@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214310</bug_id>
+          
+          <creation_ts>2008-01-04 03:06:00 -0500</creation_ts>
+          <short_desc>Value validation issue for Date and Time parameter.</short_desc>
+          <delta_ts>2008-07-01 04:10:43 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Data</component>
+          <version>2.3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Liwen Chen">lchen</reporter>
+          <assigned_to name="Birt-Data-inbox@eclipse.org">Birt-Data-inbox</assigned_to>
+          <cc>lzhu</cc>
+    
+    <cc>wenfeng.fwd</cc>
+    
+    <cc>zqian</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125528</commentid>
+    <comment_count>0</comment_count>
+    <who name="Liwen Chen">lchen</who>
+    <bug_when>2008-01-04 03:06:01 -0500</bug_when>
+    <thetext>Description:
+Value validation issue for Date and Time parameter.
+Build number:2.3.0.v20080104
+
+Steps to reproduce:
+1. New a report parameter, time type,input &quot;10:61:20&quot;.
+2. New a report parameter, date type, input &quot;2007-13-12&quot;.
+
+Expected result:
+Value validation will report errors for both situation.
+
+Actual result:
+Warning for invalid time value but accept invalid date value.
+
+Error log:n/a</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1280457</commentid>
+    <comment_count>1</comment_count>
+    <who name="Zhiqiang Qian">zqian</who>
+    <bug_when>2008-06-30 02:52:00 -0400</bug_when>
+    <thetext>GUI uses DataTypeUtil to validate the datetime value. For Date value like &quot;2007-13-12&quot;, it will treat it as valid and auto-convert the value to &quot;2008-01-12&quot;, but for Time value like &quot;10:61:20&quot;, it will think it&apos;s invalid. I think we need keep the two validation logic consistent, that is, either auto-convert &quot;10:61:20&quot; to &quot;11:01:20&quot;, or treat them both as invalid.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1281283</commentid>
+    <comment_count>2</comment_count>
+    <who name="Lin Zhu">lzhu</who>
+    <bug_when>2008-07-01 04:10:43 -0400</bug_when>
+    <thetext>The current data conversion is enforced by ICU rather than by BIRT, so we can do little to it.
+
+Meanwhile, I think cannot convert &quot;10:61:20&quot; to &quot;11:01:20&quot; actually makes sense. There is no info in the above time string to indicate whether they are 24 hour based or 12 hour based, so how should we convert &quot;12:61:20&quot;? Even if the time is 24 hour based, convert of it may also lead to the lost of information. So the most straightforward way is to disallow such time format.
+
+Thanks.
+Lin</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

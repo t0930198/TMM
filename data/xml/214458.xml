@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214458</bug_id>
+          
+          <creation_ts>2008-01-07 04:30:00 -0500</creation_ts>
+          <short_desc>*_consolelog.txt incomplete</short_desc>
+          <delta_ts>2008-01-22 14:46:35 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Releng</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Markus Keller">markus_keller</reporter>
+          <assigned_to name="Kim Moir">kim.moir</assigned_to>
+          <cc>daniel_megert</cc>
+    
+    <cc>kim.moir</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126405</commentid>
+    <comment_count>0</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-07 04:30:00 -0500</bug_when>
+    <thetext>While investigating bug 213605, I found that the *_consolelog.txt files don&apos;t contain the output for all tests any more.
+
+http://fullmoon.ottawa.ibm.com/downloads/drops/M20071219-0800/testresults/win32.win32.x86/
+contains files with the missing output, e.g. org.eclipse.jdt.ui.tests.automatedsuite.txt has the output from org.eclipse.jdt.ui.tests.AutomatedSuite</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127341</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-08 10:57:54 -0500</bug_when>
+    <thetext>This was changed last year.  I can change the build scripts so all the individual *.txt files are copied to the consolelogs directory so they are viewable from the web page, will this work for you?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127400</commentid>
+    <comment_count>2</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-08 11:27:40 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+Yes, that would be fine. You then would also have to prepend &quot;win32_&quot;, etc. to the files to make all test configurations available.
+
+Another solution would be to make the testresults directory (and subdirectories) browseable on download.eclipse.org and just add a link to it on the Test Results page. Currently, I get a 404 File not Found for
+http://download.eclipse.org/eclipse/downloads/drops/M20071219-0800/testresults/ .</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127469</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-08 11:38:32 -0500</bug_when>
+    <thetext>The contents of directories are not browseable on eclipse.org for security reasons.
+
+I&apos;ll go with the first suggestion.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127475</commentid>
+    <comment_count>4</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-08 11:40:31 -0500</bug_when>
+    <thetext>What&apos;s interesting though is that UiTestSuite still gets output into the
+consolelog (and still generates 16M of output (bug 214630)):
+
+java-test:
+     [echo] Running org.eclipse.ui.tests.UiTestSuite. Result file:
+C:\buildtest\M20071219-0800\eclipse-testing/results/win32.win32.x86/org.eclipse.ui.tests.UiTestSuite.xml.
+     [java] ----- testStartup
+     [java] testStartup: setUp...
+     [java] testStartup: tearDown...
+...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136123</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-22 14:46:35 -0500</bug_when>
+    <thetext>The logs from running the individual test suites will appear on the test results page with under the console logs heading for builds &gt;= N20080123.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

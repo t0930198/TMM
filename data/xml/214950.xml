@@ -1,0 +1,229 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214950</bug_id>
+          
+          <creation_ts>2008-01-10 15:29:00 -0500</creation_ts>
+          <short_desc>Cannot create Servlets in Web projects without runtimes</short_desc>
+          <delta_ts>2008-05-12 09:19:43 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Web Tools</product>
+          <component>J2EE Standard Tools</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Carl Anderson">ccc</reporter>
+          <assigned_to name="Kaloyan Raev">kaloyan.r</assigned_to>
+          
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129222</commentid>
+    <comment_count>0</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-01-10 15:29:40 -0500</bug_when>
+    <thetext>I tried to create a servlet in a dynamic web project without a runtime (I tried with 2.3, 2.4, and 2.5), and I keep getting an updated deployment descriptor and an empty .java file.  
+
+The following appears in the log:
+
+!MESSAGE null
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.jst.servlet.ui.internal.wizard.AddServletWizard.postPerformFinish(AddServletWizard.java:104)
+	at org.eclipse.wst.common.frameworks.internal.datamodel.ui.DataModelWizard.performFinish(DataModelWizard.java:187)
+	at org.eclipse.jface.wizard.WizardDialog.finishPressed(WizardDialog.java:742)
+	at org.eclipse.jface.wizard.WizardDialog.buttonPressed(WizardDialog.java:373)
+	at org.eclipse.jface.dialogs.Dialog$2.widgetSelected(Dialog.java:623)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:227)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+	at org.eclipse.jface.window.Window.open(Window.java:801)
+	at org.eclipse.ui.internal.navigator.wizards.WizardShortcutAction.run(WizardShortcutAction.java:94)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:582)
+	at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:499)
+	at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:410)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2381)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2345)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2211)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:473)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:468)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1239)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129232</commentid>
+    <comment_count>1</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-01-10 15:35:43 -0500</bug_when>
+    <thetext>This is a regression from 2.0.2 - it was caused by bug 209329
+
+What is happening is that during the JETEmitter, a NPE is happening, which causes an InvocationTargetException which just causes the emitter to give up and write an empty .java class.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129236</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86602</attachid>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-01-10 15:40:30 -0500</bug_when>
+    <thetext>Created attachment 86602
+NPE check added to getConstructors()
+
+I added a NPE check- if the superclass is not on the classpath (such as when the runtime target is set to &lt;none&gt;), it returns without the default constructor.  This causes the servlet&apos;s .java file to be generated, and it immediately show compilation errors due to the missing classpath entry.
+
+This brings the New Servlet back in line with the behavior of WTP 2.0.2 (and previous WTP versions.)
+
+Please review this patch to see if you find it an acceptable change (since this framework is now used by more than just the new servlet operation).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129639</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kaloyan Raev">kaloyan.r</who>
+    <bug_when>2008-01-11 09:58:49 -0500</bug_when>
+    <thetext>Carl, thanks a lot for finding the bug and making the patch! 
+
+the patch is dropped to HEAD</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1155764</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kaloyan Raev">kaloyan.r</who>
+    <bug_when>2008-02-13 04:25:38 -0500</bug_when>
+    <thetext>Verify with the I20080208170344 build. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1231536</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kaloyan Raev">kaloyan.r</who>
+    <bug_when>2008-05-12 09:19:43 -0400</bug_when>
+    <thetext>Closing</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86602</attachid>
+            <date>2008-01-10 15:40:00 -0500</date>
+            <delta_ts>2008-01-10 15:40:30 -0500</delta_ts>
+            <desc>NPE check added to getConstructors()</desc>
+            <filename>bug214950patch</filename>
+            <type>text/plain</type>
+            <size>3404</size>
+            <attacher name="Carl Anderson">ccc</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUu
+d2ViDQpJbmRleDogd2ViL29yZy9lY2xpcHNlL2pzdC9qMmVlL2ludGVybmFsL3dlYi9vcGVyYXRp
+b25zL0NyZWF0ZVdlYkNsYXNzVGVtcGxhdGVNb2RlbC5qYXZhDQo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmls
+ZTogL2N2c3Jvb3Qvd2VidG9vbHMvamVldG9vbHMvcGx1Z2lucy9vcmcuZWNsaXBzZS5qc3QuajJl
+ZS53ZWIvd2ViL29yZy9lY2xpcHNlL2pzdC9qMmVlL2ludGVybmFsL3dlYi9vcGVyYXRpb25zL0Ny
+ZWF0ZVdlYkNsYXNzVGVtcGxhdGVNb2RlbC5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4z
+DQpkaWZmIC11IC1yMS4zIENyZWF0ZVdlYkNsYXNzVGVtcGxhdGVNb2RlbC5qYXZhDQotLS0gd2Vi
+L29yZy9lY2xpcHNlL2pzdC9qMmVlL2ludGVybmFsL3dlYi9vcGVyYXRpb25zL0NyZWF0ZVdlYkNs
+YXNzVGVtcGxhdGVNb2RlbC5qYXZhCTUgRGVjIDIwMDcgMTg6MTM6NDQgLTAwMDAJMS4zDQorKysg
+d2ViL29yZy9lY2xpcHNlL2pzdC9qMmVlL2ludGVybmFsL3dlYi9vcGVyYXRpb25zL0NyZWF0ZVdl
+YkNsYXNzVGVtcGxhdGVNb2RlbC5qYXZhCTEwIEphbiAyMDA4IDIwOjM2OjE2IC0wMDAwDQpAQCAt
+Nyw2ICs3LDcgQEANCiAgKg0KICAqIENvbnRyaWJ1dG9yczoNCiAgKiBLYWxveWFuIFJhZXYsIGth
+bG95YW4ucmFldkBzYXAuY29tIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uDQorICog
+Q2FybCBBbmRlcnNvbiwgY2NjQHVzLmlibS5jb20gLSBoYW5kbGUgbnVsbCBzdXBlcmNsYXNzIChu
+byBydW50aW1lKQ0KICAqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLw0KIHBhY2thZ2Ugb3JnLmVjbGlw
+c2UuanN0LmoyZWUuaW50ZXJuYWwud2ViLm9wZXJhdGlvbnM7DQogDQpAQCAtMjUyLDIyICsyNTMs
+MjUgQEANCiAgICAgICAgICAgICBpZiAoamF2YVByb2plY3QgIT0gbnVsbCkgew0KICAgICAgICAg
+ICAgICAgICB0cnkgew0KICAgICAgICAgICAgICAgICAgICAgSVR5cGUgdHlwZSA9IGphdmFQcm9q
+ZWN0LmZpbmRUeXBlKHN1cGVyY2xhc3MpOw0KLSAgICAgICAgICAgICAgICAgICAgaWYgKHR5cGUu
+aXNCaW5hcnkoKSkgew0KLSAgICAgICAgICAgICAgICAgICAgICAgIElNZXRob2RbXSBtZXRob2Rz
+ID0gdHlwZS5nZXRNZXRob2RzKCk7DQotICAgICAgICAgICAgICAgICAgICAgICAgZm9yIChJTWV0
+aG9kIG1ldGhvZCA6IG1ldGhvZHMpIHsNCi0gICAgICAgICAgICAgICAgICAgICAgICAgICAgaWYg
+KG1ldGhvZC5pc0NvbnN0cnVjdG9yKCkpIA0KLSAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgY29uc3Rycy5hZGQobmV3IEJpbmFyeUNvbnN0cnVjdG9yKG1ldGhvZCkpOw0KLSAgICAgICAg
+ICAgICAgICAgICAgICAgIH0NCi0gICAgICAgICAgICAgICAgICAgIH0gZWxzZSB7DQotICAgICAg
+ICAgICAgICAgICAgICAJSUNvbXBpbGF0aW9uVW5pdCBjb21waWxhdGlvblVuaXQgPSB0eXBlLmdl
+dENvbXBpbGF0aW9uVW5pdCgpOw0KLSAgICAgICAgICAgICAgICAgICAgICAgIFR5cGVEZWNsYXJh
+dGlvbiBkZWNsYXJhdGlvbkZyb21UeXBlID0gZ2V0VHlwZURlY2xhcmF0aW9uRnJvbVR5cGUoc3Vw
+ZXJjbGFzcywgY29tcGlsYXRpb25Vbml0KTsNCi0gICAgICAgICAgICAgICAgICAgICAgICBpZiAo
+ZGVjbGFyYXRpb25Gcm9tVHlwZSAhPSBudWxsKSB7DQotICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIE1ldGhvZERlY2xhcmF0aW9uW10gbWV0aG9kcyA9IGRlY2xhcmF0aW9uRnJvbVR5cGUuZ2V0
+TWV0aG9kcygpOw0KLSAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3IgKE1ldGhvZERlY2xh
+cmF0aW9uIG1ldGhvZCA6IG1ldGhvZHMpIHsNCi0gICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICAgIGlmIChtZXRob2QuaXNDb25zdHJ1Y3RvcigpKSANCi0gICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgICBjb25zdHJzLmFkZChuZXcgU291cmNlQ29uc3RydWN0b3IobWV0aG9kKSk7
+DQotICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0NCi0gICAgICAgICAgICAgICAgICAgICAg
+ICB9DQorICAgICAgICAgICAgICAgICAgICBpZiAodHlwZSAhPSBudWxsKQ0KKyAgICAgICAgICAg
+ICAgICAgICAgew0KKwkgICAgICAgICAgICAgICAgICAgIGlmICh0eXBlLmlzQmluYXJ5KCkpIHsN
+CisJICAgICAgICAgICAgICAgICAgICAgICAgSU1ldGhvZFtdIG1ldGhvZHMgPSB0eXBlLmdldE1l
+dGhvZHMoKTsNCisJICAgICAgICAgICAgICAgICAgICAgICAgZm9yIChJTWV0aG9kIG1ldGhvZCA6
+IG1ldGhvZHMpIHsNCisJICAgICAgICAgICAgICAgICAgICAgICAgICAgIGlmIChtZXRob2QuaXND
+b25zdHJ1Y3RvcigpKSANCisJICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICBjb25zdHJz
+LmFkZChuZXcgQmluYXJ5Q29uc3RydWN0b3IobWV0aG9kKSk7DQorCSAgICAgICAgICAgICAgICAg
+ICAgICAgIH0NCisJICAgICAgICAgICAgICAgICAgICB9IGVsc2Ugew0KKwkgICAgICAgICAgICAg
+ICAgICAgIAlJQ29tcGlsYXRpb25Vbml0IGNvbXBpbGF0aW9uVW5pdCA9IHR5cGUuZ2V0Q29tcGls
+YXRpb25Vbml0KCk7DQorCSAgICAgICAgICAgICAgICAgICAgICAgIFR5cGVEZWNsYXJhdGlvbiBk
+ZWNsYXJhdGlvbkZyb21UeXBlID0gZ2V0VHlwZURlY2xhcmF0aW9uRnJvbVR5cGUoc3VwZXJjbGFz
+cywgY29tcGlsYXRpb25Vbml0KTsNCisJICAgICAgICAgICAgICAgICAgICAgICAgaWYgKGRlY2xh
+cmF0aW9uRnJvbVR5cGUgIT0gbnVsbCkgew0KKwkgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+TWV0aG9kRGVjbGFyYXRpb25bXSBtZXRob2RzID0gZGVjbGFyYXRpb25Gcm9tVHlwZS5nZXRNZXRo
+b2RzKCk7DQorCSAgICAgICAgICAgICAgICAgICAgICAgICAgICBmb3IgKE1ldGhvZERlY2xhcmF0
+aW9uIG1ldGhvZCA6IG1ldGhvZHMpIHsNCisJICAgICAgICAgICAgICAgICAgICAgICAgICAgICAg
+ICBpZiAobWV0aG9kLmlzQ29uc3RydWN0b3IoKSkgDQorCSAgICAgICAgICAgICAgICAgICAgICAg
+ICAgICAgICAgICAgIGNvbnN0cnMuYWRkKG5ldyBTb3VyY2VDb25zdHJ1Y3RvcihtZXRob2QpKTsN
+CisJICAgICAgICAgICAgICAgICAgICAgICAgICAgIH0NCisJICAgICAgICAgICAgICAgICAgICAg
+ICAgfQ0KKwkgICAgICAgICAgICAgICAgICAgIH0NCiAgICAgICAgICAgICAgICAgICAgIH0NCiAg
+ICAgICAgICAgICAgICAgfSBjYXRjaCAoSmF2YU1vZGVsRXhjZXB0aW9uIGUpIHsNCiAgICAgICAg
+ICAgICAgICAgICAgIExvZ2dlci5nZXRMb2dnZXIoKS5sb2coZSk7DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

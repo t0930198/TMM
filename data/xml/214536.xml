@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214536</bug_id>
+          
+          <creation_ts>2008-01-07 15:33:00 -0500</creation_ts>
+          <short_desc>SWT resource leak opening/closing server editor</short_desc>
+          <delta_ts>2008-05-01 15:01:35 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP ServerTools</product>
+          <component>wst.server</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Robert Taniwa">rtaniwa</reporter>
+          <assigned_to name="Tim deBoer">deboer</assigned_to>
+          
+          <qa_contact name="Tim deBoer">deboer</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126888</commentid>
+    <comment_count>0</comment_count>
+    <who name="Robert Taniwa">rtaniwa</who>
+    <bug_when>2008-01-07 15:33:06 -0500</bug_when>
+    <thetext>Build ID: 3.0.0.v20071203
+
+Steps To Reproduce:
+Continuously opening and closing the server editor while running sleak shows that each invocation leaks 13 SWT Color objects. In the sleak stacks, it appears the leak is stemming from OverviewEditorPart.createPartControl(), specifically from the use of the ManagedForm. Here are two of the leaks that seem to be similar to the others:
+
+	at org.eclipse.swt.graphics.Device.new_Object(Unknown Source)
+	at org.eclipse.swt.graphics.Color.&lt;init&gt;(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createColor(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createColor(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createTitleColor(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.initializeColorTable(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.initialize(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.&lt;init&gt;(Unknown Source)
+	at org.eclipse.ui.forms.widgets.FormToolkit.&lt;init&gt;(Unknown Source)
+	at org.eclipse.ui.forms.ManagedForm.&lt;init&gt;(Unknown Source)
+	at org.eclipse.wst.server.ui.internal.editor.OverviewEditorPart.createPartControl(Unknown Source)
+
+and
+
+	at org.eclipse.swt.graphics.Device.new_Object(Unknown Source)
+	at org.eclipse.swt.graphics.Color.&lt;init&gt;(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createColor(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createColor(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createFormHeaderGradientColors(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.createFormHeaderColors(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.initializeFormHeaderColors(Unknown Source)
+	at org.eclipse.ui.forms.FormColors.getColor(Unknown Source)
+	at org.eclipse.ui.forms.widgets.FormToolkit.decorateFormHeading(Unknown Source)
+	at org.eclipse.wst.server.ui.internal.editor.OverviewEditorPart.createPartControl(Unknown Source)
+
+I am not sure the contract with the ManagedForm, but perhaps you need to call dispose to ensure it releases the SWT resources?
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127677</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-01-08 15:24:09 -0500</bug_when>
+    <thetext>Fix released to 3.0 M5 builds.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220823</commentid>
+    <comment_count>2</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-05-01 15:01:35 -0400</bug_when>
+    <thetext>Verified, closing.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

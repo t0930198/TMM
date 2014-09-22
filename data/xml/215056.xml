@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215056</bug_id>
+          
+          <creation_ts>2008-01-11 11:49:00 -0500</creation_ts>
+          <short_desc>NullPointerExcpeption while parsing GCC output during build</short_desc>
+          <delta_ts>2008-06-22 03:18:53 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>5.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alex Chapiro">achapiro</reporter>
+          <assigned_to name="Markus Schorn">markus.schorn</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129751</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86694</attachid>
+    <who name="Alex Chapiro">achapiro</who>
+    <bug_when>2008-01-11 11:49:55 -0500</bug_when>
+    <thetext>Created attachment 86694
+Patch to fix a problem
+
+Build ID:  I20070503-1400
+
+Steps To Reproduce:
+1. This line, for example, causs  NPE:
+D:/Development/projects/LibGL.AMD/ugl/src/gl/mgll/1_5/ep/timmo/timmo_compare_arrays.cpp:398:   instantiated from `void gllEP::tc_DrawElements(glepStateHandleTypeRec*, unsigned int, int, const indextype*) [with _bool32 useDpd = ATIGL_TRUE, indextype = GLushort, unsigned int format = 0]&apos;
+
+It happens because detecting this message as an error one (wich depends on the point of developer&apos;s view :-), GC error parser tries to get more information, say variable name,  fails with that but continues to dig out more information for reporting and runs into NPE
+
+
+More information:
+See GCCErrorParser 
+
+new ErrorPattern(Messages.GCCErrorParser_Warnings, 1, 2, 5, 0, 0) {
+			public String getVarName(Matcher matcher) {
+
+and below (desc == null)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129876</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86694</attachid>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-11 14:54:37 -0500</bug_when>
+    <thetext>Comment on attachment 86694
+Patch to fix a problem
+
+Please make sure you check the patch flag or it won&apos;t show up on our patch reports.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1250520</commentid>
+    <comment_count>2</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-05-28 07:57:05 -0400</bug_when>
+    <thetext>Thanks!
+fixed in 5.0 &gt; 20080528.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86694</attachid>
+            <date>2008-01-11 11:49:00 -0500</date>
+            <delta_ts>2008-06-22 03:18:53 -0400</delta_ts>
+            <desc>Patch to fix a problem</desc>
+            <filename>error_parser.bug</filename>
+            <type>text/plain</type>
+            <size>1266</size>
+            <attacher name="Alex Chapiro">achapiro</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuY2R0LmNvcmUN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvY2R0L2ludGVybmFsL2Vycm9ycGFyc2Vycy9HQ0NFcnJv
+clBhcnNlci5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvdG9vbHMvb3JnLmVj
+bGlwc2UuY2R0LWNvcmUvb3JnLmVjbGlwc2UuY2R0LmNvcmUvc3JjL29yZy9lY2xpcHNlL2NkdC9p
+bnRlcm5hbC9lcnJvcnBhcnNlcnMvR0NDRXJyb3JQYXJzZXIuamF2YSx2DQpyZXRyaWV2aW5nIHJl
+dmlzaW9uIDEuMjcNCmRpZmYgLXUgLXIxLjI3IEdDQ0Vycm9yUGFyc2VyLmphdmENCi0tLSBzcmMv
+b3JnL2VjbGlwc2UvY2R0L2ludGVybmFsL2Vycm9ycGFyc2Vycy9HQ0NFcnJvclBhcnNlci5qYXZh
+CTE0IEp1biAyMDA3IDE4OjA0OjAwIC0wMDAwCTEuMjcNCisrKyBzcmMvb3JnL2VjbGlwc2UvY2R0
+L2ludGVybmFsL2Vycm9ycGFyc2Vycy9HQ0NFcnJvclBhcnNlci5qYXZhCTExIEphbiAyMDA4IDE2
+OjQ2OjI3IC0wMDAwDQpAQCAtMzgsMTQgKzM4LDE1IEBADQogCQkJcHVibGljIFN0cmluZyBnZXRW
+YXJOYW1lKE1hdGNoZXIgbWF0Y2hlcikgew0KIAkJCQlTdHJpbmcgZGVzYyA9IGdldERlc2MobWF0
+Y2hlcik7DQogCQkJCU1hdGNoZXIgdmFyTWF0Y2hlciA9IG51bGw7DQotCQkJCWZvciAoaW50IGkg
+PSAwOyBpIDwgdmFyUGF0dGVybnMubGVuZ3RoOyArK2kpIHsNCi0JCQkJCXZhck1hdGNoZXIgPSB2
+YXJQYXR0ZXJuc1tpXS5tYXRjaGVyKGRlc2MpOw0KLQkJCQkJaWYgKHZhck1hdGNoZXIuZmluZCgp
+KQ0KLQkJCQkJCWJyZWFrOw0KLQkJCQkJZWxzZQ0KLQkJCQkJCXZhck1hdGNoZXIgPSBudWxsOw0K
+KwkJCQlpZihudWxsICE9IGRlc2MpIHsNCisJCQkJCWZvciAoaW50IGkgPSAwOyBpIDwgdmFyUGF0
+dGVybnMubGVuZ3RoOyArK2kpIHsNCisJCQkJCQl2YXJNYXRjaGVyID0gdmFyUGF0dGVybnNbaV0u
+bWF0Y2hlcihkZXNjKTsNCisJCQkJCQlpZiAodmFyTWF0Y2hlci5maW5kKCkpDQorCQkJCQkJCWJy
+ZWFrOw0KKwkJCQkJCWVsc2UNCisJCQkJCQkJdmFyTWF0Y2hlciA9IG51bGw7DQorCQkJCQl9DQog
+CQkJCX0NCi0NCiAJCQkJcmV0dXJuIHZhck1hdGNoZXIgIT0gbnVsbCA/IHZhck1hdGNoZXIuZ3Jv
+dXAoMSkgOiBudWxsOw0KIAkJCX0NCiAJCQlwdWJsaWMgaW50IGdldFNldmVyaXR5KE1hdGNoZXIg
+bWF0Y2hlcikgew0K
+</data>
+<flag name="iplog"
+          id="10273"
+          type_id="7"
+          status="+"
+          setter="bjorn.freeman-benson"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

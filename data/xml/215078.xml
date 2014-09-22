@@ -1,0 +1,420 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215078</bug_id>
+          
+          <creation_ts>2008-01-11 15:12:00 -0500</creation_ts>
+          <short_desc>Test Execution Tabular Report contains empty or incorrect child reports.</short_desc>
+          <delta_ts>2009-05-27 21:12:02 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Testing</product>
+          <component>Test.Execution.JUnitRunner</component>
+          <version>4.5</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>241139</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>4.6</target_milestone>
+          
+          <blocked>215135</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Joel Cayne">jcayne</reporter>
+          <assigned_to name="Paul Slauenwhite">paules</assigned_to>
+          <cc>apnan</cc>
+    
+    <cc>bobbyjoseph</cc>
+    
+    <cc>paules</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129896</commentid>
+    <comment_count>0</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-01-11 15:12:39 -0500</bug_when>
+    <thetext>The content of the testsuite during reporting returns empty results when clicking on the results page.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130547</commentid>
+    <comment_count>1</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-14 07:47:07 -0500</bug_when>
+    <thetext>This is isolated to missing content in the secondary report window opened when the user selects a test suite in the test report.  For example, select the org.eclipse.tptp.monitoring.managedagent.test.AllSmokeTests test suite in the http://www.eclipse.org/tptp/test/reports/4.5_i4_TP2/index.html report and note that it is missing several of the verdict events.  The results in the main report window are reported accurately.
+
+I have also seen the symptom where no verdict events are reported in the secondary report window since the test case reference is not captured in the execution event for that test log.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138212</commentid>
+    <comment_count>2</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-24 17:20:31 -0500</bug_when>
+    <thetext>This problem is also manifested by the following exception:
+
+org.eclipse.datatools.connectivity.oda.OdaException: unknown protocol: d
+	at org.eclipse.datatools.enablement.oda.xml.util.XMLDataInputStreamCreator.&lt;init&gt;(XMLDataInputStreamCreator.java:280)
+	at org.eclipse.datatools.enablement.oda.xml.util.XMLDataInputStreamCreator.getCreator(XMLDataInputStreamCreator.java:159)
+	at org.eclipse.datatools.enablement.oda.xml.util.XMLDataInputStreamCreator.getCreator(XMLDataInputStreamCreator.java:79)
+	at org.eclipse.datatools.enablement.oda.xml.util.XMLDataInputStreamCreator.getCreator(XMLDataInputStreamCreator.java:100)
+	at org.eclipse.datatools.enablement.oda.xml.util.SaxParserConsumer.&lt;init&gt;(SaxParserConsumer.java:108)
+	at org.eclipse.datatools.enablement.oda.xml.impl.ResultSet.&lt;init&gt;(ResultSet.java:65)
+	at org.eclipse.datatools.enablement.oda.xml.impl.Query.executeQuery(Query.java:139)
+	at org.eclipse.datatools.connectivity.oda.consumer.helper.OdaQuery.doExecuteQuery(OdaQuery.java:443)
+	at org.eclipse.datatools.connectivity.oda.consumer.helper.OdaQuery.executeQuery(OdaQuery.java:408)
+	at org.eclipse.birt.data.engine.odaconsumer.PreparedStatement.execute(PreparedStatement.java:553)
+	at org.eclipse.birt.data.engine.executor.DataSourceQuery.execute(DataSourceQuery.java:495)
+	at org.eclipse.birt.data.engine.impl.PreparedOdaDSQuery$OdaDSQueryExecutor.executeOdiQuery(PreparedOdaDSQuery.java:348)
+	at org.eclipse.birt.data.engine.impl.QueryExecutor.execute(QueryExecutor.java:782)
+	at org.eclipse.birt.data.engine.impl.ServiceForQueryResults.executeQuery(ServiceForQueryResults.java:232)
+	at org.eclipse.birt.data.engine.impl.QueryResults.getResultIterator(QueryResults.java:158)
+	at org.eclipse.birt.report.engine.data.dte.QueryResultSet.&lt;init&gt;(QueryResultSet.java:92)
+	at org.eclipse.birt.report.engine.data.dte.DteDataEngine.doExecuteQuery(DteDataEngine.java:129)
+	at org.eclipse.birt.report.engine.data.dte.AbstractDataEngine.execute(AbstractDataEngine.java:224)
+	at org.eclipse.birt.report.engine.executor.ExecutionContext.executeQuery(ExecutionContext.java:1712)
+	at org.eclipse.birt.report.engine.executor.QueryItemExecutor.executeQuery(QueryItemExecutor.java:77)
+	at org.eclipse.birt.report.engine.executor.GridItemExecutor.execute(GridItemExecutor.java:64)
+	at org.eclipse.birt.report.engine.internal.executor.dup.SuppressDuplicateItemExecutor.execute(SuppressDuplicateItemExecutor.java:42)
+	at org.eclipse.birt.report.engine.internal.executor.wrap.WrappedReportItemExecutor.execute(WrappedReportItemExecutor.java:45)
+	at org.eclipse.birt.report.engine.internal.executor.l18n.LocalizedReportItemExecutor.execute(LocalizedReportItemExecutor.java:33)
+	at org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:63)
+	at org.eclipse.birt.report.engine.layout.html.HTMLPageLM.layout(HTMLPageLM.java:85)
+	at org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout(HTMLReportLayoutEngine.java:106)
+	at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.doRun(RunAndRenderTask.java:138)
+	at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run(RunAndRenderTask.java:66)
+	at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReportFragment(BIRTReportGenerator.java:293)
+	at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReport(BIRTReportGenerator.java:190)
+	at org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.generate(TabularTPFTestSuiteReportElement.java:263)
+
+The problem is caused by a NPE being thrown at org.eclipse.tptp.test.report.birt.internal.elements.util.TPFExecutionResultSerializer.serialize(TPFExecutionResultSerializer.java:76)  because the test for the verdict event does not have a reference to the test suite.  For example, see /org.eclipse.hyades.logging.core.tests/junit_results/Windows_EM64T/org.eclipse.hyades.logging.core.tests.junit.AllTests.Winows_EM64T_1197455391955.execution</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147827</commentid>
+    <comment_count>3</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-02-01 15:29:51 -0500</bug_when>
+    <thetext>See https://bugs.eclipse.org/bugs/show_bug.cgi?id=214638#c0 for another example.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160463</commentid>
+    <comment_count>4</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-02-20 12:17:34 -0500</bug_when>
+    <thetext>The same problem has been found for execution results generated from the following test suites:
+
+/org.eclipse.tptp.monitoring.managedagent.test/junit/AllManagedagentTests_IBMJava142.testsuite
+/org.eclipse.tptp.monitoring.managedagent.test/junit/AllManagedagentTests_IBMJava150.testsuite
+/org.eclipse.tptp.monitoring.managedagent.test/junit/AllManagedagentTests_SUNJava142.testsuite
+/org.eclipse.tptp.monitoring.managedagent.test/junit/AllManagedagentTests_SUNJava150.testsuite
+
+http://www.eclipse.org/tptp/test/reports/4.5_i5_TP1/index.html</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1243243</commentid>
+    <comment_count>5</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-05-21 14:17:31 -0400</bug_when>
+    <thetext>Deferring to future as approved by the TPTP PMC (http://dev.eclipse.org/mhonarc/lists/tptp-pmc/msg04926.html).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1254083</commentid>
+    <comment_count>6</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-05-30 07:44:08 -0400</bug_when>
+    <thetext>*** Bug 234817 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1254085</commentid>
+    <comment_count>7</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-05-30 07:46:21 -0400</bug_when>
+    <thetext>In addition:
+
+[Defect #234817]:
+Test Execution Tabular Report contains empty or incorrect child reports.
+
+Using the TPTP 4.5 M6 driver, the Test Execution Tabular Report contains child
+reports with no results (for example, see
+http://www.eclipse.org/tptp/test/reports/4.5_i8_TP1/E4EFC948056023F6BE2AF110E43011DB.html
+for
+org.eclipse.tptp.monitoring.managedagent.test.AllManagedagentTests_SUNJava150,
+which should contain 7 attempted/pass or 14 test cases) or the following error
+(for example, see
+http://www.eclipse.org/tptp/test/reports/4.5_i8_TP1/F297EDF3E1D65EA1B108BB902BFE11DD.html
+for Test.Execution.CommonRunner.XMLUtil.Test):
+
+Data (id = 17):
++ A BIRT exception occurred: Error evaluating Javascript expression. Script
+engine error: TypeError: Cannot find default value for object.
+ Script source: {1}, line: 0, text:
+&lt;compiled script&gt;. See next exception for more information.
+Error evaluating Javascript expression. Script engine error: TypeError: Cannot
+find default value for object.
+ Script source: {1}, line: 0, text:
+&lt;compiled script&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1278584</commentid>
+    <comment_count>8</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-06-26 07:56:18 -0400</bug_when>
+    <thetext>Required for both the TPTP and COSMOS test reporting.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1279867</commentid>
+    <comment_count>9</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-06-27 14:07:22 -0400</bug_when>
+    <thetext>This defect is still reproducible in TPTP 4.5.0 (http://www.eclipse.org/tptp/home/downloads/?ver=4.5.0).  
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1292998</commentid>
+    <comment_count>10</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-07-16 15:12:16 -0400</bug_when>
+    <thetext>Using the TPTP-4.5.1-200807140100 driver, Test Execution Tabular Report can be generated on the TPTP test results without any errors in the secondary report windows.  However, there are missing verdict events in the secondary report windows due to defect #241139.   
+
+*** This bug has been marked as a duplicate of bug 241139 ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1310611</commentid>
+    <comment_count>11</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-08-13 13:08:02 -0400</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1485813</commentid>
+    <comment_count>12</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2009-04-29 06:55:52 -0400</bug_when>
+    <thetext>Reopening due to (TPTP 4.6 M6):
+
+[AllBVTJUnitTests_IBM_JRE_150 [TPTP JUnit Test]] http://www.eclipse.org/tptp/test/reports/4.6_i2_TP1/A1DDEBC33396BDD0D36BE63633313737.html
+
+The following items have errors:
+
+Grid (id = 6):
++ An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+
+exception.error ( 1 time(s) )
+detail : org.eclipse.birt.report.engine.api.EngineException: An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.addException(ExecutionContext.java:1121)
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.addException(ExecutionContext.java:1085)
+ at org.eclipse.birt.report.engine.executor.QueryItemExecutor.executeQuery(QueryItemExecutor.java:88)
+ at org.eclipse.birt.report.engine.executor.GridItemExecutor.execute(GridItemExecutor.java:65)
+ at org.eclipse.birt.report.engine.internal.executor.dup.SuppressDuplicateItemExecutor.execute(SuppressDuplicateItemExecutor.java:43)
+ at org.eclipse.birt.report.engine.internal.executor.wrap.WrappedReportItemExecutor.execute(WrappedReportItemExecutor.java:46)
+ at org.eclipse.birt.report.engine.internal.executor.l18n.LocalizedReportItemExecutor.execute(LocalizedReportItemExecutor.java:34)
+ at org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:64)
+ at org.eclipse.birt.report.engine.layout.html.HTMLPageLM.layout(HTMLPageLM.java:90)
+ at org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout(HTMLReportLayoutEngine.java:99)
+ at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.doRun(RunAndRenderTask.java:157)
+ at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run(RunAndRenderTask.java:70)
+ at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReportFragment(BIRTReportGenerator.java:303)
+ at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReport(BIRTReportGenerator.java:203)
+ at org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.generate(TabularTPFTestSuiteReportElement.java:268)
+ at org.eclipse.tptp.test.report.birt.services.TestSuitesTabularPublicationService.publish(TestSuitesTabularPublicationService.java:92)
+ at org.eclipse.hyades.test.core.services.AbstractTestResultsPublicationService.execute(AbstractTestResultsPublicationService.java:105)
+ at org.eclipse.hyades.automation.server.AbstractService.execute(AbstractService.java:43)
+ at org.eclipse.hyades.automation.server.ServiceProxy$1.run(ServiceProxy.java:139)
+ at org.eclipse.hyades.automation.core.utils.ReusableThread.run(ReusableThread.java:131)
+ at java.lang.Thread.run(Thread.java:801)
+Caused by: org.eclipse.birt.report.data.adapter.api.AdapterException: An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.report.data.adapter.impl.DataRequestSessionImpl.execute(DataRequestSessionImpl.java:491)
+ at org.eclipse.birt.report.engine.data.dte.DteDataEngine.doExecuteQuery(DteDataEngine.java:115)
+ at org.eclipse.birt.report.engine.data.dte.AbstractDataEngine.execute(AbstractDataEngine.java:253)
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.executeQuery(ExecutionContext.java:1755)
+ at org.eclipse.birt.report.engine.executor.QueryItemExecutor.executeQuery(QueryItemExecutor.java:76)
+ ... 18 more
+Caused by: org.eclipse.birt.data.engine.core.DataException: Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.data.engine.odaconsumer.ConnectionManager.openConnection(ConnectionManager.java:169)
+ at org.eclipse.birt.data.engine.executor.DataSource.newConnection(DataSource.java:188)
+ at org.eclipse.birt.data.engine.executor.DataSource.open(DataSource.java:176)
+ at org.eclipse.birt.data.engine.impl.DataSourceRuntime.openOdiDataSource(DataSourceRuntime.java:209)
+ at org.eclipse.birt.data.engine.impl.QueryExecutor.openDataSource(QueryExecutor.java:390)
+ at org.eclipse.birt.data.engine.impl.QueryExecutor.prepareExecution(QueryExecutor.java:309)
+ at org.eclipse.birt.data.engine.impl.PreparedQuery.doPrepare(PreparedQuery.java:493)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.produceQueryResults(PreparedDataSourceQuery.java:189)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.execute(PreparedDataSourceQuery.java:177)
+ at org.eclipse.birt.data.engine.impl.PreparedOdaDSQuery.execute(PreparedOdaDSQuery.java:143)
+ at org.eclipse.birt.report.data.adapter.impl.DataRequestSessionImpl.execute(DataRequestSessionImpl.java:480)
+ ... 22 more
+Caused by: org.eclipse.datatools.connectivity.oda.OdaException ;
+    java.net.MalformedURLException: unknown protocol: d
+ at org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath.openInputStream(XMLSourceFromPath.java:70)
+ at org.eclipse.datatools.enablement.oda.xml.impl.Connection.open(Connection.java:87)
+ at org.eclipse.datatools.connectivity.oda.consumer.helper.OdaConnection.open(OdaConnection.java:238)
+ at org.eclipse.birt.data.engine.odaconsumer.ConnectionManager.openConnection(ConnectionManager.java:157)
+ ... 32 more
+Caused by: java.net.MalformedURLException: unknown protocol: d
+ at java.net.URL.&lt;init&gt;(URL.java:608)
+ at java.net.URL.&lt;init&gt;(URL.java:498)
+ at java.net.URL.&lt;init&gt;(URL.java:447)
+ at org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath.openInputStream(XMLSourceFromPath.java:65)
+ ... 35 more
+
+						
+
+
+Table (id = 141):
++ An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+
+exception.error ( 1 time(s) )
+detail : org.eclipse.birt.report.engine.api.EngineException: An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.addException(ExecutionContext.java:1121)
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.addException(ExecutionContext.java:1085)
+ at org.eclipse.birt.report.engine.executor.QueryItemExecutor.executeQuery(QueryItemExecutor.java:88)
+ at org.eclipse.birt.report.engine.executor.TableItemExecutor.execute(TableItemExecutor.java:62)
+ at org.eclipse.birt.report.engine.internal.executor.dup.SuppressDuplicateItemExecutor.execute(SuppressDuplicateItemExecutor.java:43)
+ at org.eclipse.birt.report.engine.internal.executor.wrap.WrappedReportItemExecutor.execute(WrappedReportItemExecutor.java:46)
+ at org.eclipse.birt.report.engine.internal.executor.l18n.LocalizedReportItemExecutor.execute(LocalizedReportItemExecutor.java:34)
+ at org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:64)
+ at org.eclipse.birt.report.engine.layout.html.HTMLStackingLM.layoutChildren(HTMLStackingLM.java:26)
+ at org.eclipse.birt.report.engine.layout.html.HTMLAbstractLM.layout(HTMLAbstractLM.java:135)
+ at org.eclipse.birt.report.engine.layout.html.HTMLInlineStackingLM.resumeLayout(HTMLInlineStackingLM.java:106)
+ at org.eclipse.birt.report.engine.layout.html.HTMLInlineStackingLM.layoutNodes(HTMLInlineStackingLM.java:155)
+ at org.eclipse.birt.report.engine.layout.html.HTMLStackingLM.layoutChildren(HTMLStackingLM.java:26)
+ at org.eclipse.birt.report.engine.layout.html.HTMLAbstractLM.layout(HTMLAbstractLM.java:135)
+ at org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:69)
+ at org.eclipse.birt.report.engine.layout.html.HTMLStackingLM.layoutChildren(HTMLStackingLM.java:26)
+ at org.eclipse.birt.report.engine.layout.html.HTMLTableLM.layoutChildren(HTMLTableLM.java:78)
+ at org.eclipse.birt.report.engine.layout.html.HTMLAbstractLM.layout(HTMLAbstractLM.java:135)
+ at org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:69)
+ at org.eclipse.birt.report.engine.layout.html.HTMLPageLM.layout(HTMLPageLM.java:90)
+ at org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout(HTMLReportLayoutEngine.java:99)
+ at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.doRun(RunAndRenderTask.java:157)
+ at org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run(RunAndRenderTask.java:70)
+ at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReportFragment(BIRTReportGenerator.java:303)
+ at org.eclipse.tptp.platform.report.birt.core.provisional.BIRTReportGenerator.generateHTMLReport(BIRTReportGenerator.java:203)
+ at org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.generate(TabularTPFTestSuiteReportElement.java:268)
+ at org.eclipse.tptp.test.report.birt.services.TestSuitesTabularPublicationService.publish(TestSuitesTabularPublicationService.java:92)
+ at org.eclipse.hyades.test.core.services.AbstractTestResultsPublicationService.execute(AbstractTestResultsPublicationService.java:105)
+ at org.eclipse.hyades.automation.server.AbstractService.execute(AbstractService.java:43)
+ at org.eclipse.hyades.automation.server.ServiceProxy$1.run(ServiceProxy.java:139)
+ at org.eclipse.hyades.automation.core.utils.ReusableThread.run(ReusableThread.java:131)
+ at java.lang.Thread.run(Thread.java:801)
+Caused by: org.eclipse.birt.report.data.adapter.api.AdapterException: An exception occurred during processing. Please see the following message for details:
+Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.report.data.adapter.impl.DataRequestSessionImpl.execute(DataRequestSessionImpl.java:491)
+ at org.eclipse.birt.report.engine.data.dte.DteDataEngine.doExecuteQuery(DteDataEngine.java:115)
+ at org.eclipse.birt.report.engine.data.dte.AbstractDataEngine.execute(AbstractDataEngine.java:253)
+ at org.eclipse.birt.report.engine.executor.ExecutionContext.executeQuery(ExecutionContext.java:1755)
+ at org.eclipse.birt.report.engine.executor.QueryItemExecutor.executeQuery(QueryItemExecutor.java:76)
+ ... 29 more
+Caused by: org.eclipse.birt.data.engine.core.DataException: Cannot open the connection for the driver: org.eclipse.datatools.enablement.oda.xml.
+ at org.eclipse.birt.data.engine.odaconsumer.ConnectionManager.openConnection(ConnectionManager.java:169)
+ at org.eclipse.birt.data.engine.executor.DataSource.newConnection(DataSource.java:188)
+ at org.eclipse.birt.data.engine.executor.DataSource.open(DataSource.java:176)
+ at org.eclipse.birt.data.engine.impl.DataSourceRuntime.openOdiDataSource(DataSourceRuntime.java:209)
+ at org.eclipse.birt.data.engine.impl.QueryExecutor.openDataSource(QueryExecutor.java:390)
+ at org.eclipse.birt.data.engine.impl.QueryExecutor.prepareExecution(QueryExecutor.java:309)
+ at org.eclipse.birt.data.engine.impl.PreparedQuery.doPrepare(PreparedQuery.java:493)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.produceQueryResults(PreparedDataSourceQuery.java:189)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.execute(PreparedDataSourceQuery.java:177)
+ at org.eclipse.birt.data.engine.impl.PreparedOdaDSQuery.execute(PreparedOdaDSQuery.java:143)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.execute(PreparedDataSourceQuery.java:158)
+ at org.eclipse.birt.data.engine.impl.PreparedJointDataSourceQuery.populatePreparedQuery(PreparedJointDataSourceQuery.java:541)
+ at org.eclipse.birt.data.engine.impl.PreparedJointDataSourceQuery.populatePreparedQuery(PreparedJointDataSourceQuery.java:490)
+ at org.eclipse.birt.data.engine.impl.PreparedJointDataSourceQuery.access$2(PreparedJointDataSourceQuery.java:488)
+ at org.eclipse.birt.data.engine.impl.PreparedJointDataSourceQuery$JointDataSetQueryExecutor.createOdiQuery(PreparedJointDataSourceQuery.java:584)
+ at org.eclipse.birt.data.engine.impl.QueryExecutor.prepareExecution(QueryExecutor.java:317)
+ at org.eclipse.birt.data.engine.impl.PreparedQuery.doPrepare(PreparedQuery.java:493)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.produceQueryResults(PreparedDataSourceQuery.java:189)
+ at org.eclipse.birt.data.engine.impl.PreparedDataSourceQuery.execute(PreparedDataSourceQuery.java:177)
+ at org.eclipse.birt.report.data.adapter.impl.DataRequestSessionImpl.execute(DataRequestSessionImpl.java:480)
+ ... 33 more
+Caused by: org.eclipse.datatools.connectivity.oda.OdaException ;
+    java.net.MalformedURLException: unknown protocol: d
+ at org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath.openInputStream(XMLSourceFromPath.java:70)
+ at org.eclipse.datatools.enablement.oda.xml.impl.Connection.open(Connection.java:87)
+ at org.eclipse.datatools.connectivity.oda.consumer.helper.OdaConnection.open(OdaConnection.java:238)
+ at org.eclipse.birt.data.engine.odaconsumer.ConnectionManager.openConnection(ConnectionManager.java:157)
+ ... 52 more
+Caused by: java.net.MalformedURLException: unknown protocol: d
+ at java.net.URL.&lt;init&gt;(URL.java:608)
+ at java.net.URL.&lt;init&gt;(URL.java:498)
+ at java.net.URL.&lt;init&gt;(URL.java:447)
+ at org.eclipse.datatools.enablement.oda.xml.util.XMLSourceFromPath.openInputStream(XMLSourceFromPath.java:65)
+ ... 55 more
+
+						
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1499631</commentid>
+    <comment_count>13</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2009-05-13 11:22:56 -0400</bug_when>
+    <thetext>The TPTP 4.6 I2 TP1 report (http://www.eclipse.org/tptp/test/reports/4.6_i2_TP1/index.html), this error is only thrown for the four BVT test suites:
+
+AllBVTJUnitTests_IBM_JRE_150
+AllBVTJUnitTests_IBM_JRE_160
+AllBVTJUnitTests_Sun_JRE_150
+AllBVTJUnitTests_Sun_JRE_160</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1500063</commentid>
+    <comment_count>14</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2009-05-13 16:02:39 -0400</bug_when>
+    <thetext>(In reply to comment #13)
+&gt; The TPTP 4.6 I2 TP1 report
+&gt; (http://www.eclipse.org/tptp/test/reports/4.6_i2_TP1/index.html), this error is
+&gt; only thrown for the four BVT test suites:
+&gt; 
+&gt; AllBVTJUnitTests_IBM_JRE_150
+&gt; AllBVTJUnitTests_IBM_JRE_160
+&gt; AllBVTJUnitTests_Sun_JRE_150
+&gt; AllBVTJUnitTests_Sun_JRE_160
+&gt; 
+
+Caused by https://bugs.eclipse.org/bugs/show_bug.cgi?id=276121.  I have manually fixed the following test results in CVS (HEAD):
+
+/org.eclipse.hyades.tests/BVT_results/AllBVTJUnitTests_IBM_JRE_150.execution
+/org.eclipse.hyades.tests/BVT_results/AllBVTJUnitTests_IBM_JRE_160.execution
+/org.eclipse.hyades.tests/BVT_results/AllBVTJUnitTests_Sun_JRE_150.execution
+/org.eclipse.hyades.tests/BVT_results/AllBVTJUnitTests_Sun_JRE_160.execution
+
+I have generated a local report successfully using the following test suites:
+
+/org.eclipse.hyades.tests/TP1/AllTP1GUITests.testsuite
+/org.eclipse.hyades.tests/TP1/AllTP1JUnitPluginTests.testsuite
+/org.eclipse.hyades.tests/TP1/AllTP1JUnitTests.testsuite
+/org.eclipse.hyades.tests/TP1/AllTP1ManualTests.testsuite
+
+Finanlly, Josh has refresh the TPTP 4.6 I2 TP1 report:
+
+http://www.eclipse.org/tptp/test/reports/4.6_i2_TP1/index.html
+
+*** This bug has been marked as a duplicate of bug 241139 ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1512364</commentid>
+    <comment_count>15</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2009-05-27 21:12:02 -0400</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

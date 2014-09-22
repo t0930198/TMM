@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214524</bug_id>
+          
+          <creation_ts>2008-01-07 13:58:00 -0500</creation_ts>
+          <short_desc>[prov] [repo] Need access to &quot;implementation only&quot; key without loading repository</short_desc>
+          <delta_ts>2008-01-09 14:15:15 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>api</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="Susan McCourt ">susan</assigned_to>
+          <cc>john_arthorne</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126823</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-07 13:58:50 -0500</bug_when>
+    <thetext>Spinning this bug off of bug #207298.
+In order for the UI to benefit from the work in that bug to allow access to repos by URL, there needs to be a way for the UI to know if a repo is implementation only without having to load the repo.
+
+I&apos;m doing this work while addressing bug #211906 and others, but am opening this bug to represent the core API changes being added to support this.  After talking to John, what we are doing is:
+
+- add an int flag to the repository manager API getKnownRepositories() so that the caller can specify which repos are of interest
+- store the value of IMPLEMENTATION_ONLY in the internal RepositoryInfo kept by the repo managers.
+- save and restore this value using the preferences so that it can be retrieved without loading the repo
+- extract this value from a repo&apos;s properties if the repo instance is already known.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126825</commentid>
+    <comment_count>1</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-07 14:00:01 -0500</bug_when>
+    <thetext>Sorry, wrong bug reference above.  This is spinning out of the work done in bug #207978.
+
+Working on this one now..</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127018</commentid>
+    <comment_count>2</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-07 18:04:50 -0500</bug_when>
+    <thetext>fixed in HEAD &gt;20080107.
+John, the changes are as we discussed earlier today, but it would be good if you could take a look at the new API defined in IMetadataRepositoryManager and IArtifactRepositoryManager and make sure nothing surprises you.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128340</commentid>
+    <comment_count>3</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 13:50:10 -0500</bug_when>
+    <thetext>Looks good. The only thing that was unclear to me in the API was whether multiple flags would be treated as AND or OR. I.e., if I said getKnownRepositories(LOCAL|SYSTEM), would it return a repository if it is local but not system.  I clarified this in the javadoc.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128354</commentid>
+    <comment_count>4</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 14:15:15 -0500</bug_when>
+    <thetext>thanks.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

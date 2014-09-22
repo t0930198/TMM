@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214647</bug_id>
+          
+          <creation_ts>2008-01-08 13:04:00 -0500</creation_ts>
+          <short_desc>[dom] NPE in MethodBinding.getParameterAnnotations(..)</short_desc>
+          <delta_ts>2008-02-05 04:54:15 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Markus Keller">markus_keller</reporter>
+          <assigned_to name="Frederic Fusier">frederic_fusier</assigned_to>
+          <cc>maxime_daniel</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127572</commentid>
+    <comment_count>0</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-08 13:04:11 -0500</bug_when>
+    <thetext>HEAD (with fix for bug 213509, e.g. N20080108-0010)
+
+- install and open ASTView
+- have:
+public class Try {
+	void m(Object o) { }
+}
+- select &quot;m&quot;
+- in ASTView, click the &quot;Show AST of active Editor&quot; toolbar button
+
+=&gt; error dialog, NPE below in log
+
+java.lang.NullPointerException
+        at org.eclipse.jdt.core.dom.MethodBinding.getParameterAnnotations(MethodBinding.java:145)
+        at org.eclipse.jdt.astview.views.Binding.getChildren(Binding.java:219)
+        at org.eclipse.jdt.astview.views.ASTViewContentProvider.getChildren(ASTViewContentProvider.java:95)
+        at org.eclipse.jdt.astview.views.ASTViewContentProvider.hasChildren(ASTViewContentProvider.java:226)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.isExpandable(AbstractTreeViewer.java:2045)
+        at org.eclipse.jface.viewers.TreeViewer.isExpandable(TreeViewer.java:575)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.isExpandable(AbstractTreeViewer.java:2071)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.updatePlus(AbstractTreeViewer.java:2713)
+        at org.eclipse.jface.viewers.TreeViewer.updatePlus(TreeViewer.java:835)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.createTreeItem(AbstractTreeViewer.java:825)
+        at org.eclipse.jface.viewers.AbstractTreeViewer$1.run(AbstractTreeViewer.java:799)
+        at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.createChildren(AbstractTreeViewer.java:773)
+        at org.eclipse.jface.viewers.TreeViewer.createChildren(TreeViewer.java:627)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalExpand(AbstractTreeViewer.java:1575)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.internalExpand(AbstractTreeViewer.java:1572)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.setSelectionToWidget(AbstractTreeViewer.java:2417)
+        at org.eclipse.jface.viewers.StructuredViewer.setSelectionToWidget(StructuredViewer.java:1680)
+        at org.eclipse.jface.viewers.AbstractTreeViewer.setSelectionToWidget(AbstractTreeViewer.java:2825)
+        at org.eclipse.jface.viewers.StructuredViewer.setSelection(StructuredViewer.java:1636)
+        at org.eclipse.jface.viewers.TreeViewer.setSelection(TreeViewer.java:1095)
+        at org.eclipse.jdt.astview.views.ASTView.internalSetInput(ASTView.java:551)
+        at org.eclipse.jdt.astview.views.ASTView.setInput(ASTView.java:517)
+        at org.eclipse.jdt.astview.views.ASTView.performSetFocus(ASTView.java:1222)
+        at org.eclipse.jdt.astview.views.ASTView$19.run(ASTView.java:962)
+        at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+        at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:582)
+        at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:499)
+        at org.eclipse.jface.action.ActionContributionItem$6.handleEvent(ActionContributionItem.java:451)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3758)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3369)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2392)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2356)
+        at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2222)
+        at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:474)
+        at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+        at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:469)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+        at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+        at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+        at java.lang.reflect.Method.invoke(Method.java:597)
+        at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+        at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+        at org.eclipse.equinox.launcher.Main.run(Main.java:1239)
+        at org.eclipse.equinox.launcher.Main.main(Main.java:1215)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127578</commentid>
+    <comment_count>1</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-08 13:16:08 -0500</bug_when>
+    <thetext>Missing a null check.
+Frédéric, you might also want to make sure that this is thread safe.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127581</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86415</attachid>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-08 13:20:25 -0500</bug_when>
+    <thetext>Created attachment 86415
+Proposed fix
+
+Need to be reviewed (untested) + addition of regression tests.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127604</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86417</attachid>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-08 13:53:43 -0500</bug_when>
+    <thetext>Created attachment 86417
+New proposed patch
+
+I prefer to store an empty array rather than testing for null on several lines. Then I avoid to get potential problem with synchronization.
+This patch also includes 2 test cases on ASTConverterBugsTest.
+
+I&apos;ll release it as soon as all JDT tests pass...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127765</commentid>
+    <comment_count>4</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-08 17:12:08 -0500</bug_when>
+    <thetext>Released for 3.4M5 in HEAD stream.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128016</commentid>
+    <comment_count>5</comment_count>
+      <attachid>86417</attachid>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-09 07:17:26 -0500</bug_when>
+    <thetext>Comment on attachment 86417
+New proposed patch
+
+Talking with Jerome about my changes leads to prefer the Olivier&apos;s patch which does not store empty arrays when there&apos;s no annotation at all.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128017</commentid>
+    <comment_count>6</comment_count>
+      <attachid>86415</attachid>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-09 07:18:11 -0500</bug_when>
+    <thetext>Comment on attachment 86415
+Proposed fix
+
+This was finally this patch I released + new added tests...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149572</commentid>
+    <comment_count>7</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-02-05 04:54:15 -0500</bug_when>
+    <thetext>Verified for 34M5 using I20080204-0010 build.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86415</attachid>
+            <date>2008-01-08 13:20:00 -0500</date>
+            <delta_ts>2008-01-09 07:18:11 -0500</delta_ts>
+            <desc>Proposed fix</desc>
+            <filename>patch_214647.txt</filename>
+            <type>text/plain</type>
+            <size>1896</size>
+            <attacher name="Olivier Thomann">Olivier_Thomann</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUN
+CkluZGV4OiBkb20vb3JnL2VjbGlwc2UvamR0L2NvcmUvZG9tL01ldGhvZEJpbmRpbmcuamF2YQ0K
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2UuamR0LmNv
+cmUvZG9tL29yZy9lY2xpcHNlL2pkdC9jb3JlL2RvbS9NZXRob2RCaW5kaW5nLmphdmEsdg0KcmV0
+cmlldmluZyByZXZpc2lvbiAxLjg4DQpkaWZmIC11IC1yMS44OCBNZXRob2RCaW5kaW5nLmphdmEN
+Ci0tLSBkb20vb3JnL2VjbGlwc2UvamR0L2NvcmUvZG9tL01ldGhvZEJpbmRpbmcuamF2YQkyMCBE
+ZWMgMjAwNyAxNToxODowNSAtMDAwMAkxLjg4DQorKysgZG9tL29yZy9lY2xpcHNlL2pkdC9jb3Jl
+L2RvbS9NZXRob2RCaW5kaW5nLmphdmEJOCBKYW4gMjAwOCAxODoxOTowNSAtMDAwMA0KQEAgLTE0
+MiwyMSArMTQyLDI1IEBADQogCQl9DQogCQlvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwuY29tcGls
+ZXIubG9va3VwLkFubm90YXRpb25CaW5kaW5nW11bXSBiaW5kaW5nQW5ub3RhdGlvbnMgPSB0aGlz
+LmJpbmRpbmcuZ2V0UGFyYW1ldGVyQW5ub3RhdGlvbnMoKTsNCiAJCS8vIGJpbmRpbmdBbm5vYXRh
+dGlvbnMgaXMgbmV2ZXIgbnVsbCBhcyB0aGUgbWV0aG9kIGhhcyBvbmUgb3Igc2V2ZXJhbCBwYXJh
+bWV0ZXJzDQorCQlpZiAoYmluZGluZ0Fubm90YXRpb25zID09IG51bGwpIHJldHVybiBBbm5vdGF0
+aW9uQmluZGluZy5Ob0Fubm90YXRpb25zOw0KIAkJaW50IGxlbmd0aCA9IGJpbmRpbmdBbm5vdGF0
+aW9ucy5sZW5ndGg7DQotCQl0aGlzLnBhcmFtZXRlckFubm90YXRpb25zID0gbmV3IEFubm90YXRp
+b25CaW5kaW5nW2xlbmd0aF1bXTsNCisJCQ0KKwkJSUFubm90YXRpb25CaW5kaW5nW11bXSBkb21B
+bm5vdGF0aW9ucyA9IG5ldyBJQW5ub3RhdGlvbkJpbmRpbmdbbGVuZ3RoXVtdOw0KIAkJZm9yIChp
+bnQgaSA9IDA7IGkgPCBsZW5ndGg7IGkrKykgew0KIAkJCW9yZy5lY2xpcHNlLmpkdC5pbnRlcm5h
+bC5jb21waWxlci5sb29rdXAuQW5ub3RhdGlvbkJpbmRpbmdbXSBwYXJhbUJpbmRpbmdBbm5vdGF0
+aW9ucyA9IGJpbmRpbmdBbm5vdGF0aW9uc1tpXTsNCiAJCQlpbnQgcExlbmd0aCA9IHBhcmFtQmlu
+ZGluZ0Fubm90YXRpb25zLmxlbmd0aDsNCi0JCQl0aGlzLnBhcmFtZXRlckFubm90YXRpb25zW2ld
+ID0gbmV3IEFubm90YXRpb25CaW5kaW5nW3BMZW5ndGhdOw0KKwkJCWRvbUFubm90YXRpb25zW2ld
+ID0gbmV3IEFubm90YXRpb25CaW5kaW5nW3BMZW5ndGhdOw0KIAkJCWZvciAoaW50IGo9MDsgajxw
+TGVuZ3RoOyBqKyspIHsNCiAJCQkJSUFubm90YXRpb25CaW5kaW5nIGRvbUFubm90YXRpb24gPSB0
+aGlzLnJlc29sdmVyLmdldEFubm90YXRpb25JbnN0YW5jZShwYXJhbUJpbmRpbmdBbm5vdGF0aW9u
+c1tqXSk7DQogCQkJCWlmIChkb21Bbm5vdGF0aW9uID09IG51bGwpIHsNCi0JCQkJCXRoaXMucGFy
+YW1ldGVyQW5ub3RhdGlvbnNbaV0gPSBBbm5vdGF0aW9uQmluZGluZy5Ob0Fubm90YXRpb25zOw0K
+KwkJCQkJZG9tQW5ub3RhdGlvbnNbaV0gPSBBbm5vdGF0aW9uQmluZGluZy5Ob0Fubm90YXRpb25z
+Ow0KIAkJCQkJYnJlYWs7DQogCQkJCX0NCi0JCQkJdGhpcy5wYXJhbWV0ZXJBbm5vdGF0aW9uc1tp
+XVtqXSA9IGRvbUFubm90YXRpb247DQorCQkJCWRvbUFubm90YXRpb25zW2ldW2pdID0gZG9tQW5u
+b3RhdGlvbjsNCiAJCQl9DQogCQl9DQorCQl0aGlzLnBhcmFtZXRlckFubm90YXRpb25zID0gZG9t
+QW5ub3RhdGlvbnM7DQorCQkNCiAJCXJldHVybiB0aGlzLnBhcmFtZXRlckFubm90YXRpb25zW2lu
+ZGV4XTsNCiAJfQ0KIA0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86417</attachid>
+            <date>2008-01-08 13:53:00 -0500</date>
+            <delta_ts>2008-01-09 07:17:26 -0500</delta_ts>
+            <desc>New proposed patch</desc>
+            <filename>v00.txt</filename>
+            <type>text/plain</type>
+            <size>5730</size>
+            <attacher name="Frederic Fusier">frederic_fusier</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUN
+CkluZGV4OiBjb21waWxlci9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvbG9va3Vw
+L01ldGhvZEJpbmRpbmcuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlw
+c2Uvb3JnLmVjbGlwc2UuamR0LmNvcmUvY29tcGlsZXIvb3JnL2VjbGlwc2UvamR0L2ludGVybmFs
+L2NvbXBpbGVyL2xvb2t1cC9NZXRob2RCaW5kaW5nLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lv
+biAxLjk2DQpkaWZmIC11IC1yMS45NiBNZXRob2RCaW5kaW5nLmphdmENCi0tLSBjb21waWxlci9v
+cmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvbG9va3VwL01ldGhvZEJpbmRpbmcuamF2
+YQkyMCBEZWMgMjAwNyAxNToxODowNCAtMDAwMAkxLjk2DQorKysgY29tcGlsZXIvb3JnL2VjbGlw
+c2UvamR0L2ludGVybmFsL2NvbXBpbGVyL2xvb2t1cC9NZXRob2RCaW5kaW5nLmphdmEJOCBKYW4g
+MjAwOCAxODo0OToyMSAtMDAwMA0KQEAgLTQ0NywyMSArNDQ3LDI2IEBADQogCU1ldGhvZEJpbmRp
+bmcgb3JpZ2luYWxNZXRob2QgPSB0aGlzLm9yaWdpbmFsKCk7DQogCUFubm90YXRpb25Ib2xkZXIg
+aG9sZGVyID0gb3JpZ2luYWxNZXRob2QuZGVjbGFyaW5nQ2xhc3MucmV0cmlldmVBbm5vdGF0aW9u
+SG9sZGVyKG9yaWdpbmFsTWV0aG9kLCB0cnVlKTsNCiAJQW5ub3RhdGlvbkJpbmRpbmdbXVtdIGFs
+bFBhcmFtZXRlckFubm90YXRpb25zID0gaG9sZGVyID09IG51bGwgPyBudWxsIDogaG9sZGVyLmdl
+dFBhcmFtZXRlckFubm90YXRpb25zKCk7DQotCWlmIChhbGxQYXJhbWV0ZXJBbm5vdGF0aW9ucyA9
+PSBudWxsICYmICh0aGlzLnRhZ0JpdHMgJiBUYWdCaXRzLkhhc1BhcmFtZXRlckFubm90YXRpb25z
+KSAhPSAwKSB7DQorCWlmIChhbGxQYXJhbWV0ZXJBbm5vdGF0aW9ucyA9PSBudWxsKSB7DQogCQlh
+bGxQYXJhbWV0ZXJBbm5vdGF0aW9ucyA9IG5ldyBBbm5vdGF0aW9uQmluZGluZ1tsZW5ndGhdW107
+DQotCQkvLyBmb3J3YXJkIHJlZmVyZW5jZSB0byBtZXRob2QsIHdoZXJlIHBhcmFtIGFubm90YXRp
+b25zIGhhdmUgbm90IHlldCBiZWVuIGFzc29jaWF0ZWQgdG8gbWV0aG9kDQotCQlpZiAodGhpcy5k
+ZWNsYXJpbmdDbGFzcyBpbnN0YW5jZW9mIFNvdXJjZVR5cGVCaW5kaW5nKSB7DQotCQkJU291cmNl
+VHlwZUJpbmRpbmcgc291cmNlVHlwZSA9IChTb3VyY2VUeXBlQmluZGluZykgdGhpcy5kZWNsYXJp
+bmdDbGFzczsNCi0JCQlpZiAoc291cmNlVHlwZS5zY29wZSAhPSBudWxsKSB7DQotCQkJCUFic3Ry
+YWN0TWV0aG9kRGVjbGFyYXRpb24gbWV0aG9kRGVjbCA9IHNvdXJjZVR5cGUuc2NvcGUucmVmZXJl
+bmNlVHlwZSgpLmRlY2xhcmF0aW9uT2YodGhpcyk7DQotCQkJCWZvciAoaW50IGkgPSAwOyBpIDwg
+bGVuZ3RoOyBpKyspIHsNCi0JCQkJCUFyZ3VtZW50IGFyZ3VtZW50ID0gbWV0aG9kRGVjbC5hcmd1
+bWVudHNbaV07DQotCQkJCQlpZiAoYXJndW1lbnQuYW5ub3RhdGlvbnMgIT0gbnVsbCkgew0KLQkJ
+CQkJCUFTVE5vZGUucmVzb2x2ZUFubm90YXRpb25zKG1ldGhvZERlY2wuc2NvcGUsIGFyZ3VtZW50
+LmFubm90YXRpb25zLCBhcmd1bWVudC5iaW5kaW5nKTsNCi0JCQkJCQlhbGxQYXJhbWV0ZXJBbm5v
+dGF0aW9uc1tpXSA9IGFyZ3VtZW50LmJpbmRpbmcuZ2V0QW5ub3RhdGlvbnMoKTsNCisJCWlmICgo
+dGhpcy50YWdCaXRzICYgVGFnQml0cy5IYXNQYXJhbWV0ZXJBbm5vdGF0aW9ucykgIT0gMCkgew0K
+KwkJCS8vIGZvcndhcmQgcmVmZXJlbmNlIHRvIG1ldGhvZCwgd2hlcmUgcGFyYW0gYW5ub3RhdGlv
+bnMgaGF2ZSBub3QgeWV0IGJlZW4gYXNzb2NpYXRlZCB0byBtZXRob2QNCisJCQlpZiAodGhpcy5k
+ZWNsYXJpbmdDbGFzcyBpbnN0YW5jZW9mIFNvdXJjZVR5cGVCaW5kaW5nKSB7DQorCQkJCVNvdXJj
+ZVR5cGVCaW5kaW5nIHNvdXJjZVR5cGUgPSAoU291cmNlVHlwZUJpbmRpbmcpIHRoaXMuZGVjbGFy
+aW5nQ2xhc3M7DQorCQkJCWlmIChzb3VyY2VUeXBlLnNjb3BlICE9IG51bGwpIHsNCisJCQkJCUFi
+c3RyYWN0TWV0aG9kRGVjbGFyYXRpb24gbWV0aG9kRGVjbCA9IHNvdXJjZVR5cGUuc2NvcGUucmVm
+ZXJlbmNlVHlwZSgpLmRlY2xhcmF0aW9uT2YodGhpcyk7DQorCQkJCQlmb3IgKGludCBpID0gMDsg
+aSA8IGxlbmd0aDsgaSsrKSB7DQorCQkJCQkJQXJndW1lbnQgYXJndW1lbnQgPSBtZXRob2REZWNs
+LmFyZ3VtZW50c1tpXTsNCisJCQkJCQlpZiAoYXJndW1lbnQuYW5ub3RhdGlvbnMgIT0gbnVsbCkg
+ew0KKwkJCQkJCQlBU1ROb2RlLnJlc29sdmVBbm5vdGF0aW9ucyhtZXRob2REZWNsLnNjb3BlLCBh
+cmd1bWVudC5hbm5vdGF0aW9ucywgYXJndW1lbnQuYmluZGluZyk7DQorCQkJCQkJCWFsbFBhcmFt
+ZXRlckFubm90YXRpb25zW2ldID0gYXJndW1lbnQuYmluZGluZy5nZXRBbm5vdGF0aW9ucygpOw0K
+KwkJCQkJCX0NCisJCQkJCX0NCisJCQkJfSBlbHNlIHsNCisJCQkJCWZvciAoaW50IGkgPSAwOyBp
+IDwgbGVuZ3RoOyBpKyspIHsNCisJCQkJCQlhbGxQYXJhbWV0ZXJBbm5vdGF0aW9uc1tpXSA9IEJp
+bmRpbmcuTk9fQU5OT1RBVElPTlM7DQogCQkJCQl9DQogCQkJCX0NCi0JCQkJdGhpcy5zZXRQYXJh
+bWV0ZXJBbm5vdGF0aW9ucyhhbGxQYXJhbWV0ZXJBbm5vdGF0aW9ucyk7DQogCQkJfSBlbHNlIHsN
+CiAJCQkJZm9yIChpbnQgaSA9IDA7IGkgPCBsZW5ndGg7IGkrKykgew0KIAkJCQkJYWxsUGFyYW1l
+dGVyQW5ub3RhdGlvbnNbaV0gPSBCaW5kaW5nLk5PX0FOTk9UQVRJT05TOw0KQEAgLTQ3Miw2ICs0
+NzcsNyBAQA0KIAkJCQlhbGxQYXJhbWV0ZXJBbm5vdGF0aW9uc1tpXSA9IEJpbmRpbmcuTk9fQU5O
+T1RBVElPTlM7DQogCQkJfQ0KIAkJfQ0KKwkJdGhpcy5zZXRQYXJhbWV0ZXJBbm5vdGF0aW9ucyhh
+bGxQYXJhbWV0ZXJBbm5vdGF0aW9ucyk7DQogCX0NCiAJcmV0dXJuIGFsbFBhcmFtZXRlckFubm90
+YXRpb25zOw0KIH0NCiNQIG9yZy5lY2xpcHNlLmpkdC5jb3JlLnRlc3RzLm1vZGVsDQpJbmRleDog
+c3JjL29yZy9lY2xpcHNlL2pkdC9jb3JlL3Rlc3RzL2RvbS9BU1RDb252ZXJ0ZXJCdWdzVGVzdC5q
+YXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5q
+ZHQuY29yZS50ZXN0cy5tb2RlbC9zcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvZG9tL0FT
+VENvbnZlcnRlckJ1Z3NUZXN0LmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjUNCmRpZmYg
+LXUgLXIxLjUgQVNUQ29udmVydGVyQnVnc1Rlc3QuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9q
+ZHQvY29yZS90ZXN0cy9kb20vQVNUQ29udmVydGVyQnVnc1Rlc3QuamF2YQkzMSBEZWMgMjAwNyAx
+MzozMzowMyAtMDAwMAkxLjUNCisrKyBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvZG9t
+L0FTVENvbnZlcnRlckJ1Z3NUZXN0LmphdmEJOCBKYW4gMjAwOCAxODo0OToyNCAtMDAwMA0KQEAg
+LTQwLDcgKzQwLDggQEANCiB9DQogDQogcHJvdGVjdGVkIHZvaWQgY2hlY2tQYXJhbWV0ZXJBbm5v
+dGF0aW9ucyhTdHJpbmcgbWVzc2FnZSwgU3RyaW5nIGV4cGVjdGVkLCBJTWV0aG9kQmluZGluZyBt
+ZXRob2RCaW5kaW5nKSB7DQotCWludCBzaXplID0gbWV0aG9kQmluZGluZy5nZXRQYXJhbWV0ZXJU
+eXBlcygpLmxlbmd0aDsNCisJSVR5cGVCaW5kaW5nW10gcGFyYW1ldGVyVHlwZXMgPSBtZXRob2RC
+aW5kaW5nLmdldFBhcmFtZXRlclR5cGVzKCk7DQorCWludCBzaXplID0gcGFyYW1ldGVyVHlwZXMg
+PT0gbnVsbCA/IDAgOiBwYXJhbWV0ZXJUeXBlcy5sZW5ndGg7DQogCVN0cmluZ0J1ZmZlciBidWZm
+ZXIgPSBuZXcgU3RyaW5nQnVmZmVyKCk7DQogCWZvciAoaW50IGk9MDsgaTxzaXplOyBpKyspIHsN
+CiAJCWJ1ZmZlci5hcHBlbmQoIi0tLS0tIHBhcmFtICIpOw0KQEAgLTQ5Nyw0ICs0OTgsNDIgQEAN
+CiAJCW1ldGhvZERlY2xhcmF0aW9uLnJlc29sdmVCaW5kaW5nKCkNCiAJKTsNCiB9DQorDQorLyoq
+DQorICogQGJ1ZyAyMTQ2NDc6IFtkb21dIE5QRSBpbiBNZXRob2RCaW5kaW5nLmdldFBhcmFtZXRl
+ckFubm90YXRpb25zKC4uKQ0KKyAqIEB0ZXN0IEVuc3VyZXMgdGhhdCBubyBOUEUgb2NjdXJzIHdo
+ZW4gcGFyYW1ldGVycyBoYXZlIG5vIGFubm90YXRpb24NCisgKiBAc2VlICJodHRwczovL2J1Z3Mu
+ZWNsaXBzZS5vcmcvYnVncy9zaG93X2J1Zy5jZ2k/aWQ9MjE0NjQ3Ig0KKyAqLw0KK3B1YmxpYyB2
+b2lkIHRlc3RCdWcyMTQ2NDcoKSB0aHJvd3MgQ29yZUV4Y2VwdGlvbiwgSU9FeGNlcHRpb24gew0K
+Kwl3b3JraW5nQ29waWVzID0gbmV3IElDb21waWxhdGlvblVuaXRbMV07DQorCXdvcmtpbmdDb3Bp
+ZXNbMF0gPSBnZXRXb3JraW5nQ29weSgiL0NvbnZlcnRlcjE1L3NyYy9UZXN0LmphdmEiLA0KKwkJ
+InB1YmxpYyBjbGFzcyBUZXN0IHtcbiIgKyANCisJCSIJdm9pZCBtKFN0cmluZyBzdHIpIHt9XG4i
+ICsgDQorCQkifVxuIg0KKwkpOw0KKw0KKwlDb21waWxhdGlvblVuaXQgdW5pdCA9IChDb21waWxh
+dGlvblVuaXQpIHJ1bkNvbnZlcnNpb24od29ya2luZ0NvcGllc1swXSwgdHJ1ZS8qYmluZGluZ3Mq
+LywgZmFsc2UvKm5vIHN0YXRlbWVudCByZWNvdmVyeSovLCB0cnVlLypiaW5kaW5ncyByZWNvdmVy
+eSovKTsNCisJTWV0aG9kRGVjbGFyYXRpb24gbWV0aG9kRGVjbGFyYXRpb24gPSAoTWV0aG9kRGVj
+bGFyYXRpb24pIGdldEFTVE5vZGUodW5pdCwgMCwgMCk7DQorCWNoZWNrUGFyYW1ldGVyQW5ub3Rh
+dGlvbnMobWV0aG9kRGVjbGFyYXRpb24rIiBoYXMgaW52YWxpZCBwYXJhbWV0ZXIgYW5ub3RhdGlv
+bnMhIiwNCisJCSItLS0tLSBwYXJhbSAxLS0tLS1cbiIsDQorCQltZXRob2REZWNsYXJhdGlvbi5y
+ZXNvbHZlQmluZGluZygpDQorCSk7DQorfQ0KK3B1YmxpYyB2b2lkIHRlc3RCdWcyMTQ2NDdiKCkg
+dGhyb3dzIENvcmVFeGNlcHRpb24sIElPRXhjZXB0aW9uIHsNCisJd29ya2luZ0NvcGllcyA9IG5l
+dyBJQ29tcGlsYXRpb25Vbml0WzFdOw0KKwl3b3JraW5nQ29waWVzWzBdID0gZ2V0V29ya2luZ0Nv
+cHkoIi9Db252ZXJ0ZXIxNS9zcmMvVGVzdC5qYXZhIiwNCisJCSJwdWJsaWMgY2xhc3MgVGVzdCB7
+XG4iICsgDQorCQkiCXZvaWQgbShTdHJpbmcgc3RyLCBPYmplY3QgbywgaW50IHgpIHt9XG4iICsg
+DQorCQkifVxuIg0KKwkpOw0KKw0KKwlDb21waWxhdGlvblVuaXQgdW5pdCA9IChDb21waWxhdGlv
+blVuaXQpIHJ1bkNvbnZlcnNpb24od29ya2luZ0NvcGllc1swXSwgdHJ1ZS8qYmluZGluZ3MqLywg
+ZmFsc2UvKm5vIHN0YXRlbWVudCByZWNvdmVyeSovLCB0cnVlLypiaW5kaW5ncyByZWNvdmVyeSov
+KTsNCisJTWV0aG9kRGVjbGFyYXRpb24gbWV0aG9kRGVjbGFyYXRpb24gPSAoTWV0aG9kRGVjbGFy
+YXRpb24pIGdldEFTVE5vZGUodW5pdCwgMCwgMCk7DQorCWNoZWNrUGFyYW1ldGVyQW5ub3RhdGlv
+bnMobWV0aG9kRGVjbGFyYXRpb24rIiBoYXMgaW52YWxpZCBwYXJhbWV0ZXIgYW5ub3RhdGlvbnMh
+IiwNCisJCSItLS0tLSBwYXJhbSAxLS0tLS1cbiIgKw0KKwkJIi0tLS0tIHBhcmFtIDItLS0tLVxu
+IiArIA0KKwkJIi0tLS0tIHBhcmFtIDMtLS0tLVxuIiwNCisJCW1ldGhvZERlY2xhcmF0aW9uLnJl
+c29sdmVCaW5kaW5nKCkNCisJKTsNCit9DQogfQ0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

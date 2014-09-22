@@ -1,0 +1,458 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214267</bug_id>
+          
+          <creation_ts>2008-01-03 15:27:00 -0500</creation_ts>
+          <short_desc>Java2 security exceptions occur in EMF when it gets context class loader</short_desc>
+          <delta_ts>2008-01-30 00:04:22 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>Core</component>
+          <version>2.4.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kwabena Mireku">kmireku</reporter>
+          <assigned_to name="Marcelo Paternostro">marcelop</assigned_to>
+          <cc>Ed.Merks</cc>
+    
+    <cc>kuehrmc</cc>
+    
+    <cc>nickboldt</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125245</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86121</attachid>
+    <who name="Kwabena Mireku">kmireku</who>
+    <bug_when>2008-01-03 15:27:11 -0500</bug_when>
+    <thetext>Created attachment 86121
+Stack traces showing java2 security exceptions
+
+Overview
+********
+Our component is called by applications to to manage user registries.  We routinely need to make EMF calls that require access to our registered ePackage.  This in turn requires EMF to access the context class loader, to find the correct ePackage for the class loader.  When Java2 security is enabled, a Java2 security exception is thrown when calls are made by our component to EMF.  The exception occurs when EMF tries to access the context class loader.
+
+Please see the sample stack traces in the attachments.
+
+We don&apos;t think it&apos;s a good idea to deploy a policy with higher permissions or use doPrivileged blocks in our component when calling EMF because the doPrivileged block should be as small possible.  So, the alternative is to have doPrivileged blocks in the EMF code itself. 
+
+We understand there may be some concerns that overriding the policy in EMF code may expose security holes.  So, a suggested solution is to make the class-loader-to-registry-map private, so that doPrivilege blocks can be securely placed into the EMF code to avoid this exception.  This would fix the Java2 security exception that occurs whenever the EMF registry implementation code is called.
+
+Steps to reproduce
+******************
+1. Enable Java2 security
+2. Execute the code: 
+    EPackage ePackage = EPackage.Registry.INSTANCE.getEPackage(nsURI);
+
+Actual Results: Java2 security exception is thrown
+
+Expected Results: Java2 security exception should not be thrown
+
+Build Date &amp; Platform: 
+  Windows XP (not platform specific)
+  Bundle-Version: 2.2.1.v200609210005 (problem exists in later versions also)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125250</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-03 15:31:50 -0500</bug_when>
+    <thetext>I&apos;ll mark it as an enhancement request for 2.4.  There can be no API changes in maintenance streams.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125322</commentid>
+    <comment_count>2</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-03 16:51:22 -0500</bug_when>
+    <thetext>Please provide a test case that demonstrates the problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125861</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86209</attachid>
+    <who name="Kwabena Mireku">kmireku</who>
+    <bug_when>2008-01-04 11:50:34 -0500</bug_when>
+    <thetext>Created attachment 86209
+Sample Java program to recreate the problem
+
+Run this program with the following arguments:
+  -Djava.security.policy={full path of emf.policy}  (ex. &quot;f:\emf.policy&quot;)
+  -Djava.security.manager=default</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125862</commentid>
+    <comment_count>4</comment_count>
+      <attachid>86210</attachid>
+    <who name="Kwabena Mireku">kmireku</who>
+    <bug_when>2008-01-04 11:51:27 -0500</bug_when>
+    <thetext>Created attachment 86210
+Java2 security policy file for test Java program</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128275</commentid>
+    <comment_count>5</comment_count>
+      <attachid>86485</attachid>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-09 12:40:29 -0500</bug_when>
+    <thetext>Created attachment 86485
+Support a secure delegator
+
+To avoid any API breakage I basically left the old Delegator alone other than a little refactoring so that a secure version can be derived from it easily.  The SecureDelegator overrides methods to delegate to secure private versions that invoke things used doPriveledged.  Then I changed the code to create a secure delegator only if there is a security manager that doesn&apos;t permit classLoader runtime permission.  This ensures that clients without a security manager will not see any changes.
+
+I&apos;ll attach the sample project I used to test it too.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128283</commentid>
+    <comment_count>6</comment_count>
+      <attachid>86487</attachid>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-09 12:43:30 -0500</bug_when>
+    <thetext>Created attachment 86487
+An eclipse project for testing.
+
+I really know very little about this security stuff but I assume that the policy file will need to given the EMF core runtime classLoader permission.  This project contains a main as well as a launcher to running it with security enabled.  Note that the policy file needs to be modified to point at the correct absolute location of the EMF jar or bin folder that will be used...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128285</commentid>
+    <comment_count>7</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-09 12:44:36 -0500</bug_when>
+    <thetext>Since I&apos;m not a security expert, I&apos;m particularly uncomfortable writing code that claims to be secure.  What&apos;s the best way to ensure that this code is tested by experts and minimally to confirm that this design works correct?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139225</commentid>
+    <comment_count>8</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-27 05:28:06 -0500</bug_when>
+    <thetext>The changes are committed to CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1143918</commentid>
+    <comment_count>9</comment_count>
+    <who name="Nick Boldt">nickboldt</who>
+    <bug_when>2008-01-28 18:22:19 -0500</bug_when>
+    <thetext>The changes are committed to CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145022</commentid>
+    <comment_count>10</comment_count>
+    <who name="Nick Boldt">nickboldt</who>
+    <bug_when>2008-01-30 00:04:22 -0500</bug_when>
+    <thetext>Fix available in HEAD: 2.4.0.I200801292000.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86121</attachid>
+            <date>2008-01-03 15:27:00 -0500</date>
+            <delta_ts>2008-01-03 15:27:11 -0500</delta_ts>
+            <desc>Stack traces showing java2 security exceptions</desc>
+            <filename>java2-stack-traces.txt</filename>
+            <type>text/plain</type>
+            <size>2035</size>
+            <attacher name="Kwabena Mireku">kmireku</attacher>
+            
+              <data encoding="base64">U3RhY2sgVHJhY2UgMToNCioqKioqKioqKioqKioqDQpqYXZhLnNlY3VyaXR5LkFjY2Vzc0NvbnRy
+b2xFeGNlcHRpb246IEFjY2VzcyBkZW5pZWQgKGphdmEubGFuZy5SdW50aW1lUGVybWlzc2lvbiBn
+ZXRDbGFzc0xvYWRlcikNCglhdCBqYXZhLnNlY3VyaXR5LkFjY2Vzc0NvbnRyb2xsZXIuY2hlY2tQ
+ZXJtaXNzaW9uKEFjY2Vzc0NvbnRyb2xsZXIuamF2YToxMDgpDQoJYXQgamF2YS5sYW5nLlNlY3Vy
+aXR5TWFuYWdlci5jaGVja1Blcm1pc3Npb24oU2VjdXJpdHlNYW5hZ2VyLmphdmE6NTUwKQ0KCWF0
+IGNvbS5pYm0ud3Muc2VjdXJpdHkuY29yZS5TZWN1cml0eU1hbmFnZXIuY2hlY2tQZXJtaXNzaW9u
+KFNlY3VyaXR5TWFuYWdlci5qYXZhOjIxMCkNCglhdCBqYXZhLmxhbmcuVGhyZWFkLmdldENvbnRl
+eHRDbGFzc0xvYWRlcihUaHJlYWQuamF2YTo0NTYpDQoJYXQgb3JnLmVjbGlwc2UuZW1mLmVjb3Jl
+LmltcGwuRVBhY2thZ2VSZWdpc3RyeUltcGwkRGVsZWdhdG9yLmRlbGVnYXRlUmVnaXN0cnkoRVBh
+Y2thZ2VSZWdpc3RyeUltcGwuamF2YToyNDApDQoJYXQgb3JnLmVjbGlwc2UuZW1mLmVjb3JlLmlt
+cGwuRVBhY2thZ2VSZWdpc3RyeUltcGwkRGVsZWdhdG9yLmdldEVQYWNrYWdlKEVQYWNrYWdlUmVn
+aXN0cnlJbXBsLmphdmE6MjQ1KQ0KCWF0IGNvbS5pYm0ud3Mud2ltLlNjaGVtYU1hbmFnZXIuY3Jl
+YXRlUm9vdERhdGFPYmplY3QoU2NoZW1hTWFuYWdlci5qYXZhOjIyMzcpDQoJLi4uDQoNCg0KU3Rh
+Y2sgVHJhY2UgMjoNCioqKioqKioqKioqKioqDQpqYXZhLnNlY3VyaXR5LkFjY2Vzc0NvbnRyb2xF
+eGNlcHRpb246IEFjY2VzcyBkZW5pZWQgKGphdmEubGFuZy5SdW50aW1lUGVybWlzc2lvbiBnZXRD
+bGFzc0xvYWRlcikNCglhdCBqYXZhLnNlY3VyaXR5LkFjY2Vzc0NvbnRyb2xsZXIuY2hlY2tQZXJt
+aXNzaW9uKEFjY2Vzc0NvbnRyb2xsZXIuamF2YToxMDQpDQoJYXQgamF2YS5sYW5nLlNlY3VyaXR5
+TWFuYWdlci5jaGVja1Blcm1pc3Npb24oU2VjdXJpdHlNYW5hZ2VyLmphdmE6NTQ3KQ0KCWF0IGNv
+bS5pYm0ud3Muc2VjdXJpdHkuY29yZS5TZWN1cml0eU1hbmFnZXIuY2hlY2tQZXJtaXNzaW9uKFNl
+Y3VyaXR5TWFuYWdlci5qYXZhOjE4OSkNCglhdCBqYXZhLmxhbmcuVGhyZWFkLmdldENvbnRleHRD
+bGFzc0xvYWRlcihUaHJlYWQuamF2YTo0ODgpDQoJYXQgb3JnLmVjbGlwc2UuZW1mLmVjb3JlLmlt
+cGwuRVBhY2thZ2VSZWdpc3RyeUltcGwkRGVsZWdhdG9yLmRlbGVnYXRlUmVnaXN0cnkoRVBhY2th
+Z2VSZWdpc3RyeUltcGwuamF2YToyNDApDQoJYXQgb3JnLmVjbGlwc2UuZW1mLmVjb3JlLmltcGwu
+RVBhY2thZ2VSZWdpc3RyeUltcGwkRGVsZWdhdG9yLmdldEVQYWNrYWdlKEVQYWNrYWdlUmVnaXN0
+cnlJbXBsLmphdmE6MjQ1KQ0KCWF0IG9yZy5lY2xpcHNlLmVtZi5lY29yZS5pbXBsLkVQYWNrYWdl
+UmVnaXN0cnlJbXBsLmRlbGVnYXRlZEdldEVQYWNrYWdlKEVQYWNrYWdlUmVnaXN0cnlJbXBsLmph
+dmE6MTY4KQ0KCWF0IG9yZy5lY2xpcHNlLmVtZi5lY29yZS5pbXBsLkVQYWNrYWdlUmVnaXN0cnlJ
+bXBsLmdldEVQYWNrYWdlKEVQYWNrYWdlUmVnaXN0cnlJbXBsLmphdmE6MTIyKQ0KCWF0IG9yZy5l
+Y2xpcHNlLmVtZi5lY29yZS51dGlsLkJhc2ljRXh0ZW5kZWRNZXRhRGF0YS5nZXRQYWNrYWdlKEJh
+c2ljRXh0ZW5kZWRNZXRhRGF0YS5qYXZhOjExOSkNCglhdCBvcmcuZWNsaXBzZS5lbWYuZWNvcmUu
+c2RvLmltcGwuRURhdGFHcmFwaEltcGwuZ2V0RUNsYXNzaWZpZXIoRURhdGFHcmFwaEltcGwuamF2
+YTo0MzcpDQoJYXQgb3JnLmVjbGlwc2UuZW1mLmVjb3JlLnNkby5pbXBsLkVEYXRhR3JhcGhJbXBs
+LmdldEVUeXBlKEVEYXRhR3JhcGhJbXBsLmphdmE6NDY1KQ0KCWF0IG9yZy5lY2xpcHNlLmVtZi5l
+Y29yZS5zZG8uaW1wbC5FRGF0YUdyYXBoSW1wbC5jcmVhdGVSb290T2JqZWN0KEVEYXRhR3JhcGhJ
+bXBsLmphdmE6NTIzKQ0KCWF0IGNvbS5pYm0ud2Vic3BoZXJlLndpbS51dGlsLlNET0hlbHBlci5j
+cmVhdGVEYXRhR3JhcGgoU0RPSGVscGVyLmphdmE6MTM5KQ0KCS4uLg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86209</attachid>
+            <date>2008-01-04 11:50:00 -0500</date>
+            <delta_ts>2008-01-04 11:50:34 -0500</delta_ts>
+            <desc>Sample Java program to recreate the problem</desc>
+            <filename>emf_java2_security.java</filename>
+            <type>text/plain</type>
+            <size>536</size>
+            <attacher name="Kwabena Mireku">kmireku</attacher>
+            
+              <data encoding="base64">cGFja2FnZSBlbWZ0ZXN0Ow0KDQppbXBvcnQgb3JnLmVjbGlwc2UuZW1mLmVjb3JlLkVQYWNrYWdl
+Ow0KDQovKioNCiAqIFRoaXMgcHJvZ3JhbSBjYXVzZXMgYSBKYXZhMiBzZWN1cml0eSBleGNlcHRp
+b24gaW4gRU1GIHdoZW4gIA0KICogdGhlIEVNRiByZWdpc3RyeSBpbXBsZW1lbnRhdGlvbiBnZXRz
+IHRoZSBjb250ZXh0IGNsYXNzIGxvYWRlci4NCiAqIA0KICogUnVuIHRoaXMgcHJvZ3JhbSB3aXRo
+IHRoZSBmb2xsb3dpbmcgYXJndW1lbnRzOg0KICogICAtRGphdmEuc2VjdXJpdHkucG9saWN5PXtm
+dWxsIHBhdGggb2YgZW1mLnBvbGljeX0gIChleC4gImY6XGVtZi5wb2xpY3kiKQ0KICogICAtRGph
+dmEuc2VjdXJpdHkubWFuYWdlcj1kZWZhdWx0DQogKi8NCnB1YmxpYyBjbGFzcyBlbWZfamF2YTJf
+c2VjdXJpdHkgew0KICAgIHB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHRo
+cm93cyBFeGNlcHRpb24gew0KICAgIAlFUGFja2FnZS5SZWdpc3RyeS5JTlNUQU5DRS5nZXRFUGFj
+a2FnZSgidGVzdCIpOw0KICAgIH0NCn0=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86210</attachid>
+            <date>2008-01-04 11:51:00 -0500</date>
+            <delta_ts>2008-01-04 11:51:27 -0500</delta_ts>
+            <desc>Java2 security policy file for test Java program</desc>
+            <filename>emf.policy</filename>
+            <type>text/plain</type>
+            <size>117</size>
+            <attacher name="Kwabena Mireku">kmireku</attacher>
+            
+              <data encoding="base64">Z3JhbnQgeyANCgkvLyBhbGwgcHJvcGVyaWVzIHRoYXQgY2FuIGJlIHJlYWQgYnkgYW55b25lDQoJ
+cGVybWlzc2lvbiBqYXZhLnV0aWwuUHJvcGVydHlQZXJtaXNzaW9uICIqIiwgInJlYWQiOw0KfTsN
+Cg0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86485</attachid>
+            <date>2008-01-09 12:40:00 -0500</date>
+            <delta_ts>2008-01-09 12:40:29 -0500</delta_ts>
+            <desc>Support a secure delegator</desc>
+            <filename>214267.patch</filename>
+            <type>text/plain</type>
+            <size>4947</size>
+            <attacher name="Ed Merks">Ed.Merks</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZW1mLmVjb3Jl
+DQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2VtZi9lY29yZS9pbXBsL0VQYWNrYWdlUmVnaXN0cnlJ
+bXBsLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9tb2RlbGluZy9vcmcuZWNs
+aXBzZS5lbWYvb3JnLmVjbGlwc2UuZW1mL3BsdWdpbnMvb3JnLmVjbGlwc2UuZW1mLmVjb3JlL3Ny
+Yy9vcmcvZWNsaXBzZS9lbWYvZWNvcmUvaW1wbC9FUGFja2FnZVJlZ2lzdHJ5SW1wbC5qYXZhLHYN
+CnJldHJpZXZpbmcgcmV2aXNpb24gMS4xMw0KZGlmZiAtdSAtcjEuMTMgRVBhY2thZ2VSZWdpc3Ry
+eUltcGwuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9lbWYvZWNvcmUvaW1wbC9FUGFja2FnZVJl
+Z2lzdHJ5SW1wbC5qYXZhCTE0IEp1biAyMDA3IDE4OjMyOjQ2IC0wMDAwCTEuMTMNCisrKyBzcmMv
+b3JnL2VjbGlwc2UvZW1mL2Vjb3JlL2ltcGwvRVBhY2thZ2VSZWdpc3RyeUltcGwuamF2YQk5IEph
+biAyMDA4IDE3OjM2OjM5IC0wMDAwDQpAQCAtMTcsNiArMTcsOCBAQA0KIHBhY2thZ2Ugb3JnLmVj
+bGlwc2UuZW1mLmVjb3JlLmltcGw7DQogDQogDQoraW1wb3J0IGphdmEuc2VjdXJpdHkuQWNjZXNz
+Q29udHJvbGxlcjsNCitpbXBvcnQgamF2YS5zZWN1cml0eS5Qcml2aWxlZ2VkQWN0aW9uOw0KIGlt
+cG9ydCBqYXZhLnV0aWwuQ29sbGVjdGlvbjsNCiBpbXBvcnQgamF2YS51dGlsLkhhc2hNYXA7DQog
+aW1wb3J0IGphdmEudXRpbC5NYXA7DQpAQCAtNTMsNyArNTUsMTkgQEANCiAgICAgICAgIH0NCiAg
+ICAgICAgIGVsc2UgaWYgKCFFTUZQbHVnaW4uSVNfRUNMSVBTRV9SVU5OSU5HKQ0KICAgICAgICAg
+ew0KLSAgICAgICAgICByZXR1cm4gbmV3IERlbGVnYXRvcigpOw0KKyAgICAgICAgICB0cnkNCisg
+ICAgICAgICAgew0KKyAgICAgICAgICAgIFNlY3VyaXR5TWFuYWdlciBzZWN1cml0eU1hbmFnZXIg
+PSBTeXN0ZW0uZ2V0U2VjdXJpdHlNYW5hZ2VyKCk7DQorICAgICAgICAgICAgaWYgKHNlY3VyaXR5
+TWFuYWdlciAhPSBudWxsKQ0KKyAgICAgICAgICAgIHsNCisgICAgICAgICAgICAgIHNlY3VyaXR5
+TWFuYWdlci5jaGVja1Blcm1pc3Npb24obmV3IFJ1bnRpbWVQZXJtaXNzaW9uKCJjbGFzc0xvYWRl
+ciIpKTsNCisgICAgICAgICAgICB9DQorICAgICAgICAgICAgcmV0dXJuIG5ldyBEZWxlZ2F0b3Io
+KTsNCisgICAgICAgICAgfQ0KKyAgICAgICAgICBjYXRjaCAoVGhyb3dhYmxlIHRocm93YWJsZSkN
+CisgICAgICAgICAgew0KKyAgICAgICAgICAgIHJldHVybiBuZXcgU2VjdXJlRGVsZWdhdG9yKCk7
+DQorICAgICAgICAgIH0NCiAgICAgICAgIH0NCiAgICAgICAgIGVsc2UNCiAgICAgICAgIHsNCkBA
+IC0yMzcsNyArMjUxLDE3IEBADQogDQogICAgIHByb3RlY3RlZCBFUGFja2FnZS5SZWdpc3RyeSBk
+ZWxlZ2F0ZVJlZ2lzdHJ5KCkNCiAgICAgew0KLSAgICAgIHJldHVybiBkZWxlZ2F0ZVJlZ2lzdHJ5
+KFRocmVhZC5jdXJyZW50VGhyZWFkKCkuZ2V0Q29udGV4dENsYXNzTG9hZGVyKCkpOw0KKyAgICAg
+IHJldHVybiBkZWxlZ2F0ZVJlZ2lzdHJ5KGdldENvbnRleHRDbGFzc0xvYWRlcigpKTsNCisgICAg
+fQ0KKw0KKyAgICBwcm90ZWN0ZWQgQ2xhc3NMb2FkZXIgZ2V0Q29udGV4dENsYXNzTG9hZGVyKCkN
+CisgICAgew0KKyAgICAgIHJldHVybiBUaHJlYWQuY3VycmVudFRocmVhZCgpLmdldENvbnRleHRD
+bGFzc0xvYWRlcigpOw0KKyAgICB9DQorDQorICAgIHByb3RlY3RlZCBDbGFzc0xvYWRlciBnZXRQ
+YXJlbnQoQ2xhc3NMb2FkZXIgY2xhc3NMb2FkZXIpDQorICAgIHsNCisgICAgICByZXR1cm4gY2xh
+c3NMb2FkZXIgPT0gbnVsbCA/IG51bGwgOiBjbGFzc0xvYWRlci5nZXRQYXJlbnQoKTsNCiAgICAg
+fQ0KIA0KICAgICBwdWJsaWMgRVBhY2thZ2UgZ2V0RVBhY2thZ2UoU3RyaW5nIGtleSkNCkBAIC0y
+ODksOCArMzEzLDggQEANCiANCiAgICAgICAgIC8vIEZpbmQgdGhlIHVwcGVybW9zdCBjbGFzcyBs
+b2FkZXIgaW4gdGhlIGhpZXJhcmNoeSB0aGF0IGNhbiBsb2FkIHRoZSBjbGFzcy4NCiAgICAgICAg
+IC8vDQotICAgICAgICBDbGFzc0xvYWRlciByZXN1bHQgPSBUaHJlYWQuY3VycmVudFRocmVhZCgp
+LmdldENvbnRleHRDbGFzc0xvYWRlcigpOw0KLSAgICAgICAgZm9yIChDbGFzc0xvYWRlciBjbGFz
+c0xvYWRlciA9IHJlc3VsdC5nZXRQYXJlbnQoKTsgY2xhc3NMb2FkZXIgIT0gbnVsbDsgY2xhc3NM
+b2FkZXIgPSBjbGFzc0xvYWRlci5nZXRQYXJlbnQoKSkNCisgICAgICAgIENsYXNzTG9hZGVyIHJl
+c3VsdCA9IGdldENvbnRleHRDbGFzc0xvYWRlcigpOw0KKyAgICAgICAgZm9yIChDbGFzc0xvYWRl
+ciBjbGFzc0xvYWRlciA9IGdldFBhcmVudChyZXN1bHQpOyBjbGFzc0xvYWRlciAhPSBudWxsOyBj
+bGFzc0xvYWRlciA9IGdldFBhcmVudChjbGFzc0xvYWRlcikpDQogICAgICAgICB7DQogICAgICAg
+ICAgIHRyeSANCiAgICAgICAgICAgew0KQEAgLTM1NSw0ICszNzksODAgQEANCiAgICAgICByZXR1
+cm4gZGVsZWdhdGVSZWdpc3RyeSgpLmVudHJ5U2V0KCk7DQogICAgIH0NCiAgIH0NCisNCisgIHBy
+aXZhdGUgc3RhdGljIGNsYXNzIFBhcmVudENsYXNzTG9hZGVyR2V0dGVyIGltcGxlbWVudHMgUHJp
+dmlsZWdlZEFjdGlvbjxDbGFzc0xvYWRlcj4NCisgIHsNCisgICAgcHJpdmF0ZSBDbGFzc0xvYWRl
+ciBjbGFzc0xvYWRlcjsNCisgICAgDQorICAgIHB1YmxpYyBDbGFzc0xvYWRlciBydW4oKQ0KKyAg
+ICB7DQorICAgICAgaWYgKGNsYXNzTG9hZGVyICE9IG51bGwpDQorICAgICAgew0KKyAgICAgICAg
+Y2xhc3NMb2FkZXIgPSBjbGFzc0xvYWRlci5nZXRQYXJlbnQoKTsNCisgICAgICB9DQorICAgICAg
+cmV0dXJuIG51bGw7DQorICAgIH0NCisgDQorICAgIHB1YmxpYyBDbGFzc0xvYWRlciBnZXRQYXJl
+bnQoQ2xhc3NMb2FkZXIgY2xhc3NMb2FkZXIpDQorICAgIHsNCisgICAgICB0aGlzLmNsYXNzTG9h
+ZGVyID0gY2xhc3NMb2FkZXI7DQorICAgICAgQWNjZXNzQ29udHJvbGxlci5kb1ByaXZpbGVnZWQo
+dGhpcyk7DQorICAgICAgcmV0dXJuIHRoaXMuY2xhc3NMb2FkZXI7DQorICAgIH0NCisgIH0NCisN
+CisgIHByaXZhdGUgc3RhdGljIGZpbmFsIFBhcmVudENsYXNzTG9hZGVyR2V0dGVyIFBBUkVOVF9D
+TEFTU19MT0FERVJfR0VUVEVSID0gbmV3IFBhcmVudENsYXNzTG9hZGVyR2V0dGVyKCk7DQorDQor
+ICBwcml2YXRlIHN0YXRpYyBmaW5hbCBQcml2aWxlZ2VkQWN0aW9uPENsYXNzTG9hZGVyPiBDT05U
+RVhUX0NMQVNTX0xPQURFUl9BQ1RJT04gPSANCisgICAgbmV3IFByaXZpbGVnZWRBY3Rpb248Q2xh
+c3NMb2FkZXI+KCkNCisgICAgew0KKyAgICAgIHB1YmxpYyBDbGFzc0xvYWRlciBydW4oKQ0KKyAg
+ICAgIHsNCisgICAgICAgIHJldHVybiBUaHJlYWQuY3VycmVudFRocmVhZCgpLmdldENvbnRleHRD
+bGFzc0xvYWRlcigpOw0KKyAgICAgIH0NCisgICAgfTsNCisNCisgIHByaXZhdGUgc3RhdGljIENs
+YXNzTG9hZGVyIGdldENvbnRleHRDbGFzc0xvYWRlclNlY3VyZWx5KCkNCisgIHsNCisgICAgcmV0
+dXJuIEFjY2Vzc0NvbnRyb2xsZXIuZG9Qcml2aWxlZ2VkKENPTlRFWFRfQ0xBU1NfTE9BREVSX0FD
+VElPTik7DQorICB9DQorDQorICBwcml2YXRlIHN0YXRpYyBmaW5hbCBNYXA8Q2xhc3NMb2FkZXIs
+IEVQYWNrYWdlLlJlZ2lzdHJ5PiBzZWN1cmVDbGFzc0xvYWRlclRvUmVnaXN0cnlNYXAgPSBuZXcg
+V2Vha0hhc2hNYXA8Q2xhc3NMb2FkZXIsIEVQYWNrYWdlLlJlZ2lzdHJ5PigpOw0KKw0KKyAgcHJp
+dmF0ZSBzdGF0aWMgc3luY2hyb25pemVkIEVQYWNrYWdlLlJlZ2lzdHJ5IGdldFJlZ2lzdHJ5U2Vj
+dXJlbHkoQ2xhc3NMb2FkZXIgY2xhc3NMb2FkZXIpDQorICB7DQorICAgIEVQYWNrYWdlLlJlZ2lz
+dHJ5IHJlc3VsdCA9IHNlY3VyZUNsYXNzTG9hZGVyVG9SZWdpc3RyeU1hcC5nZXQoY2xhc3NMb2Fk
+ZXIpOw0KKyAgICBpZiAocmVzdWx0ID09IG51bGwpDQorICAgIHsNCisgICAgICBpZiAoY2xhc3NM
+b2FkZXIgIT0gbnVsbCkNCisgICAgICB7DQorICAgICAgICByZXN1bHQgPSBuZXcgRVBhY2thZ2VS
+ZWdpc3RyeUltcGwoZ2V0UmVnaXN0cnlTZWN1cmVseShQQVJFTlRfQ0xBU1NfTE9BREVSX0dFVFRF
+Ui5nZXRQYXJlbnQoY2xhc3NMb2FkZXIpKSk7DQorICAgICAgICBzZWN1cmVDbGFzc0xvYWRlclRv
+UmVnaXN0cnlNYXAucHV0KGNsYXNzTG9hZGVyLCByZXN1bHQpOw0KKyAgICAgIH0NCisgICAgfQ0K
+KyAgICByZXR1cm4gcmVzdWx0Ow0KKyAgfQ0KKw0KKyAgcHJpdmF0ZSBzdGF0aWMgZmluYWwgY2xh
+c3MgU2VjdXJlRGVsZWdhdG9yIGV4dGVuZHMgRGVsZWdhdG9yDQorICB7DQorICAgIHByaXZhdGUg
+ZmluYWwgUGFyZW50Q2xhc3NMb2FkZXJHZXR0ZXIgcGFyZW50Q2xhc3NMb2FkZXJHZXR0ZXIgPSBu
+ZXcgUGFyZW50Q2xhc3NMb2FkZXJHZXR0ZXIoKTsNCisgICAgDQorICAgIEBPdmVycmlkZQ0KKyAg
+ICBwcm90ZWN0ZWQgRVBhY2thZ2UuUmVnaXN0cnkgZGVsZWdhdGVSZWdpc3RyeShDbGFzc0xvYWRl
+ciBjbGFzc0xvYWRlcikNCisgICAgew0KKyAgICAgIHJldHVybiBnZXRSZWdpc3RyeVNlY3VyZWx5
+KGNsYXNzTG9hZGVyKTsNCisgICAgfQ0KKw0KKyAgICBAT3ZlcnJpZGUNCisgICAgcHJvdGVjdGVk
+IENsYXNzTG9hZGVyIGdldENvbnRleHRDbGFzc0xvYWRlcigpDQorICAgIHsNCisgICAgICByZXR1
+cm4gZ2V0Q29udGV4dENsYXNzTG9hZGVyU2VjdXJlbHkoKTsNCisgICAgfQ0KKw0KKyAgICBAT3Zl
+cnJpZGUNCisgICAgcHJvdGVjdGVkIENsYXNzTG9hZGVyIGdldFBhcmVudChDbGFzc0xvYWRlciBj
+bGFzc0xvYWRlcikNCisgICAgew0KKyAgICAgIHJldHVybiBwYXJlbnRDbGFzc0xvYWRlckdldHRl
+ci5nZXRQYXJlbnQoY2xhc3NMb2FkZXIpOw0KKyAgICB9DQorICB9DQogfQ0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86487</attachid>
+            <date>2008-01-09 12:43:00 -0500</date>
+            <delta_ts>2008-01-09 12:43:30 -0500</delta_ts>
+            <desc>An eclipse project for testing.</desc>
+            <filename>214267.zip</filename>
+            <type>application/x-zip</type>
+            <size>3762</size>
+            <attacher name="Ed Merks">Ed.Merks</attacher>
+            
+              <data encoding="base64">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
+bHcDhHuxQu15RJToXUwSRns8eBCKOwfK8BwtixRxuW80pR2J2Uu/jcDCKGX2UpfAbdkEZncZIQDv
+r3+SUtYLZbVRUrRXL0WjFNScCEwRWtEFXgEyPDCYFJff304n07+wVVxT6exVjgVvlA9Z8/Gobp4I
+1dkglscAungcijUevVAmQJfnQh0E7IzMoeJSZxtvycu3H8GNm5JDa/YOVkOJIzhR0Oes7Wx9u3n4
+eLtcMapsH80mYdgm00UPm8+psxZ5zkiVpZKlf9k0oJapE8vg4EvsQzq/4yHzdJ8YXxNvWE9tpSrc
+tBuN/Lm9RoUl98bSxHjUuYM/zR8b0gJf57SjPWPKpik+FCT9voYZDpsPX3dorcyxo7HGo/CYQ38j
+5IlqkJAd+U760/73i2IJaR5LuaM3USFwIZDMenMywmG4uYc1PQCuVAtuaxqV63cenggSJpfEEMYh
+sjfqfmfRN1aDa2p6DGdKj9UtBuNxoe8vUEsHCO5MILgUAgAAawQAAFBLAQIUABQACAAIAFZlKThj
+c8zAzgAAAHYBAAARAAAAAAAAAAAAAAAAAAAAAABzZWN1cmUvLmNsYXNzcGF0aFBLAQIUABQACAAI
+AFZlKTi0SUuE5gAAAJsCAAAPAAAAAAAAAAAAAAAAAA0BAABzZWN1cmUvLnByb2plY3RQSwECFAAU
+AAgACABWZSk4DqySWW8AAACqAAAAGwAAAAAAAAAAAAAAAAAwAgAAc2VjdXJlL01FVEEtSU5GL01B
+TklGRVNULk1GUEsBAhQAFAAIAAgAVmUpOC+3QXClAQAASgMAAD0AAAAAAAAAAAAAAAAA6AIAAHNl
+Y3VyZS9iaW4vZW1mdGVzdC9lbWZfamF2YTJfc2VjdXJpdHkkTXlTbmVha3lEZWxlZ2F0b3IuY2xh
+c3NQSwECFAAUAAgACABWZSk4Zv/EjckBAAA/AwAAKwAAAAAAAAAAAAAAAAD4BAAAc2VjdXJlL2Jp
+bi9lbWZ0ZXN0L2VtZl9qYXZhMl9zZWN1cml0eS5jbGFzc1BLAQIUABQACAAIAFZlKTh+nIhMvQAA
+ABYBAAARAAAAAAAAAAAAAAAAABoHAABzZWN1cmUvZW1mLnBvbGljeVBLAQIUABQACAAIAFZlKTh+
+rZHfXgEAADADAAAgAAAAAAAAAAAAAAAAABYIAABzZWN1cmUvZW1mX2phdmEyX3NlY3VyaXR5Lmxh
+dW5jaFBLAQIUABQACAAIAFZlKTjuTCC4FAIAAGsEAAAqAAAAAAAAAAAAAAAAAMIJAABzZWN1cmUv
+c3JjL2VtZnRlc3QvZW1mX2phdmEyX3NlY3VyaXR5LmphdmFQSwUGAAAAAAgACABuAgAALgwAAAAA
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

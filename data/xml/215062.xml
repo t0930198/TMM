@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215062</bug_id>
+          
+          <creation_ts>2008-01-11 12:55:00 -0500</creation_ts>
+          <short_desc>Attribute &apos;filter&apos; is not allowed exception is thrown materializing from BOM</short_desc>
+          <delta_ts>2008-01-15 03:35:22 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Buckminster</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Vaidas Nargėlas">vaidasn</reporter>
+          <assigned_to name="buckminster.core-inbox">buckminster.core-inbox</assigned_to>
+          <cc>thomas</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129800</commentid>
+    <comment_count>0</comment_count>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-11 12:55:41 -0500</bug_when>
+    <thetext>Build ID: r07488
+
+Steps To Reproduce:
+1. Resolve the query to BOM file using resolve command
+2. Import the the BOM using import command
+3. The exception is reported:
+
+org.xml.sax.SAXParseException: cvc-complex-type.3.2.2: Attribute &apos;filter&apos; is not allowed to appear in element &apos;md:cspec&apos;.: ...
+
+The line reported looks like this:
+&lt;md:idwrapper id=&quot;f9bc4306-cc07-3fcf-b1f9-7c7b7a921865&quot;&gt;
+    &lt;md:cspec name=&quot;org.eclipse.equinox.launcher.win32.win32.x86&quot; componentType=&quot;osgi.bundle&quot; version=&quot;1.0.1.R33x_v20070828&quot; versionType=&quot;OSGi&quot; filter=&quot;(&amp;amp;(target.ws=win32)(target.os=win32)(target.arch=x86))&quot;&gt;
+
+I had a short look to cspec-1.0.xsd. It seems that either wrong bom is generated and attribute should be called platfromFilter instead or xsd (and maybe something else) has to be fixed.
+
+More information:
+I faced this issue with headless buckminster r07406 and update site r07488.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131233</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-15 03:35:22 -0500</bug_when>
+    <thetext>The schema said &apos;platformFilter&apos; but the internal model used &apos;filter&apos;. I changed this so that it&apos;s &apos;filter&apos; in both places.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

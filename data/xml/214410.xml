@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214410</bug_id>
+          
+          <creation_ts>2008-01-04 17:45:00 -0500</creation_ts>
+          <short_desc>Cannot have two sets of Batik Bundles</short_desc>
+          <delta_ts>2008-02-08 19:10:04 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Orbit</product>
+          <component>bundles</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Anthony Hunter">anthonyh</reporter>
+          <assigned_to name="Christian W. Damus">give.a.damus</assigned_to>
+          <cc>caniszczyk</cc>
+    
+    <cc>cisco</cc>
+    
+    <cc>clin</cc>
+    
+    <cc>david_williams</cc>
+    
+    <cc>dj_houghton</cc>
+    
+    <cc>fabrice92</cc>
+    
+    <cc>jay.graham</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126119</commentid>
+    <comment_count>0</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-04 17:45:14 -0500</bug_when>
+    <thetext>Download Eclipse-SDK-3.4M4, Orbit S200710221836 and Orbit S200712072116.
+
+Extract Eclipse-SDK-3.4M4 and one of the orbits.
+Create a new Hello World plug-in and add a dependency to the org.apache.batik.transcoder bundle.
+Additionally add to one of the classes:
+
+import org.apache.batik.transcoder.Transcoder;
+import org.apache.batik.transcoder.svg2svg.SVGTranscoder;
+[...]
+Transcoder transcoder = new SVGTranscoder();
+
+Everything compiles and all is happy.
+If you open the properties for the plug-in, and look at the Java Build Path, when you expand the org.apache.batik.transcoder plug-in dependency, you will see the 9 access rules defined for org.apache.batik.transcoder. These are of course the 9 exported packages in org.apache.batik.transcoder.
+
+When you do the same above, but with both orbits extracted, the plug-in no longer compiles.
+When expanding the the org.apache.batik.transcoder plug-in dependency, there are now only 5 exported packages in org.apache.batik.transcoder, four packages are missing.
+
+I did a binary diff on the org.apache.batik.transcoder plug-in in both Orbit R200709171314 and Orbit S200712072116 and they are identical, except for the version number.
+I cannot explain why having one of :
+org.apache.batik.transcoder_1.6.0.v200706111724.jar
+org.apache.batik.transcoder_1.6.0.v200711021015.jar
+works fine but having both breaks.
+
+This problem occurs when you download a recent GMF 2.1 integration build which has Orbit S200710221836 and WTP which has Orbit S200712072116. GMF depends on Batik for SVG support and as a result of this issue, at runtime, we receive a bunch of:
+
+java.lang.NoClassDefFoundError: org.apache.batik.transcoder.Transcoder
+		 at java.lang.J9VMInternals.verifyImpl(Native Method)
+		 at java.lang.J9VMInternals.verify(Unknown Source)
+		 at java.lang.J9VMInternals.initialize(Unknown Source)
+		 at org.eclipse.gmf.runtime.draw2d.ui.render.awt.internal.svg.SVGImage.renderImage(Unknown Source)
+
+As a workaround, we are going to make sure that GMF adopts S200712072116 for GMF 2.1 M4 so that only one set of the Batik plug-ins are present.
+
+However, this issue will cause GMF to break when someone uses update, since the new and old batik will be present.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126249</commentid>
+    <comment_count>1</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-05 14:07:57 -0500</bug_when>
+    <thetext>Sounds like a major problem to me.
+
+I&apos;ll see (with Tom&apos;s help) whether, perhaps, re-introducing &quot;uses&quot; directives in the package exports can help with wiring up the package/bundle dependencies correctly.
+
+I am, however, a little concerned about the simplicity of this scenario:  with a single user bundle requiring the single org.apache.batik.transcoder bundle, it should be extremely easy for OSGi to resolve a consistent classpath.  However that the package dependencies in the transcoder bundle are resolved, this shouldn&apos;t possibly have any effect on the user bundle that requires transcoder, should it?
+
+Note that all of the Batik bundles&apos;s package exports specify version numbers.  Should I not do that?  Because, obviously, those package versions are identical in both Orbit builds: only the bundle version qualifiers are different, owing, I think, to changes in the source-bundle generation.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126815</commentid>
+    <comment_count>2</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-07 13:48:10 -0500</bug_when>
+    <thetext>This is truly bizarre.
+
+My run-time classpath appears to be changing dynamically!
+
+I am able, in the GMF project&apos;s TaiPan example editor, to create port shapes and various ship shapes (all SVGs) and connect them together with relationships.  Then, I can add a barrel to the cargo of a ship.  Next, I attempt to add an empty box to the cargo -- bam!  Transcoder class can no longer be found.  It was there a minute ago!  Now, I can no longer open the diagram.  All of this in the same Eclipse session.
+
+On a hunch, I enabled Equinox&apos;s tracing option for dependency cycles (resolver/cycles).  Guess what I got?
+
+import-package cycle: [org.apache.batik.transcoder_1.6.0.v200706111724] -&gt; Export-Package: org.apache.batik.bridge; version=&quot;1.6.0&quot; from org.apache.batik.bridge_1.6.0.v200801071215
+import-package cycle: [org.apache.batik.transcoder_1.6.0.v200801071215] -&gt; Export-Package: org.apache.batik.bridge; version=&quot;1.6.0&quot; from org.apache.batik.bridge_1.6.0.v200801071215
+import-package cycle: [org.apache.batik.pdf_1.6.0.v200711212055] -&gt; Export-Package: org.apache.batik.transcoder.image; version=&quot;1.6.0&quot; from org.apache.batik.transcoder_1.6.0.v200711021015
+Pushing [org.apache.batik.transcoder_1.6.0.v200706111724] to RESOLVED
+Pushing [org.apache.batik.transcoder_1.6.0.v200801071215] to RESOLVED
+Pushing [org.apache.batik.pdf_1.6.0.v200711212055] to RESOLVED
+
+It looks like I shall have to combine the bridge and transcoder bundles into one.  I had already combined three of the original Batik JARs into a single &quot;bridge&quot; bundle because of a dependency cycle amongst their packages; guess I missed this one.  I don&apos;t know what Chris is going to do for the PDF bundle that he appears to have taken over from BIRT (I think?).
+
+This looks like something that the PDE&apos;s validator should be enhanced to report at compile-time.  I&apos;m also concerned that Equinox appears to resolve these bundles with cycles anyway; it looks like they&apos;ll just break.
+
+So, I shall investigate rebundling bridge and transcoder as a single &quot;transcoder&quot; bundle.  Stay tuned.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126926</commentid>
+    <comment_count>3</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-07 15:57:05 -0500</bug_when>
+    <thetext>Well, wouldn&apos;t you know it?  The problem is even simpler than I thought and looks like it&apos;s self-inflicted:  the org.apache.batik.transcoder bundle imports four packages that it, itself, defines!  These are the ones that go AWOL from the Java Build Path properties in Anthony&apos;s scenario.  It seems that the resolver variably obtains these imported packages from other installed versions, despite that the bundle doing the import provides them, itself.
+
+Removing the extraneous Import-Package headers makes the problem go away.  Now, I just need to see whether I need those &quot;uses&quot; directives, after all.
+
+Chris, there&apos;s no issue for you to deal with in the org.apache.batik.pdf bundle:  the cycle detected in its dependencies is just the transcoder package that the transcoder bundle messed up.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144621</commentid>
+    <comment_count>4</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-29 14:07:08 -0500</bug_when>
+    <thetext>I have committed and released (tag v200801291758) a fix for the problem of self-imports of exported packages in the org.apache.batik.transcoder bundle.
+
+This fixes the original class-not-found on Transcoder and PDE classpath problems for the transcoder bundle, as reported by the bug submitter.
+
+However, there are new problems, now, when deploying two different qualifier-version sets of the Batik bundles.  These are IncompatibleClassChangeErrors and ClassFormatErrors (on different classes) in BIRT and GMF scenarios, respectively, that are not solved even by computing &quot;uses&quot; directives on every export.  As far as I can tell, this is now down to a bug in Equinox; I shall try to devise a relatively small and simple test case that I can attach to a new bugzilla for that project.  In the mean-time, I can&apos;t resolve this bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145221</commentid>
+    <comment_count>5</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-30 08:24:37 -0500</bug_when>
+    <thetext>The fixed transcoder bundle is available in the I20080129214859 Orbit integration build.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148817</commentid>
+    <comment_count>6</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-04 10:47:06 -0500</bug_when>
+    <thetext>(in reply to comment #4)
+
+Actually, rather than an Equinox resolver bug, it occurred to me that this problem could well be caused by consumers of the Batik bundles using Require-Bundle instead of Import-Package to express their dependencies.  This would be expected to result in inconsistent classpaths as the resolver cannot satisfy multiple Require-Bundle dependencies in the same consumer when Import-Package dependencies within the Batik bundles are resolving sometimes to the older qualifier and sometimes the newer.
+
+I shall try an experiment, hacking the BIRT and GMF bundle manifests to change use Import-package.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148841</commentid>
+    <comment_count>7</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-02-04 11:00:53 -0500</bug_when>
+    <thetext>Chris,  the problem with &quot;uses&quot; is that we cannot ensure a consistent class space unless everybody specifies the &quot;uses&quot; clause.  For example
+
+1) A bundle (BIRT) imports or requires batik. 
+2) BIRT export packages which use batik api in its own API and does not specify the &quot;uses&quot; clause for batik packages its own exports.
+3) Clients of BIRT will have no constraint on the version of batik which their clients must use in order to be compatible with BIRT.
+
+I suspect this is the problem you ran into when specifying &quot;uses&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148857</commentid>
+    <comment_count>8</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-04 11:13:02 -0500</bug_when>
+    <thetext>Hi, Tom.  I&apos;m not proposing to specify &quot;uses&quot; clauses.  Rather, to try replacing occurrences of Require-Bundle with Import-Package in clients such as GMF and BIRT.
+
+I get class loading problems without any &quot;uses&quot; clauses.  Recent discussion on the Orbit mailing list (relating to usage at Apache) suggested to me that perhaps the problem is in the mix of Require-Bundle and Import-Package.
+
+Or, maybe the right answer is to use Require-Bundle in my Batik bundles, instead of Import-Package?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151924</commentid>
+    <comment_count>9</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-07 09:49:18 -0500</bug_when>
+    <thetext>Alright.  I now have a patch that updates all of the Batik bundles to use Require-Bundle instead of Import-Package to express dependencies between the Orbit bundles.
+
+When installing two or more qualifiers of these bundles in products known to fail miserably in simple BIRT and GMF scenarios, all of the class loading problems are resolved.
+
+So, my question now is:  should I just abandon the OSGi recommendation to use Import-Package that we intended to follow assiduously in Orbit?  I would vote &quot;yes&quot; for two reasons:
+
+1. Orbit is an Eclipse project, so it should do what is best for
+   Eclipse.  Other Eclipse projects aren&apos;t going to stop using
+   Require-Bundle any time soon (and there are practical problems in
+   that department, anyway).
+
+2. Apache originally shipped Batik as multiple JARs and only ever would
+   expect an application to have one instance of them installed.  It
+   seems in keeping with original packaging to lock these bundles together
+   tightly using Require-Bundle.  After all, what if the original Batik
+   distro had been just a single JAR?
+
+If I hear no -1s by Friday afternoon 8 Feb, I&apos;ll commit this change.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152003</commentid>
+    <comment_count>10</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-02-07 10:55:26 -0500</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; 
+&gt; So, my question now is:  should I just abandon the OSGi recommendation to use
+&gt; Import-Package that we intended to follow assiduously in Orbit?  I would vote
+&gt; &quot;yes&quot; for two reasons:
+&gt; 
+
+I agree, unless Tom is optimistic that bug 217724 might be fixed quite soon. 
+
+Probably the tougher question is what to do about Europa maintenance stream? 
+Think the require-bundle fix should go in there? 
+(And, recall, we currently don&apos;t have in Europa Orbit builds planned .... so, if folks do want it fixed there, then &quot;we&quot; had better decide and make sure we coordinate). 
+
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152038</commentid>
+    <comment_count>11</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-07 11:22:14 -0500</bug_when>
+    <thetext>(In reply to comment #10)
+&gt; Probably the tougher question is what to do about Europa maintenance stream? 
+&gt; Think the require-bundle fix should go in there? 
+&gt; (And, recall, we currently don&apos;t have in Europa Orbit builds planned .... so,
+&gt; if folks do want it fixed there, then &quot;we&quot; had better decide and make sure we
+&gt; coordinate). 
+
+The only hesitation that I (as Batik maintainer) have with releasing this change on the maintenance branch is that I don&apos;t know how to test Batik thoroughly.  I know nothing about the API, only how to preview BIRT reports and drop SVGs onto GMF diagrams.  And EWM is closing soon!  It was easy enough to change Import-Package into Require-Bundle because PDE showed me no change in each bundle&apos;s dependencies in the Package Explorer.  However, that&apos;s not a test.
+
+I&apos;ll need the affected parties to chime in if they want this fixed in EWM.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152088</commentid>
+    <comment_count>12</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-02-07 11:54:45 -0500</bug_when>
+    <thetext>(In reply to comment #11)
+&gt; I&apos;ll need the affected parties to chime in if they want this fixed in EWM.
+
+My IBM team is fine not fixing in maintenance. Everyone is currently on the R build from the fall and we should not have two sets of Batik showing up.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152161</commentid>
+    <comment_count>13</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-02-07 13:02:38 -0500</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; Alright.  I now have a patch that updates all of the Batik bundles to use
+&gt; Require-Bundle instead of Import-Package to express dependencies between the
+&gt; Orbit bundles.
+&gt; 
+&gt; When installing two or more qualifiers of these bundles in products known to
+&gt; fail miserably in simple BIRT and GMF scenarios, all of the class loading
+&gt; problems are resolved.
+&gt; 
+&gt; So, my question now is:  should I just abandon the OSGi recommendation to use
+&gt; Import-Package that we intended to follow assiduously in Orbit?  I would vote
+&gt; &quot;yes&quot; for two reasons:
+&gt; 
+&gt; 1. Orbit is an Eclipse project, so it should do what is best for
+&gt;    Eclipse.  Other Eclipse projects aren&apos;t going to stop using
+&gt;    Require-Bundle any time soon (and there are practical problems in
+&gt;    that department, anyway).
+&gt; 
+&gt; 2. Apache originally shipped Batik as multiple JARs and only ever would
+&gt;    expect an application to have one instance of them installed.  It
+&gt;    seems in keeping with original packaging to lock these bundles together
+&gt;    tightly using Require-Bundle.  After all, what if the original Batik
+&gt;    distro had been just a single JAR?
+&gt; 
+&gt; If I hear no -1s by Friday afternoon 8 Feb, I&apos;ll commit this change.
+&gt; 
+
+I think this should be ok:
+
+1) It appears that the batik API is pretty tightly coupled anyway and the dependencies between the different parts of a particular version should likely be expressed as require-bundle.  This is after all the main usecase for require-bundle.
+2) The other &quot;external&quot; dependencies the batik bundles have will continue to use Import-Package.  This is ok because the dependencies on non-batik packages do not require as tight of a coupling.
+
+Unfortunately the &quot;uses&quot; clause will not help solve much here until
+- we solve the scalability issues with the uses directive
+- we employ a campaign to promote the uses directive across all eclipse components.  The uses directive cannot guarantee class space consistency unless all exports define their uses constraints properly.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153554</commentid>
+    <comment_count>14</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-08 19:10:04 -0500</bug_when>
+    <thetext>The Require-Bundle fix is committed to HEAD and released.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

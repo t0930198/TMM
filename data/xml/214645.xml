@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214645</bug_id>
+          
+          <creation_ts>2008-01-08 12:51:00 -0500</creation_ts>
+          <short_desc>[prov] [query] shouldCollector.accept  (and therefore  Query.perform) take progress monitors?</short_desc>
+          <delta_ts>2008-01-10 16:18:43 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>api</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          <cc>john_arthorne</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127562</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 12:51:34 -0500</bug_when>
+    <thetext>The Collector concept in the query API is there to allow clients to do further scoping/checking of query results when an object matches a query.  I&apos;m wondering if Collector.accept should have a progress monitor argument.  There is one passed into the query, and perhaps it could be passed through to the perform/accept?
+
+My case is admittedly a bit weird.  I have a collector that is actually performing a secondary query on the result of the original query.  And so it has no progress monitor to pass to its secondary query.  
+
+The concrete example is that I am querying a metadata repository manager for all public repos, and as I accept each repo, I load it and get all of its categories.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128490</commentid>
+    <comment_count>1</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 16:37:01 -0500</bug_when>
+    <thetext>Your usage seems a bit odd. Couldn&apos;t you just perform two queries - one query to get the list of repositories, and then a second query on each of the repositories to get the categories?  If a collector were to do really long running work, the query would have no way to know how long it is... how many child ticks do I allocate to the collector if it may be just adding an item to a list, or it may be performing arbitrary long running work?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128562</commentid>
+    <comment_count>2</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 18:10:08 -0500</bug_when>
+    <thetext>Because of the call chain/code structure, performing two separate queries wasn&apos;t going to work.  But...I ended up restructuring some model elements for other reasons, and in the end, this scenario wasn&apos;t needed.  (I meant to update this bug to let you know...)
+
+So if you think it doesn&apos;t really make sense, you can close this.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129280</commentid>
+    <comment_count>3</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 16:18:43 -0500</bug_when>
+    <thetext>Ok, I&apos;d like to keep this API as simple as possible, and adding progress monitors for the rare case it may be needed just creates work for all callers.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

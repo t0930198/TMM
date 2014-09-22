@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215114</bug_id>
+          
+          <creation_ts>2008-01-12 10:01:00 -0500</creation_ts>
+          <short_desc>Type hinting for var with multiple implemented interface</short_desc>
+          <delta_ts>2008-10-22 08:33:30 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>PDT</product>
+          <component>Code Assist</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Christopher Klein">christopher.klein</reporter>
+          <assigned_to name="PHP UI">php.ui-inbox</assigned_to>
+          <cc>gadi</cc>
+    
+    <cc>guy.g</cc>
+    
+    <cc>programatorfreez</cc>
+          <qa_contact name="Sylvia Tancheva">silviya</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130155</commentid>
+    <comment_count>0</comment_count>
+    <who name="Christopher Klein">christopher.klein</who>
+    <bug_when>2008-01-12 10:01:32 -0500</bug_when>
+    <thetext>Build ID: I20070625-1500
+
+Steps To Reproduce:
+interface If1 {
+  public function testIf1();
+}
+
+interface If2 {
+  public function testIf2();
+}
+
+class TestClass {
+  /** 
+   * @var If1, If2
+   */
+  public $_testObject
+}
+
+$test = new TestClass();
+$test-&gt;_testObject-&gt; // &lt;&lt; auto completion does not suggest testIf2 or testIf1
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137989</commentid>
+    <comment_count>1</comment_count>
+    <who name="Jan Novak">programatorfreez</who>
+    <bug_when>2008-01-24 12:54:41 -0500</bug_when>
+    <thetext>I can confirm this bug, try my test case:
+&lt;?php
+class first {
+    private $second;
+
+    public function __construct() {
+        $this-&gt;second = new Second();
+    }
+
+    public function test() {
+        // try to type $this-&gt;second-&gt; here 
+    }
+}
+
+class second {
+    public $third;
+
+    public function __construct() {
+        $this-&gt;third = new Third();
+    }
+}
+
+class third {
+    const aChar = &apos;a&apos;;
+    private $priv;
+    public $pub;
+
+    function someMethod($in, &amp;$out) {
+    }
+}
+?&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138365</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mark Kirchner">eclipse-bugs</who>
+    <bug_when>2008-01-25 02:35:31 -0500</bug_when>
+    <thetext>Workaround for original report:
+
+[...]
+class TestClass {
+  /** 
+   * @var If1|If2
+   */
+  public $_testObject;
+}
+
+$test = new TestClass();
+$test-&gt;_testObject-&gt; // &lt;&lt; auto completion suggests testIf2 and testIf1</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1252582</commentid>
+    <comment_count>3</comment_count>
+    <who name="Guy Gurfinkel">guy.g</who>
+    <bug_when>2008-05-29 09:44:19 -0400</bug_when>
+    <thetext>not a bug. the workaround suggested is the way to do it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1342876</commentid>
+    <comment_count>4</comment_count>
+    <who name="Gadi Goldbarg">gadi</who>
+    <bug_when>2008-10-02 15:30:41 -0400</bug_when>
+    <thetext>Still no code assist</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1352629</commentid>
+    <comment_count>5</comment_count>
+    <who name="Michael Spector">spektom</who>
+    <bug_when>2008-10-19 07:53:04 -0400</bug_when>
+    <thetext>Fixed in CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1354826</commentid>
+    <comment_count>6</comment_count>
+    <who name="Gadi Goldbarg">gadi</who>
+    <bug_when>2008-10-22 08:33:30 -0400</bug_when>
+    <thetext>Verified on N20081022
+Closing
+
+[Sylvia Tancheva]</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

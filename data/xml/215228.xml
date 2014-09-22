@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215228</bug_id>
+          
+          <creation_ts>2008-01-14 10:56:00 -0500</creation_ts>
+          <short_desc>META-INF/context.xml is ignored</short_desc>
+          <delta_ts>2008-01-21 19:52:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP ServerTools</product>
+          <component>jst.server</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alexander Brill">alex</reporter>
+          <assigned_to name="Larry Isaacs">Larry.Isaacs</assigned_to>
+          
+          <qa_contact name="Tim deBoer">deboer</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130703</commentid>
+    <comment_count>0</comment_count>
+    <who name="Alexander Brill">alex</who>
+    <bug_when>2008-01-14 10:56:12 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Steps To Reproduce:
+I added a META-INF/context.xml file to my web app project, in which I declare:
+&lt;?xml version=&apos;1.0&apos; encoding=&apos;utf-8&apos;?&gt;
+&lt;Context docBase=&quot;intranet_news&quot; path=&quot;/intranet_news&quot;&gt;	
+	&lt;ResourceLink global=&quot;jdbc/Internweb&quot; name=&quot;jdbc/Internweb&quot; type=&quot;javax.sql.DataSource&quot;/&gt;
+&lt;/Context&gt;
+
+I then deploy to my Tomcat 5.5 installation. But my context.xml is being ignored, and the server.xml for that installation ends up with this line instead:
+      &lt;Context docBase=&quot;intranet_news&quot; path=&quot;/intranet_news&quot; reloadable=&quot;true&quot; source=&quot;org.eclipse.jst.j2ee.server:intranet_news&quot;/&gt;&lt;/Host&gt;
+
+According to the WTP Tomcat FAQ (http://wiki.eclipse.org/WTP_Tomcat_FAQ#How_do_I_specify_the_Tomcat_context_configuration_for_my_Web_Application.3F) it should honour this file.
+
+I have a standard maven setup as a filesystem for my project:
+
+src/
+src/main
+src/main/java
+src/main/webapp
+
+I thus have this .settings/org.eclipse.wst.common.component:
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;project-modules id=&quot;moduleCoreId&quot; project-version=&quot;1.5.0&quot;&gt;
+&lt;wb-module deploy-name=&quot;intranet_news&quot;&gt;
+&lt;wb-resource deploy-path=&quot;/&quot; source-path=&quot;/src/main/webapp&quot;/&gt;
+&lt;wb-resource deploy-path=&quot;/WEB-INF/classes&quot; source-path=&quot;/src/main/java&quot;/&gt;
+&lt;wb-resource deploy-path=&quot;/WEB-INF/classes&quot; source-path=&quot;/src/test/java&quot;/&gt;
+&lt;property name=&quot;java-output-path&quot; value=&quot;build/classes&quot;/&gt;
+&lt;property name=&quot;context-root&quot; value=&quot;intranet_news&quot;/&gt;
+&lt;/wb-module&gt;
+&lt;/project-modules&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134483</commentid>
+    <comment_count>1</comment_count>
+    <who name="Larry Isaacs">Larry.Isaacs</who>
+    <bug_when>2008-01-19 21:20:16 -0500</bug_when>
+    <thetext>Alex,
+
+The incorporation of the context.xml content in server.xml occurs after the server.xml and project have been published to the server.  The source context.xml is the one in the deployed webapp.  The info you provided above predicts it would be at &quot;wtpwebapps/intranet_news/META-INF/context.xml&quot; in your Tomcat installation.  Can you confirm that this file exists?
+
+The FAQ may not have made it clear that the &quot;META-INF/context.xml&quot; needs to be part of the Web application&apos;s content.  This implies that it should appear as &quot;src/main/webapp/META-INF/context.xml&quot; in your project.  If it&apos;s not there, move it and see if that fixes the problem.
+
+Cheers,
+Larry</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134736</commentid>
+    <comment_count>2</comment_count>
+    <who name="Alexander Brill">alex</who>
+    <bug_when>2008-01-21 04:19:00 -0500</bug_when>
+    <thetext>Ok. This seems to be my bad. I guess I was getting confused by the Context-line in the generated server.xml. It works nicely now :)
+
+Thanks for the reply.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135475</commentid>
+    <comment_count>3</comment_count>
+    <who name="Larry Isaacs">Larry.Isaacs</who>
+    <bug_when>2008-01-21 19:52:36 -0500</bug_when>
+    <thetext>Thanks for the update.  Going ahead and closing the bug.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

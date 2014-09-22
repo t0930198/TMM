@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214765</bug_id>
+          
+          <creation_ts>2008-01-09 11:21:00 -0500</creation_ts>
+          <short_desc>[clean up] should not convert to enhanced for loop when the collection elements are not used</short_desc>
+          <delta_ts>2008-01-09 11:44:05 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>ASSIGNED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="NoName">utilisateur_182</reporter>
+          <assigned_to name="JDT-UI-Inbox">jdt-ui-inbox</assigned_to>
+          <cc>daniel_megert</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128210</commentid>
+    <comment_count>0</comment_count>
+    <who name="NoName">utilisateur_182</who>
+    <bug_when>2008-01-09 11:21:47 -0500</bug_when>
+    <thetext>Build ID: I20071213-1700
+
+Steps To Reproduce:
+1. configure &quot;Save Actions&quot; to have the following &quot;Additional actions&quot;:
+* Remove &apos;this&apos; qualifier for non static field accesses
+* Remove &apos;this&apos; qualifier for non static method accesses
+* Change non static accesses to static members using declaring type
+* Convert for loops to enhanced for loops
+* Remove unnecessary parentheses
+* Remove trailing white spaces on non empty lines
+2. copy the &quot;original&quot; code below in a new editor
+3. Save the editor
+4. You get the &quot;result&quot; code below
+
+When the collection elements are not used/read, the conversion doesn&apos;t make the code easier to understand/read, so i think no conversion should happen.
+
+
+More information:
+=========== original code
+package tests;
+
+import java.util.Vector;
+
+public class TestCleanUpFor {
+
+	public Vector&lt;String&gt; foo(String[] strings, Vector&lt;String&gt; v) {
+		if (v == null) {
+			v = new Vector&lt;String&gt;();
+                        // strings[i] is not used
+			for (int i = 0; i &lt; strings.length; i++)
+				v.add(null);
+			return v;
+		}
+		
+		/* stuff */
+		return v;
+	}
+
+}
+==========================
+
+====================== result code
+package tests;
+
+import java.util.Vector;
+
+public class TestCleanUpFor {
+
+	public Vector&lt;String&gt; foo(String[] strings, Vector&lt;String&gt; v) {
+		if (v == null) {
+			v = new Vector&lt;String&gt;();
+			for (String string : strings)
+				v.add(null);
+			return v;
+		}
+		 
+		/* stuff */
+		return v;
+	}
+
+}
+=========================</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128229</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-09 11:44:05 -0500</bug_when>
+    <thetext>I agree.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

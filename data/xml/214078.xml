@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214078</bug_id>
+          
+          <creation_ts>2008-01-02 03:48:00 -0500</creation_ts>
+          <short_desc>Invalid bpel generated for If activity</short_desc>
+          <delta_ts>2008-08-19 07:01:55 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>13</classification_id>
+          <classification>SOA</classification>
+          <product>BPEL</product>
+          <component>Model</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Guillaume Porcher">guillaume.porcher</reporter>
+          <assigned_to name="BPEL Model Inbox">bpel.model-inbox</assigned_to>
+          <cc>smoser</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1123988</commentid>
+    <comment_count>0</comment_count>
+    <who name="Guillaume Porcher">guillaume.porcher</who>
+    <bug_when>2008-01-02 03:48:59 -0500</bug_when>
+    <thetext>Eclipse Build ID: M20071023-1652
+Bpel plugin version: 0.3.0
+
+Steps To Reproduce:
+1.Create a new bpel file and open it with bpel designer
+2.Add a &quot;if&quot; activity
+3.Add an empty activity to the &quot;then&quot; part of the &quot;if&quot;
+4.Add a condition to the &quot;if&quot; activity
+5.Save the file
+
+More information:
+The condition and the &quot;then&quot; activity are switched (in bpel spec the condition is before the activity).
+
+The generated bpel is :
+&lt;bpws:if name=&quot;If&quot;&gt;
+  &lt;bpws:empty name=&quot;Empty&quot;/&gt;
+  &lt;bpws:condition&gt;&lt;![CDATA[true()]]&gt;&lt;/bpws:condition&gt;
+&lt;/bpws:if&gt;
+
+it should be :
+&lt;bpws:if name=&quot;If&quot;&gt;
+  &lt;bpws:condition&gt;&lt;![CDATA[true()]]&gt;&lt;/bpws:condition&gt;
+  &lt;bpws:empty name=&quot;Empty&quot;/&gt;
+&lt;/bpws:if&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1314866</commentid>
+    <comment_count>1</comment_count>
+    <who name="Simon Moser">smoser</who>
+    <bug_when>2008-08-19 07:01:55 -0400</bug_when>
+    <thetext>I cannot reproduce this problem in the current HEAD stream code. 
+BPEL gets generated correctly like this: 
+
+&lt;bpws:if name=&quot;If&quot;&gt;
+  &lt;bpws:condition&gt;&lt;![CDATA[true()]]&gt;&lt;/bpws:condition&gt;
+  &lt;bpws:empty name=&quot;Empty&quot;/&gt;
+&lt;/bpws:if&gt;
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

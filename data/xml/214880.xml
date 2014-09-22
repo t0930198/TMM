@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214880</bug_id>
+          
+          <creation_ts>2008-01-10 06:56:00 -0500</creation_ts>
+          <short_desc>GMF newsgroup Q&amp;A wiki pages missing</short_desc>
+          <delta_ts>2008-01-15 17:18:43 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Wiki</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>NOT_ECLIPSE</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Richard Gronback">richard.gronback</reporter>
+          <assigned_to name="Eclipse Webmaster">webmaster</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128807</commentid>
+    <comment_count>0</comment_count>
+    <who name="Richard Gronback">richard.gronback</who>
+    <bug_when>2008-01-10 06:56:28 -0500</bug_when>
+    <thetext>From the GMF documentation wiki page http://wiki.eclipse.org/GMF_Documentation there is a link to a newsgroup Q&amp;A page http://wiki.eclipse.org/GMF_Newsgroup_Q%26A which takes you to a &quot;Moved here&quot; page with this link http://wiki.eclipse.org/index.php/GMF_Newsgroup_Q%26A which takes you nowhere.  This link used to work.
+
+Similarly, the archived newsgroup page is lost http://wiki.eclipse.org/GMF_Archived_Newsgroup_Q%26A -&gt; http://wiki.eclipse.org/index.php/GMF_Archived_Newsgroup_Q&amp;A
+
+These pages contained a LOT of content that we&apos;d like to recover.
+
+Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131865</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-01-15 17:14:20 -0500</bug_when>
+    <thetext>Ok, so the solution/workaround is that I rename the listed pages to use &apos;Q_and_A&apos; instead of &apos;Q&amp;A&apos;.
+
+I&apos;ve spent a bunch of time crawling through the web and the MediaWiki source to find a solution, but I haven&apos;t been able to find another solution that doesn&apos;t damage more than it fixes or that works.  I can tell you right now that my testing points to this issue being entirely a MediaWiki thing.  From the debug logs:
+
+Start request
+GET /GMF_Archived_Newsgroup_Q&amp;A
+.....
+SQL: BEGIN
+SQL: SET /* Database::open 192.168.1.251 */ sql_mode = &apos;&apos;
+SQL:  /* Article::pageData 192.168.1.251 */ SELECT  page_id,page_namespace,page_title,page_restrictions,page_counter,page_is_redirect,page_is_new,page_random,page_touched,page_latest,page_len  FROM `page`  WHERE page_namespace = &apos;0&apos; AND page_title = &apos;GMF_Archived_Newsgroup_Q&apos;  LIMIT 1
+
+So even though it&apos;s getting the right request Mediawiki is trashing the &amp;.  It even trashes %26
+
+Start request
+GET /GMF_Archived_Newsgroup_Q%26A
+.......
+SQL: BEGIN
+SQL: SET /* Database::open 192.168.1.251 */ sql_mode = &apos;&apos;
+SQL:  /* Article::pageData 192.168.1.251 */ SELECT  page_id,page_namespace,page_title,page_restri
+ctions,page_counter,page_is_redirect,page_is_new,page_random,page_touched,page_latest,page_len  F
+ROM `page`  WHERE page_namespace = &apos;0&apos; AND page_title = &apos;GMF_Archived_Newsgroup_Q&apos;  LIMIT 1
+
+Closing as not_eclipse.
+
+-M.
+
+More info:
+http://www.organicdesign.co.nz/MediaWiki_1.11_title_extraction_bug
+http://www.mediawiki.org/wiki/Manual:Short_URL/Page_title_--_Working_method_with_mediawiki-1.11
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131873</commentid>
+    <comment_count>2</comment_count>
+    <who name="Richard Gronback">richard.gronback</who>
+    <bug_when>2008-01-15 17:18:43 -0500</bug_when>
+    <thetext>Thanks for recovering them!  Q_and_A is fine with me.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

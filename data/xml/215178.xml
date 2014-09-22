@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215178</bug_id>
+          
+          <creation_ts>2008-01-14 03:39:00 -0500</creation_ts>
+          <short_desc>[QuickAccess] Add Keybindings to Quick Access</short_desc>
+          <delta_ts>2009-12-11 09:47:21 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>293044</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Channing Walton">channingwalton</reporter>
+          <assigned_to name="Platform UI Triaged">platform-ui-triaged</assigned_to>
+          <cc>pwebster</cc>
+          <qa_contact name="Remy Suen">remysuen</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130429</commentid>
+    <comment_count>0</comment_count>
+    <who name="Channing Walton">channingwalton</who>
+    <bug_when>2008-01-14 03:39:15 -0500</bug_when>
+    <thetext>I wrote a plugin called ergo, to help you learn the keybindings for the commands used in the workbench: http://www.stateofflow.com/journal/72/ergo
+
+Boris bokowski suggested showing keybindings in quick access so I attempted to implement it. I&apos;ll attach a patch for this which is actually working :-( but I cannot figure out why. The code is identical to that used in my plugin but the keybindings always come back null.
+
+Is there any interest in this enhancement? If so, any pointers on how to get the keybinding would be appreciated.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130431</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86805</attachid>
+    <who name="Channing Walton">channingwalton</who>
+    <bug_when>2008-01-14 03:40:31 -0500</bug_when>
+    <thetext>Created attachment 86805
+Patch for org.eclipse.ui.workbench
+
+an attempt to show keybindings for commands in quick access</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130692</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86837</attachid>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-01-14 10:50:12 -0500</bug_when>
+    <thetext>Created attachment 86837
+Quick Access v02
+
+Channing, try working with this patch ... basically it moves the keystroke requests to the CommandProvider.
+
+The problem you were seeing was that by the time the CommandElements were asking for keybindings, the contexts had all changed and so most commands don&apos;t have keybindings in a dialog context.
+
+Later,
+PW</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130923</commentid>
+    <comment_count>3</comment_count>
+    <who name="Channing Walton">channingwalton</who>
+    <bug_when>2008-01-14 15:03:30 -0500</bug_when>
+    <thetext>Thanks Paul, but I don&apos;t see any keybindings shown with the patch. I&apos;m using OS X if that makes any difference.
+
+Channing</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130959</commentid>
+    <comment_count>4</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-14 15:54:56 -0500</bug_when>
+    <thetext>I did see key bindings when running Paul&apos;s patch (on Windows XP). I&apos;ve used the filter string &quot;quick&quot; since it resulted in a number of commands that actually have key bindings.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130966</commentid>
+    <comment_count>5</comment_count>
+    <who name="Channing Walton">channingwalton</who>
+    <bug_when>2008-01-14 16:02:05 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; I did see key bindings when running Paul&apos;s patch (on Windows XP).
+
+ah yes my mistake, I am seeing keybindings. I tested with &apos;save&apos; and expected to see its keybinding but didn&apos;t. I do see keybindings for &apos;quick&apos; though.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1635283</commentid>
+    <comment_count>6</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2009-11-26 16:16:05 -0500</bug_when>
+    <thetext>Remy is now responsible for watching bugs in the [QuickAccess] component area.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1643635</commentid>
+    <comment_count>7</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2009-12-11 09:47:21 -0500</bug_when>
+    <thetext>
+
+*** This bug has been marked as a duplicate of bug 293044 ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86805</attachid>
+            <date>2008-01-14 03:40:00 -0500</date>
+            <delta_ts>2008-01-14 03:40:31 -0500</delta_ts>
+            <desc>Patch for org.eclipse.ui.workbench</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>1600</size>
+            <attacher name="Channing Walton">channingwalton</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS53b3JrYmVu
+Y2gKSW5kZXg6IEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvcXVpY2thY2Nlc3Mv
+Q29tbWFuZEVsZW1lbnQuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNl
+L29yZy5lY2xpcHNlLnVpLndvcmtiZW5jaC9FY2xpcHNlIFVJL29yZy9lY2xpcHNlL3VpL2ludGVy
+bmFsL3F1aWNrYWNjZXNzL0NvbW1hbmRFbGVtZW50LmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9u
+IDEuNgpkaWZmIC11IC1yMS42IENvbW1hbmRFbGVtZW50LmphdmEKLS0tIEVjbGlwc2UgVUkvb3Jn
+L2VjbGlwc2UvdWkvaW50ZXJuYWwvcXVpY2thY2Nlc3MvQ29tbWFuZEVsZW1lbnQuamF2YQkyOSBN
+YXkgMjAwNyAxODo0NjoxMCAtMDAwMAkxLjYKKysrIEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkv
+aW50ZXJuYWwvcXVpY2thY2Nlc3MvQ29tbWFuZEVsZW1lbnQuamF2YQkxNCBKYW4gMjAwOCAwODoy
+OTo0MiAtMDAwMApAQCAtMTksNiArMTksNyBAQAogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLlBsYXRm
+b3JtVUk7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuaGFuZGxlcnMuSUhhbmRsZXJTZXJ2aWNlOwog
+aW1wb3J0IG9yZy5lY2xpcHNlLnVpLmludGVybmFsLm1pc2MuU3RhdHVzVXRpbDsKK2ltcG9ydCBv
+cmcuZWNsaXBzZS51aS5rZXlzLklCaW5kaW5nU2VydmljZTsKIGltcG9ydCBvcmcuZWNsaXBzZS51
+aS5zdGF0dXNoYW5kbGVycy5TdGF0dXNNYW5hZ2VyOwogCiAvKioKQEAgLTg1LDcgKzg2LDcgQEAK
+IAkJCWlmIChuZXN0ZWRDb21tYW5kICE9IG51bGwgJiYgbmVzdGVkQ29tbWFuZC5nZXREZXNjcmlw
+dGlvbigpICE9IG51bGwKIAkJCQkJJiYgbmVzdGVkQ29tbWFuZC5nZXREZXNjcmlwdGlvbigpLmxl
+bmd0aCgpICE9IDApIHsKIAkJCQlyZXR1cm4gY29tbWFuZC5nZXROYW1lKCkgKyBzZXBhcmF0b3IK
+LQkJCQkJCSsgbmVzdGVkQ29tbWFuZC5nZXREZXNjcmlwdGlvbigpOworCQkJCQkJKyBuZXN0ZWRD
+b21tYW5kLmdldERlc2NyaXB0aW9uKCkgKyBzZXBhcmF0b3IgKyBnZXRLZXlTdHJva2UoKTsKIAkJ
+CX0KIAkJCXJldHVybiBjb21tYW5kLmdldE5hbWUoKTsKIAkJfSBjYXRjaCAoTm90RGVmaW5lZEV4
+Y2VwdGlvbiBlKSB7CkBAIC05Myw2ICs5NCwxMiBAQAogCQl9CiAJfQogCisJcHJpdmF0ZSBTdHJp
+bmcgZ2V0S2V5U3Ryb2tlKCkgeworCQlJQmluZGluZ1NlcnZpY2UgYmluZGluZ1NlcnZpY2UgPSAo
+SUJpbmRpbmdTZXJ2aWNlKSBQbGF0Zm9ybVVJLmdldFdvcmtiZW5jaCgpLmdldFNlcnZpY2UoSUJp
+bmRpbmdTZXJ2aWNlLmNsYXNzKTsKKwkJU3RyaW5nIGtleVN0cm9rZSA9IGJpbmRpbmdTZXJ2aWNl
+LmdldEJlc3RBY3RpdmVCaW5kaW5nRm9ybWF0dGVkRm9yKGlkKTsKKwkJcmV0dXJuIGtleVN0cm9r
+ZSA9PSBudWxsID8gIiIgOiBrZXlTdHJva2U7IC8vJE5PTi1OTFMtMSQKKwl9CisKIAlwdWJsaWMg
+aW50IGhhc2hDb2RlKCkgewogCQlmaW5hbCBpbnQgcHJpbWUgPSAzMTsKIAkJaW50IHJlc3VsdCA9
+IDE7Cg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86837</attachid>
+            <date>2008-01-14 10:50:00 -0500</date>
+            <delta_ts>2008-01-14 10:50:12 -0500</delta_ts>
+            <desc>Quick Access v02</desc>
+            <filename>quickAccess-v02.txt</filename>
+            <type>text/plain</type>
+            <size>3365</size>
+            <attacher name="Paul Webster">pwebster</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS53b3JrYmVu
+Y2gKSW5kZXg6IEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvcXVpY2thY2Nlc3Mv
+Q29tbWFuZEVsZW1lbnQuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNl
+L29yZy5lY2xpcHNlLnVpLndvcmtiZW5jaC9FY2xpcHNlIFVJL29yZy9lY2xpcHNlL3VpL2ludGVy
+bmFsL3F1aWNrYWNjZXNzL0NvbW1hbmRFbGVtZW50LmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9u
+IDEuNgpkaWZmIC11IC1yMS42IENvbW1hbmRFbGVtZW50LmphdmEKLS0tIEVjbGlwc2UgVUkvb3Jn
+L2VjbGlwc2UvdWkvaW50ZXJuYWwvcXVpY2thY2Nlc3MvQ29tbWFuZEVsZW1lbnQuamF2YQkyOSBN
+YXkgMjAwNyAxODo0NjoxMCAtMDAwMAkxLjYKKysrIEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkv
+aW50ZXJuYWwvcXVpY2thY2Nlc3MvQ29tbWFuZEVsZW1lbnQuamF2YQkxNCBKYW4gMjAwOCAxNTo0
+ODoxMiAtMDAwMApAQCAtMzMsOSArMzMsMTIgQEAKIAogCXByaXZhdGUgU3RyaW5nIGlkOwogCi0J
+LyogcGFja2FnZSAqL0NvbW1hbmRFbGVtZW50KFBhcmFtZXRlcml6ZWRDb21tYW5kIGNvbW1hbmQs
+IFN0cmluZyBpZCwKKwlwcml2YXRlIFN0cmluZyBrZXlTdHJva2U7CisKKwkvKiBwYWNrYWdlICov
+Q29tbWFuZEVsZW1lbnQoUGFyYW1ldGVyaXplZENvbW1hbmQgY29tbWFuZCwgU3RyaW5nIGtleXMs
+IFN0cmluZyBpZCwKIAkJCUNvbW1hbmRQcm92aWRlciBjb21tYW5kUHJvdmlkZXIpIHsKIAkJc3Vw
+ZXIoY29tbWFuZFByb3ZpZGVyKTsKKwkJdGhpcy5rZXlTdHJva2UgPSBrZXlzOwogCQl0aGlzLmlk
+ID0gaWQ7CiAJCXRoaXMuY29tbWFuZCA9IGNvbW1hbmQ7CiAJfQpAQCAtODUsNyArODgsNyBAQAog
+CQkJaWYgKG5lc3RlZENvbW1hbmQgIT0gbnVsbCAmJiBuZXN0ZWRDb21tYW5kLmdldERlc2NyaXB0
+aW9uKCkgIT0gbnVsbAogCQkJCQkmJiBuZXN0ZWRDb21tYW5kLmdldERlc2NyaXB0aW9uKCkubGVu
+Z3RoKCkgIT0gMCkgewogCQkJCXJldHVybiBjb21tYW5kLmdldE5hbWUoKSArIHNlcGFyYXRvcgot
+CQkJCQkJKyBuZXN0ZWRDb21tYW5kLmdldERlc2NyaXB0aW9uKCk7CisJCQkJCQkrIG5lc3RlZENv
+bW1hbmQuZ2V0RGVzY3JpcHRpb24oKSArIHNlcGFyYXRvciArIGdldEtleVN0cm9rZSgpOwogCQkJ
+fQogCQkJcmV0dXJuIGNvbW1hbmQuZ2V0TmFtZSgpOwogCQl9IGNhdGNoIChOb3REZWZpbmVkRXhj
+ZXB0aW9uIGUpIHsKQEAgLTkzLDYgKzk2LDEwIEBACiAJCX0KIAl9CiAKKwlwcml2YXRlIFN0cmlu
+ZyBnZXRLZXlTdHJva2UoKSB7CisJCXJldHVybiBrZXlTdHJva2U7CisJfQorCiAJcHVibGljIGlu
+dCBoYXNoQ29kZSgpIHsKIAkJZmluYWwgaW50IHByaW1lID0gMzE7CiAJCWludCByZXN1bHQgPSAx
+OwpJbmRleDogRWNsaXBzZSBVSS9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9xdWlja2FjY2Vzcy9D
+b21tYW5kUHJvdmlkZXIuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNl
+L29yZy5lY2xpcHNlLnVpLndvcmtiZW5jaC9FY2xpcHNlIFVJL29yZy9lY2xpcHNlL3VpL2ludGVy
+bmFsL3F1aWNrYWNjZXNzL0NvbW1hbmRQcm92aWRlci5qYXZhLHYKcmV0cmlldmluZyByZXZpc2lv
+biAxLjYKZGlmZiAtdSAtcjEuNiBDb21tYW5kUHJvdmlkZXIuamF2YQotLS0gRWNsaXBzZSBVSS9v
+cmcvZWNsaXBzZS91aS9pbnRlcm5hbC9xdWlja2FjY2Vzcy9Db21tYW5kUHJvdmlkZXIuamF2YQkz
+MCBNYXkgMjAwNyAxODozNDozMyAtMDAwMAkxLjYKKysrIEVjbGlwc2UgVUkvb3JnL2VjbGlwc2Uv
+dWkvaW50ZXJuYWwvcXVpY2thY2Nlc3MvQ29tbWFuZFByb3ZpZGVyLmphdmEJMTQgSmFuIDIwMDgg
+MTU6NDg6MTIgLTAwMDAKQEAgLTI3LDYgKzI3LDcgQEAKIGltcG9ydCBvcmcuZWNsaXBzZS51aS5p
+bnRlcm5hbC5JV29ya2JlbmNoR3JhcGhpY0NvbnN0YW50czsKIGltcG9ydCBvcmcuZWNsaXBzZS51
+aS5pbnRlcm5hbC5Xb3JrYmVuY2hJbWFnZXM7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuaW50ZXJu
+YWwuaGFuZGxlcnMuSGFuZGxlclNlcnZpY2U7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkua2V5cy5J
+QmluZGluZ1NlcnZpY2U7CiAKIC8qKgogICogQHNpbmNlIDMuMwpAQCAtNTgsNiArNTksOCBAQAog
+CQkJaWRUb0VsZW1lbnQgPSBuZXcgSGFzaE1hcCgpOwogCQkJSUNvbW1hbmRTZXJ2aWNlIGNvbW1h
+bmRTZXJ2aWNlID0gKElDb21tYW5kU2VydmljZSkgUGxhdGZvcm1VSQogCQkJCQkuZ2V0V29ya2Jl
+bmNoKCkuZ2V0U2VydmljZShJQ29tbWFuZFNlcnZpY2UuY2xhc3MpOworCQkJSUJpbmRpbmdTZXJ2
+aWNlIGJpbmRpbmdTZXJ2aWNlID0gKElCaW5kaW5nU2VydmljZSkgUGxhdGZvcm1VSQorCQkJCQku
+Z2V0V29ya2JlbmNoKCkuZ2V0U2VydmljZShJQmluZGluZ1NlcnZpY2UuY2xhc3MpOwogCQkJZmlu
+YWwgQ29sbGVjdGlvbiBjb21tYW5kSWRzID0gY29tbWFuZFNlcnZpY2UuZ2V0RGVmaW5lZENvbW1h
+bmRJZHMoKTsKIAkJCWZpbmFsIEl0ZXJhdG9yIGNvbW1hbmRJZEl0ciA9IGNvbW1hbmRJZHMuaXRl
+cmF0b3IoKTsKIAkJCXdoaWxlIChjb21tYW5kSWRJdHIuaGFzTmV4dCgpKSB7CkBAIC03Myw4ICs3
+NiwxNSBAQAogCQkJCQkJCQkuaGFzTmV4dCgpOykgewogCQkJCQkJCVBhcmFtZXRlcml6ZWRDb21t
+YW5kIHBjID0gKFBhcmFtZXRlcml6ZWRDb21tYW5kKSBpdC5uZXh0KCk7CiAJCQkJCQkJU3RyaW5n
+IGlkID0gcGMuc2VyaWFsaXplKCk7CisJCQkJCQkJU3RyaW5nIGtleVN0cm9rZSA9ICIiOyAvLyRO
+T04tTkxTLTEkCisJCQkJCQkJaWYgKHBjLmdldFBhcmFtZXRlck1hcCgpLnNpemUoKSA9PSAwKSB7
+CisJCQkJCQkJCWtleVN0cm9rZSA9IGJpbmRpbmdTZXJ2aWNlCisJCQkJCQkJCQkJLmdldEJlc3RB
+Y3RpdmVCaW5kaW5nRm9ybWF0dGVkRm9yKGNvbW1hbmQKKwkJCQkJCQkJCQkJCS5nZXRJZCgpKTsK
+KworCQkJCQkJCX0KIAkJCQkJCQlpZFRvRWxlbWVudC5wdXQoaWQsCi0JCQkJCQkJCQluZXcgQ29t
+bWFuZEVsZW1lbnQocGMsIGlkLCB0aGlzKSk7CisJCQkJCQkJCQluZXcgQ29tbWFuZEVsZW1lbnQo
+cGMsIGtleVN0cm9rZSA9PSBudWxsPyIiOmtleVN0cm9rZSwgaWQsIHRoaXMpKTsgLy8kTk9OLU5M
+Uy0xJAogCQkJCQkJfQogCQkJCQl9IGNhdGNoIChmaW5hbCBOb3REZWZpbmVkRXhjZXB0aW9uIGUp
+IHsKIAkJCQkJCS8vIEl0IGlzIHNhZmUgdG8ganVzdCBpZ25vcmUgdW5kZWZpbmVkIGNvbW1hbmRz
+Lgo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

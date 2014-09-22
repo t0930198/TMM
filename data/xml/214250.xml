@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214250</bug_id>
+          
+          <creation_ts>2008-01-03 12:15:00 -0500</creation_ts>
+          <short_desc>Materialization of jar component from url reader causes error message</short_desc>
+          <delta_ts>2008-01-07 12:23:28 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Buckminster</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3.0-M1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Vaidas Nargėlas">vaidasn</reporter>
+          <assigned_to name="buckminster.core-inbox">buckminster.core-inbox</assigned_to>
+          <cc>thomas</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125067</commentid>
+    <comment_count>0</comment_count>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 12:15:32 -0500</bug_when>
+    <thetext>Build ID: r7034
+
+Steps To Reproduce:
+Here are test cquery and rmap that reproduce the problem.
+1. Download attached cquery and rmap
+2. Update path in cquery file to the actual location of rmap file you downloaded
+3. Open cquery, resolve and materialize
+4. Component is successfully materialized but the following error appears in console:
+
+ERROR   [0000] : Cannot create file because existing file of wrong type exists: /path/to/workspace/.buckminster/javax.servlet_2.4.0.v200706111738.jar.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125070</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86109</attachid>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 12:17:32 -0500</bug_when>
+    <thetext>Created attachment 86109
+jar-url-reader-test.cquery</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125071</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86110</attachid>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 12:18:08 -0500</bug_when>
+    <thetext>Created attachment 86110
+jar-url-reader-test.rmap</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125078</commentid>
+    <comment_count>3</comment_count>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 12:31:18 -0500</bug_when>
+    <thetext>However if I materialize the component through the attached mspec (change the path to the location where you donwloaded cquery file) which specifies that component has to be downloaded to download subdir then materialization succeeds without error message.
+
+More to this the new project .buckminster gets creted what does not happed when error message is printed.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125079</commentid>
+    <comment_count>4</comment_count>
+      <attachid>86111</attachid>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 12:32:00 -0500</bug_when>
+    <thetext>Created attachment 86111
+jar-url-reader-test.mspec</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125627</commentid>
+    <comment_count>5</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-04 06:28:49 -0500</bug_when>
+    <thetext>When materializing things that are not projects using the workspace materializer, Buckminster will put them into the special project .buckminster. The logic for this had a bug in it that caused artifacts targeted for the root of this project to incorrectly force a project creation for the file corresponding to the artifact itself. I fixed this in revision r7208.
+
+Thank you Vaidas for providing good examples.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86109</attachid>
+            <date>2008-01-03 12:17:00 -0500</date>
+            <delta_ts>2008-01-03 12:17:32 -0500</delta_ts>
+            <desc>jar-url-reader-test.cquery</desc>
+            <filename>jar-url-reader-test.cquery</filename>
+            <type>application/xml</type>
+            <size>253</size>
+            <attacher name="Vaidas Nargėlas">vaidasn</attacher>
+            
+              <data encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPGNxOmNvbXBvbmVudFF1ZXJ5
+IHhtbG5zOmNxPSJodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2J1Y2ttaW5zdGVyL0NRdWVyeS0xLjAi
+IHJlc291cmNlTWFwPSJmaWxlOi9wYXRoL3RvL2phci11cmwtcmVhZGVyLXRlc3Qucm1hcCI+CiAg
+ICA8Y3E6cm9vdFJlcXVlc3QgbmFtZT0iamF2YXguc2VydmxldCIgY29tcG9uZW50VHlwZT0iamFy
+Ii8+CjwvY3E6Y29tcG9uZW50UXVlcnk+Cg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86110</attachid>
+            <date>2008-01-03 12:18:00 -0500</date>
+            <delta_ts>2008-01-03 12:18:08 -0500</delta_ts>
+            <desc>jar-url-reader-test.rmap</desc>
+            <filename>jar-url-reader-test.rmap</filename>
+            <type>application/xml</type>
+            <size>605</size>
+            <attacher name="Vaidas Nargėlas">vaidasn</attacher>
+            
+              <data encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPHJtYXAKCXhtbG5zOnhzaT0i
+aHR0cDovL3d3dy53My5vcmcvMjAwMS9YTUxTY2hlbWEtaW5zdGFuY2UiCgl4bWxucz0iaHR0cDov
+L3d3dy5lY2xpcHNlLm9yZy9idWNrbWluc3Rlci9STWFwLTEuMCIKCXhtbG5zOmJjPSJodHRwOi8v
+d3d3LmVjbGlwc2Uub3JnL2J1Y2ttaW5zdGVyL0NvbW1vbi0xLjAiPgoKCTxzZWFyY2hQYXRoIG5h
+bWU9Imphci11cmwtcmVhZGVyLXRlc3QiPgoJCTxwcm92aWRlciByZWFkZXJUeXBlPSJ1cmwiIGNv
+bXBvbmVudFR5cGVzPSJqYXIiIG11dGFibGU9ImZhbHNlIj4KCQkJPHVyaSBmb3JtYXQ9Imh0dHA6
+Ly9kb3dubG9hZC5lY2xpcHNlLm9yZy90b29scy9vcmJpdC9kb3dubG9hZHMvZHJvcHMvUjIwMDcw
+OTE3MTMxNC9idW5kbGVzL3swfV8yLjQuMC52MjAwNzA2MTExNzM4LmphciI+CgkJCQk8YmM6cHJv
+cGVydHlSZWYga2V5PSJidWNrbWluc3Rlci5jb21wb25lbnQiLz4KCQkJPC91cmk+CgkJPC9wcm92
+aWRlcj4KCTwvc2VhcmNoUGF0aD4KCgk8bG9jYXRvciBzZWFyY2hQYXRoUmVmPSJqYXItdXJsLXJl
+YWRlci10ZXN0IiBwYXR0ZXJuPSIuKyIvPgo8L3JtYXA+Cgo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86111</attachid>
+            <date>2008-01-03 12:32:00 -0500</date>
+            <delta_ts>2008-01-03 12:32:00 -0500</delta_ts>
+            <desc>jar-url-reader-test.mspec</desc>
+            <filename>jar-url-reader-test.mspec</filename>
+            <type>application/xml</type>
+            <size>334</size>
+            <attacher name="Vaidas Nargėlas">vaidasn</attacher>
+            
+              <data encoding="base64">PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4KPG1kOm1zcGVjIHhtbG5zOm1k
+PSJodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2J1Y2ttaW5zdGVyL01ldGFEYXRhLTEuMCIKICAgIG1h
+dGVyaWFsaXplcj0id29ya3NwYWNlIgogICAgbmFtZT0iamFyLXVybC1yZWFkZXItdGVzdCIKICAg
+IHVybD0iZmlsZTovcGF0aC90by9qYXItdXJsLXJlYWRlci10ZXN0LmNxdWVyeSI+CgogICAgPG1k
+Om1zcGVjTm9kZSBpbnN0YWxsTG9jYXRpb249ImRvd25sb2FkIiBtYXRlcmlhbGl6ZXI9Indvcmtz
+cGFjZSIgbmFtZVBhdHRlcm49ImphdmF4XC5zZXJ2bGV0Ii8+CjwvbWQ6bXNwZWM+Cg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

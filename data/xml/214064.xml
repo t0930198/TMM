@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214064</bug_id>
+          
+          <creation_ts>2008-01-01 23:26:00 -0500</creation_ts>
+          <short_desc>d=Display.getCurrent(); if(d!=null) d.syncExec(...); makes no sense</short_desc>
+          <delta_ts>2008-08-14 12:00:05 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Eclipse monkey</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Scharf">eclipse</reporter>
+          <assigned_to name="Project Dash Incoming bugs">dash-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1123914</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Scharf">eclipse</who>
+    <bug_when>2008-01-01 23:26:43 -0500</bug_when>
+    <thetext>In JavaScriptGlobal there is multiple times the following code:
+  		Display currentDisplay = Display.getCurrent();
+		if (currentDisplay != null)
+			currentDisplay.syncExec(....)
+This code ties to run some code in the display thread, but when the sync exec is called we *must* be in the display thread!
+Instead of Display.getCurrent  use  Display.getDefault:
+  		Display currentDisplay = Display.getDefault();
+		if (currentDisplay != null)
+			currentDisplay.syncExec(....)
+
+I would factor this out....</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1312515</commentid>
+    <comment_count>1</comment_count>
+    <who name="Bjorn Freeman-Benson">bjorn.freeman-benson</who>
+    <bug_when>2008-08-14 12:00:05 -0400</bug_when>
+    <thetext>Per the Monkey component termination review (http://www.eclipse.org/projects/slides/2008.08.13%20Monkey%20Termination%20Review.pdf), this bug is being marked as WONTFIX because this component is being terminated.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

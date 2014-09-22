@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215214</bug_id>
+          
+          <creation_ts>2008-01-14 08:59:00 -0500</creation_ts>
+          <short_desc>Case sensitivity of path names</short_desc>
+          <delta_ts>2009-10-13 08:01:12 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Resources</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>ASSIGNED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas .">spam-receiver</reporter>
+          <assigned_to name="Platform-Resources-Inbox">platform-resources-inbox</assigned_to>
+          <cc>andrew.ferguson</cc>
+    
+    <cc>spam-receiver</cc>
+    
+    <cc>Szymon.Brandys</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130587</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas .">spam-receiver</who>
+    <bug_when>2008-01-14 08:59:29 -0500</bug_when>
+    <thetext>Build ID: I20070621-1340
+
+Steps To Reproduce:
+1. Use Eclipse on a Windows-PC and sources which are located on a remote Unix host
+2. Put the remote sources into an Eclipse project using a linked folder
+3. The remote sources contain file system elements, which differ only in character case
+4. Only one of these elements is visible within Eclipse
+
+
+More information:
+I work at a WinXP-PC with Eclipse locally installed.
+My Eclipse workspace is stored locally on my PC, too.
+The workspace consists of three projects:
+1. (Main project) A complexe system written in Pascal, C, C++ and Java with more than 55,000 files.
+   This project and the source files are managed by a ClearCase server, which is hosted by a Unix server and connected via a Samba share.
+2. The C/C++ standard headers
+   This project is stored locally on my PC in the workspace directory and contains a linked folder. This folder is linked to my build host, which is a Unix server, also connected via a Samba share, but which is different from the ClearCase host.
+3. The Boost C++ libraries
+   The project is structured analogeous to project 2.
+
+
+The problem I observe is the following:
+
+Due to the Unix distribution of our build host, the standard headers (project 2) contain among others the following directories:
+/opt/SUNWspro/WS6U2/include/ &gt; ll
+drwxr-xr-x   CC
+drwxr-xr-x   CC4
+drwxr-xr-x   CCios
+drwxr-xr-x   cc
+drwxr-xr-x   f77
+drwxr-xr-x   f90
+drwxr-xr-x   lint
+
+The directory CC/ is not visible within Eclipse, but hidden by the directory cc/. 
+
+I&apos;ve put the directory /opt/SUNWspro/WS6U2/ as a linked folder into my project.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1250508</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-05-28 07:27:13 -0400</bug_when>
+    <thetext>I don&apos;t see why this would be a CDT specific issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1256037</commentid>
+    <comment_count>2</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-06-02 10:16:03 -0400</bug_when>
+    <thetext>Yes, this is a general problem that case sensitivity is determined by the local OS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1256038</commentid>
+    <comment_count>3</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-06-02 10:16:28 -0400</bug_when>
+    <thetext>I thought we had a bug report for this already, but couldn&apos;t find one.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1609559</commentid>
+    <comment_count>4</comment_count>
+    <who name="Thomas .">spam-receiver</who>
+    <bug_when>2009-10-12 13:44:01 -0400</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; I thought we had a bug report for this already, but couldn&apos;t find one.
+
+Hm, it&apos;s now quite a long time ago since I reported this bug. Can I hope for a solution?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1609831</commentid>
+    <comment_count>5</comment_count>
+    <who name="Szymon Brandys">Szymon.Brandys</who>
+    <bug_when>2009-10-13 08:01:12 -0400</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; Hm, it&apos;s now quite a long time ago since I reported this bug. Can I hope for a
+&gt; solution?
+
+Bug 39488 is the one John was looking for. We don&apos;t plan to work on this during 3.6.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

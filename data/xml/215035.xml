@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215035</bug_id>
+          
+          <creation_ts>2008-01-11 10:49:00 -0500</creation_ts>
+          <short_desc>NullPointerException at o.e.ptp.internal.core.PProcess.outputDirPath</short_desc>
+          <delta_ts>2008-03-25 11:50:14 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>PTP</product>
+          <component>Core</component>
+          <version>1.1.1</version>
+          <rep_platform>Macintosh</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Beth Tibbitts">beth</reporter>
+          <assigned_to name="Greg Watson">g.watson</assigned_to>
+          
+          <qa_contact name="Craig E Rasmussen">crasmussen</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129678</commentid>
+    <comment_count>0</comment_count>
+    <who name="Beth Tibbitts">beth</who>
+    <bug_when>2008-01-11 10:49:58 -0500</bug_when>
+    <thetext>Build ID: M20070212-1330
+
+Steps To Reproduce:
+I built an eclipse 3.2.2 and cdt 3.1.2 and installed ptp 1.1.1 (not src, downloaded plugins to put in my eclipse install)
+when i try to launch a simple ptp job i get an error
+
+(note: orte seems to have launched ok, but i have one machine with just white box &quot;?&quot;)
+
+!ENTRY com.ibm.jdg2e.concurrency 4 4 2008-01-10 16:01:20.723
+!MESSAGE Execution Error
+!STACK 0
+java.lang.NullPointerException
+    at org.eclipse.ptp.internal.core.PProcess.outputDirPath(PProcess.java:52)
+    at org.eclipse.ptp.internal.core.PProcess.deleteOutputFiles(PProcess.java:40)
+    at org.eclipse.ptp.internal.core.ModelManager.newJob(ModelManager.java:900)
+    at org.eclipse.ptp.internal.core.ModelManager.run (ModelManager.java:823)
+    at org.eclipse.ptp.launch.internal.ParallelLaunchConfigurationDelegate.runtimeApplication(ParallelLaunchConfigurationDelegate.java:123)
+    at org.eclipse.ptp.launch.internal.ParallelLaunchConfigurationDelegate.launch (ParallelLaunchConfigurationDelegate.java:105)
+    at org.eclipse.ptp.tau.performance.internal.PerformanceLaunchSteps.performLaunch(PerformanceLaunchSteps.java:498)
+    at org.eclipse.ptp.tau.performance.internal.PerformanceLaunchManager$2.run (PerformanceLaunchManager.java:78)
+    at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+=============================
+
+console says:
+In getResourceManagerFactories
+retrieved factory: Simulation, org.eclipse.ptp.simulation.core.resourcemanager
+leaving getResourceManagerFactories
+Your Control System Choice: &apos;&lt;UNDEFINED CS&gt;&apos;
+Your Monitoring System Choice: &apos;&lt;UNDEFINED MS&gt;&apos;
+No previous (or invalid) control or monitoring system selected.
+
+Default systems set to Open Runtime Environment (ORTE).  To change, use the Window-&gt;Preferences-&gt;PTP preferences page.Your Default Control System Choice: &apos;Open Runtime Environment (ORTE)&apos;
+Your Default Monitoring System Choice: &apos;Open Runtime Environment (ORTE)&apos;
+
+In retrieveConfigurationWizardPageFactories
+wizard page factory: org.eclipse.ptp.simulation.ui.wizards.SimulationRMConfigurationWizardPageFactory@1cf6f61 for class: class org.eclipse.ptp.rmsystem.SimulationResourceManagerFactory
+leaving retrieveConfigurationWizardPageFactories
+XXXXXXXXXXX refreshRuntimeSystems(false), isInitialized():falserefreshRuntimeSystems
+XXXXXXXXXXX refreshRuntimeSystems calling initialize(), force:false, isInitialized():false
+
+SHUTTING DOWN CONTROL/MONITORING/PROXY systems where appropriate
+User selected 1 simulated machines.
+SimPreferences: Machine 0 = 1 nodes
+ModelManager.runtimeNodeGeneralName - #keys = 2, #values = 2
+        Unknown machine ID (machine0), adding to the model.
+        Unknown node number (0), adding to the model.
+XXXXXXXXXXX refreshRuntimeSystems(false), isInitialized():true
+OS = &apos;linux&apos;, Architecture = &apos;x86&apos;, OS_ARCH combo = &apos;org.eclipse.ptp.linux.x86 &apos;
+PTP Version = 1.1.0
+All Found Fragments:
+    update@plugins/org.eclipse.ptp.linux.ppc_1.1.0 [109]
+    update@plugins/org.eclipse.ptp.linux.x86_1.1.0 [110]
+    update@plugins/org.eclipse.ptp.linux.x86_64_1.1.0 [111]
+    update@plugins/org.eclipse.ptp.macosx.ppc_1.1.0 [112]
+    update@plugins/org.eclipse.ptp.macosx.x86_1.1.0 [113]
+Testing fragment 1 with this OS/arch - path: &apos;/home/beth/ecl/eclipse-3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.ppc_1.1.0/&apos;
+Testing fragment 2 with this OS/arch - path: &apos;/home/beth/ecl/eclipse-3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.x86_1.1.0/&apos;
+    Correct fragment for our OS &amp; arch
+    Searching for file in &apos;/home/beth/ecl/eclipse- 3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.x86_1.1.0/bin/sdm&apos;
+        **** FOUND IT!
+XXXXXXXXXXXX   Waiting for Universe to Populate
+MODEL MANAGER: newJob(1)
+OS = &apos;linux&apos;, Architecture = &apos;x86&apos;, OS_ARCH combo = &apos; org.eclipse.ptp.linux.x86&apos;
+PTP Version = 1.1.0
+All Found Fragments:
+    update@plugins/org.eclipse.ptp.linux.ppc_1.1.0 [109]
+    update@plugins/org.eclipse.ptp.linux.x86_1.1.0 [110]
+    update@plugins/org.eclipse.ptp.linux.x86_64_1.1.0 [111]
+    update@plugins/org.eclipse.ptp.macosx.ppc_1.1.0 [112]
+    update@plugins/org.eclipse.ptp.macosx.x86_1.1.0 [113]
+Testing fragment 1 with this OS/arch - path: &apos;/home/beth/ecl/eclipse-3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.ppc_1.1.0/&apos;
+Testing fragment 2 with this OS/arch - path: &apos;/home/beth/ecl/eclipse-3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.x86_1.1.0/&apos;
+    Correct fragment for our OS &amp; arch
+    Searching for file in &apos;/home/beth/ecl/eclipse- 3.2.2ptp/eclipse/plugins/org.eclipse.ptp.linux.x86_1.1.0/bin/ptp_orte_proxy&apos;
+        **** FOUND IT!
+XXXXXXXXXXX refreshRuntimeSystems(false), isInitialized():true
+XXXXXXXXXXX refreshRuntimeSystems(false), isInitialized():true
+XXXXXXXXXXXX   Waiting for Universe to Populate
+MODEL MANAGER: newJob(2)
+
+
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1183407</commentid>
+    <comment_count>1</comment_count>
+    <who name="Greg Watson">g.watson</who>
+    <bug_when>2008-03-25 11:50:14 -0400</bug_when>
+    <thetext>The 2.0 release should fix this problem. No further 1.x releases are planned.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

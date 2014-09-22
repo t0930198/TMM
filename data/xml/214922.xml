@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214922</bug_id>
+          
+          <creation_ts>2008-01-10 12:02:00 -0500</creation_ts>
+          <short_desc>set row header width manually</short_desc>
+          <delta_ts>2009-06-26 04:26:23 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Nebula</product>
+          <component>Grid</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P5</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Sebastian Fuchs">spacehorst</reporter>
+          <assigned_to name="Chris Gross">cgross</assigned_to>
+          <cc>tom.schindl</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129010</commentid>
+    <comment_count>0</comment_count>
+    <who name="Sebastian Fuchs">spacehorst</who>
+    <bug_when>2008-01-10 12:02:40 -0500</bug_when>
+    <thetext>The current implementation computes the width of the row header column by the largest row header label.
+There are situations where the client should be able to change this behaviour and set the width manually.
+I suggest to create a method setRowHeaderWidth(int width) in Grid.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1179283</commentid>
+    <comment_count>1</comment_count>
+      <attachid>92781</attachid>
+    <who name="Sergey Stepanenko">sest</who>
+    <bug_when>2008-03-18 06:05:26 -0400</bug_when>
+    <thetext>Created attachment 92781
+Add ability to set row header width manually
+
+Here is patch to allow manually setting of row header width.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481268</commentid>
+    <comment_count>2</comment_count>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2009-04-24 08:59:24 -0400</bug_when>
+    <thetext>Chris thoughts on this. One can naturally also customize this width by setting a custom renderer but this looks a bit of overhead.
+
+I&apos;d suggest to name the method setMinRowHeaderWidth() because the final decision is made by the renderer.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481384</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Gross">cgross</who>
+    <bug_when>2009-04-24 10:15:45 -0400</bug_when>
+    <thetext>I actually thought I added this (and maybe called it setItemHeaderWidth to try in keeping with the Item = row terminology).  I guess not (I don&apos;t have access to source right now).  I&apos;m fine with adding it though I&apos;d just make it conceptually simpler and not worry about minimums or letting the renderer have a final say.  If the user sets the width I&apos;d ignore what the renderer wants.  The code in the patch likely isn&apos;t sufficient for this though.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481436</commentid>
+    <comment_count>4</comment_count>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2009-04-24 10:46:00 -0400</bug_when>
+    <thetext>There&apos;s only a getItemHeaderWidth() but not a set and yes if this is absolute then we need more code because currently this is calculated using Math.max().</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481467</commentid>
+    <comment_count>5</comment_count>
+    <who name="Chris Gross">cgross</who>
+    <bug_when>2009-04-24 10:59:26 -0400</bug_when>
+    <thetext>I think we need to understand the use case (which I don&apos;t really).  Why do users want to change the row header width?  Just to make it bigger?  If so then this is probably fine - but I&apos;m not sure why you&apos;d want to increase the width of the row header larger than necessary to show the text.  If you want to change it at all I can see you wanting to make it smaller.  That seems like a more logical use case to me.  Lets say you&apos;ve set the row header text to something thats so long you&apos;d never want the row header to grow large enough to show it.  So you could limit the size of the header to 50 pixels or something.  Its not obvious to me why someone would want to do the opposite and make the header bigger than necessary.
+
+So I&apos;d rather not add the new API setMinRowHeaderWidth and later someone wants to see us add the ability to setMaxRowHeaderWidth.  And then once we have both those methods - we probably would have been better off with just a setRowHeaderWidth (no min or max just set it and be done).  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481488</commentid>
+    <comment_count>6</comment_count>
+    <who name="Sebastian Fuchs">spacehorst</who>
+    <bug_when>2009-04-24 11:10:35 -0400</bug_when>
+    <thetext>In my case I had to show several Grid widgets 	among each other.
+It would be nice to have all the row headers having the same width.
+To make sure the header&apos;s titles are all readable, we must the smaller ones make bigger :-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481500</commentid>
+    <comment_count>7</comment_count>
+    <who name="Sebastian Fuchs">spacehorst</who>
+    <bug_when>2009-04-24 11:17:05 -0400</bug_when>
+    <thetext>(In reply to comment #6)
+I remember a screenshot in the nebula newsgroup. Must be around the date I filed the bug.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1481525</commentid>
+    <comment_count>8</comment_count>
+    <who name="Chris Gross">cgross</who>
+    <bug_when>2009-04-24 11:33:03 -0400</bug_when>
+    <thetext>That makes sense, but still probably a more rare use case then setting the width smaller.  Can you update the patch to handle that use case as well? </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1532551</commentid>
+    <comment_count>9</comment_count>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2009-06-26 03:28:49 -0400</bug_when>
+    <thetext>Looking the code there is such a method(In reply to comment #3)
+&gt; I actually thought I added this (and maybe called it setItemHeaderWidth to try
+&gt; in keeping with the Item = row terminology).  I guess not (I don&apos;t have access
+&gt; to source right now).  I&apos;m fine with adding it though I&apos;d just make it
+&gt; conceptually simpler and not worry about minimums or letting the renderer have
+&gt; a final say.  If the user sets the width I&apos;d ignore what the renderer wants. 
+&gt; The code in the patch likely isn&apos;t sufficient for this though.
+&gt; 
+
+There is such a method so I think I can close the bug! Feel free to reopen if this is not working for you.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1532579</commentid>
+    <comment_count>10</comment_count>
+    <who name="Sebastian Fuchs">spacehorst</who>
+    <bug_when>2009-06-26 04:26:23 -0400</bug_when>
+    <thetext>I haven&apos;t tried it yet.
+But looking at the current cvs, I trust you and believe it works :-)
+Thanks.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>92781</attachid>
+            <date>2008-03-18 06:05:00 -0400</date>
+            <delta_ts>2008-03-18 06:05:26 -0400</delta_ts>
+            <desc>Add ability to set row header width manually</desc>
+            <filename>nebula_grid_setRowHeaderWidth.patch</filename>
+            <type>text/plain</type>
+            <size>371</size>
+            <attacher name="Sergey Stepanenko">sest</attacher>
+            
+              <data encoding="base64">MzE4YzMxOA0KPCAgICAgcHJpdmF0ZSBpbnQgcm93SGVhZGVyV2lkdGggPSAwOw0KLS0tDQo+ICAg
+ICBwcml2YXRlIGludCByb3dIZWFkZXJXaWR0aCA9IDE7DQozNDkxLDM0OTJkMzQ5MA0KPCAJICAg
+ICAgICByb3dIZWFkZXJXaWR0aCA9IDE7DQo8IAkgICAgICAgIA0KMzUwM2EzNTAyLDM1MTANCj4g
+ICAgICAqIFNldCB3aWR0aCBvZiB0aGUgcm93IGhlYWRlci4NCj4gICAgICAqIEBwYXJhbSB3aWR0
+aA0KPiAgICAgICovDQo+ICAgICBwdWJsaWMgdm9pZCBzZXRSb3dIZWFkZXJXaWR0aChpbnQgd2lk
+dGgpIHsNCj4gICAgIAl0aGlzLnJvd0hlYWRlcldpZHRoID0gd2lkdGg7DQo+ICAgICAJcmVkcmF3
+KCk7DQo+ICAgICB9DQo+IA0KPiAgICAgLyoqDQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

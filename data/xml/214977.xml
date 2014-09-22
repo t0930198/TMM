@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214977</bug_id>
+          
+          <creation_ts>2008-01-10 19:19:00 -0500</creation_ts>
+          <short_desc>Ensure the BREE needed for compliation is listed first</short_desc>
+          <delta_ts>2008-12-16 09:38:56 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>bugday</keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chris Aniszczyk">caniszczyk</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129384</commentid>
+    <comment_count>0</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-10 19:19:41 -0500</bug_when>
+    <thetext>see bug 212228 and http://wiki.eclipse.org/index.php/Execution_Environments#Compiling_against_more_than_is_required why this is an awesome idea
+
+I&apos;d envision a warning and quickfix here to help people as this problem is annoying to debug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138751</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-25 12:20:19 -0500</bug_when>
+    <thetext>adding context to help people</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138752</commentid>
+    <comment_count>2</comment_count>
+      <attachid>87883</attachid>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-25 12:20:23 -0500</bug_when>
+    <thetext>Created attachment 87883
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145599</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-30 14:31:21 -0500</bug_when>
+    <thetext>Here&apos;s the bug Tom.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145842</commentid>
+    <comment_count>4</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-30 17:04:26 -0500</bug_when>
+    <thetext>Chris, can you give more details on the warning and quickfix you are proposing?
+
+- When would you flag a warning?  anytime the highest EE is not listed first?
+- What problem is hard (annoying) to debug?
+- What about EEs that are not true subsets with one another?  Say Foundation is listed before J2SE-1.3 because the bundle really does need to compile against javax.microedition.io package but can run on J2SE-1.3.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145899</commentid>
+    <comment_count>5</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-30 18:01:04 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; Chris, can you give more details on the warning and quickfix you are proposing?
+
+We need a quick fix that would change the order of the EEs to place the lowest EE at the beginning of the list.
+
+&gt; - When would you flag a warning?  anytime the highest EE is not listed first?
+
+Correct
+
+&gt; - What problem is hard (annoying) to debug?
+
+Figuring out why your plug-in is failing to export (bug 212228) when you incorrectly set your EEs, which is the motivation behind this bug.
+
+&gt; - What about EEs that are not true subsets with one another?  Say Foundation is
+&gt; listed before J2SE-1.3 because the bundle really does need to compile against
+&gt; javax.microedition.io package but can run on J2SE-1.3.
+
+For this, I think it is easiest to use ExecutionEnviornmentAnalyzer. In that class there is a map that represents EEs and the ones that are supersets.  We would need to create a new function that queries that map some how (that&apos;s where the fun comes in :) ).
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146565</commentid>
+    <comment_count>6</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-31 12:40:17 -0500</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; We need a quick fix that would change the order of the EEs to place the lowest
+&gt; EE at the beginning of the list.
+
+I sure you mean to say highest EE at the beginning of the list.
+
+&gt; For this, I think it is easiest to use ExecutionEnviornmentAnalyzer. In that
+&gt; class there is a map that represents EEs and the ones that are supersets.  We
+&gt; would need to create a new function that queries that map some how (that&apos;s
+&gt; where the fun comes in :) ).
+&gt; 
+
+But in the case of EEs which are not subsets then I think you have to give up.  How could you know which EE is the one you must use in that case?  It seems like the developer is the only one that could know this.
+
+Isn&apos;t this really an error in the workspace configuration?  Seems like the check you really want is to make sure that there is a VM installed which provides a perfect match to the first EE specified in the BREE or the build.properties setting &quot;jre.compilation.profile&quot; which should override any setting in the BREE at PDE-Build time.
+
+PDE team is flag happy this milestone :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146696</commentid>
+    <comment_count>7</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-31 14:52:15 -0500</bug_when>
+    <thetext>&gt; I sure you mean to say highest EE at the beginning of the list.
+
+Yep, I got confused :)
+
+&gt; But in the case of EEs which are not subsets then I think you have to give up. 
+&gt; How could you know which EE is the one you must use in that case?  It seems
+&gt; like the developer is the only one that could know this.
+
+With this enhancement we are trying to prevent the user from errors which lead to problems which are extremely difficult to debug.  Now you are right that their are cases where two profiles may not be subsets and in this case we can exit.  But there are many of cases were profiles are subsets and where we can save users from getting into bad situations.  
+
+If we have knowledgeable eclipse users like Pascal running into the problem, we can try to save the rest of the community some time and offer help where we can.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1394739</commentid>
+    <comment_count>8</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-12-16 09:38:56 -0500</bug_when>
+    <thetext>I don&apos;t think we can really fix this issue as we can&apos;t read people&apos;s mind. In some cases, it doesn&apos;t matter.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>87883</attachid>
+            <date>2008-01-25 12:20:00 -0500</date>
+            <delta_ts>2008-01-25 12:20:23 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>829</size>
+            <attacher name="Chris Aniszczyk">caniszczyk</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIAIhaOTgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQ5NzcueG1s7Vldb5swFP0ryA97iwME8llaaWmmRtPWrWn3sicXXzFXxmbG
+sEaT+ttnSNamNMuaDKVrEp4sc3Xv4dxj3yNxdHIbcysHlTIpAuRgG1kgQkmZiAJ0dfmu0UUnx0dj
+oUGRUJugM5ZqqabWmAbom9ZJ2m82r7MoxRBylqSApYrKjYbreL1OB1lf7rOjR5lGOQhtnQLXJEAi
+4xxZI0FPiYYAubbdbdhOw/Utx+m7dt9p41bPtoaTS2SVOSDVAWrY2Gm1kfWeCQMnJoIlGSdFcmR9
+JDmLyvXv7OeKRUwUwA3Ge7zxlE8FDqUyS0mBYzZPjymEZIqsiSZKPwPWRKss1JmCMyIoN9HBYpmE
+QllkIW6G+obkBDU3ZMbp9X0Hd/1elZlW0clZgUTJhERLWFnJAtAIUrMhNGEiNnjW5+9R4T+yaD7B
+87HrvyCLK/Vlm1jzvC6VNVMVviFxMuB6UH1fVhaEz9BcZ4xTc0J/vs2KfCOlpLqARCoThAtWvy55
+Ub+IW9hrV9l3HzScAodwPcYzhnMGP1I8NBo2UM4zzZmAvyqx67g7zbS5Ljp+lWrngWqgTD+f5Ruq
+C6aHMk7Y7ExcCaZHJodUq6leBLKDVL/SmXUYT2uOp4NqtnBct6/KDQbO5lfh+v7nv+V2lYDtlrev
+Al42b+5ywhk1YOcG5e7z+JOSkfme9IMUhWoGtffGdrHX6qyY/lsxWhUg+9sN4zafnpRte7EKkL3t
+xk4N3oOPq2vMHnRW3x1wUOXLmL8terwdV/BmU+wCvmdMAR3dQpiVZIucKTmXVt2uoo29rlevx/sH
+a7GAZgea0nz6K+T4F1BLBwhT3eByawIAAEUZAABQSwECFAAUAAgACACIWjk4U93gcmsCAABFGQAA
+MAAAAAAAAAAAAAAAAAAAAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uub3JnJTJGYnVncy0y
+MTQ5NzcueG1sUEsFBgAAAAABAAEAXgAAAMkCAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

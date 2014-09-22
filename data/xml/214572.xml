@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214572</bug_id>
+          
+          <creation_ts>2008-01-08 00:26:00 -0500</creation_ts>
+          <short_desc>Implement IAggregationCellViewProvider for crosstab/chart integration</short_desc>
+          <delta_ts>2008-02-18 03:39:42 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Chart</component>
+          <version>2.3.0</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Michonneau">dmichonneau</reporter>
+          <assigned_to name="Yulin Wang">yulin.wang</assigned_to>
+          <cc>lshen</cc>
+    
+    <cc>qaobsolete</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127103</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Michonneau">dmichonneau</who>
+    <bug_when>2008-01-08 00:26:12 -0500</bug_when>
+    <thetext>This interface implements the model logic for the designer UI, when the users 
+design a crosstab with charts. Note that it is independent from the multi-view 
+feature.
+
+/**
+ * Return the name of this view
+ */
+String getViewName( );
+
+// this should simply return &quot;chart&quot;
+
+/**
+ * Returns if the given aggregation cell matches this view
+ */
+boolean matchView( AggregationCellHandle cell );
+Returns true if chart is supported in this type of aggregation cell
+
+/**
+ * Switches given aggregation cell to this view
+ */
+void switchView( AggregationCellHandle cell );
+
+create a chart inside the aggregation cell (and remove the data elements). This 
+method is called when the UI tries to switch the cell contents from data 
+element to chart.
+
+/**
+ * Restores given aggregation cell to previous view
+ */
+void restoreView( AggregationCellHandle cell );</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129513</commentid>
+    <comment_count>1</comment_count>
+    <who name="Yulin Wang">yulin.wang</who>
+    <bug_when>2008-01-11 05:01:34 -0500</bug_when>
+    <thetext>Added UI support to convert between chart and text in cross tab.
+Select &quot;display as chart&quot; will replace data item with the chart in measure cell, and add grand total cell to insert an axis chart, which references to the host chart in measure cell.
+When user clicks the axis chart, it will open the chart builder for the host chart.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

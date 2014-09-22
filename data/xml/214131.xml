@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214131</bug_id>
+          
+          <creation_ts>2008-01-02 12:09:00 -0500</creation_ts>
+          <short_desc>Misleading javadoc in ModelProviderManager::registerProvider</short_desc>
+          <delta_ts>2008-10-01 11:07:39 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Java EE Tools</product>
+          <component>jst.j2ee</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>3.1 M3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="kiril mitov">thebravoman</reporter>
+          <assigned_to name="kiril mitov">thebravoman</assigned_to>
+          
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124252</commentid>
+    <comment_count>0</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-01-02 12:09:49 -0500</bug_when>
+    <thetext>Build ID:  I20071101-2000
+
+Steps To Reproduce:
+1.The method ModelProviderManager::registerProvider is used for registration of modelProviders.
+2.Its java doc states that:
+&quot;@param priority - {@link String}- Used to allow multiple instances, the highest priority is chosen&quot;
+3.But it is not state which priority is higher. Is &quot;0&quot; higher than &quot;1&quot; or revers?
+
+According to the code in the method:
+if (newPriority &lt;= currentPriority) {...}
+it seems that &quot;0&quot; is a higher priority than &quot;1&quot;.
+
+I think it is appropriate to describe this in the javadoc of the method.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1341858</commentid>
+    <comment_count>1</comment_count>
+      <attachid>114001</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-10-01 11:04:14 -0400</bug_when>
+    <thetext>Created attachment 114001
+Changes in the javadoc
+
+Adding the following explanation
+@param priority
+	 *            - {@link String}- Used to allow multiple instances, the
+	 *            highest priority is chosen. Priority &apos;0&apos; is higher that
+	 *            priority &apos;1&apos;. If priorities are equal the new providerFactory
+	 *            is chosen.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1341860</commentid>
+    <comment_count>2</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-10-01 11:07:15 -0400</bug_when>
+    <thetext>Commit in HEAD.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>114001</attachid>
+            <date>2008-10-01 11:04:00 -0400</date>
+            <delta_ts>2008-10-01 11:04:14 -0400</delta_ts>
+            <desc>Changes in the javadoc</desc>
+            <filename>ModelProviderManagerJavadoc.patch</filename>
+            <type>text/plain</type>
+            <size>3821</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUN
+CkluZGV4OiBjb21tb24vb3JnL2VjbGlwc2UvanN0L2oyZWUvbW9kZWwvTW9kZWxQcm92aWRlck1h
+bmFnZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3dlYnRvb2xzL2plZXRv
+b2xzL3BsdWdpbnMvb3JnLmVjbGlwc2UuanN0LmoyZWUvY29tbW9uL29yZy9lY2xpcHNlL2pzdC9q
+MmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lv
+biAxLjEyDQpkaWZmIC11IC1yMS4xMiBNb2RlbFByb3ZpZGVyTWFuYWdlci5qYXZhDQotLS0gY29t
+bW9uL29yZy9lY2xpcHNlL2pzdC9qMmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEJ
+MjMgQXByIDIwMDggMTU6MjI6MzggLTAwMDAJMS4xMg0KKysrIGNvbW1vbi9vcmcvZWNsaXBzZS9q
+c3QvajJlZS9tb2RlbC9Nb2RlbFByb3ZpZGVyTWFuYWdlci5qYXZhCTEgT2N0IDIwMDggMTU6MDE6
+MTUgLTAwMDANCkBAIC0xOTMsMTYgKzE5MywyMSBAQA0KIAkJCQlub3RpZnlNb2RlbFByb3ZpZGVy
+cyhldmVudCk7DQogCQkJDQogCQl9DQotCQkNCiANCiAJLyoqDQogCSAqIFVzZWQgdG8gcmVnaXN0
+ZXIgYW4gSU1vZGVsUHJvdmlkZXJGYWN0b3J5IGFnYWluc3QgYSBmYWNldCB2ZXJzaW9uDQotCSAq
+IEBwYXJhbSBwcm92aWRlckZhY3RvcnkgLSB7QGxpbmsgSU1vZGVsUHJvdmlkZXJGYWN0b3J5fQ0K
+LQkgKiBAcGFyYW0gdiAtIHtAbGluayBJUHJvamVjdEZhY2V0VmVyc2lvbn0NCi0JICogQHBhcmFt
+IHByaW9yaXR5IC0ge0BsaW5rIFN0cmluZ30tIFVzZWQgdG8gYWxsb3cgbXVsdGlwbGUgaW5zdGFu
+Y2VzLCB0aGUgaGlnaGVzdCBwcmlvcml0eSBpcyBjaG9zZW4NCisJICogDQorCSAqIEBwYXJhbSBw
+cm92aWRlckZhY3RvcnkNCisJICogICAgICAgICAgICAtIHtAbGluayBJTW9kZWxQcm92aWRlckZh
+Y3Rvcnl9DQorCSAqIEBwYXJhbSB2DQorCSAqICAgICAgICAgICAgLSB7QGxpbmsgSVByb2plY3RG
+YWNldFZlcnNpb259DQorCSAqIEBwYXJhbSBwcmlvcml0eQ0KKwkgKiAgICAgICAgICAgIC0ge0Bs
+aW5rIFN0cmluZ30tIFVzZWQgdG8gYWxsb3cgbXVsdGlwbGUgaW5zdGFuY2VzLCB0aGUNCisJICog
+ICAgICAgICAgICBoaWdoZXN0IHByaW9yaXR5IGlzIGNob3Nlbi4gUHJpb3JpdHkgJzAnIGlzIGhp
+Z2hlciB0aGF0DQorCSAqICAgICAgICAgICAgcHJpb3JpdHkgJzEnLiBJZiBwcmlvcml0aWVzIGFy
+ZSBlcXVhbCB0aGUgbmV3IHByb3ZpZGVyRmFjdG9yeQ0KKwkgKiAgICAgICAgICAgIGlzIGNob3Nl
+bi4NCiAJICovDQotCXB1YmxpYyBzdGF0aWMgdm9pZCByZWdpc3RlclByb3ZpZGVyKElNb2RlbFBy
+b3ZpZGVyRmFjdG9yeSBwcm92aWRlckZhY3RvcnksDQotCQkJSVByb2plY3RGYWNldFZlcnNpb24g
+diwgU3RyaW5nIHByaW9yaXR5KSB7DQorCXB1YmxpYyBzdGF0aWMgdm9pZCByZWdpc3RlclByb3Zp
+ZGVyKElNb2RlbFByb3ZpZGVyRmFjdG9yeSBwcm92aWRlckZhY3RvcnksIElQcm9qZWN0RmFjZXRW
+ZXJzaW9uIHYsIFN0cmluZyBwcmlvcml0eSkgew0KIA0KIAkJaW50IG5ld1ByaW9yaXR5ID0gKHBy
+aW9yaXR5ICE9IG51bGwpID8gSW50ZWdlci5wYXJzZUludChwcmlvcml0eSkgOiBERUZBVUxUX1BS
+SU9SSVRZOw0KIAkJaW50IGN1cnJlbnRQcmlvcml0eSA9IGdldFByb3ZpZGVyUHJpb3JpdHkodik7
+DQpJbmRleDogTW9kZWxQcm92aWRlck1hbmFnZXJKYXZhZG9jLnBhdGNoDQo9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpS
+Q1MgZmlsZTogTW9kZWxQcm92aWRlck1hbmFnZXJKYXZhZG9jLnBhdGNoDQpkaWZmIC1OIE1vZGVs
+UHJvdmlkZXJNYW5hZ2VySmF2YWRvYy5wYXRjaA0KLS0tIC9kZXYvbnVsbAkxIEphbiAxOTcwIDAw
+OjAwOjAwIC0wMDAwDQorKysgTW9kZWxQcm92aWRlck1hbmFnZXJKYXZhZG9jLnBhdGNoCTEgSmFu
+IDE5NzAgMDA6MDA6MDAgLTAwMDANCkBAIC0wLDAgKzEsMzYgQEANCisjIyMgRWNsaXBzZSBXb3Jr
+c3BhY2UgUGF0Y2ggMS4wDQorI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUNCitJbmRleDogY29tbW9u
+L29yZy9lY2xpcHNlL2pzdC9qMmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmENCis9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09DQorUkNTIGZpbGU6IC9jdnNyb290L3dlYnRvb2xzL2plZXRvb2xzL3BsdWdpbnMv
+b3JnLmVjbGlwc2UuanN0LmoyZWUvY29tbW9uL29yZy9lY2xpcHNlL2pzdC9qMmVlL21vZGVsL01v
+ZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEsdg0KK3JldHJpZXZpbmcgcmV2aXNpb24gMS4xMg0KK2Rp
+ZmYgLXUgLXIxLjEyIE1vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmENCistLS0gY29tbW9uL29yZy9l
+Y2xpcHNlL2pzdC9qMmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEJMjMgQXByIDIw
+MDggMTU6MjI6MzggLTAwMDAJMS4xMg0KKysrKyBjb21tb24vb3JnL2VjbGlwc2UvanN0L2oyZWUv
+bW9kZWwvTW9kZWxQcm92aWRlck1hbmFnZXIuamF2YQkxIE9jdCAyMDA4IDE0OjU3OjU0IC0wMDAw
+DQorQEAgLTE5MywxNiArMTkzLDIwIEBADQorIAkJCQlub3RpZnlNb2RlbFByb3ZpZGVycyhldmVu
+dCk7DQorIAkJCQ0KKyAJCX0NCistCQkNCisgDQorIAkvKioNCisgCSAqIFVzZWQgdG8gcmVnaXN0
+ZXIgYW4gSU1vZGVsUHJvdmlkZXJGYWN0b3J5IGFnYWluc3QgYSBmYWNldCB2ZXJzaW9uDQorLQkg
+KiBAcGFyYW0gcHJvdmlkZXJGYWN0b3J5IC0ge0BsaW5rIElNb2RlbFByb3ZpZGVyRmFjdG9yeX0N
+CistCSAqIEBwYXJhbSB2IC0ge0BsaW5rIElQcm9qZWN0RmFjZXRWZXJzaW9ufQ0KKy0JICogQHBh
+cmFtIHByaW9yaXR5IC0ge0BsaW5rIFN0cmluZ30tIFVzZWQgdG8gYWxsb3cgbXVsdGlwbGUgaW5z
+dGFuY2VzLCB0aGUgaGlnaGVzdCBwcmlvcml0eSBpcyBjaG9zZW4NCisrCSAqIA0KKysJICogQHBh
+cmFtIHByb3ZpZGVyRmFjdG9yeQ0KKysJICogICAgICAgICAgICAtIHtAbGluayBJTW9kZWxQcm92
+aWRlckZhY3Rvcnl9DQorKwkgKiBAcGFyYW0gdg0KKysJICogICAgICAgICAgICAtIHtAbGluayBJ
+UHJvamVjdEZhY2V0VmVyc2lvbn0NCisrCSAqIEBwYXJhbSBwcmlvcml0eQ0KKysJICogICAgICAg
+ICAgICAtIHtAbGluayBTdHJpbmd9LSBVc2VkIHRvIGFsbG93IG11bHRpcGxlIGluc3RhbmNlcywg
+dGhlDQorKwkgKiAgICAgICAgICAgIGhpZ2hlc3QgcHJpb3JpdHkgaXMgY2hvc2VuLiBQcmlvcml0
+eSAnMCcgaXMgaGlnaGVyIHRoYXQNCisrCSAqICAgICAgICAgICAgcHJpb3JpdHkgJzEnLg0KKyAJ
+ICovDQorLQlwdWJsaWMgc3RhdGljIHZvaWQgcmVnaXN0ZXJQcm92aWRlcihJTW9kZWxQcm92aWRl
+ckZhY3RvcnkgcHJvdmlkZXJGYWN0b3J5LA0KKy0JCQlJUHJvamVjdEZhY2V0VmVyc2lvbiB2LCBT
+dHJpbmcgcHJpb3JpdHkpIHsNCisrCXB1YmxpYyBzdGF0aWMgdm9pZCByZWdpc3RlclByb3ZpZGVy
+KElNb2RlbFByb3ZpZGVyRmFjdG9yeSBwcm92aWRlckZhY3RvcnksIElQcm9qZWN0RmFjZXRWZXJz
+aW9uIHYsIFN0cmluZyBwcmlvcml0eSkgew0KKyANCisgCQlpbnQgbmV3UHJpb3JpdHkgPSAocHJp
+b3JpdHkgIT0gbnVsbCkgPyBJbnRlZ2VyLnBhcnNlSW50KHByaW9yaXR5KSA6IERFRkFVTFRfUFJJ
+T1JJVFk7DQorIAkJaW50IGN1cnJlbnRQcmlvcml0eSA9IGdldFByb3ZpZGVyUHJpb3JpdHkodik7
+DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

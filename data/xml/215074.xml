@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215074</bug_id>
+          
+          <creation_ts>2008-01-11 14:41:00 -0500</creation_ts>
+          <short_desc>[api tooling] @noreference on compile-time constant does not work</short_desc>
+          <delta_ts>2008-04-30 10:21:58 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>API Tools</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>3.4 M7</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Darin Wright">darin.eclipse</reporter>
+          <assigned_to name="Darin Wright">darin.eclipse</assigned_to>
+          <cc>Michael_Rennie</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129864</commentid>
+    <comment_count>0</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-11 14:41:59 -0500</bug_when>
+    <thetext>I have the following projects in my workspace:
+
+org.eclipse.core.variables
+org.eclipse.debug.core
+org.eclipse.debug.ui
+org.eclipse.jdt.debug
+org.eclipse.jdt.debug.ui
+org.eclipse.jdt.launching
+org.eclipse.ui.console
+
+I added a @noreference flag to ILaunchConfiguration.LAUNCH_CONFIGURATION_FILE_EXTENSION.
+
+The reference in LaunchingPlugin.start(BundleContext) is not flagged as an error. But, a @noreference flag on ILaunchConfigugration.ATTR_SOURCE_LOCATOR_MEMENTO does produce errors for its references.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129869</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-11 14:48:05 -0500</bug_when>
+    <thetext>It appears that constants like &apos;name = &quot;something&quot;&apos; are not truly referenced by class files, while constants like &apos;name = DebugPlugin.getUniqueIdentifier() + &quot;something&quot;&apos; are referenced by class files.
+
+I think the problem here is an inlined constant. Not sure if we should support @noreference on fields.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147489</commentid>
+    <comment_count>2</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-02-01 10:43:55 -0500</bug_when>
+    <thetext>I don&apos;t think we can support @norefererence on compile-time constant fields since there is no actual reference in the .class files.
+This could work in a source environment, but since we check for references inside .class files, we cannot get this one.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147515</commentid>
+    <comment_count>3</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 11:04:56 -0500</bug_when>
+    <thetext>Olivier, is it safe to allow @noreference on non-final fields?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1155556</commentid>
+    <comment_count>4</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-02-12 21:17:24 -0500</bug_when>
+    <thetext>@noreference on non-final field should work. non-final fields are not compile time constants so they are referenced using either getstatic or getfield.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1194553</commentid>
+    <comment_count>5</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-04-04 15:08:22 -0400</bug_when>
+    <thetext>We would have to analyze source to find illegal references. Not something we plan to do in 3.4. We might consider this in a later release (for example, we&apos;d also have to analyze source to produce API problems as the user edits code).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1208999</commentid>
+    <comment_count>6</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-04-21 11:18:07 -0400</bug_when>
+    <thetext>For 3.4 we should not allow @noreference on final fields. This should also be part of our API tag validation - bug 225961.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1209037</commentid>
+    <comment_count>7</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-21 11:42:26 -0400</bug_when>
+    <thetext>added fix to HEAD to not have the tag completion available for final fields</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1211826</commentid>
+    <comment_count>8</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-23 12:30:17 -0400</bug_when>
+    <thetext>marking fixed</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1211827</commentid>
+    <comment_count>9</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-23 12:30:29 -0400</bug_when>
+    <thetext>please verify Darin W</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1219042</commentid>
+    <comment_count>10</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-04-30 10:21:58 -0400</bug_when>
+    <thetext>Verified. And a nice warning appears now saying that the tag is unsupported (should someone try to add it manually, or have it pre-existing).</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

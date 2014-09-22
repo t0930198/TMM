@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214482</bug_id>
+          
+          <creation_ts>2008-01-07 08:55:00 -0500</creation_ts>
+          <short_desc>CPPParameter getName() returns empty string for function pointers</short_desc>
+          <delta_ts>2008-06-19 08:34:38 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-parser</component>
+          <version>4.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>5.0.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Perryman">david.perryman</reporter>
+          <assigned_to name="Markus Schorn">markus.schorn</assigned_to>
+          <cc>r.p.miskin</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126525</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Perryman">david.perryman</who>
+    <bug_when>2008-01-07 08:55:31 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Create an ASTVisitor class to visit expressions
+
+2. Use the following code in the visit(IASTExpression) function:
+        if (pr_Expression instanceof IASTIdExpression) {           
+            IASTIdExpression param = (IASTIdExpression) pr_Expression;
+            IBinding binding = param.getName().resolveBinding();
+            if (binding instanceof IParameter) {
+                String name = binding.getName();
+            }
+        }
+
+3. Use this code to visit a C++ source file in a C++ Projoct containing the followign function:
+int foo(int (*ptr) (int, int))
+{
+	ptr(1, 2);	
+	return 1;
+}
+
+4. The name that is returned from binding.getName() will be empty string.
+
+
+More information:
+This seems to be a C++ problem only, as doing the same, but using a C project with a C source file returns the correct name. 
+
+Both org.eclipse.cdt.internal.core.dom.parser.cpp.CPPParameter and org.eclipse.cdt.internal.core.dom.parser.c.CParameter have their own implementation of getName() which uses getPrimaryDeclaration() to work out what to return. 
+
+The problem appears to be in getPrimaryDeclaration() of CPPParameter, which (for function pointer parameters) has two declarations to choose from, and seems to return the wrong one.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1274239</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-06-19 08:34:38 -0400</bug_when>
+    <thetext>Created AST2Tests.testComplexParameterBinding_Bug214482(),
+fixed in 5.0.1 &gt; 20080619.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

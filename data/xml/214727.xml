@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214727</bug_id>
+          
+          <creation_ts>2008-01-09 05:21:00 -0500</creation_ts>
+          <short_desc>Create folder error</short_desc>
+          <delta_ts>2012-01-05 13:31:12 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>OHF</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="jameau">jjameau</reporter>
+          <assigned_to name="ohf.xds_source-inbox">ohf.xds_source-inbox</assigned_to>
+          <cc>matt.davis</cc>
+    
+    <cc>seknoop</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127971</commentid>
+    <comment_count>0</comment_count>
+    <who name="jameau">jjameau</who>
+    <bug_when>2008-01-09 05:21:03 -0500</bug_when>
+    <thetext>When I try to create a folder I have this error message :
+***********************************************************************
+ExternalIdentifier of type urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a (XDSFolder.patientId) has no internal Name element&quot; 
+***********************************************************************
+
+this is my code for Folder creation :
+***********************************************************************
+String folderEntryUUID = txnData.addFolder();
+FolderType folder = txnData.getFolder(folderEntryUUID);
+CX pid =  Hl7v2Factory.eINSTANCE.createCX();
+pid.setIdNumber(&quot;21a217088720423&quot;);         pid.setAssigningAuthorityUniversalId(&quot;1.3.6.1.4.1.21367.2005.3.7&quot;);     pid.setAssigningAuthorityUniversalIdType(&quot;ISO&quot;);
+folder.setPatientId(pid);
+***********************************************************************
+
+that&apos;s get this metadatas :
+***********************************************************************
+&lt;rim:RegistryPackage id=&quot;urn:uuid:2b46931e-ab3e-48a8-2622-00e018d4b31d&quot; objectType=&quot;urn:uuid:d9d542f3-6cc4-48b6-8870-ea235fbc94c2&quot;&gt;
+    &lt;rim:Name&gt;
+        &lt;rim:LocalizedString value=&quot;FOLDER&quot;&gt;
+        &lt;/rim:LocalizedString&gt;
+    &lt;/rim:Name&gt;
+    &lt;rim:Description&gt;
+    &lt;/rim:Description&gt;
+    &lt;rim:ExternalIdentifier identificationScheme=&quot;urn:uuid:f64ffdf0-4b97-4e06-b79f-a52b38ec2f8a&quot; value=&quot;21a217088720423^^^&amp;amp;1.3.6.1.4.1.21367.2005.3.7&amp;amp;ISO&quot;&gt;
+    &lt;/rim:ExternalIdentifier&gt;
+    &lt;rim:ExternalIdentifier identificationScheme=&quot;urn:uuid:75df8f67-9973-4fbe-a900-df66cefecc5a&quot; value=&quot;1.3.6.1.4.1.21367.2005.3.7.20080104.112341.999&quot;&gt;
+        &lt;rim:Name&gt;
+            &lt;rim:LocalizedString value=&quot;XDSFolder.uniqueId&quot;&gt;
+            &lt;/rim:LocalizedString&gt;
+        &lt;/rim:Name&gt;
+    &lt;/rim:ExternalIdentifier&gt;
+&lt;/rim:RegistryPackage&gt; 
+***********************************************************************</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131713</commentid>
+    <comment_count>1</comment_count>
+    <who name="">seknoop</who>
+    <bug_when>2008-01-15 14:20:25 -0500</bug_when>
+    <thetext>This was due to a variable re-use problem. Re-declared initialized new name elements for each external identifier for all metadata. Please update from CVS to get this fix. 
+
+- Sarah</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1284524</commentid>
+    <comment_count>2</comment_count>
+    <who name="Matthew Davis">matt.davis</who>
+    <bug_when>2008-07-03 16:08:40 -0400</bug_when>
+    <thetext>Closing out all IHE and Bridge bugs.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

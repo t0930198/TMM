@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214778</bug_id>
+          
+          <creation_ts>2008-01-09 12:41:00 -0500</creation_ts>
+          <short_desc>[prov] [ui]  Make profile properties non editable in admin UI</short_desc>
+          <delta_ts>2008-01-28 13:27:53 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="Susan McCourt ">susan</assigned_to>
+          <cc>simon_kaegi</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128277</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 12:41:08 -0500</bug_when>
+    <thetext>In the admin UI:
+- Open the properties dialog on an existing profile
+- change the install folder
+- push OK
+- reopen the properties dialog
+
+The old folder is shown.  
+Not sure if this is UI or not, but if the folder cannot be changed, the UI shouldn&apos;t show it as editable.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128297</commentid>
+    <comment_count>1</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-09 12:57:26 -0500</bug_when>
+    <thetext>Currently changing something like the install folder would be fairly catastrophoic in terms of leaving the profile in a bad state. I&apos;m not sure we want to allow editing of that field at least for the moment.
+
+So, I tend to agree that we may not want to show this as editable or at least re-think how we want to show this. The profile properties (like the install folder) can only be changed persistently by going through the engine and ultimately committing the change.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128307</commentid>
+    <comment_count>2</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 13:07:03 -0500</bug_when>
+    <thetext>Thanks for the info, Simon.  
+Do you think any of the info shown in the profile properties should be editable?  (Name/Description). </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128893</commentid>
+    <comment_count>3</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-10 10:13:19 -0500</bug_when>
+    <thetext>For the moment though they&apos;re stored as profile properties so I&apos;d tend to make them uneditable until we have a chance to think about this more. The problem is that for the moment the Engine.perform is very focused on IU changes as opposed to properties. Perhaps the profile delta stuff might be a good way to do this -- something to keep in mind anyway.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128970</commentid>
+    <comment_count>4</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-10 11:26:23 -0500</bug_when>
+    <thetext>For M5 I&apos;ll make everything non-editable since the rest is low prio compared to end user scenarios.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139776</commentid>
+    <comment_count>5</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-28 13:27:53 -0500</bug_when>
+    <thetext>Changed title of bug to reflect what we are doing here.
+
+In the spirit of keeping it simple, the admin UI does not permit editing a profile properties once the profile has been created.  If this becomes an issue for our own usage later on, we can change this, using the new engine/profile change request mechanisms.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

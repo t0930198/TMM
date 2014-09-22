@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214503</bug_id>
+          
+          <creation_ts>2008-01-07 11:30:00 -0500</creation_ts>
+          <short_desc>Incorrect KeyEvents returned using SWT_AWT.</short_desc>
+          <delta_ts>2008-05-13 16:47:13 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>blocker</bug_severity>
+          <target_milestone>3.4 RC1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Scott Anderson">sanderson</reporter>
+          <assigned_to name="Silenio Quarti">Silenio_Quarti</assigned_to>
+          <cc>black_kats</cc>
+    
+    <cc>cocoakevin</cc>
+    
+    <cc>eclipse.felipe</cc>
+    
+    <cc>eclipse</cc>
+    
+    <cc>gordon.hirsch</cc>
+    
+    <cc>Mike_Wilson</cc>
+    
+    <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="6656"
+          type_id="1"
+          status="+"
+          setter="eclipse.felipe"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126679</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86324</attachid>
+    <who name="Scott Anderson">sanderson</who>
+    <bug_when>2008-01-07 11:30:23 -0500</bug_when>
+    <thetext>Created attachment 86324
+Test Project with SWT Application for recreate KEYEVENT issue
+
+Build ID: M20071023-1652
+
+Steps To Reproduce:
+Attached TestProject.zip, which shows the error;
+1.To test, extract code, import the project into your workspace, and run it as an SWT Application.
+2.Click in window;
+3.Type;  1 + 1
+4. As you type, the events will be written to the dialog.
+NOTE:
+  Once the KEY_RELEASED for the shift (utilized for &apos;+&apos;) has been issued.
+  The next KEY_PRESSED and KEY_RELEASED for the &apos;1&apos; does not show &apos;1&apos; for the keyChar but instead returns &apos;!&apos; as if the SHIFT modifier is still active.
+
+
+
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1201054</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mike Wilson">Mike_Wilson</who>
+    <bug_when>2008-04-11 17:54:32 -0400</bug_when>
+    <thetext>Can we replicate the failure here? Is it still happening in the latest?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1202162</commentid>
+    <comment_count>2</comment_count>
+    <who name="Scott Anderson">sanderson</who>
+    <bug_when>2008-04-14 09:27:36 -0400</bug_when>
+    <thetext>Good morning. 
+Thanks for you time and effort into looking at this defect. See replies below;
+
+Yes, you should be able to recreate using the Test project that was attached to the initial request using the recreate steps.
+
+Yes, it fails in the latest.
+
+Please let me know if you have any questions or concerns.
+
+Thanks-</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1209030</commentid>
+    <comment_count>3</comment_count>
+    <who name="Keith Swanson">black_kats</who>
+    <bug_when>2008-04-21 11:40:31 -0400</bug_when>
+    <thetext>I have tested the provided project on Eclipse 3.4 M6a and I still see the same behavior.  It happens every time the shift is used.  &quot;Aaa&quot; shows &quot;AAa&quot;, &quot;!23&quot; shows &quot;!@3&quot;, and so on.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1218379</commentid>
+    <comment_count>4</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-04-29 19:24:03 -0400</bug_when>
+    <thetext>Here is some code that shows the problem:
+
+import java.awt.TextArea;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+
+import javax.swing.JTextArea;
+import java.awt.Frame;
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.awt.SWT_AWT;
+import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
+import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+public class PR_214503 {
+	public static final int DIALOG_SHELL_STYLE = SWT.DIALOG_TRIM | SWT.RESIZE
+			| SWT.APPLICATION_MODAL;
+
+	public static void main(String[] args) {
+		Display display = Display.getDefault();
+		Shell shell = new Shell(display, DIALOG_SHELL_STYLE);
+		shell.setLayout(new GridLayout(1, false));
+
+		Composite base = new Composite(shell, SWT.EMBEDDED);
+		base.setLayoutData(new GridData(GridData.FILL_BOTH));
+		
+		java.awt.Frame baseFrame = SWT_AWT.new_Frame(base);
+		//java.awt.Frame baseFrame = new Frame();
+		baseFrame.setSize(800, 600);
+		
+		final java.awt.Panel basePanel = new java.awt.Panel();
+		baseFrame.add(basePanel);
+
+		final TextArea output = new TextArea();
+		//final JTextArea output = new JTextArea();
+		output.setEditable(false);
+		String msg = &quot;Click here and type the sequence 1 &lt;shift-&apos;=&apos;&gt; 1 1\n\n&quot;;
+		output.setText(msg);
+		
+		basePanel.setLayout(new java.awt.GridLayout());
+		basePanel.add(output);
+		
+		output.addKeyListener(new KeyListener(){
+			public void keyPressed(KeyEvent arg0) {
+				output.append(arg0.paramString()+&quot;\n&quot;);
+			}
+			public void keyTyped(KeyEvent arg0) {
+				output.append(arg0.paramString()+&quot;\n&quot;);
+			}
+			public void keyReleased(KeyEvent arg0) {
+				output.append(arg0.paramString()+&quot;\n\n&quot;);
+			}
+		});
+
+		baseFrame.setVisible(true);
+		shell.open();
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch()) display.sleep();
+		}
+	}
+}
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1218383</commentid>
+    <comment_count>5</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-04-29 19:26:10 -0400</bug_when>
+    <thetext>It&apos;s possible that this worked in a older JDK version or in an older SWT.  It fails in JDK1.6 and SWT 3.4 HEAD stream.  Sorry, but Silenio, you are going to have to look into this.  Get Kevin to help determine if this ever worked and when.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225310</commentid>
+    <comment_count>6</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-06 16:57:07 -0400</bug_when>
+    <thetext>This fails in SWT 3.3 running jdk 1.6 as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225318</commentid>
+    <comment_count>7</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-06 17:01:50 -0400</bug_when>
+    <thetext>This fails in SWT 3.3 running jdk 1.5.0_02 as well.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225338</commentid>
+    <comment_count>8</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-06 17:13:52 -0400</bug_when>
+    <thetext>This fails in SWT 3.3 running jdk 1.4.2_06 as well. So it probably never worked or it worked before SWT 3.3.
+
+ </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225346</commentid>
+    <comment_count>9</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-06 17:21:02 -0400</bug_when>
+    <thetext>It did not work in SWT 3.2 either.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1226976</commentid>
+    <comment_count>10</comment_count>
+    <who name="Mike Wilson">Mike_Wilson</who>
+    <bug_when>2008-05-07 09:43:57 -0400</bug_when>
+    <thetext>So we now we know that we have had this bug for a while. That doesn&apos;t really change the fact that it&apos;s a blocker for the reporter, however, so are we going to try to fix it?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1227190</commentid>
+    <comment_count>11</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-07 11:19:06 -0400</bug_when>
+    <thetext>I am working on it, but I have not found a solution yet.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1230518</commentid>
+    <comment_count>12</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-09 15:21:05 -0400</bug_when>
+    <thetext>Fixed &gt; 20080509</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1234002</commentid>
+    <comment_count>13</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-05-13 16:09:29 -0400</bug_when>
+    <thetext>Did the fix for this impact OS X at all?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1234101</commentid>
+    <comment_count>14</comment_count>
+    <who name="Silenio Quarti">Silenio_Quarti</who>
+    <bug_when>2008-05-13 16:47:13 -0400</bug_when>
+    <thetext>No, it is a Windows only change.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86324</attachid>
+            <date>2008-01-07 11:30:00 -0500</date>
+            <delta_ts>2008-01-07 11:30:23 -0500</delta_ts>
+            <desc>Test Project with SWT Application for recreate KEYEVENT issue</desc>
+            <filename>TestProject.zip</filename>
+            <type>application/x-zip-compressed</type>
+            <size>4516</size>
+            <attacher name="Scott Anderson">sanderson</attacher>
+            
+              <data encoding="base64">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
+DlB5VhNWP/r3C1BLAwQKAAAAAADCcyQ4AAAAAAAAAAAAAAAADAAAAFRlc3RQcm9qZWN0L1BLAQIU
+ABQAAAAIAC13JDjVHJzSpQAAADMBAAAWAAAAAAAAAAEAIAAAAAAAAABUZXN0UHJvamVjdC8uY2xh
+c3NwYXRoUEsBAhQAFAAAAAgAwXMkOE0x2WrnAAAAoAIAABQAAAAAAAAAAQAgAAAA2QAAAFRlc3RQ
+cm9qZWN0Ly5wcm9qZWN0UEsBAhQACgAAAAAADYQkOAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQAAAA
+8gEAAFRlc3RQcm9qZWN0L2Jpbi9QSwECFAAUAAAACADNiyQ4Yrf4S2wCAAAGBQAAKgAAAAAAAAAA
+ACAAAAAgAgAAVGVzdFByb2plY3QvYmluL0xpc3RlbmVyVGVzdERpYWxvZyQxLmNsYXNzUEsBAhQA
+FAAAAAgAzYskODFnsum5BAAAqggAACgAAAAAAAAAAAAgAAAA1AQAAFRlc3RQcm9qZWN0L2Jpbi9M
+aXN0ZW5lclRlc3REaWFsb2cuY2xhc3NQSwECFAAUAAAACADBcyQ40ltg+z8AAABQAAAAHAAAAAAA
+AAABACAAAADTCQAAVGVzdFByb2plY3QvYnVpbGQucHJvcGVydGllc1BLAQIUAAoAAAAAAMFzJDgA
+AAAAAAAAAAAAAAAVAAAAAAAAAAAAEAAAAEwKAABUZXN0UHJvamVjdC9NRVRBLUlORi9QSwECFAAU
+AAAACADvcyQ4ME6UIXsAAADDAAAAIAAAAAAAAAABACAAAAB/CgAAVGVzdFByb2plY3QvTUVUQS1J
+TkYvTUFOSUZFU1QuTUZQSwECFAAKAAAAAADQcyQ4AAAAAAAAAAAAAAAAEAAAAAAAAAAAABAAAAA4
+CwAAVGVzdFByb2plY3Qvc3JjL1BLAQIUABQAAAAIAM2LJDj+gapHnwIAAKgGAAAnAAAAAAAAAAEA
+IAAAAGYLAABUZXN0UHJvamVjdC9zcmMvTGlzdGVuZXJUZXN0RGlhbG9nLmphdmFQSwECFAAKAAAA
+AADCcyQ4AAAAAAAAAAAAAAAADAAAAAAAAAAAABAAAABKDgAAVGVzdFByb2plY3QvUEsFBgAAAAAL
+AAsAGgMAAHQOAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

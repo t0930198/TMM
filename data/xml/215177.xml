@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215177</bug_id>
+          
+          <creation_ts>2008-01-14 03:25:00 -0500</creation_ts>
+          <short_desc>[aspects] OSGiWeavingAdaptor.weaveClass() has to be adapted to the updated super class signature</short_desc>
+          <delta_ts>2009-04-29 15:26:54 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>blocker</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Heiko Seeberger">heiko.seeberger</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          <cc>mlippert</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130422</commentid>
+    <comment_count>0</comment_count>
+    <who name="Heiko Seeberger">heiko.seeberger</who>
+    <bug_when>2008-01-14 03:25:56 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Look at AJDT 1.5.1 (AJ 1.5.4): Weaving.Adaptor.weaveClass() has a changed changed signature.
+2. Take Equinox Aspects 1.0.4: OSGiWeavingAdaptor.weaveClass() still has the old signature and also makes a super call with the old signature =&gt; Compiler error!
+
+More information:
+I will provide a fix soon ...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130427</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86804</attachid>
+    <who name="Heiko Seeberger">heiko.seeberger</who>
+    <bug_when>2008-01-14 03:34:23 -0500</bug_when>
+    <thetext>Created attachment 86804
+Suggested patch for this bug
+
+This patch affects two classes: OSGiWeavingAdaptor and WeavingService. I think that for OSGiWeavingAdaptor it works fine, but for WeavingService I am not quite sure.
+Martin, could you please take a look?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130539</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Lippert">mlippert</who>
+    <bug_when>2008-01-14 07:40:51 -0500</bug_when>
+    <thetext>Thanks a lot for the patch. One question: Why is the default value for the new &quot;mustWeave&quot; parameter false in our case?
+
+I am not sure what the best strategy is for this. I tend to ask the ApsectJ team to reintroduce the old method signature (for compatibility reasons) but that might take some time. We should definitely wait with a new release of equinox aspects until we have a new stable release of AJDT available (current state is rc, if I am right). But that means also to cut off users of Eclipse 3.2 or AJDT older than 1.5.1.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130548</commentid>
+    <comment_count>3</comment_count>
+    <who name="Martin Lippert">mlippert</who>
+    <bug_when>2008-01-14 07:53:54 -0500</bug_when>
+    <thetext>To correct myself: current stable release version of AJDT is 1.5.1. This means we should go with the patch and have a new version of equinox aspects out soon, I think.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130550</commentid>
+    <comment_count>4</comment_count>
+    <who name="Heiko Seeberger">heiko.seeberger</who>
+    <bug_when>2008-01-14 08:00:48 -0500</bug_when>
+    <thetext>&gt;Why is the default value for the new &quot;mustWeave&quot; parameter false in our case?
+That is a good question that also should be asked the AspectJ team.
+Martin, could you please go for AspectJ team?
+
+From the JavaDoc comment &quot;@param mustWeave if true then this class *must* get
+woven (used for concrete aspects generated from XML)&quot; I guessed that &quot;false&quot; is
+a good starting point. But I also left a comment in WeavingService (should also
+add a //TODO) stating that this has to be revised.
+
+For the version problem: Like AJDT we could also have different versions
+targeting different Equinox/AJDT versions.
+For example: 1.0.x for AJDT up to 1.5.0 (Europa release) and 1.1.x for AJDT
+form 1.5.1.
+Anyway we should go for 1.1 because of the caching service ...
+What do you think?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130563</commentid>
+    <comment_count>5</comment_count>
+    <who name="Martin Lippert">mlippert</who>
+    <bug_when>2008-01-14 08:22:40 -0500</bug_when>
+    <thetext>Regarding the version issue:
+
+Lets update equinox aspects to work with AsjectJ 1.5.4 and AJDT 1.5.1 only, integrate a caching service (for non-IBM vms) and put a 1.1.0 release out.
+
+People depending on AspectJ &lt;= 1.5.3 and/or AJDT &lt;= 1.5.0 could use equinox aspects 1.0.4.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131746</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Lippert">mlippert</who>
+    <bug_when>2008-01-15 15:01:22 -0500</bug_when>
+    <thetext>Patch applied to HEAD. Mark as fixed. HEAD development of equinox aspects now depends on the latest AJDT release (1.5.1).
+
+I investigated the &quot;false&quot; parameter value and it seems to be correct.
+
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86804</attachid>
+            <date>2008-01-14 03:34:00 -0500</date>
+            <delta_ts>2009-04-29 15:26:54 -0400</delta_ts>
+            <desc>Suggested patch for this bug</desc>
+            <filename>patches_215177.txt</filename>
+            <type>text/plain</type>
+            <size>2316</size>
+            <attacher name="Heiko Seeberger">heiko.seeberger</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmFzcGVjdGoub3NnaS5zZXJ2
+aWNlLndlYXZpbmcNCkluZGV4OiBzcmMvb3JnL2FzcGVjdGovb3NnaS93ZWF2ZXIvbG9hZHRpbWUv
+T1NHaVdlYXZpbmdBZGFwdG9yLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9l
+Y2xpcHNlL2VxdWlub3gtaW5jdWJhdG9yL2FzcGVjdHMvb3JnLmFzcGVjdGoub3NnaS5zZXJ2aWNl
+LndlYXZpbmcvc3JjL29yZy9hc3BlY3RqL29zZ2kvd2VhdmVyL2xvYWR0aW1lL09TR2lXZWF2aW5n
+QWRhcHRvci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4yDQpkaWZmIC11IC1yMS4yIE9T
+R2lXZWF2aW5nQWRhcHRvci5qYXZhDQotLS0gc3JjL29yZy9hc3BlY3RqL29zZ2kvd2VhdmVyL2xv
+YWR0aW1lL09TR2lXZWF2aW5nQWRhcHRvci5qYXZhCTIzIE5vdiAyMDA2IDE0OjI3OjA1IC0wMDAw
+CTEuMg0KKysrIHNyYy9vcmcvYXNwZWN0ai9vc2dpL3dlYXZlci9sb2FkdGltZS9PU0dpV2Vhdmlu
+Z0FkYXB0b3IuamF2YQkxNCBKYW4gMjAwOCAwODozMToxMyAtMDAwMA0KQEAgLTE5LDcgKzE5LDgg
+QEANCiAJCXRoaXMud2VhdmluZ0NvbnRleHQgPSBjb250ZXh0Ow0KIAl9DQogDQotCXB1YmxpYyBi
+eXRlW10gd2VhdmVDbGFzcyhTdHJpbmcgbmFtZSwgYnl0ZVtdIGJ5dGVzKSB0aHJvd3MgSU9FeGNl
+cHRpb24gew0KKwkvLyBCdWcgMjE1MTc3OiBBZGFwdCB0byB1cGRhdGVkIChBSiAxLjUuNCkgc3Vw
+ZXIgY2xhc3Mgc2lnbmF0dXJlOg0KKwlwdWJsaWMgYnl0ZVtdIHdlYXZlQ2xhc3MoU3RyaW5nIG5h
+bWUsIGJ5dGVbXSBieXRlcywgYm9vbGVhbiBtdXN0V2VhdmUpIHRocm93cyBJT0V4Y2VwdGlvbiB7
+DQogDQogCQkvKiBBdm9pZCByZWN1cnNpb24gZHVyaW5nIGFkYXB0b3IgaW5pdGlhbGl6YXRpb24g
+Ki8NCiAJCWlmICghaW5pdGlhbGl6aW5nKSB7DQpAQCAtMjksNyArMzAsOCBAQA0KIAkJCQlpbml0
+aWFsaXplZCA9IHRydWU7DQogCQkJCWluaXRpYWxpemluZyA9IGZhbHNlOw0KIAkJCX0NCi0JCQli
+eXRlcyA9IHN1cGVyLndlYXZlQ2xhc3MobmFtZSwgYnl0ZXMpOw0KKwkJICAgIC8vIEJ1ZyAyMTUx
+Nzc6IEFkYXB0IHRvIHVwZGF0ZWQgKEFKIDEuNS40KSBzdXBlciBjbGFzcyBzaWduYXR1cmU6DQor
+CQkJYnl0ZXMgPSBzdXBlci53ZWF2ZUNsYXNzKG5hbWUsIGJ5dGVzLCBtdXN0V2VhdmUpOw0KIAkJ
+fQ0KIAkJcmV0dXJuIGJ5dGVzOw0KIAl9DQpJbmRleDogc3JjL29yZy9hc3BlY3RqL29zZ2kvc2Vy
+dmljZS93ZWF2aW5nL1dlYXZpbmdTZXJ2aWNlLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAv
+Y3Zzcm9vdC9lY2xpcHNlL2VxdWlub3gtaW5jdWJhdG9yL2FzcGVjdHMvb3JnLmFzcGVjdGoub3Nn
+aS5zZXJ2aWNlLndlYXZpbmcvc3JjL29yZy9hc3BlY3RqL29zZ2kvc2VydmljZS93ZWF2aW5nL1dl
+YXZpbmdTZXJ2aWNlLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjENCmRpZmYgLXUgLXIx
+LjEgV2VhdmluZ1NlcnZpY2UuamF2YQ0KLS0tIHNyYy9vcmcvYXNwZWN0ai9vc2dpL3NlcnZpY2Uv
+d2VhdmluZy9XZWF2aW5nU2VydmljZS5qYXZhCTEzIE9jdCAyMDA2IDA5OjM1OjA5IC0wMDAwCTEu
+MQ0KKysrIHNyYy9vcmcvYXNwZWN0ai9vc2dpL3NlcnZpY2Uvd2VhdmluZy9XZWF2aW5nU2Vydmlj
+ZS5qYXZhCTE0IEphbiAyMDA4IDA4OjMxOjEzIC0wMDAwDQpAQCAtNTgsNyArNTgsOCBAQA0KIC8v
+CQlTeXN0ZW0uZXJyLnByaW50bG4oIldlYXZpbmdTZXJ2aWNlLnByZVByb2Nlc3MoKSBuYW1lPSIg
+KyBuYW1lKTsNCiAJCWVuc3VyZUFkYXB0b3JJbml0KCk7DQogLy8JCXJldHVybiBhZGFwdG9yLnBy
+ZVByb2Nlc3MobmFtZSwgY2xhc3NieXRlcywgbG9hZGVyKTsNCi0JCW5ld0J5dGVzID0gIGFkYXB0
+b3IxLndlYXZlQ2xhc3MobmFtZSxjbGFzc2J5dGVzKTsNCisJCS8vIEJ1ZyAyMTUxNzc6IEFkYXB0
+IHRvIHVwZGF0ZWQgKEFKIDEuNS40KSBzaWduYXR1cmUuIEkgaG9wZSBmYWxzZSBpcyBjb3JyZWN0
+IC4uLg0KKwkJbmV3Qnl0ZXMgPSAgYWRhcHRvcjEud2VhdmVDbGFzcyhuYW1lLGNsYXNzYnl0ZXMs
+IGZhbHNlKTsNCiAJCWlmIChXZWF2aW5nU2VydmljZVBsdWdpbi5ERUJVRykgU3lzdGVtLm91dC5w
+cmludGxuKCI8IFdlYXZpbmdTZXJ2aWNlLnByZVByb2Nlc3MoKSBieXRlcz0iICsgbmV3Qnl0ZXMu
+bGVuZ3RoKTsNCiAJCXJldHVybiBuZXdCeXRlczsNCiAJfQ0K
+</data>
+<flag name="iplog"
+          id="16987"
+          type_id="7"
+          status="+"
+          setter="mlippert"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

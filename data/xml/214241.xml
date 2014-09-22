@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214241</bug_id>
+          
+          <creation_ts>2008-01-03 11:24:00 -0500</creation_ts>
+          <short_desc>cmdbf services make eclipse-specific references</short_desc>
+          <delta_ts>2012-01-03 13:48:31 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Cosmos</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ray Ellis">rayellis</reporter>
+          <assigned_to name="David Whiteman">dlwhiteman</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125021</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-03 11:24:19 -0500</bug_when>
+    <thetext>The functions provided by the org.eclipse.cosmos.dc.cmdbf.services project are useful in non-eclipse environments (e.g., in a servlet or J2EE container), but since the project creates an eclipse plugin it contains references to features not generally found outside eclipse.  Would it be possible to re-factor this code so that there is a core that provides just the cmdbf functionality without the eclipse-specific references?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125103</commentid>
+    <comment_count>1</comment_count>
+    <who name="">amehrega</who>
+    <bug_when>2008-01-03 12:59:03 -0500</bug_when>
+    <thetext>David,
+
+As far as I know, we don&apos;t make references to Eclipse APIs other than what&apos;s included in the eclipse runtime plug-in.  Can you look into this?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125116</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-01-03 13:04:20 -0500</bug_when>
+    <thetext>Ray, I will look into this.  What do you have in mind exactly?  Are you asking that there is no reference to anything Eclipse-related in the jars?  We are currently using the NLS classes for internationalization - I will have to see what other Eclipse dependencies we have.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125181</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-01-03 14:06:08 -0500</bug_when>
+    <thetext>The only non-J2SE dependency (other than the 3rd party libraries bundled by COSMOS) I see is the OSGi NLS class.  Can you try just deploying with the following JAR in addition to the CMDBf services jars, and see if everything works:
+
+org.eclipse.osgi_3.3.0.v20070530.jar
+
+Would this be a satisfactory minimum prereq?  It&apos;s a fairly small file.  If that works for you, I would still need to change the project from being a plugin project so that it doesn&apos;t depend on org.eclipse.core.runtime.Plugin (by removing the CMDBfServicesPlugin class).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125203</commentid>
+    <comment_count>4</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-03 14:32:17 -0500</bug_when>
+    <thetext>This is what I was looking for, yes.  I was just trying to prune down the amount of stuff that has to be dragged along to use the cmdbf services in another environment.  The more stuff that is involved the more work needs to be done to identify it and gather it together, the bigger the footprint of the result, and the greater the chance of some sort of error or conflict.  The closer we can get to zero overhead outside the necessary functionality the easier I think it would be for others to adopt the work.  I didn&apos;t discover any other dependencies when I was working on getting this running in WAS, and I haven&apos;t had any trouble with the NLS feature under WAS 6.1. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125228</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-01-03 15:00:10 -0500</bug_when>
+    <thetext>Thanks for opening this, Ray.  I agree with keeping the prereqs to the absolute minimum to facilitate less painful adoption.
+
+I changed the required plugin list from org.eclipse.core.runtime to org.eclipse.osgi.  This is the bare minimum necessary to get the NLS support.  We might have to revisit this later if anything from *.core.runtime becomes necessary to prereq.  I also removed the CMDBfServicesPlugin class and the reference to it in the manifest, since it was not being used for anything.
+
+Please change this bug to VERIFIED here in bugzilla if you try this change and are satisfied.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125283</commentid>
+    <comment_count>6</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-03 16:07:55 -0500</bug_when>
+    <thetext>the changes work fine, thanks!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125303</commentid>
+    <comment_count>7</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-01-03 16:33:52 -0500</bug_when>
+    <thetext>closing</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

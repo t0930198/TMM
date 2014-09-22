@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214733</bug_id>
+          
+          <creation_ts>2008-01-09 06:00:00 -0500</creation_ts>
+          <short_desc>JBoss server not getting created in WTP 2</short_desc>
+          <delta_ts>2008-06-13 10:37:21 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP ServerTools</product>
+          <component>jst.server</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>196649</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Inder Jeet Singh">singh.inderjeet</reporter>
+          <assigned_to name="Gorkem Ercan">gorkem.ercan</assigned_to>
+          
+          <qa_contact name="Tim deBoer">deboer</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127990</commentid>
+    <comment_count>0</comment_count>
+    <who name="Inder Jeet Singh">singh.inderjeet</who>
+    <bug_when>2008-01-09 06:00:18 -0500</bug_when>
+    <thetext>Hello,
+I have recently installed Eclipse WTP 2.0 on my machine. I also have JBoss 4.0.4 GA application server. I have Sun jdk1.5.0_14 on my machine.
+I have copied the default server instance of JBoss and created a new server named &quot;test&quot; in Jboss. I have also changed the port number to 1010. Now when I try to create this new server instance &quot;test&quot; of JBoss on eclipse, it is not creating the server instance. I checked in eclipse .log file, it is throwing the following exception.
+
+!SESSION 2008-01-09 16:25:34.679 -----------------------------------------------
+eclipse.buildId=I20070625-1500
+java.version=1.6.0
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+!ENTRY org.eclipse.ui 4 0 2008-01-09 16:27:37.150
+!MESSAGE Unhandled event loop exception
+!STACK 0
+java.lang.IllegalArgumentException: Index out of bounds
+	at org.eclipse.swt.SWT.error(SWT.java:3547)
+	at org.eclipse.swt.SWT.error(SWT.java:3481)
+	at org.eclipse.swt.SWT.error(SWT.java:3452)
+	at org.eclipse.swt.widgets.Widget.error(Widget.java:432)
+	at org.eclipse.swt.widgets.Combo.getItem(Combo.java:633)
+	at org.eclipse.jst.server.generic.ui.internal.ServerTypeDefinitionDecorator.getValues(ServerTypeDefinitionDecorator.java:193)
+	at org.eclipse.jst.server.generic.ui.internal.ServerTypeDefinitionServerDecorator.validate(ServerTypeDefinitionServerDecorator.java:36)
+	at org.eclipse.jst.server.generic.ui.internal.GenericServerWizardFragment.exit(GenericServerWizardFragment.java:148)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizard.switchWizardFragment(TaskWizard.java:274)
+	at org.eclipse.wst.server.ui.internal.wizard.TaskWizardPage.setVisible(TaskWizardPage.java:89)
+	at org.eclipse.jface.wizard.WizardDialog.updateForPage(WizardDialog.java:1161)
+	at org.eclipse.jface.wizard.WizardDialog.access$2(WizardDialog.java:1139)
+	at org.eclipse.jface.wizard.WizardDialog$4.run(WizardDialog.java:1128)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.jface.wizard.WizardDialog.showPage(WizardDialog.java:1126)
+	at org.eclipse.jface.wizard.WizardDialog.nextPressed(WizardDialog.java:820)
+	at org.eclipse.jface.wizard.WizardDialog.buttonPressed(WizardDialog.java:369)
+	at org.eclipse.jface.dialogs.Dialog$2.widgetSelected(Dialog.java:616)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:227)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3682)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3293)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:820)
+	at org.eclipse.jface.window.Window.open(Window.java:796)
+	at org.eclipse.wst.server.ui.internal.actions.LaunchWizardAction.run(LaunchWizardAction.java:57)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:545)
+	at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:490)
+	at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:402)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3682)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3293)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:153)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:504)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:443)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1169)
+
+The New Server screen in the eclipse does not go further to next step. It remains on the same step.
+
+But when I try to create the server instance of the &quot;default&quot; Jboss server in eclipse, it is getting created easily.
+
+I tried the same thing by changing the version of the JBoss server to 4.2.0 GA but still it does not work.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158330</commentid>
+    <comment_count>1</comment_count>
+    <who name="Gorkem Ercan">gorkem.ercan</who>
+    <bug_when>2008-02-17 16:33:30 -0500</bug_when>
+    <thetext>This was fixed some time ago, and I am pretty sure that it did not make it to the final 2.0 release can you check you WTP build id?
+
+*** This bug has been marked as a duplicate of bug 196649 ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1270139</commentid>
+    <comment_count>2</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-06-13 10:37:21 -0400</bug_when>
+    <thetext>Closing duplicate bugs. Please resolve/verify/close via the other bug.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

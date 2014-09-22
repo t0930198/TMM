@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214167</bug_id>
+          
+          <creation_ts>2008-01-02 17:30:00 -0500</creation_ts>
+          <short_desc>Empty catch yeilds internal compiler error</short_desc>
+          <delta_ts>2010-03-03 11:16:53 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>JSDT</product>
+          <component>General</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Thompson">dthompson</reporter>
+          <assigned_to name="Phil Berkland">berkland</assigned_to>
+          <cc>dthompson</cc>
+          <qa_contact name="Phil Berkland">berkland</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124588</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Thompson">dthompson</who>
+    <bug_when>2008-01-02 17:30:36 -0500</bug_when>
+    <thetext>The following code yields some null pointers in the validator:
+
+function main() {
+    try {
+        int a = 5;
+    } catch (e) {
+     // Nothing   
+    }
+}
+
+It&apos;s quite easy to fix all of these null pointers--it appears as though a statement is always expected--but this does not have to be the case in the grammar of the language.
+
+The first error message is as follows: 
+
+Description	Resource	Path	Location	Type13Internal compiler error
+java.lang.NullPointerException
+	at org.eclipse.wst.jsdt.internal.compiler.flow.ExceptionHandlingFlowContext.&lt;init&gt;(ExceptionHandlingFlowContext.java:57)
+	at org.eclipse.wst.jsdt.internal.compiler.ast.TryStatement.analyseCode(TryStatement.java:101)
+	at org.eclipse.wst.jsdt.internal.compiler.ast.MethodDeclaration.analyseCode(MethodDeclaration.java:90)
+	at org.eclipse.wst.jsdt.internal.compiler.ast.AbstractMethodDeclaration.analyseCode(AbstractMethodDeclaration.java:103)
+	at org.eclipse.wst.jsdt.internal.compiler.ast.CompilationUnitDeclaration.analyseCode(CompilationUnitDeclaration.java:157)
+	at org.eclipse.wst.jsdt.internal.compiler.Compiler.process(Compiler.java:682)
+	at org.eclipse.wst.jsdt.internal.compiler.Compiler.compile(Compiler.java:446)
+	at org.eclipse.wst.jsdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:388)
+	at org.eclipse.wst.jsdt.internal.core.builder.BatchImageBuilder.compile(BatchImageBuilder.java:178)
+	at org.eclipse.wst.jsdt.internal.core.builder.AbstractImageBuilder.compile(AbstractImageBuilder.java:325)
+	at org.eclipse.wst.jsdt.internal.core.builder.BatchImageBuilder.build(BatchImageBuilder.java:64)
+	at org.eclipse.wst.jsdt.internal.core.builder.JavaBuilder.buildAll(JavaBuilder.java:291)
+	at org.eclipse.wst.jsdt.internal.core.builder.JavaBuilder.build(JavaBuilder.java:199)
+	at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:629)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:166)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:197)
+	at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:249)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:252)
+	at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:305)
+	at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:337)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:137)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:235)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+	Debug.js	DebugJS	line 0	JavaScript Problem13</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124603</commentid>
+    <comment_count>1</comment_count>
+    <who name="David Thompson">dthompson</who>
+    <bug_when>2008-01-02 17:46:11 -0500</bug_when>
+    <thetext>I&apos;ve included the following patches for your perusal:
+
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.wst.jsdt.core
+Index: src/org/eclipse/wst/jsdt/internal/compiler/ast/AllocationExpression.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/plugins/org.eclipse.wst.jsdt.core/src/org/eclipse/wst/jsdt/internal/compiler/ast/AllocationExpression.java,v
+retrieving revision 1.9
+diff -u -r1.9 AllocationExpression.java
+--- src/org/eclipse/wst/jsdt/internal/compiler/ast/AllocationExpression.java	11 Dec 2007 19:10:28 -0000	1.9
++++ src/org/eclipse/wst/jsdt/internal/compiler/ast/AllocationExpression.java	2 Jan 2008 22:37:08 -0000
+@@ -66,14 +66,16 @@
+ 		}
+ 	}
+ 	// record some dependency information for exception types
+-	ReferenceBinding[] thrownExceptions;
+-	if (((thrownExceptions = this.binding.thrownExceptions).length) != 0) {
+-		// check exception handling
+-		flowContext.checkExceptionHandlers(
+-			thrownExceptions,
+-			this,
+-			flowInfo.unconditionalCopy(),
+-			currentScope);
++	if (this.binding != null) {
++		ReferenceBinding[] thrownExceptions = this.binding.thrownExceptions;
++		if (thrownExceptions != null &amp;&amp; thrownExceptions.length != 0) {
++			// check exception handling
++			flowContext.checkExceptionHandlers(
++				thrownExceptions,
++				this,
++				flowInfo.unconditionalCopy(),
++				currentScope);
++		}
+ 	}
+ //	manageEnclosingInstanceAccessIfNecessary(currentScope, flowInfo);
+ //	manageSyntheticAccessIfNecessary(currentScope, flowInfo);
+
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.wst.jsdt.core
+Index: src/org/eclipse/wst/jsdt/internal/compiler/ast/TryStatement.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/plugins/org.eclipse.wst.jsdt.core/src/org/eclipse/wst/jsdt/internal/compiler/ast/TryStatement.java,v
+retrieving revision 1.8
+diff -u -r1.8 TryStatement.java
+--- src/org/eclipse/wst/jsdt/internal/compiler/ast/TryStatement.java	29 Oct 2007 16:50:42 -0000	1.8
++++ src/org/eclipse/wst/jsdt/internal/compiler/ast/TryStatement.java	2 Jan 2008 22:44:36 -0000
+@@ -122,7 +122,8 @@
+ 		handlingContext.complainIfUnusedExceptionHandlers(this.scope, this);
+ 
+ 		// process the catch blocks - computing the minimal exit depth amongst try/catch
+-		if (this.catchArguments != null) {
++		if (this.caughtExceptionTypes != null &amp;&amp; 
++				this.catchArguments != null) {
+ 			int catchCount;
+ 			this.catchExits = new boolean[catchCount = this.catchBlocks.length];
+ 			this.catchExitInitStateIndexes = new int[catchCount];
+
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.wst.jsdt.core
+Index: src/org/eclipse/wst/jsdt/internal/compiler/flow/ExceptionHandlingFlowContext.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/plugins/org.eclipse.wst.jsdt.core/src/org/eclipse/wst/jsdt/internal/compiler/flow/ExceptionHandlingFlowContext.java,v
+retrieving revision 1.2
+diff -u -r1.2 ExceptionHandlingFlowContext.java
+--- src/org/eclipse/wst/jsdt/internal/compiler/flow/ExceptionHandlingFlowContext.java	25 Oct 2007 00:09:21 -0000	1.2
++++ src/org/eclipse/wst/jsdt/internal/compiler/flow/ExceptionHandlingFlowContext.java	2 Jan 2008 22:45:08 -0000
+@@ -54,7 +54,8 @@
+ 	super(parent, associatedNode);
+ 	this.isMethodContext = scope == scope.methodScope();
+ 	this.handledExceptions = handledExceptions;
+-	int count = handledExceptions.length, cacheSize = (count / ExceptionHandlingFlowContext.BitCacheSize) + 1;
++	int count = handledExceptions != null ? handledExceptions.length : 0;
++	int cacheSize = (count / ExceptionHandlingFlowContext.BitCacheSize) + 1;
+ 	this.isReached = new int[cacheSize]; // none is reached by default
+ 	this.isNeeded = new int[cacheSize]; // none is needed by default
+ 	this.initsOnExceptions = new UnconditionalFlowInfo[count];
+@@ -96,7 +97,8 @@
+ 
+ public void complainIfUnusedExceptionHandlers(BlockScope scope,TryStatement tryStatement) {
+ 	// report errors for unreachable exception handlers
+-	for (int i = 0, count = this.handledExceptions.length; i &lt; count; i++) {
++	int length = this.handledExceptions != null ? this.handledExceptions.length : 0;
++	for (int i = 0, count = length; i &lt; count; i++) {
+ 		int index = this.indexes.get(this.handledExceptions[i]);
+ 		int cacheIndex = index / ExceptionHandlingFlowContext.BitCacheSize;
+ 		int bitMask = 1 &lt;&lt; (index % ExceptionHandlingFlowContext.BitCacheSize);
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127754</commentid>
+    <comment_count>2</comment_count>
+    <who name="Phil Berkland">berkland</who>
+    <bug_when>2008-01-08 16:57:42 -0500</bug_when>
+    <thetext>Fixed by resolving catch argument type to the JS &quot;Error&quot; class.  When this is done there is no longer a null pointer exception. </thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

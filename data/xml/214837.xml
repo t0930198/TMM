@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214837</bug_id>
+          
+          <creation_ts>2008-01-09 19:47:00 -0500</creation_ts>
+          <short_desc>resource leak in the new Plugin PopupMenu template</short_desc>
+          <delta_ts>2008-02-05 15:55:41 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Scharf">eclipse</reporter>
+          <assigned_to name="Chris Aniszczyk">caniszczyk</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>caniszczyk</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128638</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Scharf">eclipse</who>
+    <bug_when>2008-01-09 19:47:31 -0500</bug_when>
+    <thetext>The sample code generated when choosing the PopupMenu template contains one very simple class NewAction. It contains the following code:
+
+	public void run(IAction action) {
+		Shell shell = new Shell();
+		MessageDialog.openInformation(
+			shell,
+			&quot;XXXX Plug-in&quot;,
+			&quot;New Action was executed.&quot;);
+	}
+
+This is a *very* bad example of a message dialog, because it leaks the shell!
+
+Either use null or do something like:
+
+	protected Shell shell;
+	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
+		shell=targetPart.getSite().getShell();
+	}
+	public void run(IAction action) {
+		MessageDialog.openInformation(
+			shell,
+			&quot;XXXX Plug-in&quot;,
+			&quot;New Action was executed.&quot;);
+	}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128657</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-09 20:53:05 -0500</bug_when>
+    <thetext>joy!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128659</commentid>
+    <comment_count>2</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-09 21:00:51 -0500</bug_when>
+    <thetext>Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128660</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86527</attachid>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-09 21:01:00 -0500</bug_when>
+    <thetext>Created attachment 86527
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128696</commentid>
+    <comment_count>4</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-09 23:32:20 -0500</bug_when>
+    <thetext>man Chris, you are fast!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150403</commentid>
+    <comment_count>5</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-02-05 15:55:41 -0500</bug_when>
+    <thetext>Verified on I20080204-0010</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86527</attachid>
+            <date>2008-01-09 21:01:00 -0500</date>
+            <delta_ts>2008-01-09 21:01:00 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>735</size>
+            <attacher name="Chris Aniszczyk">caniszczyk</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIABigKTgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQ4MzcueG1s7ZhvT9swEMa/imWhvYvjtBnrHwJCpRPVtAEqbC+GNJnkFAyO
+bdlORTWJzz6n3UrLEKwM2sHy7mJH5ye/e+4ieWvnqhBoBMZyJRMcEYoRyFRlXOYJPjl+H7TwzvbW
+QDowLHX+pX1unTJjNMgSfO6ctp0wPCtzSyAVXFsgyuSThaARxa3mO4w+z7LjhUz9EUiH9kA4lmBZ
+CoFRX2Z7zEGCG5S2AhoFtI0atENpJ26RzcZb1BseYzTJAdYlOKCENmOMPnDp5RRMcl0KViXH6BMb
+8XwS/8p+YHjOZSXca5zpLcZiLEmqjA9VBoLwn+lJBikbYzR0zLg/kDV0pkxdaWCfyUz4t5P5Y3QG
+pOTEQaG9QrDhLPrWJPQ01EqX+iPI0p6GF2zE3rBCd4XrzuWdfmW1icPHk4xiEsX0NslGVfnpAdoo
+zfI7KN5LDbIcrF+QjnFZeD3L8144+D7qdJO0W/GLov4S/Vtbb0nr1a55qv77vjGl1RPM2g0y4Vi7
+cQ2DcBWF+O9cXlt5lVau/fqMw+DrwlJt7H9kRj9zWV5dBzw5Idomzeg2oOjGtxYEpMuhuchcpfmQ
+pZcsh/6VFp6SecB8NzLWDWSuDe4k8po7uW7Alc26awtu1z+P4NDrvD4a7E42uz76oszlGcj0vNpZ
+w8XK43u+pwrNp5U8kdz1M+7UQ52//t/O35ci/P3icfsHUEsHCLndaWANAgAAsxQAAFBLAQIUABQA
+CAAIABigKTi53WlgDQIAALMUAAAwAAAAAAAAAAAAAAAAAAAAAABodHRwcyUzQSUyRiUyRmJ1Z3Mu
+ZWNsaXBzZS5vcmclMkZidWdzLTIxNDgzNy54bWxQSwUGAAAAAAEAAQBeAAAAawIAAAAA
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

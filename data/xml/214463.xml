@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214463</bug_id>
+          
+          <creation_ts>2008-01-07 05:04:00 -0500</creation_ts>
+          <short_desc>During startup of a debug session, a disabled watchpoint is set anyway</short_desc>
+          <delta_ts>2014-01-29 20:47:10 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-debug</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>6.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Luber">michael.luber</reporter>
+          <assigned_to name="James Blackburn">jamesblackburn+eclipse</assigned_to>
+          <cc>dschaefer</cc>
+    
+    <cc>jamesblackburn+eclipse</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126423</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86294</attachid>
+    <who name="Michael Luber">michael.luber</who>
+    <bug_when>2008-01-07 05:04:02 -0500</bug_when>
+    <thetext>Created attachment 86294
+Patch on CVS
+
+Build ID: I20071101-2000
+
+Steps To Reproduce:
+1. Setup everything to run a test debug session, i.e. write a small example program, install gcc and gdb, etc.
+
+2. Create a new watchpoint on a global variable, but disable it right away.
+
+3. Now invoke a debug session (with &quot;stop in main&quot;): The watchpoint will be triggered anyway, although it should be disabled.
+
+
+More information:
+From the &quot;verbose output&quot; of the debug session, one can see the CDT &quot;forgets&quot; to disable the watchpoint after it has created it (like it does with regular breakpoints).
+
+If you have a disabled breakpoint, you can see the following lines in the verbose output:
+## 169-break-insert test.c:23
+## 170-break-disable 1
+
+The &quot;break-disable&quot; command is missing for disabled watchpoints.
+
+
+I added a patch as an attachment. Unfortunately, the path to the file in question is different in CVS and in a project imported from the Jar-file.
+That is why i added two patch files:
+&quot;patch_cvs.txt&quot; should work in CVS,
+&quot;patch_import.txt&quot; should work on an imorted plugin project.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126425</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86295</attachid>
+    <who name="Michael Luber">michael.luber</who>
+    <bug_when>2008-01-07 05:05:30 -0500</bug_when>
+    <thetext>Created attachment 86295
+Patch on imorted plugin project</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1516660</commentid>
+    <comment_count>2</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2009-06-02 15:37:02 -0400</bug_when>
+    <thetext>Thanks for the patch, this bug is indeed annoying.
+
+The patch looks fine, it adds functionality in BreakpointManager#setWatchpoint very similar to the code in #setLocationBreakpoint.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1516663</commentid>
+    <comment_count>3</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2009-06-02 15:38:50 -0400</bug_when>
+    <thetext>Committed. Will be in 6.0 RC 4</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86294</attachid>
+            <date>2008-01-07 05:04:00 -0500</date>
+            <delta_ts>2014-01-29 20:47:10 -0500</delta_ts>
+            <desc>Patch on CVS</desc>
+            <filename>patch_cvs.txt</filename>
+            <type>text/plain</type>
+            <size>1738</size>
+            <attacher name="Michael Luber">michael.luber</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuY2R0LmRlYnVn
+Lm1pLmNvcmUNCkluZGV4OiBjZGkvb3JnL2VjbGlwc2UvY2R0L2RlYnVnL21pL2NvcmUvY2RpL0Jy
+ZWFrcG9pbnRNYW5hZ2VyLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90b29s
+cy9vcmcuZWNsaXBzZS5jZHQvYWxsL29yZy5lY2xpcHNlLmNkdC5kZWJ1Zy5taS5jb3JlL2NkaS9v
+cmcvZWNsaXBzZS9jZHQvZGVidWcvbWkvY29yZS9jZGkvQnJlYWtwb2ludE1hbmFnZXIuamF2YSx2
+DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNDUNCmRpZmYgLXUgLXIxLjQ1IEJyZWFrcG9pbnRNYW5h
+Z2VyLmphdmENCi0tLSBjZGkvb3JnL2VjbGlwc2UvY2R0L2RlYnVnL21pL2NvcmUvY2RpL0JyZWFr
+cG9pbnRNYW5hZ2VyLmphdmEJNSBOb3YgMjAwNyAxNTozNjo0MiAtMDAwMAkxLjQ1DQorKysgY2Rp
+L29yZy9lY2xpcHNlL2NkdC9kZWJ1Zy9taS9jb3JlL2NkaS9CcmVha3BvaW50TWFuYWdlci5qYXZh
+CTI0IERlYyAyMDA3IDAwOjIxOjQxIC0wMDAwDQpAQCAtNzQ5LDcgKzc0OSw4IEBADQogCQlib29s
+ZWFuIGFjY2VzcyA9IHdhdGNocG9pbnQuaXNSZWFkVHlwZSgpICYmIHdhdGNocG9pbnQuaXNXcml0
+ZVR5cGUoKTsNCiAJCWJvb2xlYW4gcmVhZCA9ICEgd2F0Y2hwb2ludC5pc1dyaXRlVHlwZSgpICYm
+IHdhdGNocG9pbnQuaXNSZWFkVHlwZSgpOw0KIAkJU3RyaW5nIGV4cHJlc3Npb24gPSB3YXRjaHBv
+aW50LmdldERlcml2ZWRFeHByZXNzaW9uKCk7DQotDQorCQlib29sZWFuIGVuYWJsZSA9IHdhdGNo
+cG9pbnQuaXNFbmFibGVkKCk7DQorCQkNCiAJCU1JU2Vzc2lvbiBtaVNlc3Npb24gPSB0YXJnZXQu
+Z2V0TUlTZXNzaW9uKCk7DQogCQlDb21tYW5kRmFjdG9yeSBmYWN0b3J5ID0gbWlTZXNzaW9uLmdl
+dENvbW1hbmRGYWN0b3J5KCk7DQogCQlNSUJyZWFrV2F0Y2ggYnJlYWtXYXRjaCA9DQpAQCAtNzk1
+LDYgKzc5NiwyMCBAQA0KIAkJCQkJdGhyb3cgbmV3IENESUV4Y2VwdGlvbihDZGlSZXNvdXJjZXMu
+Z2V0U3RyaW5nKCJjZGkuQ29tbW9uLk5vX2Fuc3dlciIpKTsgLy8kTk9OLU5MUy0xJA0KIAkJCQl9
+CQkJCQ0KIAkJCX0NCisJCQlpZiAoIWVuYWJsZSkgew0KKwkJCQlpbnRbXSBudW1iZXJzID0gbmV3
+IGludFsxXTsNCisJCQkJbnVtYmVyc1swXSA9IG5vOw0KKwkJCQlNSUJyZWFrRGlzYWJsZSBicmVh
+a0Rpc2FibGUgPSBmYWN0b3J5LmNyZWF0ZU1JQnJlYWtEaXNhYmxlKG51bWJlcnMpOw0KKwkJCQl0
+cnkgew0KKwkJCQkJbWlTZXNzaW9uLnBvc3RDb21tYW5kKGJyZWFrRGlzYWJsZSk7DQorCQkJCQlN
+SUluZm8gZGlzYWJsZUluZm8gPSBicmVha0Rpc2FibGUuZ2V0TUlJbmZvKCk7DQorCQkJCQlpZiAo
+ZGlzYWJsZUluZm8gPT0gbnVsbCkgew0KKwkJCQkJCXRocm93IG5ldyBDRElFeGNlcHRpb24oQ2Rp
+UmVzb3VyY2VzLmdldFN0cmluZygiY2RpLkNvbW1vbi5Ob19hbnN3ZXIiKSk7IC8vJE5PTi1OTFMt
+MSQNCisJCQkJCX0NCisJCQkJfSBjYXRjaCAoTUlFeGNlcHRpb24gZSkgew0KKwkJCQkJdGhyb3cg
+bmV3IE1JMkNESUV4Y2VwdGlvbihlKTsNCisJCQkJfQ0KKwkJCX0NCiAJCQkvLyBob3cgdG8gZGVh
+bCB3aXRoIHRocmVhZHMgPz8/DQogCQl9IGNhdGNoIChNSUV4Y2VwdGlvbiBlKSB7DQogCQkJdGhy
+b3cgbmV3IE1JMkNESUV4Y2VwdGlvbihlKTsNCg==
+</data>
+<flag name="iplog"
+          id="60961"
+          type_id="7"
+          status="+"
+          setter="dschaefer"
+    />
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86295</attachid>
+            <date>2008-01-07 05:05:00 -0500</date>
+            <delta_ts>2009-06-02 15:38:16 -0400</delta_ts>
+            <desc>Patch on imorted plugin project</desc>
+            <filename>patch_import.txt</filename>
+            <type>text/plain</type>
+            <size>1738</size>
+            <attacher name="Michael Luber">michael.luber</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuY2R0LmRlYnVn
+Lm1pLmNvcmUNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvY2R0L2RlYnVnL21pL2NvcmUvY2RpL0Jy
+ZWFrcG9pbnRNYW5hZ2VyLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90b29s
+cy9vcmcuZWNsaXBzZS5jZHQvYWxsL29yZy5lY2xpcHNlLmNkdC5kZWJ1Zy5taS5jb3JlL2NkaS9v
+cmcvZWNsaXBzZS9jZHQvZGVidWcvbWkvY29yZS9jZGkvQnJlYWtwb2ludE1hbmFnZXIuamF2YSx2
+DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNDUNCmRpZmYgLXUgLXIxLjQ1IEJyZWFrcG9pbnRNYW5h
+Z2VyLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvY2R0L2RlYnVnL21pL2NvcmUvY2RpL0JyZWFr
+cG9pbnRNYW5hZ2VyLmphdmEJNSBOb3YgMjAwNyAxNTozNjo0MiAtMDAwMAkxLjQ1DQorKysgc3Jj
+L29yZy9lY2xpcHNlL2NkdC9kZWJ1Zy9taS9jb3JlL2NkaS9CcmVha3BvaW50TWFuYWdlci5qYXZh
+CTI0IERlYyAyMDA3IDAwOjIxOjQxIC0wMDAwDQpAQCAtNzQ5LDcgKzc0OSw4IEBADQogCQlib29s
+ZWFuIGFjY2VzcyA9IHdhdGNocG9pbnQuaXNSZWFkVHlwZSgpICYmIHdhdGNocG9pbnQuaXNXcml0
+ZVR5cGUoKTsNCiAJCWJvb2xlYW4gcmVhZCA9ICEgd2F0Y2hwb2ludC5pc1dyaXRlVHlwZSgpICYm
+IHdhdGNocG9pbnQuaXNSZWFkVHlwZSgpOw0KIAkJU3RyaW5nIGV4cHJlc3Npb24gPSB3YXRjaHBv
+aW50LmdldERlcml2ZWRFeHByZXNzaW9uKCk7DQotDQorCQlib29sZWFuIGVuYWJsZSA9IHdhdGNo
+cG9pbnQuaXNFbmFibGVkKCk7DQorCQkNCiAJCU1JU2Vzc2lvbiBtaVNlc3Npb24gPSB0YXJnZXQu
+Z2V0TUlTZXNzaW9uKCk7DQogCQlDb21tYW5kRmFjdG9yeSBmYWN0b3J5ID0gbWlTZXNzaW9uLmdl
+dENvbW1hbmRGYWN0b3J5KCk7DQogCQlNSUJyZWFrV2F0Y2ggYnJlYWtXYXRjaCA9DQpAQCAtNzk1
+LDYgKzc5NiwyMCBAQA0KIAkJCQkJdGhyb3cgbmV3IENESUV4Y2VwdGlvbihDZGlSZXNvdXJjZXMu
+Z2V0U3RyaW5nKCJjZGkuQ29tbW9uLk5vX2Fuc3dlciIpKTsgLy8kTk9OLU5MUy0xJA0KIAkJCQl9
+CQkJCQ0KIAkJCX0NCisJCQlpZiAoIWVuYWJsZSkgew0KKwkJCQlpbnRbXSBudW1iZXJzID0gbmV3
+IGludFsxXTsNCisJCQkJbnVtYmVyc1swXSA9IG5vOw0KKwkJCQlNSUJyZWFrRGlzYWJsZSBicmVh
+a0Rpc2FibGUgPSBmYWN0b3J5LmNyZWF0ZU1JQnJlYWtEaXNhYmxlKG51bWJlcnMpOw0KKwkJCQl0
+cnkgew0KKwkJCQkJbWlTZXNzaW9uLnBvc3RDb21tYW5kKGJyZWFrRGlzYWJsZSk7DQorCQkJCQlN
+SUluZm8gZGlzYWJsZUluZm8gPSBicmVha0Rpc2FibGUuZ2V0TUlJbmZvKCk7DQorCQkJCQlpZiAo
+ZGlzYWJsZUluZm8gPT0gbnVsbCkgew0KKwkJCQkJCXRocm93IG5ldyBDRElFeGNlcHRpb24oQ2Rp
+UmVzb3VyY2VzLmdldFN0cmluZygiY2RpLkNvbW1vbi5Ob19hbnN3ZXIiKSk7IC8vJE5PTi1OTFMt
+MSQNCisJCQkJCX0NCisJCQkJfSBjYXRjaCAoTUlFeGNlcHRpb24gZSkgew0KKwkJCQkJdGhyb3cg
+bmV3IE1JMkNESUV4Y2VwdGlvbihlKTsNCisJCQkJfQ0KKwkJCX0NCiAJCQkvLyBob3cgdG8gZGVh
+bCB3aXRoIHRocmVhZHMgPz8/DQogCQl9IGNhdGNoIChNSUV4Y2VwdGlvbiBlKSB7DQogCQkJdGhy
+b3cgbmV3IE1JMkNESUV4Y2VwdGlvbihlKTsNCg==
+</data>
+<flag name="iplog"
+          id="20243"
+          type_id="7"
+          status="+"
+          setter="jamesblackburn+eclipse"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

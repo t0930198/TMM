@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214329</bug_id>
+          
+          <creation_ts>2008-01-04 05:58:00 -0500</creation_ts>
+          <short_desc>NPE at org.eclipse.team.internal.ccvs.ui.actions.CVSAction$5.run</short_desc>
+          <delta_ts>2008-01-04 09:38:03 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>CVS</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Jacek Pospychala">jacek.pospychala</reporter>
+          <assigned_to name="platform-cvs-inbox">platform-cvs-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125611</commentid>
+    <comment_count>0</comment_count>
+    <who name="Jacek Pospychala">jacek.pospychala</who>
+    <bug_when>2008-01-04 05:58:50 -0500</bug_when>
+    <thetext>eclipse.buildId=I20071213-1700
+
+I have checked out two projects and was switching their versions several times.
+Not sure in which exactly moment NPE was thrown.
+
+Stack trace:
+java.lang.NullPointerException
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction$5.run(CVSAction.java:543)
+at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:175)
+at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:118)
+at org.eclipse.swt.widgets.Display.syncExec(Display.java:4173)
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction.checkForMixingTags(CVSAction.java:539)
+at org.eclipse.team.internal.ccvs.ui.actions.ReplaceWithTagAction$2.run(ReplaceWithTagAction.java:65)
+at org.eclipse.team.internal.ccvs.ui.repo.RepositoryManager.run(RepositoryManager.java:717)
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction$2.run(CVSAction.java:360)
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction$3.run(CVSAction.java:369)
+at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction.run(CVSAction.java:366)
+at org.eclipse.team.internal.ccvs.ui.actions.ReplaceWithTagAction.execute(ReplaceWithTagAction.java:57)
+at org.eclipse.team.internal.ccvs.ui.actions.CVSAction.run(CVSAction.java:117)
+at org.eclipse.team.internal.ui.actions.TeamAction.runWithEvent(TeamAction.java:515)
+at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:241)
+at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:582)
+at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:499)
+at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:410)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2381)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2345)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2211)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:473)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:468)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1239)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125740</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tomasz Zarna">tomasz.zarna</who>
+    <bug_when>2008-01-04 09:33:05 -0500</bug_when>
+    <thetext>Jacek, are you able to reproduce it reliably? Have you observed it happen more than once?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125747</commentid>
+    <comment_count>2</comment_count>
+    <who name="Jacek Pospychala">jacek.pospychala</who>
+    <bug_when>2008-01-04 09:38:03 -0500</bug_when>
+    <thetext>no I&apos;ve seen it once. </thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

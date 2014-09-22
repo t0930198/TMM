@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215132</bug_id>
+          
+          <creation_ts>2008-01-12 20:46:00 -0500</creation_ts>
+          <short_desc>No watch-on-demand support in CDT</short_desc>
+          <delta_ts>2008-01-12 20:46:22 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-debug</component>
+          <version>5.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Rustam Abdullaev">rustamabd</reporter>
+          <assigned_to name="cdt-debug-inbox@eclipse.org">cdt-debug-inbox</assigned_to>
+          
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130242</commentid>
+    <comment_count>0</comment_count>
+    <who name="Rustam Abdullaev">rustamabd</who>
+    <bug_when>2008-01-12 20:46:22 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+This bug is about invoking a user-interactive function from a watch expression. A real-world example can be found here:
+http://gcc.gnu.org/projects/tree-ssa/tree-browser.html
+
+The only way I can do this from CDT is to add a permanent watch expression &quot;debug_tree(tmp)&quot;. This causes two problems:
+1. CDT tries to update this expression which results in my function being called multiple times. Disabling the watch doesn&apos;t seem to help (another bug? why does it evaluate a disabled watch expression?);
+2. Since the function waits for user input, CDT appears to &quot;hang&quot;, and approx. every 30 seconds displays &quot;debug session timed out&quot;.
+
+In a simplified test case, I want to be able to invoke func() in the example below with a single mouse click (after I add it as a watch expression) as many times as I want but _only_ when I want it.
+
+#include &lt;stdio.h&gt;
+void func()
+  {
+    printf(&quot;in func(). press Enter:&quot;); getchar();
+  }
+int main()
+  {
+    int a; // just something to step through
+    a=0;
+    a++;
+    a++;
+    a++;
+    a++;
+    a++;
+    return 0;
+  }
+
+Steps To Reproduce:
+1. Add a watch expression &quot;func()&quot;
+2. Step through the program
+3. Notice how many times you have to press Enter in the console
+4. Disable the watch
+5. Notice that func() is still being invoked, multiple times
+
+More information:
+
+I propose:
+1. Add a &quot;manual watch update&quot; mode with an &quot;update&quot; button next to the expression so that it can be updated with a single click.
+2. If the expression contains a function call, switch the paused thread/application back into &quot;running&quot; mode until the function returns.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

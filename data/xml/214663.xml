@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214663</bug_id>
+          
+          <creation_ts>2008-01-08 14:55:00 -0500</creation_ts>
+          <short_desc>[api tooling] potential NPE in tool builder</short_desc>
+          <delta_ts>2008-01-10 12:02:10 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>Incubators</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Rennie">Michael_Rennie</reporter>
+          <assigned_to name="Olivier Thomann">Olivier_Thomann</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127650</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-01-08 14:55:11 -0500</bug_when>
+    <thetext>In the buildDelta method of our tool builder we use ToolFactory to create a class file reader, which can return null if the type passed to it is not a valid .class file. This case can occur when you move a type from one package to another.
+
+for example:
+
+project P1 has two packages p1 and p2, where p1 contains type t1. drag t1 out of p1 and into p2. 
+
+It turns out that (in the above example) our types to inspect contains the old classfile (P1\bin\p1\t1.class) and the new one (P1\bin\p2\t1.class). Causing an NPE when we try to get the classfile reader and use it (for the old class file), as the old classfile is no longer valid.
+
+There are two things we could do here:
+
+1. guard against the NPE and do no work for invalid class files
+2. beef up the checking and don&apos;t ever add the invalid classfile to the listing of ones to check
+
+any other thoughts Olivier?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129005</commentid>
+    <comment_count>1</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-10 11:58:19 -0500</bug_when>
+    <thetext>If the .class file no longer exists, it should simply be skipped.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129007</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86573</attachid>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-10 12:00:10 -0500</bug_when>
+    <thetext>Created attachment 86573
+Proposed fix</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129009</commentid>
+    <comment_count>3</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-10 12:02:10 -0500</bug_when>
+    <thetext>Released for 3.4M5.
+Michael, please review.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86573</attachid>
+            <date>2008-01-10 12:00:00 -0500</date>
+            <delta_ts>2008-01-10 12:00:10 -0500</delta_ts>
+            <desc>Proposed fix</desc>
+            <filename>patch_214663.txt</filename>
+            <type>text/plain</type>
+            <size>1117</size>
+            <attacher name="Olivier Thomann">Olivier_Thomann</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLmFwaS50
+b29scw0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9wZGUvYXBpL3Rvb2xzL2ludGVybmFsL2J1aWxk
+ZXIvQXBpVG9vbEJ1aWxkZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2Vj
+bGlwc2UvcGRlLWluY3ViYXRvci9hcGktdG9vbGluZy9wbHVnaW5zL29yZy5lY2xpcHNlLnBkZS5h
+cGkudG9vbHMvc3JjL29yZy9lY2xpcHNlL3BkZS9hcGkvdG9vbHMvaW50ZXJuYWwvYnVpbGRlci9B
+cGlUb29sQnVpbGRlci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4yMw0KZGlmZiAtdSAt
+cjEuMjMgQXBpVG9vbEJ1aWxkZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9wZGUvYXBpL3Rv
+b2xzL2ludGVybmFsL2J1aWxkZXIvQXBpVG9vbEJ1aWxkZXIuamF2YQkxMCBKYW4gMjAwOCAxNjo1
+Mjo0MyAtMDAwMAkxLjIzDQorKysgc3JjL29yZy9lY2xpcHNlL3BkZS9hcGkvdG9vbHMvaW50ZXJu
+YWwvYnVpbGRlci9BcGlUb29sQnVpbGRlci5qYXZhCTEwIEphbiAyMDA4IDE2OjU5OjUyIC0wMDAw
+DQpAQCAtMzMzLDYgKzMzMyw3IEBADQogCQkJCWZvciAoSXRlcmF0b3IgaXRlcmF0b3IgPSB0eXBl
+c1RvQmVDaGVja2VkLml0ZXJhdG9yKCk7IGl0ZXJhdG9yLmhhc05leHQoKTsgKSB7DQogCQkJCQlJ
+RmlsZSBmaWxlID0gKElGaWxlKSBpdGVyYXRvci5uZXh0KCk7DQogCQkJCQlJQ2xhc3NGaWxlUmVh
+ZGVyIGNsYXNzRmlsZVJlYWRlciA9IFRvb2xGYWN0b3J5LmNyZWF0ZURlZmF1bHRDbGFzc0ZpbGVS
+ZWFkZXIoZmlsZS5nZXRMb2NhdGlvbigpLnRvT1NTdHJpbmcoKSwgSUNsYXNzRmlsZVJlYWRlci5T
+VVBFUl9JTlRFUkZBQ0VTKTsNCisJCQkJCWlmIChjbGFzc0ZpbGVSZWFkZXIgPT0gbnVsbCkgY29u
+dGludWU7DQogCQkJCQljaGFyW10gY2xhc3NOYW1lID0gY2xhc3NGaWxlUmVhZGVyLmdldENsYXNz
+TmFtZSgpOw0KIAkJCQkJQ2hhck9wZXJhdGlvbi5yZXBsYWNlKGNsYXNzTmFtZSwgJy8nLCAnLicp
+Ow0KIAkJCQkJaWYocmVmZXJlbmNlICE9IG51bGwpIHsNCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

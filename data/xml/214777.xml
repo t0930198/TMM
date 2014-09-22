@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214777</bug_id>
+          
+          <creation_ts>2008-01-09 12:20:00 -0500</creation_ts>
+          <short_desc>[prov] Provisioned SDK will not start</short_desc>
+          <delta_ts>2008-01-10 14:35:34 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>blocker</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="John Arthorne">john_arthorne</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          <cc>simon_kaegi</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128266</commentid>
+    <comment_count>0</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 12:20:28 -0500</bug_when>
+    <thetext>Build: I20080108-1320
+
+- download admin UI
+- create a profile and provision SDK + user UI into it
+- attempt to start the provisioned SDK.
+
+-&gt; An error occurs early in the startup sequence:
+
+!ENTRY org.eclipse.osgi 4 0 2008-01-09 12:17:07.984
+!MESSAGE Startup error
+!STACK 1
+java.lang.IllegalArgumentException: The System Bundle&apos;s start level can not be modified.
+	at org.eclipse.osgi.framework.internal.core.StartLevelManager.setBundleStartLevel(StartLevelManager.java:392)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.installBundles(EclipseStarter.java:1085)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.loadBasicBundles(EclipseStarter.java:620)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.startup(EclipseStarter.java:302)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:171)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:615)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1239)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128577</commentid>
+    <comment_count>1</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 18:36:11 -0500</bug_when>
+    <thetext>The problem is that the simpleconfigurator.manipulator bundle is never started. Tom, this feels like it&apos;s related to your fix for bug 213791.  We are indeed calling start(Bundle.START_ACTIVATION_POLICY) on that bundle, which used to start the bundle, but it&apos;s not starting any more. Are we doing the wrong thing here? Should we instead be using START_TRANSIENT?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128639</commentid>
+    <comment_count>2</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-09 19:48:02 -0500</bug_when>
+    <thetext>Nice find. Yes, we should be using START_TRANSIENT here. I&apos;ve updated the code in CVS but am leaving this open until we verify that this fixes the problem. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128838</commentid>
+    <comment_count>3</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-10 08:34:15 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; Nice find. Yes, we should be using START_TRANSIENT here. I&apos;ve updated the code
+&gt; in CVS but am leaving this open until we verify that this fixes the problem. 
+&gt; 
+
+If you want a bundle to activate immediately (run its BundleActivator.start method) then you must call Bundle.start without the START_ACTIVATION_POLICY.  That flag tells the framework to activate the bundle lazily which means it will not run the BundleActivator code until a trigger class is loaded from the bundle.
+
+If you want the bundle to activate immediately but do not want it to be persistently activated on the next launch of the framework then you must use START_TRANSIENT option of Bundle.start.
+
+With that said, I am not sure why this is related to the exception in this bug.  It seems like the error is caused by the osgi.bundles list including org.eclipse.osgi in the list.  This causes the EclipseStarter to try and set the start-level on the system.bundle perhaps?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128900</commentid>
+    <comment_count>4</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 10:19:48 -0500</bug_when>
+    <thetext>Tom: The stack trace is from the Eclipse provisioned by p2.  The problem was that the bundles.txt file wasn&apos;t written at all, because the simple configurator manipulator bundle wasn&apos;t started during install.
+
+Simon: The eclipse touchpoint should ideally throw an exception in this case if simpleconfigurator.manipulator isn&apos;t available. Do you know a good place to do this check?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129173</commentid>
+    <comment_count>5</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 14:35:34 -0500</bug_when>
+    <thetext>I verified with a test build that the fix released by Simon fixes the problem.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

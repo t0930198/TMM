@@ -1,0 +1,168 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214437</bug_id>
+          
+          <creation_ts>2008-01-06 07:05:00 -0500</creation_ts>
+          <short_desc>Provide efficient type lookup service in storage framework</short_desc>
+          <delta_ts>2010-06-29 09:22:24 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>cdo.core</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eike Stepper">stepper</reporter>
+          <assigned_to name="Eike Stepper">stepper</assigned_to>
+          <cc>mark.geib</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126288</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-06 07:05:04 -0500</bug_when>
+    <thetext>Provide efficient type lookup service in storage framework.
+Use it for horizontal mapping strategy where there is no central object table by default.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126402</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-07 04:18:31 -0500</bug_when>
+    <thetext>Committed to CVS
+
+Mark, with this feature (and the tweak in your ItemProviderAdapters) your big model should be faster now. Can you please tell me if you are content or if there is further need to optimize?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138174</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mark Geib">mark.geib</who>
+    <bug_when>2008-01-24 16:38:46 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+
+Eike,
+
+I can&apos;t say that it appears any different.
+
+I deleted the old database, and re-imported my data. Then I rebuilt both the client and server side with most recent CVS source.
+
+Startup seems a bit faster, but access to objects is still very slow.
+
+Mark.
+
+&gt; Committed to CVS
+&gt; 
+&gt; Mark, with this feature (and the tweak in your ItemProviderAdapters) your big
+&gt; model should be faster now. Can you please tell me if you are content or if
+&gt; there is further need to optimize?
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138521</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-25 08:20:35 -0500</bug_when>
+    <thetext> (In reply to comment #2)
+&gt; I deleted the old database, and re-imported my data. Then I rebuilt both the
+&gt; client and server side with most recent CVS source.
+That should at least eliminate the effect of bug #215686. Can I close that one?
+
+&gt; Startup seems a bit faster, but access to objects is still very slow.
+Hmm, here it is really fast.
+What db adapter are you using?
+Have you configured a connection pooling datasource?
+can you send me the client logs again to verify that reference-chunking is really turned on?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138818</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mark Geib">mark.geib</who>
+    <bug_when>2008-01-25 13:52:00 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt;  (In reply to comment #2)
+&gt; &gt; I deleted the old database, and re-imported my data. Then I rebuilt both the
+&gt; &gt; client and server side with most recent CVS source.
+&gt; That should at least eliminate the effect of bug #215686. Can I close that one?
+&gt; 
+&gt; &gt; Startup seems a bit faster, but access to objects is still very slow.
+&gt; Hmm, here it is really fast.
+&gt; What db adapter are you using?
+&gt; Have you configured a connection pooling datasource?
+&gt; can you send me the client logs again to verify that reference-chunking is
+&gt; really turned on?
+&gt; 
+
+Eike,
+
+Yes you should close #215686.
+
+I am using mysql.
+
+No, I have not configured connection pooling datasource, unless that is default.
+
+I post logs soon as I can.
+
+Mark.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139125</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-26 10:48:40 -0500</bug_when>
+    <thetext>I&apos;ve circumvented so far to implement own connection pooling because I belived that most &quot;real&quot; DB vendors have data sources that do this already. Nevertheless I&apos;ll try to do it for the cases where the data source can&apos;t do it. See bug #216586.
+
+BTW. my UI with your model is very fast. If your UI with your model is slow it could also be a problem with your UI? It would be good to test your model with the shipped CDO UI as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195418</commentid>
+    <comment_count>6</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-04-07 05:20:46 -0400</bug_when>
+    <thetext>cleanup</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1265233</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-06-10 02:30:01 -0400</bug_when>
+    <thetext>Reversioned due to graduation</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1769072</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2010-06-29 04:44:45 -0400</bug_when>
+    <thetext>Closing</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

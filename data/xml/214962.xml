@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214962</bug_id>
+          
+          <creation_ts>2008-01-10 16:11:00 -0500</creation_ts>
+          <short_desc>Port.getRequireds() should consider usages to other interfaces.</short_desc>
+          <delta_ts>2008-05-22 14:24:09 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>MDT.UML2</product>
+          <component>Core</component>
+          <version>2.2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.2.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="James Bruck">bruck.james</reporter>
+          <assigned_to name="James Bruck">bruck.james</assigned_to>
+          <cc>Kenn.Hussey</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129273</commentid>
+    <comment_count>0</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-01-10 16:11:46 -0500</bug_when>
+    <thetext>Create two interfaces I1 and I2.
+Create a usage between I1 and I2.
+Create a port.
+Type the port with I1.
+Call get.Requireds().
+
+There is nothing in the spec. excluding I2 from the returned result.
+
+Note that in practice this is unusual since usages are somewhat meaningless between interfaces (IMHO) since one interface does not require the services of another interface as it does not explicitly define behavior.  However, this is open to interpretation and nothing excludes this case from the spec.
+
+The implementation of Port.getRequireds() should be relaxed in include this case.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130954</commentid>
+    <comment_count>1</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-01-14 15:50:18 -0500</bug_when>
+    <thetext>Fixed 2008-01-14.  Removed extra check for interfaces when calculating getRequireds().</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133523</commentid>
+    <comment_count>2</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-01-17 16:32:31 -0500</bug_when>
+    <thetext>The fix was backed out after further discussions with OMG members.
+Users can simply type ports with classes that have usages to other interfaces.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1234075</commentid>
+    <comment_count>3</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-05-13 16:38:11 -0400</bug_when>
+    <thetext>re-opened after final discussions.   I will change this to allow usages between interfaces to be considered.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1235162</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kenn Hussey">Kenn.Hussey</who>
+    <bug_when>2008-05-14 10:13:46 -0400</bug_when>
+    <thetext>James, this fix needs to get in ASAP (i.e. in time for RC1, which is on May 19).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1235296</commentid>
+    <comment_count>5</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-05-14 11:20:13 -0400</bug_when>
+    <thetext>The fix has been committed May 14/2008</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1235298</commentid>
+    <comment_count>6</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-05-14 11:20:56 -0400</bug_when>
+    <thetext>removed the instanceof check for interface in the getRequireds() implementation</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1244897</commentid>
+    <comment_count>7</comment_count>
+    <who name="James Bruck">bruck.james</who>
+    <bug_when>2008-05-22 14:24:09 -0400</bug_when>
+    <thetext>verified in RC1</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

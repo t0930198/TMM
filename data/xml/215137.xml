@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215137</bug_id>
+          
+          <creation_ts>2008-01-13 03:15:00 -0500</creation_ts>
+          <short_desc>[AST]Some malformed MethodDeclaration, their Block is null, but they actually have Block</short_desc>
+          <delta_ts>2008-03-25 11:06:48 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="supgenius">supgenius.tw</reporter>
+          <assigned_to name="David Audel">david_audel</assigned_to>
+          <cc>jerome_lanneluc</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130258</commentid>
+    <comment_count>0</comment_count>
+    <who name="supgenius">supgenius.tw</who>
+    <bug_when>2008-01-13 03:15:18 -0500</bug_when>
+    <thetext>Build ID: M20060629-1905
+
+Steps To Reproduce:
+I used ASTParser to parse a java file. When statements has some wrong syntax in a method,such as...
+
+1.The statement has only one &quot; .
+  example: System.out.println(&quot;hello);
+
+2.The statement has only one &apos; or a couple of &apos; are not follow syntax.
+  example: System.out.println(&apos;a);
+           System.out.println(&apos;&apos;a);
+
+3.The statement is begin with number+e .
+  example: 7eSystem.out.println();
+
+This method will be parsed a malformed MethodDeclaration object by ASTParser. I want to call MethodDeclaration.getBody() to get it&apos;s Block but return null. 
+
+In other wrong syntax cases, they can still have Block. I know these all wrong syntax cases, but I have request to get their Blocks.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130629</commentid>
+    <comment_count>1</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-14 10:00:49 -0500</bug_when>
+    <thetext>If you enable the statement recovery, you get a body, but it is empty.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131208</commentid>
+    <comment_count>2</comment_count>
+    <who name="supgenius">supgenius.tw</who>
+    <bug_when>2008-01-15 02:21:59 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; If you enable the statement recovery, you get a body, but it is empty.
+
+I set ASTParser.setStatementsRecovery(true), but the result was the same. It&apos;s seems that those three types of syntax error statement can not be recoverd.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1180030</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Audel">david_audel</who>
+    <bug_when>2008-03-19 08:00:48 -0400</bug_when>
+    <thetext>This bug is already fixed in the 3.4 stream.
+
+I close this bug as WORKSFORME.
+
+I added some regression tests:
+  ASTConverterBugsTest#testBug215137a() -&gt; testBug215137d()</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1183312</commentid>
+    <comment_count>4</comment_count>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-03-25 11:06:48 -0400</bug_when>
+    <thetext>Verified for 3.4M6 using I20080325-0100</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214825</bug_id>
+          
+          <creation_ts>2008-01-09 17:03:00 -0500</creation_ts>
+          <short_desc>Loading model aborts on non-fatal error</short_desc>
+          <delta_ts>2010-07-19 21:59:45 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMF-Runtime</product>
+          <component>General</component>
+          <version>2.0.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.0.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Anthony Hunter">anthonyh</reporter>
+          <assigned_to name="Anthony Hunter">anthonyh</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128523</commentid>
+    <comment_count>0</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-09 17:03:55 -0500</bug_when>
+    <thetext>A model had been corrupted so that two semantic elements are missing from the model, but some notation elements and relationships are still referencing the missing elements (the references are all local to the same resource).
+
+This is a request to fix the user experience when a model with unresolved references is opened.
+
+Currently, an error (UnresolvedReferenceException) is recorded in the resource by XMLHandler#handleForwardReferences, which causes the GMFHandler#error method to stop loading the resource, and throw an AbortResourceLoadException because the GMFResource#doLoad() method has set the OPTION_ABORT_ON_ERROR to TRUE.  Because the resource does not finish loading, other unrelated parts of the model (such as parts of the diagram) can&apos;t be viewed in the application.
+
+UnresolvedReferenceException is not considered by EMF to be a fatal error.  XMLHandler#error is called instead of XMLHandler#fatal Error.
+So we can not abort when an UnresolvedReferenceException is received in XMLHandler#error().</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128542</commentid>
+    <comment_count>1</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-09 17:21:55 -0500</bug_when>
+    <thetext>Committed to R2_0_maintenance and HEAD</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1783396</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2010-07-19 21:59:45 -0400</bug_when>
+    <thetext>[GMF Restructure] Bug 319140 : product GMF and component
+Runtime was the original product and component for this bug</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

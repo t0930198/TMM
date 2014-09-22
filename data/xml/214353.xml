@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214353</bug_id>
+          
+          <creation_ts>2008-01-04 09:24:00 -0500</creation_ts>
+          <short_desc>ClassCastException if a field in the model is of type List</short_desc>
+          <delta_ts>2011-01-17 16:17:40 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Maynstall</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Jed Anderson">jed.anderson</reporter>
+          <assigned_to name="Maynstall Common Inbox">maynstall.common-inbox</assigned_to>
+          <cc>maynstall.common-inbox</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125736</commentid>
+    <comment_count>0</comment_count>
+    <who name="Jed Anderson">jed.anderson</who>
+    <bug_when>2008-01-04 09:24:02 -0500</bug_when>
+    <thetext>I declared a field to be of type List&lt;String&gt; but when I try and access it via the setter I get the following exception:
+
+java.lang.ClassCastException: org.eclipse.maynstall.client.model.provider.internal.LazyLoadingSet
+
+This is coming from the generated setter in the cglib code.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125822</commentid>
+    <comment_count>1</comment_count>
+    <who name="Jed Anderson">jed.anderson</who>
+    <bug_when>2008-01-04 11:05:16 -0500</bug_when>
+    <thetext>I&apos;d love to help contribute a solution to this problem but I&apos;m not sure about a fix.
+
+I tried changing MetaHelper.isSet(Field) to the following:
+
+	public static boolean isSet(Field field) {
+		return Set.class.isAssignableFrom(field.getType());
+	}
+	
+But that just gives me NullPointerExceptions when I try to access my field of type List.
+
+It looks to me like Set objects have special meaning so copying the SetProperty class and adding the appropriate handling in the MetaHelper might cause unwanted consequences.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125825</commentid>
+    <comment_count>2</comment_count>
+    <who name="Jed Anderson">jed.anderson</who>
+    <bug_when>2008-01-04 11:06:47 -0500</bug_when>
+    <thetext>I should also add that the field is marked @Transient.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

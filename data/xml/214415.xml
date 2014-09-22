@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214415</bug_id>
+          
+          <creation_ts>2008-01-04 20:24:00 -0500</creation_ts>
+          <short_desc>Cannot create EAR project from new button in JEE wizard</short_desc>
+          <delta_ts>2008-01-08 19:57:09 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Java EE Tools</product>
+          <component>jst.j2ee</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Carl Anderson">ccc</reporter>
+          <assigned_to name="Konstantin Komissarchik">konstantin.komissarchik</assigned_to>
+          
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126155</commentid>
+    <comment_count>0</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-01-04 20:24:41 -0500</bug_when>
+    <thetext>Steps to reproduce:
+
+Bring up one of the new Java EE projects wizards (such as new EJB)
+Select the Add to EAR check box
+Press the new button -&gt; this brings up the new EAR project wizard
+Fill in the project name, and press Finish
+
+The wizard dialog stays up.  In the console, the following exception (which is caused by a NPE listed towards the end) appears:
+
+!ENTRY org.eclipse.ui 4 0 2008-01-04 19:47:24.015
+!MESSAGE Unhandled event loop exception
+!STACK 0
+java.lang.RuntimeException: java.lang.NullPointerException
+        at org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard.pe
+rformFinish(ModifyFacetedProjectWizard.java:344)
+        at org.eclipse.wst.web.ui.internal.wizards.NewProjectDataModelFacetWizar
+d.performFinish(NewProjectDataModelFacetWizard.java:276)
+        at org.eclipse.jface.wizard.WizardDialog.finishPressed(WizardDialog.java
+:742)
+        at org.eclipse.jface.wizard.WizardDialog.buttonPressed(WizardDialog.java
+:373)
+        at org.eclipse.jface.dialogs.Dialog$2.widgetSelected(Dialog.java:623)
+        at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:
+227)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+        at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+        at org.eclipse.jface.window.Window.open(Window.java:801)
+        at org.eclipse.jst.j2ee.ui.project.facet.EarSelectionPanel.handleAddButt
+on(EarSelectionPanel.java:96)
+        at org.eclipse.jst.j2ee.ui.project.facet.EarSelectionPanel.access$0(EarS
+electionPanel.java:85)
+        at org.eclipse.jst.j2ee.ui.project.facet.EarSelectionPanel$1.widgetSelec
+ted(EarSelectionPanel.java:77)
+        at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:
+227)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+        at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+        at org.eclipse.jface.window.Window.open(Window.java:801)
+        at org.eclipse.ui.internal.navigator.wizards.WizardShortcutAction.run(Wi
+zardShortcutAction.java:94)
+        at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+        at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection
+(ActionContributionItem.java:582)
+        at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContri
+butionItem.java:499)
+        at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionC
+ontributionItem.java:410)
+        at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+        at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:952)
+        at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3750)
+        at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3361)
+        at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2381)
+        at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2345)
+        at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2211)
+        at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:473)
+        at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.ja
+va:288)
+        at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.jav
+a:468)
+        at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+        at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEAppli
+cation.java:106)
+        at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandl
+e.java:193)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runAppli
+cation(EclipseAppLauncher.java:106)
+        at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(Ec
+lipseAppLauncher.java:76)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.ja
+va:362)
+        at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.ja
+va:175)
+        at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+        at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.
+java:64)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAcces
+sorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:615)
+        at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+        at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+        at org.eclipse.equinox.launcher.Main.run(Main.java:1239)
+Caused by: java.lang.NullPointerException
+        at org.eclipse.core.runtime.Path.&lt;init&gt;(Path.java:182)
+        at org.eclipse.core.internal.resources.WorkspaceRoot.getProject(Workspac
+eRoot.java:163)
+        at org.eclipse.wst.common.project.facet.core.internal.FacetedProjectFram
+eworkImpl.create(FacetedProjectFrameworkImpl.java:739)
+        at org.eclipse.wst.common.project.facet.core.ProjectFacetsManager.create
+(ProjectFacetsManager.java:399)
+        at org.eclipse.wst.common.project.facet.core.internal.FacetedProjectWork
+ingCopy.commitChanges(FacetedProjectWorkingCopy.java:1759)
+        at org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard.pe
+rformFinish(ModifyFacetedProjectWizard.java:356)
+        at org.eclipse.wst.web.ui.internal.wizards.NewProjectDataModelFacetWizar
+d.performFinish(NewProjectDataModelFacetWizard.java:260)
+        at org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard$2.
+run(ModifyFacetedProjectWizard.java:298)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1800
+)
+        at org.eclipse.wst.common.project.facet.ui.ModifyFacetedProjectWizard$3.
+run(ModifyFacetedProjectWizard.java:312)
+        at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(Modal
+Context.java:119)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126156</commentid>
+    <comment_count>1</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-01-04 20:25:59 -0500</bug_when>
+    <thetext>Kosta- this looks like another bug in your new framework.  Can you investigate?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127843</commentid>
+    <comment_count>2</comment_count>
+    <who name="Konstantin Komissarchik">konstantin.komissarchik</who>
+    <bug_when>2008-01-08 19:57:09 -0500</bug_when>
+    <thetext>Fix released into 3.0 M5 code stream.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

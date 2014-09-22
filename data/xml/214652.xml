@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214652</bug_id>
+          
+          <creation_ts>2008-01-08 14:23:00 -0500</creation_ts>
+          <short_desc>UnsupportedOperationException - ConnectionProfiles lost on restart</short_desc>
+          <delta_ts>2008-07-01 17:42:11 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>9</classification_id>
+          <classification>DataTools</classification>
+          <product>Data Tools</product>
+          <component>Connectivity</component>
+          <version>1.5.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>1.5.2</target_milestone>
+          <dependson>206691</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Brian Fitzpatrick">bfitzpat</reporter>
+          <assigned_to name="Brian Fitzpatrick">bfitzpat</assigned_to>
+          <cc>bfitzpat</cc>
+    
+    <cc>lchan</cc>
+    
+    <cc>ledunnel</cc>
+    
+    <cc>mutdosch</cc>
+    
+    <cc>tanu78</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127623</commentid>
+    <comment_count>0</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-01-08 14:23:21 -0500</bug_when>
+    <thetext>+++ This bug was initially created as a clone of Bug #206691 +++
+
+I created two profiles -- one to a Derby 10.1 DB and another to DB2 8.2.  When I restarted my workspace, the connections were not showing in DataSource Explorer and I saw this exception when trying to retrieve one of the profiles (that no longer showed up).
+
+!ENTRY org.eclipse.datatools.connectivity 4 10001 2007-10-17 16:07:50.109
+!MESSAGE Parsing error: invalid attribute (org.eclipse.datatools.connectivity.db.generic.connectionProfile: org.eclipse.core.internal.registry.ConfigurationElementHandle@7138)
+
+!ENTRY org.eclipse.datatools.connectivity 4 10001 2007-10-17 16:07:50.125
+!MESSAGE Internal Error - org.eclipse.datatools.connectivity
+!STACK 0
+java.lang.UnsupportedOperationException
+	at java.util.AbstractMap.put(Unknown Source)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileProvider.addConnectionFactory(ConnectionProfileProvider.java:203)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileProvider.addConnectionFactory(ConnectionProfileProvider.java:198)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileManager.processExtensions(ConnectionProfileManager.java:174)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileManager.getProviders(ConnectionProfileManager.java:91)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileManager.getProvider(ConnectionProfileManager.java:96)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfile.&lt;init&gt;(ConnectionProfile.java:102)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileMgmt.readCPsFromXML1_0(ConnectionProfileMgmt.java:527)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileMgmt.loadCPs(ConnectionProfileMgmt.java:690)
+	at org.eclipse.datatools.connectivity.internal.ConnectionProfileMgmt.loadCPs(ConnectionProfileMgmt.java:474)
+	at org.eclipse.datatools.connectivity.internal.InternalProfileManager.loadProfiles(InternalProfileManager.java:785)
+	at org.eclipse.datatools.connectivity.internal.InternalProfileManager.getProfiles(InternalProfileManager.java:117)
+	at org.eclipse.datatools.connectivity.internal.InternalProfileManager.getProfileByName(InternalProfileManager.java:192)
+	at org.eclipse.datatools.connectivity.ProfileManager.getProfileByName(ProfileManager.java:92)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127626</commentid>
+    <comment_count>1</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-01-08 14:24:50 -0500</bug_when>
+    <thetext>Delivered fix from 206691 to the 1.5.2 stream</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1282365</commentid>
+    <comment_count>2</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-07-01 17:42:11 -0400</bug_when>
+    <thetext>Closing bugs</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

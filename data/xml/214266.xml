@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214266</bug_id>
+          
+          <creation_ts>2008-01-03 15:18:00 -0500</creation_ts>
+          <short_desc>[Webapp] Content frame links broken after empty topic</short_desc>
+          <delta_ts>2008-01-15 20:15:13 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>User Assistance</component>
+          <version>3.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>191591</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Henderson">dash.alpha</reporter>
+          <assigned_to name="platform-ua-inbox">platform-ua-inbox</assigned_to>
+          <cc>cgold</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125238</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Henderson">dash.alpha</who>
+    <bug_when>2008-01-03 15:18:25 -0500</bug_when>
+    <thetext>Build ID: I20070621-1340
+
+Steps To Reproduce:
+1. in a primary toc.xml, have something like this:
+   &lt;topic label=&quot;Empty topic&quot;/&gt;
+   &lt;topic label=&quot;Getting Started&quot;&gt;
+      &lt;anchor id=&quot;gettingstarted&quot;/&gt;
+   &lt;/topic&gt;
+
+2. In another toc, put this:
+&lt;toc label=&quot;Getting Started&quot; link_to=&quot;toc.xml#gettingstarted&quot;&gt; 
+    &lt;topic label=&quot;Main Topic&quot;  href=&quot;html/gettingstarted/maintopic.html&quot;/&gt; 
+&lt;/toc&gt;
+
+3. Run an instance of eclipse that includes the plugin containing these toc files.  Open the help contents and navigate to the &quot;Getting Started&quot; topic from the Contents pane.  The help browser displays the topic for &quot;Empty topic&quot; instead.
+
+Also, expand &quot;Getting Started&quot; and eclipse just says &quot;Loading... please wait&quot; and never displays the subtopics for &quot;Getting Started&quot;
+
+
+More information:
+The page generated for the Contents pane filters out empty topics, but this is likely done after the topics have already been numbered so all links to topics after an empty topic will point to the incorrect topic.
+
+In this example, the Contents pane links to 
+&quot;http://127.0.0.1:58647/help/nav/19_0&quot; instead of &quot;http://127.0.0.1:58647/help/nav/19_1&quot;, but the empty topic was omitted since it contains no sub topics nor an href itself)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125239</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86119</attachid>
+    <who name="David Henderson">dash.alpha</who>
+    <bug_when>2008-01-03 15:21:30 -0500</bug_when>
+    <thetext>Created attachment 86119
+Sample help plugin
+
+Here&apos;s a sample help plugin created from eclipse (using the plugin wizard with sample help content).  I just removed some extra content and added an extra (empty) topic.  You should be able to just import the plugin into eclipse and run it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125289</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Henderson">dash.alpha</who>
+    <bug_when>2008-01-03 16:21:16 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+ 
+&gt; Also, expand &quot;Getting Started&quot; and eclipse just says &quot;Loading... please wait&quot;
+&gt; and never displays the subtopics for &quot;Getting Started&quot;
+
+I just tried eclipse 3.3.1.1 M20071023-1652 and this part of the behavior no longer exists; expanding &quot;Getting Started&quot; works as expected.  The original problem of links to topics being incorrect in the Contents pane still exists.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125291</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-03 16:26:15 -0500</bug_when>
+    <thetext>Targeting 3.4</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131944</commentid>
+    <comment_count>4</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-15 20:15:13 -0500</bug_when>
+    <thetext>The problem of not loading the children was the same as Bug 191591. The second problem which is that the topic links are incorrect has been fixed for Eclipse 3.4  
+
+I am closing this as a duplicate of Bug 191591 which was the more serious of the two problems, both of which are now resolved. 
+
+*** This bug has been marked as a duplicate of bug 191591 ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86119</attachid>
+            <date>2008-01-03 15:21:00 -0500</date>
+            <delta_ts>2008-01-03 15:21:30 -0500</delta_ts>
+            <desc>Sample help plugin</desc>
+            <filename>HelpPlugin.zip</filename>
+            <type>application/zip</type>
+            <size>2792</size>
+            <attacher name="David Henderson">dash.alpha</attacher>
+            
+              <data encoding="base64">UEsDBBQAAAAIAH1oIziVEN5l0QAAAPMBAAATAAAASGVscFBsdWdpbi8ucHJvamVjdK2RTQ7CIBCF
+15p4h6Z7i+5cYE3UGDcak+oBkI4Vw1+AGo8vUNQ0bly44715Mx8MePEQPLuDsUzJeT4tJnkGkqqa
+yWaen46b8SxflKMh1kbdgLo1WGqYdj7t3QGWREC5Ba4PvG2YxCgaoUKVECBdidHrFNw0xkaBeurc
+Ml5XGmhQSa58K5F1dBJMmaYAypm2UOgaih2R7ALWLUMezOcGvoGYpg1omzTqGxh9QX7GVvQKgvwF
+mpzX0z3PtQZSuhNf+G7d+1gM9BiKsz7d7/32P+0JUEsDBBQAAAAIAH1oIzipzujVNwAAAGcAAAAb
+AAAASGVscFBsdWdpbi9idWlsZC5wcm9wZXJ0aWVzS8rM08vMS84pTUktVrBVKMgpTQeKVOTm6MTw
+cimgAl/XEEddTz83fSxyGSW5OdjEtUBm8XIBAFBLAwQKAAAAAAB9aCM4AAAAAAAAAAAAAAAAEAAA
+AEhlbHBQbHVnaW4vaHRtbC9QSwMECgAAAAAAnGgjOAAAAAAAAAAAAAAAAB8AAABIZWxwUGx1Z2lu
+L2h0bWwvZ2V0dGluZ3N0YXJ0ZWQvUEsDBBQAAAAIAH1oIzhIIj8JxwAAAAMBAAAtAAAASGVscFBs
+dWdpbi9odG1sL2dldHRpbmdzdGFydGVkL21haW50b3BpYy5odG1sVY7NTsMwEITP+CkW392lgkpF
+OD6QVAKpPzm4qjiaZKVYSu3gbBF5e5Kml55Ws7Mz3+rH4pDbr3IDH3a3hfL4vv3MQSrE03OOWNhi
+Nl4WT2CTC71nH4NrETd7aYTQDZ9bMw5ytREP+kzsoGHuFP1c/G8m8xiYAis7dCShmlUmmf4Yp+wb
+VI1LPXHm+6jW69WrWsqpiT23ZHbOB7Cx85XGeSM0zjChv2M9TOzl3dkoRdmS6wlGFCUY4iXBBISG
+Ei3Gglvw+oD5B1BLAwQUAAAACAB9aCM4sV2sScUAAAARAQAAGAAAAEhlbHBQbHVnaW4vaHRtbC90
+b2MuaHRtbG1OvW7CMBCe8VMc3s2B2kqgOh5IkFqJlgyuqo4GDsWSial9VM3bN2kYmU73/etptSvt
+V72BF/u2hfpjvX0tQSrEz4cSsbLVSDzO5mCTa7NnH1sXEDfv0gihGz4H0x9yRyMm+kzsoGG+KPq+
++p9ClrFlalnZ7kISDuNXSKZfxsH7DIfGpUxc+BzVcvm0Ugs5JLHnQMa6fSCIJ7jlZI0jITSOnULv
+47EbJizuqXtU1IFcJugBStDFa4KhHhpKNOtzbv7/OeYPUEsDBAoAAAAAAH1oIzgAAAAAAAAAAAAA
+AAAUAAAASGVscFBsdWdpbi9NRVRBLUlORi9QSwMEFAAAAAgAfWgjOIabBuhfAAAAlwAAAB8AAABI
+ZWxwUGx1Z2luL01FVEEtSU5GL01BTklGRVNULk1G803My0xLLS7RDUstKs7Mz7NSMNQz4HIqzUvJ
+SdX1hUrC5YxgMn6JualWCh6pOQUBOaXpmXkKIEo3Mw8mH1yZm5Sfk5mMrs5aoTgzLz0ntQRomm1J
+UWkqTAOy9UAHAABQSwMEFAAAAAgAfWgjOG0zEFKnAAAAPAEAABUAAABIZWxwUGx1Z2luL3BsdWdp
+bi54bWyNT7sOwjAM3Cv1HyLvpDwWhoRufAF8QNWaYClNojRF5e8xLZQiMeDJ5zuffaocWituGDvy
+TsNGrkGgq31Dzmg4n46rPZSHPFMl1pZChx/tTm4nKtjekOMuz4QQCoeE7ikZ4VTBk0safDTy5SOv
+aINMvobDW6cYLXa4LmRRA48lfwnfXIjUVvHOdOxxYVKw/B9LgylxyC5VMWEzHvhlooo5z5hQFXPc
+B1BLAwQUAAAACACSaCM4kvbYjbYAAAAEAQAAEgAAAEhlbHBQbHVnaW4vdG9jLnhtbGWPMQ+CMBCF
+dxL/w+V2i24OFAajLsaYgINjKSc0KW0DF6P/3oI4uVxe8r57eS8rXr2FJw2j8U7iVmwQyGnfGNdK
+vFXH9Q6LPMmKy7mE6n49SPRDK0hbE0YSHdkg2OuJSbIowKqarMRS9cESVKqO1z9g7x2T4xGBfTBa
+Yse9TeODmATmqwQAstn7RRz6wO8vjmn+75+IObaEktXA1OCMTJRyuvMDmEZi+2XGBVli0jknrpoK
+5MkHUEsDBBQAAAAIAJtoIzgzbByjpAAAANwAAAAgAAAASGVscFBsdWdpbi90b2NnZXR0aW5nc3Rh
+cnRlZC54bWxVjbEOwjAMRGfyFZaZSWBjSNoJWAAhtQxMqBTTRqRJlUaIz8cFhMRmnd+90/mzc/Cg
+ONjgDS7kHIF8Ha7WNwaP5Xq2xDwTOt9vCyhPh5XBEBtJtbP9QLIl18sU6pERmg9w1YWcwQ2lxAoo
+UhUTXRGc9fdzCgYZkrw5bT7E8AUyEBMW9Pan2FXWQzkmCNBGuhlsU+fUf1F1jL17cvyiYpFWPJKJ
+F1BLAwQKAAAAAABtaiM4AAAAAAAAAAAAAAAACwAAAEhlbHBQbHVnaW4vUEsBAhQAFAAAAAgAfWgj
+OJUQ3mXRAAAA8wEAABMAAAAAAAAAAQAgAAAAAAAAAEhlbHBQbHVnaW4vLnByb2plY3RQSwECFAAU
+AAAACAB9aCM4qc7o1TcAAABnAAAAGwAAAAAAAAABACAAAAACAQAASGVscFBsdWdpbi9idWlsZC5w
+cm9wZXJ0aWVzUEsBAhQACgAAAAAAfWgjOAAAAAAAAAAAAAAAABAAAAAAAAAAAAAQAAAAcgEAAEhl
+bHBQbHVnaW4vaHRtbC9QSwECFAAKAAAAAACcaCM4AAAAAAAAAAAAAAAAHwAAAAAAAAAAABAAAACg
+AQAASGVscFBsdWdpbi9odG1sL2dldHRpbmdzdGFydGVkL1BLAQIUABQAAAAIAH1oIzhIIj8JxwAA
+AAMBAAAtAAAAAAAAAAEAIAAAAN0BAABIZWxwUGx1Z2luL2h0bWwvZ2V0dGluZ3N0YXJ0ZWQvbWFp
+bnRvcGljLmh0bWxQSwECFAAUAAAACAB9aCM4sV2sScUAAAARAQAAGAAAAAAAAAABACAAAADvAgAA
+SGVscFBsdWdpbi9odG1sL3RvYy5odG1sUEsBAhQACgAAAAAAfWgjOAAAAAAAAAAAAAAAABQAAAAA
+AAAAAAAQAAAA6gMAAEhlbHBQbHVnaW4vTUVUQS1JTkYvUEsBAhQAFAAAAAgAfWgjOIabBuhfAAAA
+lwAAAB8AAAAAAAAAAQAgAAAAHAQAAEhlbHBQbHVnaW4vTUVUQS1JTkYvTUFOSUZFU1QuTUZQSwEC
+FAAUAAAACAB9aCM4bTMQUqcAAAA8AQAAFQAAAAAAAAABACAAAAC4BAAASGVscFBsdWdpbi9wbHVn
+aW4ueG1sUEsBAhQAFAAAAAgAkmgjOJL22I22AAAABAEAABIAAAAAAAAAAQAgAAAAkgUAAEhlbHBQ
+bHVnaW4vdG9jLnhtbFBLAQIUABQAAAAIAJtoIzgzbByjpAAAANwAAAAgAAAAAAAAAAEAIAAAAHgG
+AABIZWxwUGx1Z2luL3RvY2dldHRpbmdzdGFydGVkLnhtbFBLAQIUAAoAAAAAAG1qIzgAAAAAAAAA
+AAAAAAALAAAAAAAAAAAAEAAAAFoHAABIZWxwUGx1Z2luL1BLBQYAAAAADAAMAE8DAACDBwAAAAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

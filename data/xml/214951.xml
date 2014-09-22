@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214951</bug_id>
+          
+          <creation_ts>2008-01-10 15:40:00 -0500</creation_ts>
+          <short_desc>Please add http: access for /svnroot/dsdp</short_desc>
+          <delta_ts>2008-01-14 11:29:11 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Subversion</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          <dependson>214493</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Martin Oberhuber">martin.oberhuber</reporter>
+          <assigned_to name="Eclipse Webmaster">webmaster</assigned_to>
+          <cc>dgaff.eclipse</cc>
+    
+    <cc>eugene.tarassov</cc>
+    
+    <cc>felix.burton</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129238</commentid>
+    <comment_count>0</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 15:40:51 -0500</bug_when>
+    <thetext>+++ This bug was initially created as a clone of Bug #214493 +++
+
+According to http://wiki.eclipse.org/SVN_Howto , http access should work for the Eclipse SVN repositories.
+
+In fact, it does work for
+   http://dev.eclipse.org/svnroot/technology/
+but it does not work for
+   http://dev.eclipse.org/svnroot/dsdp/
+
+The server gives a 404 not found. Please add that access method.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129266</commentid>
+    <comment_count>1</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-01-10 16:03:56 -0500</bug_when>
+    <thetext>The webmasters feel that there is an inherent risk in enabling https access to the repository, as we need to grant write access to our web server to the complete repository.  Anyone who exploits any hole in our website code can potentially gain write access to your repository.
+
+If you only want http, then there is no problem, but http is anonymous-only.  https would be for committers.
+
+Please confirm if you just want http, or both http and https (for commit access).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129270</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 16:08:31 -0500</bug_when>
+    <thetext>Just http: is fine for me.
+
+If https: is a risk, can it be removed from all the repositories, and from the SVN_Howto Wiki page? Currently, /svnroot/technology is accessible through https.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129286</commentid>
+    <comment_count>3</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-01-10 16:22:40 -0500</bug_when>
+    <thetext>&gt; If https: is a risk, can it be removed from all the repositories, and from the
+&gt; SVN_Howto Wiki page? Currently, /svnroot/technology is accessible through
+&gt; https.
+
+Trust me, we struggled hard to not implement it at all. Some projects in Technology need it, as some committers behind corporate firewalls cannot establish ssh connections.  They are aware of the implications but have no other choice.
+
+See bug 168282 for the nitty gritty.
+
+I&apos;ve updated the SVN howto document to reflect this.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130742</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-01-14 11:29:11 -0500</bug_when>
+    <thetext>Done.
+
+http://dev.eclipse.org/svnroot/dsdp
+
+You&apos;ll still need to commit changes via svn+ssh.
+
+-M.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

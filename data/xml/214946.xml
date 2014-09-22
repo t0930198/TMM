@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214946</bug_id>
+          
+          <creation_ts>2008-01-10 14:51:00 -0500</creation_ts>
+          <short_desc>[Webapp] Process JSP files in documentation plugins</short_desc>
+          <delta_ts>2008-12-02 16:12:15 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>User Assistance</component>
+          <version>3.3</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Douglas Dirks">ddirks</reporter>
+          <assigned_to name="platform-ua-inbox">platform-ua-inbox</assigned_to>
+          <cc>cgold</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129192</commentid>
+    <comment_count>0</comment_count>
+    <who name="Douglas Dirks">ddirks</who>
+    <bug_when>2008-01-10 14:51:42 -0500</bug_when>
+    <thetext>In Eclipse 3.3, it does not appear to be possible to use the help server to process JSP files contained in documentation plugins. (Only JSPs from the org.eclipse.help.webapp plugin are processed, it seems.)
+
+Having access to the servlet engine from documentation plugins would give documentation creators significant flexibility to build dynamic user assistance content. One might, for example, create content that behaves differently when viewed in the full help system, in the standalone help system, or in an Infocenter.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1382579</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-12-02 16:12:15 -0500</bug_when>
+    <thetext>It turns out that there is a way to do this, although I only just discovered it. If you create a plugin with extensions like this and have a plugin which contains files doc/page.html and test.jsp these can be accessed at /help/doc/page.html and /help/jsp/test.jsp.
+
+Closing the bug as WORKSFORME.
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;?eclipse version=&quot;3.2&quot;?&gt;
+&lt;plugin&gt;
+   &lt;extension
+         point=&quot;org.eclipse.equinox.http.registry.servlets&quot;&gt;
+      &lt;servlet
+            alias=&quot;/test.html&quot;
+            class=&quot;temp.mynewcontext.TestServlet&quot;            
+            httpcontextId=&quot;org.eclipse.help.webapp.help&quot;&gt;
+      &lt;/servlet&gt;
+      &lt;servlet
+            alias=&quot;/jsp/*.jsp&quot;
+            class=&quot;org.eclipse.equinox.jsp.jasper.registry.JSPFactory:/&quot;&gt;
+      &lt;/servlet&gt;
+      &lt;serviceSelector
+            filter=&quot;(other.info=org.eclipse.help)&quot;&gt;
+      &lt;/serviceSelector&gt;
+   &lt;/extension&gt;
+   &lt;extension
+         point=&quot;org.eclipse.equinox.http.registry.resources&quot;&gt;
+      &lt;resource
+            alias=&quot;/doc&quot;
+            base-name=&quot;/&quot;&gt;
+      &lt;/resource&gt;
+      &lt;serviceSelector
+            filter=&quot;(other.info=org.eclipse.help)&quot;&gt;
+      &lt;/serviceSelector&gt;
+   &lt;/extension&gt;
+&lt;/plugin&gt;
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

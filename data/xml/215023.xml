@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215023</bug_id>
+          
+          <creation_ts>2008-01-11 09:35:00 -0500</creation_ts>
+          <short_desc>[POG] setconfig fails with IAC install due to JAXP</short_desc>
+          <delta_ts>2009-07-01 16:49:44 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Agent Controller</product>
+          <component>Config</component>
+          <version>4.5</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>closed460</status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>4.5i5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Harm Sluiman">sluiman</reporter>
+          <assigned_to name="Bing Xu">xubing</assigned_to>
+          <cc>analexee</cc>
+    
+    <cc>ben_hutchison</cc>
+    
+    <cc>igor.alelekov</cc>
+    
+    <cc>jkubasta</cc>
+    
+    <cc>kiryl.kazakevich</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129625</commentid>
+    <comment_count>0</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-01-11 09:35:11 -0500</bug_when>
+    <thetext>setconfig requires JAXP to set up the config.xml file, and before doing so it tests for the presence of JAXP. With a default install of Java 4-5-6 and running the setconfg in the IAC plugin, errors occur and hte config is never created, whihc prevents standalone opperation of the AC. Yet after running the workbench with the same default JRE and using the AC a config file is created and works fine.
+
+See the wiki for profiler usage problems and more details if needed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132662</commentid>
+    <comment_count>1</comment_count>
+    <who name="Bing Xu">xubing</who>
+    <bug_when>2008-01-16 14:48:45 -0500</bug_when>
+    <thetext>Kiryl, we need to add lib/config.jar back to IAC because the config.jar is used by setconfig to check for JAXP.
+
+Can you modify the rmt-add-native-to-tptp.sh?   Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133095</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kiryl Kazakevich">kiryl.kazakevich</who>
+    <bug_when>2008-01-17 08:31:02 -0500</bug_when>
+    <thetext>Done.
+
+Actually config.jar for IAC is located in org.eclipse.tptp.platform.agentcontroller plug-in.
+
+To avoid duplicating config.jar, I changed SetConfig scripts to include this plug-in to classpath.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135781</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kiryl Kazakevich">kiryl.kazakevich</who>
+    <bug_when>2008-01-22 08:40:00 -0500</bug_when>
+    <thetext>Bing,
+
+You can check if it works in the TPTP-4.5.0-200801210400 driver.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135917</commentid>
+    <comment_count>4</comment_count>
+    <who name="Bing Xu">xubing</who>
+    <bug_when>2008-01-22 11:21:02 -0500</bug_when>
+    <thetext>Tested in TPTP-4.5.0-200801210400.   IAC&apos;s SetConfig.bat is working now.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1188432</commentid>
+    <comment_count>5</comment_count>
+    <who name="BenH">ben_hutchison</who>
+    <bug_when>2008-03-29 06:17:56 -0400</bug_when>
+    <thetext>Hi there developers, it me, &quot;User&quot; of TPTP. :)
+
+I was wondering why setconfig doesnt work, and now I know: cause its broken.
+
+Now Im just left wondering:
+
+How was such a obvious bug, which can be found by simply downloading the current TPTP release and following the setup vanilla instructions for standalone mode, go undetected? Were the testers slacking off even more than usual?
+
+This (4.4.1) is the second release of TPTP I have downloaded: both had something broken that stopped me getting work done. Last time it was indefinite 100% cpu consumption, now its &quot;Oopps, its broken and we didnt notice&quot;.
+
+And finally, take a look at the masterful &quot;non-help&quot; that a Mr Asaf Yaffe of TPTP fame manages to provide to another poor User. User has hit your bug, but Yasaf manages to stonewall him into running to sysadmins getting his JRE version updated from 1.5.03 to 1.5.011. Like thats going to help! Thats right, if in doubt, waste the Users time while sounding vauguely helpful, until 4.45pm comes around and you can quit the office, another day older and more mediocre.
+http://dev.eclipse.org/mhonarc/lists/tptp-tracing-profiling-tools-dev/msg00768.html
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1188853</commentid>
+    <comment_count>6</comment_count>
+    <who name="Igor Alelekov">igor.alelekov</who>
+    <bug_when>2008-03-31 02:53:05 -0400</bug_when>
+    <thetext>Hi, 
+IMHO this is not error. Originally IAC&apos;s SetConfig wasn&apos;t intended to be launched from command line. In TPTP 4.4.1 IAC is configured automatically  from the workbench behind scene.
+
+As far as I know, Asaf Yaffe is very friendly and careful about TPTP users person.
+
+Regards,
+Igor</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1539992</commentid>
+    <comment_count>7</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2009-06-30 12:10:05 -0400</bug_when>
+    <thetext>As of TPTP 4.6.0, TPTP is in maintenance mode and focusing on improving quality by resolving relevant enhancements/defects and increasing test coverage through test creation, automation, Build Verification Tests (BVTs), and expanded run-time execution. As part of the TPTP Bugzilla housecleaning process (see http://wiki.eclipse.org/Bugzilla_Housecleaning_Processes), this enhancement/defect is verified/closed by the Project Lead since this enhancement/defect has been resolved and unverified for more than 1 year and considered to be fixed. If this enhancement/defect is still unresolved and reproducible in the latest TPTP release (http://www.eclipse.org/tptp/home/downloads/), please re-open.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

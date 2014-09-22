@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214644</bug_id>
+          
+          <creation_ts>2008-01-08 12:51:00 -0500</creation_ts>
+          <short_desc>randomly malfunctioning links to wiki site</short_desc>
+          <delta_ts>2008-01-09 07:49:52 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Wiki</component>
+          <version>unspecified</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc>http://www.eclipse.org/downloads/</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Bruno Haible">haible</reporter>
+          <assigned_to name="Eclipse Webmaster">webmaster</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127561</commentid>
+    <comment_count>0</comment_count>
+    <who name="Bruno Haible">haible</who>
+    <bug_when>2008-01-08 12:51:23 -0500</bug_when>
+    <thetext>On this web page, both links &quot;Source code&quot; (one in a menu on the left,
+one in a menu on the right) point to
+http://wiki.eclipse.org/index.php/CVS_Howto; use of these links *sometimes*
+loads 
+http://wiki.eclipse.org/Main_Page
+instead.
+
+In Firefox 1.5: It loads http://wiki.eclipse.org/Main_Page always,
+regardless whether opening with single-click or &quot;Load in new window&quot;
+or &quot;Load in new tab&quot;.
+
+In Konqueror 3: It loads http://wiki.eclipse.org/Main_Page about half
+of the time, http://wiki.eclipse.org/index.php/CVS_Howto the other half
+of the time. Also regardless whether opening with single-click or
+&quot;Load in new window&quot; or &quot;Load in new tab&quot;.
+
+Sometimes http://wiki.eclipse.org/index.php/CVS_Howto works,
+then reloading the page again refers to the Main_Page.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127566</commentid>
+    <comment_count>1</comment_count>
+    <who name="Bruno Haible">haible</who>
+    <bug_when>2008-01-08 12:56:50 -0500</bug_when>
+    <thetext>This is a problem on the web server, not related to the client and not
+related to JavaScript. This can be seen by use of wget: The command
+
+  wget http://wiki.eclipse.org/index.php/CVS_Howto
+
+sometimes produces this output:
+
+--18:52:57--  http://wiki.eclipse.org/index.php/CVS_Howto
+           =&gt; `CVS_Howto.3&apos;
+Resolving wiki.eclipse.org... 206.191.52.47
+Connecting to wiki.eclipse.org|206.191.52.47|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+
+    [      &lt;=&gt;                            ] 24,581        12.10K/s             
+
+18:53:04 (12.07 KB/s) - `CVS_Howto.3&apos; saved [24581]
+
+
+and sometimes produces this output:
+
+--18:53:05--  http://wiki.eclipse.org/index.php/CVS_Howto
+           =&gt; `CVS_Howto.4&apos;
+Resolving wiki.eclipse.org... 206.191.52.47
+Connecting to wiki.eclipse.org|206.191.52.47|:80... connected.
+HTTP request sent, awaiting response... 301 Moved Permanently
+Location: http://wiki.eclipse.org/Main_Page [following]
+--18:53:06--  http://wiki.eclipse.org/Main_Page
+           =&gt; `Main_Page.1&apos;
+Reusing existing connection to wiki.eclipse.org:80.
+HTTP request sent, awaiting response... 200 OK
+Length: unspecified [text/html]
+
+    [     &lt;=&gt;                             ] 18,904        11.74K/s             
+
+18:53:11 (11.70 KB/s) - `Main_Page.1&apos; saved [18904]
+
+
+What does this &quot;Moved Permanently&quot; mean?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127597</commentid>
+    <comment_count>2</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-01-08 13:42:09 -0500</bug_when>
+    <thetext>This is likely due to the fix on bug 214442 -- I suspect one or more servers in the cluster have a newer (fixed) config, whereas the others haven&apos;t synced up yet.  They will be refreshed later today.
+
+I&apos;ve updated the link on the download page to drop the index.php portion, as it is not required.  Matt or I will close this as fixed once all the web servers are running the same config.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127647</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-01-08 14:52:41 -0500</bug_when>
+    <thetext>I&apos;ve restarted all of the servers and checked that CVS_Howto works, both internally and from and external host.
+
+-M.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128030</commentid>
+    <comment_count>4</comment_count>
+    <who name="Bruno Haible">haible</who>
+    <bug_when>2008-01-09 07:49:52 -0500</bug_when>
+    <thetext>I confirm that it&apos;s fixed: Ran the wget command 10 times, and it fetched
+the right file 10 times.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

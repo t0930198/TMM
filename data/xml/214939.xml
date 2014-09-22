@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214939</bug_id>
+          
+          <creation_ts>2008-01-10 14:13:00 -0500</creation_ts>
+          <short_desc>[Markers] CachedMarkerBuilder using too much CPU</short_desc>
+          <delta_ts>2010-04-06 15:05:15 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Boris Bokowski">bokowski</reporter>
+          <assigned_to name="Platform UI Triaged">platform-ui-triaged</assigned_to>
+          
+          <qa_contact name="Hitesh">hsoliwal</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129132</commentid>
+    <comment_count>0</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-10 14:13:15 -0500</bug_when>
+    <thetext>[3.4 M4]
+
+The CachedMarkerBuilder is using lots of CPU cycles on my machine. If I create a thread dump, I see traces like this:
+
+4XESTACKTRACE          at com/ibm/icu/text/CollationElementIterator.&lt;init&gt;(CollationElementIterator.java:644(Compiled Code))
+4XESTACKTRACE          at com/ibm/icu/text/RuleBasedCollator.initUtility(RuleBasedCollator.java:4048(Compiled Code))
+4XESTACKTRACE          at com/ibm/icu/text/RuleBasedCollator.getSortKeyBytes(RuleBasedCollator.java:2751(Compiled Code))
+4XESTACKTRACE          at com/ibm/icu/text/RuleBasedCollator.getRawCollationKey(RuleBasedCollator.java:1000(Compiled Code))
+4XESTACKTRACE          at com/ibm/icu/text/RuleBasedCollator.getCollationKey(RuleBasedCollator.java:925(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/MarkerEntry.getCollationKey(MarkerEntry.java:151(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/MarkerDescriptionField.getDescriptionKey(MarkerDescriptionField.java:60(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/MarkerDescriptionField.compare(MarkerDescriptionField.java:42(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/MarkerSeverityAndMessageField.compare(MarkerSeverityAndMessageField.java:39(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/MarkerComparator.compare(MarkerComparator.java:99(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1299(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1311(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1311(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1311(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.mergeSort(Arrays.java:1310(Compiled Code))
+4XESTACKTRACE          at java/util/Arrays.sort(Arrays.java:1238(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/CachedMarkerBuilder.sortAndMakeCategories(CachedMarkerBuilder.java:130)
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/CachedMarkerBuilder.buildAllMarkers(CachedMarkerBuilder.java:114(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/provisional/views/markers/CachedMarkerBuilder$1.run(CachedMarkerBuilder.java:244)
+4XESTACKTRACE          at org/eclipse/core/internal/jobs/Worker.run(Worker.java:55(Compiled Code))
+
+
+I tried closing the Problems view from all perspectives, but that didn&apos;t seem to get rid of the problem - apart from fixing the concrete performance problem, shouldn&apos;t you also remove that builder when the view is not showing?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129133</commentid>
+    <comment_count>1</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-10 14:13:57 -0500</bug_when>
+    <thetext>Marking as major.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129142</commentid>
+    <comment_count>2</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-10 14:16:22 -0500</bug_when>
+    <thetext>Btw, four of the five traces I took have the same stack trace, so it seems that RuleBasedCollator.initUtility either takes a long time to complete, or is called too often, or both.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129172</commentid>
+    <comment_count>3</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-10 14:34:38 -0500</bug_when>
+    <thetext>Boris please let me know how to setup your workspace.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129662</commentid>
+    <comment_count>4</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-11 10:27:22 -0500</bug_when>
+    <thetext>There is an obvious optimization I have just released but I don&apos;t think it was the problem here - it looks to be like too many new markers were being created.
+
+I&apos;ll need to know what you had loaded and what you were doing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129668</commentid>
+    <comment_count>5</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-11 10:38:41 -0500</bug_when>
+    <thetext>I haven&apos;t been able to reproduce this yet. Restarting Eclipse helped. I am also using a newer build now, so it could be that PDE fixed something.
+
+When I was having the high CPU usage problem, I had just created a new plug-in project and was editing the plugin.xml file. But the high CPU usage was not only triggered by changes to the plug-in metadata - bringing up the Ctrl+Shift+T dialog for example, lead to a long wait, too.
+
+I also ran into an OutOfMemoryError, but I cannot prove that it was caused by the markers code.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1549759</commentid>
+    <comment_count>6</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2009-07-09 19:19:41 -0400</bug_when>
+    <thetext>As per http://wiki.eclipse.org/Platform_UI/Bug_Triage_Change_2009
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1706764</commentid>
+    <comment_count>7</comment_count>
+    <who name="Hitesh">hsoliwal</who>
+    <bug_when>2010-04-06 15:05:15 -0400</bug_when>
+    <thetext>This an old bug, the view has gone through a number of fixes - particularly the recent ones. The partial sort should take care of the cpu. One of the earlier problems was the full sorting.
+
+Anyway I have never noticed such behaviour, except in case of Java auto complete,which wraps-up the condition with an OOME. I am closing the Bug as WORKSFORME for now. Feel free to reopen if you do spot such an instance again.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

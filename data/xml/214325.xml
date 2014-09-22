@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214325</bug_id>
+          
+          <creation_ts>2008-01-04 05:26:00 -0500</creation_ts>
+          <short_desc>Bug on the dirty flag of the WorkspaceCommandStack</short_desc>
+          <delta_ts>2008-05-13 17:10:21 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>Transaction</component>
+          <version>1.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Past</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Fabrice Dubach">fabrice92</reporter>
+          <assigned_to name="Christian W. Damus">give.a.damus</assigned_to>
+          <cc>nickboldt</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125589</commentid>
+    <comment_count>0</comment_count>
+    <who name="Fabrice Dubach">fabrice92</who>
+    <bug_when>2008-01-04 05:26:03 -0500</bug_when>
+    <thetext>Build ID:  I20070625-1500
+
+Steps To Reproduce:
+1.Using a transactionnal EMF editor, do several modifications on a document.
+2.Save it
+3.Undo ALL your modifications. The dirty flag become false at the end of the stack.
+
+
+More information:
+The following method of the WorkspaceCommandStackImpl class :
+
+public boolean isSaveNeeded() {
+		IUndoableOperation nextUndoableOperation =
+                       history.getUndoOperation(getDefaultUndoContext());
+		
+		if (nextUndoableOperation == null)
+			return false;
+		
+		return savedContext != null ? 
+                  !nextUndoableOperation.hasContext(getSavedContext()) : true;
+	}
+
+perhaps should be something like this
+
+public boolean isSaveNeeded() {
+		IUndoableOperation nextUndoableOperation = 
+                       history.getUndoOperation(getDefaultUndoContext());
+
+		if ( (nextUndoableOperation == null)
+                  &amp;&amp; (savedContext != null) )
+			return false;
+		
+		return savedContext != null ? 
+                  !nextUndoableOperation.hasContext(getSavedContext()) : true;
+	}
+
+but we need to test</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125739</commentid>
+    <comment_count>1</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-04 09:29:50 -0500</bug_when>
+    <thetext>That makes a good deal of sense to me.  The bottom of the command-stack shouldn&apos;t be considered as an implicit savepoint unless the editor had never been saved since opening.
+
+That leads me think that the test should actually be:
+
+                if ( (nextUndoableOperation == null)
+                  &amp;&amp; (savedContext == null) )
+                        return false;
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125771</commentid>
+    <comment_count>2</comment_count>
+    <who name="Fabrice Dubach">fabrice92</who>
+    <bug_when>2008-01-04 10:09:10 -0500</bug_when>
+    <thetext>Christian,
+I made obviously a little mistake on my conditional test, 
+yours seems to be quite better !</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138589</commentid>
+    <comment_count>3</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-25 09:43:54 -0500</bug_when>
+    <thetext>Committed the fix to CVS HEAD (1.2 release), with a JUnit test implementing the original problem scenario.
+
+The fix actually ended up slightly different to account for the null &apos;nextUndoableOperation&apos;:
+
+        if (nextUndoableOperation == null) {
+            return savedContext != null;
+        }
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1143922</commentid>
+    <comment_count>4</comment_count>
+    <who name="Nick Boldt">nickboldt</who>
+    <bug_when>2008-01-28 18:23:24 -0500</bug_when>
+    <thetext>Fix in CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151624</commentid>
+    <comment_count>5</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-02-06 21:20:24 -0500</bug_when>
+    <thetext>Fix available in HEAD: 1.2.0.I200802062040.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214585</bug_id>
+          
+          <creation_ts>2008-01-08 03:40:00 -0500</creation_ts>
+          <short_desc>[Markers] ClassCastException in MarkerAdapter#buildAllMarkers(IProgressMonitor monitor)</short_desc>
+          <delta_ts>2008-01-08 08:51:02 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Bullitt">49377</reporter>
+          <assigned_to name="Tod Creasey">Tod_Creasey</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127151</commentid>
+    <comment_count>0</comment_count>
+    <who name="Bullitt">49377</who>
+    <bug_when>2008-01-08 03:40:46 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+I use the ProblemsView.
+If i call getMarkerAdapter().buildAllMarkers(monitor) i get a ClassCastException in MarkerAdapter#buildAllMarkers(IProgressMonitor monitor).
+
+
+More information:
+In MarkerAdapter#buildAllMarkers(IProgressMonitor monitor) i see the this code:
+
+...
+ViewerComparator sorter = view.getViewer().getComparator();
+if (markerLimit == -1 || isShowingHierarchy()) {
+    sorter.sort(view.getViewer(), newMarkers.toArray());
+} else {
+    monitor.subTask(MarkerMessages.MarkerView_18);
+    SubProgressMonitor mon = new SubProgressMonitor(monitor, 40);
+    newMarkers = SortUtil.getFirst(newMarkers, (Comparator) sorter, 
+        markerLimit, mon);
+    if (monitor.isCanceled()) 
+        return;
+    sorter.sort(view.getViewer(), newMarkers.toArray());
+}
+...
+
+
+The sorter is a type of ViewerComparator which does NOT extend Comparator but in the method call SortUtil.getFirst(...) is is casted to Comparator which causes a ClassCastException.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127258</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-08 08:51:02 -0500</bug_when>
+    <thetext>The ProblemsView is not API. In 3.4 we will be supplying an API problems view for you to use. See Bug 162505</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

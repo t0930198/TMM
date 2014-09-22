@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214559</bug_id>
+          
+          <creation_ts>2008-01-07 18:27:00 -0500</creation_ts>
+          <short_desc>Binary operator with type patterns in declare parents don&apos;t work as expected</short_desc>
+          <delta_ts>2008-02-20 16:08:52 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>AspectJ</product>
+          <component>Compiler</component>
+          <version>1.5.4RC1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>1.6.0 M2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ramnivas Laddad">ramnivas</reporter>
+          <assigned_to name="aspectj inbox">aspectj-inbox</assigned_to>
+          <cc>aclement</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127035</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ramnivas Laddad">ramnivas</who>
+    <bug_when>2008-01-07 18:27:19 -0500</bug_when>
+    <thetext>Found this problem while fixing a bug related to @Configurable support in Spring.
+
+If I use type pattern based on an interface introduced through &apos;declare parents&apos; and then combine type pattern for that interface with other type pattern in another &apos;declare parents&apos;, it doesn&apos;t work (the second parent doesn&apos;t get introduced). Here is a test case that illustrates the problem:
+
+package test;
+
+import junit.framework.TestCase;
+
+public class DeclareParentPrecedenceTest extends TestCase {
+	public void testParenting() {
+		TestClass testObject = new TestClass();
+
+		assertTrue(testObject instanceof Interface1); // pass
+		assertTrue(testObject instanceof Interface1TestClass); // fail
+	}
+}
+
+aspect TestAspect  {
+	declare parents: 
+		TestClass implements Interface1;
+
+	declare parents: 
+		TestClass &amp;&amp; Interface1+ implements Interface1TestClass;
+}
+
+interface Interface1 {
+}
+
+interface Interface1TestClass {
+}
+
+class TestClass {
+}
+
+Interestingly enough:
+1. If either TestClass or Interface1 is removed in the second &apos;declare parents&apos; the test works.
+2. If TestClass implements Interface1 directly (not through &apos;declare parents&apos;), the test works.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160734</commentid>
+    <comment_count>1</comment_count>
+    <who name="Andrew Clement">aclement</who>
+    <bug_when>2008-02-20 16:08:52 -0500</bug_when>
+    <thetext>Took me a while to get this to fail - it depends on the order in which the weaver chooses to apply the declare parents.  Although the code is intended to loop around repeatedly applying them until a steady state is reached, this test showed a case that didn&apos;t work.
+
+fix committed.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

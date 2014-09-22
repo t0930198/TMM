@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215010</bug_id>
+          
+          <creation_ts>2008-01-11 07:35:00 -0500</creation_ts>
+          <short_desc>Remove EMF dependency on Eclipse runtime</short_desc>
+          <delta_ts>2009-11-23 18:29:37 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>212827</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Rajini Sivaram">rajinisivaram</reporter>
+          <assigned_to name="Marcelo Paternostro">marcelop</assigned_to>
+          <cc>david.varnes</cc>
+    
+    <cc>Ed.Merks</cc>
+    
+    <cc>jconlon</cc>
+    
+    <cc>jeffmcaffer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129564</commentid>
+    <comment_count>0</comment_count>
+    <who name="Rajini Sivaram">rajinisivaram</who>
+    <bug_when>2008-01-11 07:35:08 -0500</bug_when>
+    <thetext>I am trying to run Apache Tuscany SDO under OSGi, and we are using the Apache Felix OSGi runtime. SDO has a dependency on EMF, and hence we need to install the EMF bundles in Felix. Unfortunately the bundle manifest entries of the EMF jars use Require-Bundle of org.eclipse.core.runtime, which in turn requires Equinox. Since I would like to use the EMF classes under Felix (as well as Equinox), I would like to find some way of running EMF jars under OSGi without requiring Eclipse. 
+
+There is a thread on the EMF newsgroup(http://www.eclipse.org/newsportal/article.php?id=29582&amp;group=eclipse.tools.emf#29582) related to this. 
+
+The response from Jeff McAffer on the dependency on Eclipse Runtime on the OSGi dev mailing list is here - http://www.mail-archive.com/osgi-dev@www2.osgi.org/msg00673.html.
+
+Thank you,
+
+Rajini</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129587</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-11 08:37:49 -0500</bug_when>
+    <thetext>Keeping up with moving targets is not as easily done as said.  You might note that the Eclipse platform itself is still using Require-Bundle.  E.g., org.eclipse.core.resources looks like this today:
+
+Require-Bundle: org.eclipse.ant.core;bundle-version=&quot;[3.1.0,4.0.0)&quot;;resolution:=optional,
+ org.eclipse.core.expressions;bundle-version=&quot;[3.1.0,4.0.0)&quot;,
+ org.eclipse.core.filesystem;bundle-version=&quot;[1.1.0,2.0.0)&quot;,
+ org.eclipse.core.runtime;bundle-version=&quot;[3.2.0,4.0.0)&quot;
+
+
+I&apos;m not even sure that package imports is entirely the right approach, since it doesn&apos;t appear you can export such imports and hence when new dependencies are introduced in the future, clients will be broken until they update their own imports as well...
+
+*** This bug has been marked as a duplicate of bug 212827 ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130163</commentid>
+    <comment_count>2</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-12 11:17:31 -0500</bug_when>
+    <thetext>I am going to disagree.  This is not a duplicate of bug 212827.  The particular problem boils down to EMF depending on the org.eclipse.osgi bundle being in the system.  When running on other frameworks, this is a problem.  The choice of whether or not to use import package is almost an implementation detail and in this particular case it may not be possible to simultaneously get off org.eclipse.core.runtime and use import package.  more later.
+
+First things first.  The EMF code uses some things that it gets from and/or *via* the org.eclipse.core.runtime bundle.  That bundle in turn depends on the Equinox framework for reasons of its own.  Over the past few years we have been moving function out of org.eclipse.core.runtime and into a series of smaller, more focused bundles (e.g., org.eclipse.equinox.common).  In many respects the runtime bundle is a facade whose apparent API is actually a composition of the API of these smaller bundles.  
+
+So, in many cases EMF can look behind the facade and simply spec a dependency on the appropriate finer-grained bundle.  For example, EMF uses IStatus.  That class actually comes from org.eclipse.equinox.common.
+
+The first step down this path is to remove the explicit dependency on org.eclipse.core.runtime and look at the errors.  Then add back *require-bundle* statements for the various bundles that supply the pieces that are missing (except of course the runtime bundle itself).
+
+Undoubtedly you will be left with a dependency on the Platform class.  The scourge of the Eclipse runtime world.  The vast majority of the function on Platform is available via alternatives.  Some of these are documented in the code, some are not.  Follow the instructions where they are available, ask the Equinox team where they are not (we will add the instructions as needed)
+
+The other dependency is likely to be on the Plugin class.  Unless you expose you plugin class as API (shame on you), you can mostly likely simple remove the &quot;extends Plugin&quot; and add &quot;implements BundleActivator&quot;.  If you do expose your plugin class, you need to look carefully at your user expectations there and see if you can realistically remove the Plugin API from their world.  
+
+Ok, so that whole discussion did not mention import-package at all.  In fact, you explicitly need to use Require-Bundle in the initial steps of this.  The reason is the dreaded &quot;split packages&quot; problem.  Over the course of time the package org.eclipse.core.runtime has gone through a number of transitions.  Most importantly its content has been split over several bundles (org.eclipse.equionx.common, org.eclipse.equinox.registry and org.eclipse.core.runtime).  That is because the original package combined too many dissimilar things (utilities, runtime stuff and registry stuff).  It all made sense at the time but the world changed.  
+
+Anyway, at runtime each of these packages is actually different package since each bundle gets its own classloader.  So if you were to simply say Import-Package:org.eclipse.core.runtime you would get bound to a random (well not quite but...) one of the three and crash.  Using Require-Bundle *in effect* merges the packages and allows your bundle to get the all three different instances of it.
+
+If, for example, you need only one of the split parts then you can use Import-Package and spec an attribute to select from the three.  For example
+   Import-Package: org.eclipse.core.runtime;registry=split
+will get you the exporter who put the registry=split attribute on their package export.  In this case that is the org.eclipse.equinox.registry bundle.
+
+You can manage your bugs how you like bit these two bugs feel like different things.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130168</commentid>
+    <comment_count>3</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-12 11:30:53 -0500</bug_when>
+    <thetext>Given that things like EMFPlugin.EclipsePlugin extends org.eclipse.core.runtime.Plugin and that clients in turn extend this, eliminating the dependency isn&apos;t something I can do without breakpoint APIs so in that sense, this is a won&apos;t fix return.  Remember, like the platform we are providing a framework and part of that framework&apos;s designed is to support running both standalone and within Eclipse.  That involved using Eclipse&apos;s Plugins long before there were Bundles or OSGi.  We all have to deal with legacy and EMF&apos;s is longer than most (and in fact pretty much as long as the platform&apos;s). 
+
+If we can get an Eclipse 4.0 effort started and include an EMF 3.0 (a small runtime stream, GWT, eEMF, RAP) and  and EMF 4.0 (the full Java 5.0 with tools) as part of that effort, we can revisit this, so leaving it as a duplicate of another closely bug that we won&apos;t be able to do either seems reasonable because when we get around to doing these related thing in a better way in a new code stream we will of course ensure that all duplicates have in fact been addressed.
+
+So right now this bug is a won&apos;t fix but in the future we hope to revisit it.  And goodness knows I can&apos;t resolve it as later without incurring someone&apos;s wrath!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130169</commentid>
+    <comment_count>4</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-12 11:39:18 -0500</bug_when>
+    <thetext>is the use of the EMFPlugin class something that all EMF clients need to do? And what do they do with it?  Another approach is to leave your Plugin class but create another class that is the BundleActivator (to the extent that you even need an activator).  Clients can still access your Plugin object/class its just that it will not be the object used as the activator.  Depending on what they are expecting to do with ti, that may not matter.
+
+Put another way, rather than changing your plugin class, consider adding a BundleActivator.  Some fixups on your Plugin class would be needed but this may work.  Feel free to point me at the relevant projects.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130189</commentid>
+    <comment_count>5</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-12 13:47:25 -0500</bug_when>
+    <thetext>Every project we generate uses these EMFPlugin.EclipsePlugin derived classes as their activator so there are likely to be countless thousands.  Of course in the future we can regenerate something different.  From an Apache/SDO point of view, I believe the EMF jars could be just used as a jar that&apos;s packaged into a Felix compatible bundle, since EMF is designed to work stand alone it has no need for OSGi in order to function. The big value that Eclipse provides in the extension points and such, which I believe won&apos;t work on Felix anyway; correct me if I&apos;m wrong.  So treating the EMF jars as just plain old jars rather than as bundles is probably a reasonable approach I should have suggested earlier since that approach would allow the EMF jars to be used as is.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130198</commentid>
+    <comment_count>6</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-12 14:14:56 -0500</bug_when>
+    <thetext>from the original post I thought we were talking about the EMF bundles themselves not the generated code.  Someone should clarify this.
+
+Either way, if there is a reference to Plugin class then that code will not run unless it is on the Equinox framework.  I strongly suggest the EMF stop using the Plugin class if at all possible.  Since I know nothing about how EMF works or why it would be generating plugins it is hard to say if/how this can be done.
+
+BTW, the extension registry works fine on other frameworks.  At least it has been tested on Knoplerfish and the Prosyst framework.  It is a pretty normal service that uses the OSGi extender pattern to detect bundles coming and going.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130203</commentid>
+    <comment_count>7</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-12 14:34:07 -0500</bug_when>
+    <thetext>The Ecore bundle and the Change bundle are model bundles that are generated by EMF so the EMF bundles and the generated code are one and the same.  The code will run anywhere despite the use of Plugins and other Eclipse artifacts because EMF is designed to run stand alone such that missing Eclipse classes are simply tolerated; that&apos;s why I&apos;m suggesting that treating EMF as just a jar is a workable solution for folks want to use EMF in a none Eclipse runtime (and that&apos;s why folks are finding that simply munging the MANIFEST.MF makes it work too despite the fact that there will be missing classes). Asking EMF to stop using plugins is the same as asking org.eclipse.ui to stop providing AbstractUIPlugin, which isn&apos;t even deprecated.  Unfortunately folks rely on it as API and unless we are willing to make API breaking changes, we&apos;re stuck with providing that.  And again, keep in mind that &quot;plugins&quot; were the only thing that existed when EMF started generating things, so it generates plugins because plugins are what Eclipse was all about.  Of course within the core runtime we can evolve toward defining and using a BundleActivator directly and avoiding all other dependencies on the parts of the Eclipse runtime that have fallen out of favor, but with me as the only currently active developer and a plate full of other work, this isn&apos;t high on my priority list, given that there are simple solutions that already work for Felix that require minimal or even no changes at all... 
+
+I&apos;m sure the extension registry works but do the plugin.xml-based extension points work on all OSGi runtimes?  I would have thought not, or they&apos;d be in the MANIFEST.MF and not in the plugin.xml...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130220</commentid>
+    <comment_count>8</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-12 15:28:26 -0500</bug_when>
+    <thetext>Many bundle JARs work fine outside of OSGi because Java ignores the manifest entries but if there are OSGi entries and the JAR is used in an OSGi framework the framework is obliged to pay attention.  So if you say your bundle Require-Bundle: org.eclipse.core.runtime then the runtime bundle better be there even if the code itself has taken provisions to compensate for missing classes.
+
+One way to address this is to consider using optional dependencies on the runtime bundle.  Then people don&apos;t have to munge the manifest to get it working on other frameworks.  
+
+Thinking about this more, if things run fine outside of OSGi then people are not getting the Plugin class/object (or if they are the object is not completely functional) so why are we talking about backward compatibility like this?  People running EMF on Felix just will not get the Plugin class.  If that is all ok, what are they missing?  
+
+I&apos;m sure I&apos;m missing something here or making invalid assumptions.  Perhaps we need some real examples of manifests, code, usage, ...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130226</commentid>
+    <comment_count>9</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-12 16:42:56 -0500</bug_when>
+    <thetext>What does OSGi do with a bundle that nests another &quot;bundle&quot; on its classpath?  Does it really support such nested bundles?  I would have assumed (silly me perhaps) that if you put a jar on the classpath of a bundle&apos;s manifest that it will just be treated as a jar with a bunch of classes, not as a first class bundle in the OSGi sense...
+
+We definitely require those classes when running in an Eclipse-based OSGi environment.  They are essential to our integration with Eclipse in that case.  But when running standalone (or in a way that looks like standalone from EMF&apos;s point of view, i.e., Platform.isRunning fails to return true), then we don&apos;t need them.  So it wouldn&apos;t be correct to make the runtime itself optional from an Eclipse OSGi point of view.  We do have an optional dependency on the resources bundle in the Ecore bundle because that we can run fine with in Eclipse (to support RCP for example).
+
+So I&apos;m starting to suspect that the Felix folks can just rebundle the EMF jars in a Felix friendly bundle.  I could be wrong, but I can be hopeful...
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130239</commentid>
+    <comment_count>10</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-12 19:55:16 -0500</bug_when>
+    <thetext>hey Ed, it is clear that you are assuming I know more about what you are talking about than I actually do.  No one has ever said anything about nesting until comment 9.  So, make any progress on this there needs to be a complete set of bundle projects or bundles or whatever that can be used as a discussion facilitator.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130283</commentid>
+    <comment_count>11</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-13 09:32:58 -0500</bug_when>
+    <thetext>Jeff,
+
+I mentioned nesting in https://bugs.eclipse.org/bugs/show_bug.cgi?id=215010#c5 when I said
+
+From an Apache/SDO point of view, I believe the EMF jars could be just used as a jar that&apos;s packaged into a Felix compatible bundle, since EMF is designed to work stand alone it has no need for OSGi in order to function. 
+
+I see that wasn&apos;t entirely clear.  :-P
+
+So imagine taking the four EMF core runtime jars, i.e., org.eclipse.emf.common*.jar, org.eclipse.emf.ecore*.jar, org.eclipse.emf.xmi*.jar and org.eclipse.emf.ecore.change*.jar and defining a new bundle with its own MANIFEST.MF that points at these four jars for its Bundle-ClassPath.  Given how familiar you are with Orbit&apos;s packaging of jars into bundles and the fact that the EMF jars are easily available, probably what needs to be done is pretty clear.
+
+The EMF libraries would believe they are running standalone and would continue to function without the Eclipse core runtime or anything else Eclipse related.  I&apos;m not saying this is an ideal solution, I&apos;m just suggesting it&apos;s a reasonable solution until we&apos;re in a better position to align with the ever changing Eclipse platform story.  Of course all these platform changes are a steady improvement, but keeping up with all the evolving technologies while maintaining full compatibility for clients is definitely a challenge that&apos;s not helped by minimal resource...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130289</commentid>
+    <comment_count>12</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-13 11:02:05 -0500</bug_when>
+    <thetext>that does clarify a few things.  Some questions/observations
+- why one wrapper?  Does the current EMF community expect to be able to ship subsets of the four JARs you mention?  They would not be able to in this scenario?
+
+- do people in the EMF community spec dependencies on the EMF bundles?  If so, (and they use Require-Bundle) then wrappering is not a great option since they will be broken
+
+- In essence this wrappering just allows you to hack the manifests.  So what would be different in this wrapper manifest?  In particular, what would it import?  If it is just eliminating the dependency on org.eclipse.core.runtime then this can be done simply by marking this requirement as optional.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130298</commentid>
+    <comment_count>13</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-13 12:06:23 -0500</bug_when>
+    <thetext>Jeff,
+
+I&apos;m not providing that wrapper since no one has ever needed it before and in fact the Eclipse community doesn&apos;t generally need it.  We provide bundles and features for grouping them and that&apos;s it. I&apos;m simply suggesting that someone wanting the core runtime packaged for Felix could create such a thing instead of opening the jar (which if we signed it would leave it unsigned by us). 
+
+In the Eclipse, community folks can define their dependencies however they like but generally, as in most of the platform itself, I expect that bundle dependencies are still mostly used.  From an Eclipse bundling point of view, the core runtime is not an optional dependency.  We rely on it integrate with Eclipse, so we can do our extension point processing.  I&apos;ve never tried making it optional though.  Maybe that would work since of course generally the core runtime will be there for countless other reasons...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130343</commentid>
+    <comment_count>14</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-13 19:59:38 -0500</bug_when>
+    <thetext>to be clear, the regsistry is not part of org.eclipse.core.runtime.  Further, the registry does work without Equinox or OSGi!  it runs as plain Java too.
+
+there are certain parts of the runtime bundle that are interesting but as mentioned previously, almost all of them are optional.  
+
+In any event, I am not pushing for you to do anything in particular but do want to ensure that whatever decision you make is based on fact.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130506</commentid>
+    <comment_count>15</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-14 06:29:08 -0500</bug_when>
+    <thetext>You&apos;re right to push on the facts! The discussion has been extremely helpful because there were lots of things about this I didn&apos;t know before and even some misconceptions. I wasn&apos;t even aware that things like Platform and Plugin are best avoided and that they have alternatives.  So this discussion leaves me in a better position to plan for the future, i.e., better runtime support by virtue of focusing on things supported by all OSGi runtimes. At some point we will have a new major version number and that point will be an opportunity to make improvements that can leave some of the legacy stuff behind us...
+
+When we revisit the duplicate of this bug, we will know that not only do we need to using a more flexible style of dependency management but we need to restrict ourselves to using the more portable newer-and-improved parts of the runtime.
+
+Just to be sure I&apos;ve understood clearly.  I understand that OSGI supports registries, but are you saying that plugin.xml processing can be invoked stand alone even?  That could potentially be useful, though I&apos;m not sure why folks would  use that and yet not be able to run as an OSGi application, which of course works already as is, but it&apos;s good to know.  Looking closely at the jar decomposition, what&apos;s the long term status of IExtension and IExtensionPoint? They won&apos;t go away will they?  Their jar has a weird name...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130601</commentid>
+    <comment_count>16</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-14 09:25:47 -0500</bug_when>
+    <thetext>It is not that OSGi supports &quot;registries&quot; but tha tthe Eclipse Extension Registry mechanism runs on OSGi frameworks.  plugin.xml is the input to that mechansism.  In particular, the extension registry is a means of collaboration between &quot;components&quot;.  Those components need not be running in OSGi.  For example, some people have been using the registry stuff in the webapp environments to allow for collaboration between webapps.
+
+Not sure what is weird about the JAR name but those types are the API.  In the future I could imagine the package being renamed so as to eliminate the dreaded split package for org.eclipse.core.runtime but that is more cosmetics...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130663</commentid>
+    <comment_count>17</comment_count>
+    <who name="John Conlon">jconlon</who>
+    <bug_when>2008-01-14 10:28:40 -0500</bug_when>
+    <thetext>(In reply to comment #15)
+&gt; ...what&apos;s the long term status of IExtension and IExtensionPoint?
+&gt; They won&apos;t go away will they?  Their jar has a weird name...
+&gt; 
+
+Great discussion. (I knew Jeff, could articulate the intricacies better than I could)
+
+Regarding OSGi and Eclipse Extensions check out Neil Bartlett&apos;s article:
+http://www.eclipsezone.com/articles/extensions-vs-services/
+
+and ensuing discussion:
+http://www.eclipsezone.com/forums/thread.jspa?threadID=90486
+
+
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

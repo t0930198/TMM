@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214124</bug_id>
+          
+          <creation_ts>2008-01-02 11:04:00 -0500</creation_ts>
+          <short_desc>[config] Need to use doPrivileged when accessing config store</short_desc>
+          <delta_ts>2008-01-16 13:26:14 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Simon Kaegi">simon_kaegi</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          <cc>mmansell</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124193</commentid>
+    <comment_count>0</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-02 11:04:46 -0500</bug_when>
+    <thetext>From Mike Mansell:
+
+I was doing some experimental work with Equinox and the incubator Config Admin service and running under a Security Manager. I found that a bundle that has restricted permissions incorrectly fails when manipulating configuration data.
+
+Basically, if Bundle A has only permission to get the ConfigurationAdmin service and CONFIGURE permissions
+
+ie.
+
+( org.osgi.framework.ServicePermission &quot;org.osgi.service.cm.ConfigurationAdmin&quot; &quot;GET&quot; )
+( org.osgi.service.cm.ConfigurationPermission &quot;*&quot; &quot;CONFIGURE&quot; )
+
+Then, it&apos;s able to get the Configuration object, but when it attempts to update it, there is a permission failure within the Config Admin. Specifically, when it attempts to access the file system to write the updated properties, (ie. java.io.File access) the normal AccessController verifies that both the Config Admin AND Bundle A have the permission to access the file. Bundle A&apos;s permissions should have no bearing on this as the fact that it&apos;s a File store is internal to this implementation of the Config Admin.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124239</commentid>
+    <comment_count>1</comment_count>
+      <attachid>85996</attachid>
+    <who name="Mike Mansell">mmansell</who>
+    <bug_when>2008-01-02 11:57:44 -0500</bug_when>
+    <thetext>Created attachment 85996
+Possible fix to the security problem
+
+I&apos;ve walked through the different &apos;public&apos; access points to the Config Admin service, and found that there are only 3 places that need to have a minor change. Basically, anywhere that the ConfigurationStore is accessed from public APIs and attempt to change the permanent store (which is only within ConfigurationImpl). These 3 places need to have a AccessController.doPriviledged() wrapper added to stop the AccessController from checking permissions beyond the Config Admin (ie. prevent it from checking Bundle A).
+
+This patch contains those changes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132377</commentid>
+    <comment_count>2</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-16 10:49:21 -0500</bug_when>
+    <thetext>I&apos;ve checked a fix into HEAD.
+I restricted the privileged section just to the configuration store but otherwise it should perform correctly.
+
+This passes the unit tests however I I have not had a chance to test this properly with a SecurityManager in place similar to what you describe so I&apos;m hesitant to mark FIXED.
+
+Mike, could you try the version from HEAD to confirm?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132402</commentid>
+    <comment_count>3</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-16 11:04:25 -0500</bug_when>
+    <thetext>Adding contributed key word.  Simon, I assume you based the fix off the contributed fix from Mike?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132479</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mike Mansell">mmansell</who>
+    <bug_when>2008-01-16 12:03:26 -0500</bug_when>
+    <thetext>I&apos;ve checked out the latest, and yes, it does work in my SecurityManager. I don&apos;t have a test case for delete, but the update works great.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132570</commentid>
+    <comment_count>5</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-16 13:26:14 -0500</bug_when>
+    <thetext>re: contributed
+Yes. Thanks for the patch Mike.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>85996</attachid>
+            <date>2008-01-02 11:57:00 -0500</date>
+            <delta_ts>2008-01-02 11:57:44 -0500</delta_ts>
+            <desc>Possible fix to the security problem</desc>
+            <filename>ConfigurationImpl.java-patch.txt</filename>
+            <type>text/plain</type>
+            <size>3581</size>
+            <attacher name="Mike Mansell">mmansell</attacher>
+            
+              <data encoding="base64">SW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2ludGVybmFsL2NtL0NvbmZpZ3VyYXRpb25J
+bXBsLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL2VxdWlub3gt
+aW5jdWJhdG9yL29yZy5lY2xpcHNlLmVxdWlub3guY20vc3JjL29yZy9lY2xpcHNlL2VxdWlub3gv
+aW50ZXJuYWwvY20vQ29uZmlndXJhdGlvbkltcGwuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9u
+IDEuMQ0KZGlmZiAtdSAtcjEuMSBDb25maWd1cmF0aW9uSW1wbC5qYXZhDQotLS0gc3JjL29yZy9l
+Y2xpcHNlL2VxdWlub3gvaW50ZXJuYWwvY20vQ29uZmlndXJhdGlvbkltcGwuamF2YQk3IE5vdiAy
+MDA3IDAyOjI4OjExIC0wMDAwCTEuMQ0KKysrIHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2ludGVy
+bmFsL2NtL0NvbmZpZ3VyYXRpb25JbXBsLmphdmEJMiBKYW4gMjAwOCAxNjo0ODoyNSAtMDAwMA0K
+QEAgLTEyLDYgKzEyLDcgQEANCiBwYWNrYWdlIG9yZy5lY2xpcHNlLmVxdWlub3guaW50ZXJuYWwu
+Y207DQogDQogaW1wb3J0IGphdmEuaW8uSU9FeGNlcHRpb247DQoraW1wb3J0IGphdmEuc2VjdXJp
+dHkuKjsNCiBpbXBvcnQgamF2YS51dGlsLkRpY3Rpb25hcnk7DQogaW1wb3J0IGphdmEudXRpbC5F
+bnVtZXJhdGlvbjsNCiBpbXBvcnQgb3JnLm9zZ2kuZnJhbWV3b3JrLkJ1bmRsZTsNCkBAIC0yNiwx
+MSArMjcsMTEgQEANCiBjbGFzcyBDb25maWd1cmF0aW9uSW1wbCBpbXBsZW1lbnRzIENvbmZpZ3Vy
+YXRpb24gew0KIA0KIAlwcml2YXRlIGZpbmFsIENvbmZpZ3VyYXRpb25BZG1pbkZhY3RvcnkgY29u
+ZmlndXJhdGlvbkFkbWluRmFjdG9yeTsNCi0JcHJpdmF0ZSBmaW5hbCBDb25maWd1cmF0aW9uU3Rv
+cmUgY29uZmlndXJhdGlvblN0b3JlOw0KKwlmaW5hbCBDb25maWd1cmF0aW9uU3RvcmUgY29uZmln
+dXJhdGlvblN0b3JlOw0KIAkvKiogQEd1YXJkZWRCeSB0aGlzKi8NCiAJcHJpdmF0ZSBTdHJpbmcg
+YnVuZGxlTG9jYXRpb247DQogCXByaXZhdGUgZmluYWwgU3RyaW5nIGZhY3RvcnlQaWQ7DQotCXBy
+aXZhdGUgZmluYWwgU3RyaW5nIHBpZDsNCisJZmluYWwgU3RyaW5nIHBpZDsNCiAJcHJpdmF0ZSBD
+b25maWd1cmF0aW9uRGljdGlvbmFyeSBkaWN0aW9uYXJ5Ow0KIAkvKiogQEd1YXJkZWRCeSB0aGlz
+Ki8NCiAJcHJpdmF0ZSBib29sZWFuIGRlbGV0ZWQgPSBmYWxzZTsNCkBAIC0xMjksNyArMTMwLDIz
+IEBADQogCQl9IGZpbmFsbHkgew0KIAkJCXVubG9jaygpOw0KIAkJfQ0KLQkJY29uZmlndXJhdGlv
+blN0b3JlLnJlbW92ZUNvbmZpZ3VyYXRpb24ocGlkKTsNCisJCXRyeSB7DQorCQkJQWNjZXNzQ29u
+dHJvbGxlci5kb1ByaXZpbGVnZWQobmV3IFByaXZpbGVnZWRFeGNlcHRpb25BY3Rpb24oKSB7DQor
+CQkJCXB1YmxpYyBPYmplY3QgcnVuKCkgdGhyb3dzIEV4Y2VwdGlvbiB7DQorCQkJCQljb25maWd1
+cmF0aW9uU3RvcmUucmVtb3ZlQ29uZmlndXJhdGlvbihwaWQpOw0KKwkJCQkJcmV0dXJuIG51bGw7
+DQorCQkJCX0NCisJCQl9KTsNCisJCX0gY2F0Y2ggKFByaXZpbGVnZWRBY3Rpb25FeGNlcHRpb24g
+ZSkgew0KKwkJCUV4Y2VwdGlvbiBpZSA9IGUuZ2V0RXhjZXB0aW9uKCk7DQorCQkJaWYgKGllIGlu
+c3RhbmNlb2YgSU9FeGNlcHRpb24pDQorCQkJCXRocm93IChJT0V4Y2VwdGlvbilpZTsNCisJCQll
+bHNlIGlmIChpZSBpbnN0YW5jZW9mIFJ1bnRpbWVFeGNlcHRpb24pDQorCQkJCXRocm93IChSdW50
+aW1lRXhjZXB0aW9uKWllOw0KKwkJCWVsc2UNCisJCQkJdGhyb3cgbmV3IFJ1bnRpbWVFeGNlcHRp
+b24oaWUpOw0KKwkJfQ0KKwkJDQogCX0NCiANCiAJcHJpdmF0ZSB2b2lkIGNoZWNrRGVsZXRlZCgp
+IHsNCkBAIC0yMzAsNyArMjQ3LDIyIEBADQogCQkJY2hlY2tEZWxldGVkKCk7DQogCQkJaWYgKGRp
+Y3Rpb25hcnkgPT0gbnVsbCkNCiAJCQkJZGljdGlvbmFyeSA9IG5ldyBDb25maWd1cmF0aW9uRGlj
+dGlvbmFyeSgpOw0KLQkJCWNvbmZpZ3VyYXRpb25TdG9yZS5zYXZlQ29uZmlndXJhdGlvbihwaWQs
+IHRoaXMpOw0KKwkJCXRyeSB7DQorCQkJCUFjY2Vzc0NvbnRyb2xsZXIuZG9Qcml2aWxlZ2VkKG5l
+dyBQcml2aWxlZ2VkRXhjZXB0aW9uQWN0aW9uKCkgew0KKwkJCQkJcHVibGljIE9iamVjdCBydW4o
+KSB0aHJvd3MgRXhjZXB0aW9uIHsNCisJCQkJCQljb25maWd1cmF0aW9uU3RvcmUuc2F2ZUNvbmZp
+Z3VyYXRpb24ocGlkLCBDb25maWd1cmF0aW9uSW1wbC50aGlzKTsNCisJCQkJCQlyZXR1cm4gbnVs
+bDsNCisJCQkJCX0NCisJCQkJfSk7DQorCQkJfSBjYXRjaCAoUHJpdmlsZWdlZEFjdGlvbkV4Y2Vw
+dGlvbiBlKSB7DQorCQkJCUV4Y2VwdGlvbiBpZSA9IGUuZ2V0RXhjZXB0aW9uKCk7DQorCQkJCWlm
+IChpZSBpbnN0YW5jZW9mIElPRXhjZXB0aW9uKQ0KKwkJCQkJdGhyb3cgKElPRXhjZXB0aW9uKWll
+Ow0KKwkJCQllbHNlIGlmIChpZSBpbnN0YW5jZW9mIFJ1bnRpbWVFeGNlcHRpb24pDQorCQkJCQl0
+aHJvdyAoUnVudGltZUV4Y2VwdGlvbilpZTsNCisJCQkJZWxzZQ0KKwkJCQkJdGhyb3cgbmV3IFJ1
+bnRpbWVFeGNlcHRpb24oaWUpOw0KKwkJCX0NCiAJCQljb25maWd1cmF0aW9uQWRtaW5GYWN0b3J5
+Lm5vdGlmeUNvbmZpZ3VyYXRpb25VcGRhdGVkKHRoaXMsIGZhY3RvcnlQaWQgIT0gbnVsbCk7DQog
+CQl9IGZpbmFsbHkgew0KIAkJCXVubG9jaygpOw0KQEAgLTI0Miw3ICsyNzQsMjIgQEANCiAJCQls
+b2NrKCk7DQogCQkJY2hlY2tEZWxldGVkKCk7DQogCQkJdXBkYXRlRGljdGlvbmFyeShwcm9wZXJ0
+aWVzKTsNCi0JCQljb25maWd1cmF0aW9uU3RvcmUuc2F2ZUNvbmZpZ3VyYXRpb24ocGlkLCB0aGlz
+KTsNCisJCQl0cnkgew0KKwkJCQlBY2Nlc3NDb250cm9sbGVyLmRvUHJpdmlsZWdlZChuZXcgUHJp
+dmlsZWdlZEV4Y2VwdGlvbkFjdGlvbigpIHsNCisJCQkJCXB1YmxpYyBPYmplY3QgcnVuKCkgdGhy
+b3dzIEV4Y2VwdGlvbiB7DQorCQkJCQkJY29uZmlndXJhdGlvblN0b3JlLnNhdmVDb25maWd1cmF0
+aW9uKHBpZCwgQ29uZmlndXJhdGlvbkltcGwudGhpcyk7DQorCQkJCQkJcmV0dXJuIG51bGw7DQor
+CQkJCQl9DQorCQkJCX0pOw0KKwkJCX0gY2F0Y2ggKFByaXZpbGVnZWRBY3Rpb25FeGNlcHRpb24g
+ZSkgew0KKwkJCQlFeGNlcHRpb24gaWUgPSBlLmdldEV4Y2VwdGlvbigpOw0KKwkJCQlpZiAoaWUg
+aW5zdGFuY2VvZiBJT0V4Y2VwdGlvbikNCisJCQkJCXRocm93IChJT0V4Y2VwdGlvbilpZTsNCisJ
+CQkJZWxzZSBpZiAoaWUgaW5zdGFuY2VvZiBSdW50aW1lRXhjZXB0aW9uKQ0KKwkJCQkJdGhyb3cg
+KFJ1bnRpbWVFeGNlcHRpb24paWU7DQorCQkJCWVsc2UNCisJCQkJCXRocm93IG5ldyBSdW50aW1l
+RXhjZXB0aW9uKGllKTsNCisJCQl9DQogCQkJY29uZmlndXJhdGlvbkFkbWluRmFjdG9yeS5ub3Rp
+ZnlDb25maWd1cmF0aW9uVXBkYXRlZCh0aGlzLCBmYWN0b3J5UGlkICE9IG51bGwpOw0KIAkJCWNv
+bmZpZ3VyYXRpb25BZG1pbkZhY3RvcnkuZGlzcGF0Y2hFdmVudChDb25maWd1cmF0aW9uRXZlbnQu
+Q01fVVBEQVRFRCwgZmFjdG9yeVBpZCwgcGlkKTsNCiAJCX0gZmluYWxseSB7DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

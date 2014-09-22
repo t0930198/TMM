@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214542</bug_id>
+          
+          <creation_ts>2008-01-07 16:10:00 -0500</creation_ts>
+          <short_desc>Error importing source plugins stored in folders</short_desc>
+          <delta_ts>2008-02-01 12:50:45 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Curtis Windatt">cwindatt</reporter>
+          <assigned_to name="Curtis Windatt">cwindatt</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>caniszczyk</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="5216"
+          type_id="1"
+          status="?"
+          setter="cwindatt"
+          requestee="baumanbr"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126938</commentid>
+    <comment_count>0</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-01-07 16:10:03 -0500</bug_when>
+    <thetext>If you try importing binary source plugins that are stored in folders (ex: lucene, jasper, ibm icu), one or more error dialogs open
+
+Problem Occurred:
+Resource &apos;/org.apache.jasper.source/src&apos; does not exist.
+
+The folder does exist in the plugins directory.  We should be able to fix the import operation to find the resource correctly.  At a minimum we should avoid opening multiple stacked modal dialogs when importing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126978</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-07 16:57:51 -0500</bug_when>
+    <thetext>Are you volunteering :)?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144806</commentid>
+    <comment_count>2</comment_count>
+      <attachid>88204</attachid>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-01-29 16:48:33 -0500</bug_when>
+    <thetext>Created attachment 88204
+Fix/Workaround
+
+This patch fixes the problem by making source bundles &apos;exempt&apos; from importing source.  There should not be a source bundle for another source bundle.  If users run a import with source, a binary import occurs instead.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144808</commentid>
+    <comment_count>3</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-01-29 16:49:30 -0500</bug_when>
+    <thetext>Brian, please review.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146102</commentid>
+    <comment_count>4</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-31 02:04:57 -0500</bug_when>
+    <thetext>Haha, such a small fix I am not sure why it has taken me so long to review.  I will make sure to review it tomorrow.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147570</commentid>
+    <comment_count>5</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-02-01 11:38:30 -0500</bug_when>
+    <thetext>Modified the patch a bit for the case where the source bundle in a folder format defines source with an extension and not the Eclipse-BundleSource header.
+
+Thank you Curtis for fixing up this bug.  I think we are looking pretty solid with the new import story due to all your work!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147657</commentid>
+    <comment_count>6</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-02-01 12:50:45 -0500</bug_when>
+    <thetext>Thanks for looking at this Brian. Verified.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>88204</attachid>
+            <date>2008-01-29 16:48:00 -0500</date>
+            <delta_ts>2008-01-29 16:48:33 -0500</delta_ts>
+            <desc>Fix/Workaround</desc>
+            <filename>214542PluginImport.patch</filename>
+            <type>text/plain</type>
+            <size>1344</size>
+            <attacher name="Curtis Windatt">cwindatt</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLnVpDQpJ
+bmRleDogc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS93aXphcmRzL2ltcG9ydHMvUGx1
+Z2luSW1wb3J0T3BlcmF0aW9uLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9l
+Y2xpcHNlL29yZy5lY2xpcHNlLnBkZS51aS9zcmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL3Vp
+L3dpemFyZHMvaW1wb3J0cy9QbHVnaW5JbXBvcnRPcGVyYXRpb24uamF2YSx2DQpyZXRyaWV2aW5n
+IHJldmlzaW9uIDEuMTE0DQpkaWZmIC11IC1yMS4xMTQgUGx1Z2luSW1wb3J0T3BlcmF0aW9uLmph
+dmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL3VpL3dpemFyZHMvaW1wb3J0cy9Q
+bHVnaW5JbXBvcnRPcGVyYXRpb24uamF2YQk5IEphbiAyMDA4IDIwOjMwOjU1IC0wMDAwCTEuMTE0
+DQorKysgc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS93aXphcmRzL2ltcG9ydHMvUGx1
+Z2luSW1wb3J0T3BlcmF0aW9uLmphdmEJMjkgSmFuIDIwMDggMjE6NDM6MjAgLTAwMDANCkBAIC0z
+NSw2ICszNSw3IEBADQogaW1wb3J0IG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC5jb3JlLmJ1bmRs
+ZS5Xb3Jrc3BhY2VCdW5kbGVNb2RlbDsNCiBpbXBvcnQgb3JnLmVjbGlwc2UucGRlLmludGVybmFs
+LmNvcmUuaWJ1bmRsZS5JQnVuZGxlOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5wZGUuaW50ZXJuYWwu
+Y29yZS5uYXR1cmVzLlBERTsNCitpbXBvcnQgb3JnLmVjbGlwc2UucGRlLmludGVybmFsLmNvcmUu
+cGx1Z2luLlBsdWdpbkJhc2U7DQogaW1wb3J0IG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC5jb3Jl
+LnV0aWwuQ29yZVV0aWxpdHk7DQogaW1wb3J0IG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC51aS5Q
+REVQbHVnaW47DQogaW1wb3J0IG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC51aS5QREVVSU1lc3Nh
+Z2VzOw0KQEAgLTk0Miw2ICs5NDMsMTMgQEANCiANCiAJCWlmICgib3JnLmVjbGlwc2Uuc3d0Ii5l
+cXVhbHMoaWQpICYmICFpc0pBUmQobW9kZWwpKSAvLyROT04tTkxTLTEkDQogCQkJcmV0dXJuIHRy
+dWU7DQorDQorCQlpZiAobW9kZWwuZ2V0UGx1Z2luQmFzZSgpIGluc3RhbmNlb2YgUGx1Z2luQmFz
+ZSkgew0KKwkJCWlmICgoKFBsdWdpbkJhc2UpIG1vZGVsLmdldFBsdWdpbkJhc2UoKSkuZ2V0QnVu
+ZGxlU291cmNlRW50cnkoKSAhPSBudWxsKSB7DQorCQkJCXJldHVybiB0cnVlOw0KKwkJCX0NCisJ
+CX0NCisNCiAJCXJldHVybiBmYWxzZTsNCiAJfQ0KIA0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

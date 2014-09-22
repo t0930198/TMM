@@ -1,0 +1,462 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214324</bug_id>
+          
+          <creation_ts>2008-01-04 05:19:00 -0500</creation_ts>
+          <short_desc>Most of CDT is totally undocumented</short_desc>
+          <delta_ts>2010-10-09 14:06:33 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-build</component>
+          <version>4.0.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>REOPENED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andras Varga">andras</reporter>
+          <assigned_to name="cdt-build-inbox@eclipse.org">cdt-build-inbox</assigned_to>
+          <cc>dschaefer</cc>
+    
+    <cc>marc-andre.laperle</cc>
+    
+    <cc>mikekucera</cc>
+          
+          <votes>2</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125587</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-04 05:19:38 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Most code in the CDT lacks Javadoc comments, or any kind of helpful comments at all. 
+
+This is in sharp contrast with other Eclipse projects I&apos;ve seen, where public APIs are usually well documented.
+
+Lack of comments is a very high barrier for anyone who wants to contribute to CDT or integrate with it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125933</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-04 13:04:06 -0500</bug_when>
+    <thetext>
+100% agree... 
+
+But, I think this bug will be completely ignored.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125947</commentid>
+    <comment_count>2</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-04 13:14:34 -0500</bug_when>
+    <thetext>Yeah, it would be hard to judge when it&apos;s fixed. When more than half of the CDT is less than totally undocumented? I think half the classes have at least one comment so this may already be fixed. Please advise.
+
+BTW, jokes aside, this is a well known issue and we are actively looking for solutions. None are easy, though.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125965</commentid>
+    <comment_count>3</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-04 13:55:34 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+
+&gt; BTW, jokes aside, this is a well known issue and we are actively looking for
+&gt; solutions. None are easy, though.
+
+On the surface the solution seems pretty darn simple: everyone just start writing comments! ... But the difficult problem isn&apos;t the lack of comments, its a lack of motivation to write them.
+
+This is a difficult problem. In a community of non-documentation-writers a sole documentation-writer will be at a disadvantage. Time spent documenting is time taken away from coding. The documentation-writer would be making a sacrifice while the other committers would get more work done.
+
+The problem here is the definition of &quot;work done&quot;. Currently in CDT land &quot;work done&quot; is defined as having some working code with a few JUnits. We need to redefine &quot;work done&quot; so that it includes high quality API and source level comments, and additional design docs or wiki docs for larger features/components. (I also think we should be doing more code review.)
+
+How do we enforce this? I&apos;m not entirely sure it can be strictly enforced. The word &quot;community&quot; gets thrown around a lot, so instead of enforcement writing docs needs to be part of the culture of the community. It should be something we all do just because its the right thing to do. Like saying please and thank you is the accepted thing to do in polite society. 
+
+Maybe that&apos;s the motivation we need, a general acceptance of certain community values. For example, there is no law enforcing politeness, but if you act rude then you will be frowned upon and won&apos;t get invited to parties. Similarly writing docs should be the &quot;polite&quot; thing to do, and if you don&apos;t do it you risk losing the approval and respect of your peers.
+
+Unfortunately right now writing documentation is not a shared value in the CDT community.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126182</commentid>
+    <comment_count>4</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-05 06:14:56 -0500</bug_when>
+    <thetext>&gt; Yeah, it would be hard to judge when it&apos;s fixed. When more than half of 
+&gt; the CDT is less than totally undocumented? I think half the classes have 
+&gt; at least one comment so this may already be fixed. Please advise.
+&gt; 
+&gt; BTW, jokes aside, this is a well known issue and we are actively looking 
+&gt; for solutions. None are easy, though.
+
+The comments I miss most are the class-level comments of interface classes (ISomething) and very central manager classes like ManagedBuildManager and CoreModel -- that would already be an immense help for all new to CDT.
+
+If I know what a class is for, and what relationship it has to other classes (like, IManagedBuildInfo --&gt; &quot;managed by ManagedBuildManager, holds configurations, and is live data structure loaded/saved via ICProjectDescriptions&quot;), then figuring out methods is already much-much easier. 
+
+So if there&apos;s **really** a willingness to improve, that&apos;s what I&apos;d suggest to start with: class-level comments for all ISomething classes and a handful of other, very central classes.
+
+
+I can try and help, but it would be better if original authors or current maintainers of classes would take some minutes/hours of their times to do it. Despite having studied parts of CDT and writing up dome of my experiences at http://cdt-devel-faq.wikidot.com, I don&apos;t feel I&apos;m qualified enough. Well, for a start I could try putting down what I currently know, if CDT team members are willing to revise and expand it. 
+
+
+I also think that documenting the code would have benefits for the developers too:
+
+1) less traffic of stupid questions in [cdt-dev]. If it&apos;s documented, 
+   it won&apos;t be asked (or and replies can be shorter, possibly just RTFC)
+
+2) help fellow developers build upon my code, and with less misunderstandings.
+   Like, who the hell knows what ICSettingEntry.RESOLVED means, and whether
+   I need to set it if I create a CSettingEntry on my own??? I need to spend
+   half a day hunting for occurrences in the source code, in order to 
+   deduct what it can be possibly used for; and in the end there&apos;s still
+   a good chance that I misunderstood something. And maybe then my code
+   will mislead other developers too, and so the plague spreads....
+
+3) this may sound strong, but on the long term, it may just be vital to the
+   survival of the CDT code. There are already multiple generations (2.x, 3.x,
+   4.x) of data structures intertwined, with heaps of code doing mapping
+   between them, possibly involving &quot;tweaks&quot; (think IConfiguration and
+   ICConfigurationDescription, and all the code to keep the two consistent), 
+   lots of utility and &quot;manager&quot; classes, etc. Do REALLY all CDT team members
+   know 100% what class is for what, what&apos;s the old/deprecated way and 
+   what&apos;s new/preferred, how to keep things consistent, etc.....? 
+   Documenting things would help staying on top.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126287</commentid>
+    <comment_count>5</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-06 07:04:03 -0500</bug_when>
+    <thetext>Today&apos;s post on cdt-dev:
+
+| Subject: [cdt-dev] Need info on CPPUnknownClass
+|
+| Hi Andrew, Bryan and Doug,
+| For understanding issues related to bug 214017 I need background information
+| on ICPPInternalUnknown, CPPUnknownClass, CPPUnknownScope and few related
+| classes.
+|    1. What do CPPUnknownClass and CPPUnknownScope classes represent? What is
+|       the basic idea behind them? What purpose do they serve? 
+|    2. Why are there no PDOM equivalents? Should they be added?
+|    3. Why does CPPTemplateTypeParameter implement ICPPInternalUnknown, but
+|       PDOMCPPTemplateTypeParameter does not?
+|    4. Why doesn&apos;t CPPTemplateTemplateParameter have a PDOM equivalent? Should 
+|       it be added? 
+| Any insight will be highly appreciated.
+|
+| -sergey
+
+As if he was posting it exactly to support my points...
+  1. so it indeed *does* happen that CDT developers themselves are not sure
+     what purpose some class serves -- docu would benefit them too
+  2. what he misses (esp. in bullet 1) is exactly what should have been written
+     down in the class-level doc of those classes in the first place. This
+     seems to confirm that documenting should begin with class-comments of
+     interface classes and a few central classes
+
+Now he cannot continue for a few days, until he actively gathers all information he needs. This delay and wasted effort could have been spared (but at least reduced) by the author of those classes spending 10 minutes on writing a useful class comment.
+
+     
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126783</commentid>
+    <comment_count>6</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-07 13:07:20 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+
+&gt; So if there&apos;s **really** a willingness to improve...
+
+See, thats the thing, I don&apos;t believe there is a willingness to improve. We get comments all the time that are related to lack of docs and the policy hasn&apos;t changed. 
+
+Some of the newer APIs in CDT are commented, like the IIndex API. But the vast majority of the code is undocumented.
+
+&gt;  1. so it indeed *does* happen that CDT developers themselves are not sure
+&gt;     what purpose some class serves -- docu would benefit them too
+
+Absolutely, this happens all the time. 
+
+Also, having docs makes it much easier and faster for new contributors to get up to speed. When I first started on CDT it took me a long time to get even a bit comfortable with the core. 
+
+&gt; This delay and wasted effort could have been spared (but
+&gt; at least reduced) by the author of those classes spending 10 minutes on 
+&gt; writing a useful class comment.
+
+I agree, sure you can save ten minutes by not commenting your code, but you are causing several other developers to waste more then ten minutes each trying to understand the code. Documentation can be thought of as an investment in overall team productivity.
+
+&gt; 3) this may sound strong, but on the long term, it may just be vital to the
+&gt;   survival of the CDT code.
+
+&gt; Do REALLY all CDT team members
+&gt; know 100% what class is for what, what&apos;s the old/deprecated way and 
+&gt; what&apos;s new/preferred, how to keep things consistent, etc.....? 
+
+In my opinion this is a major issue. There are a couple very active commiters on the CDT core and I wonder what would happen if any one of them decided to quit working on CDT. Certain individuals have a lot of intimate knowledge of CDT internals, but that knowledge hasn&apos;t been written down. If a key individual left it would create a major stall in development. The developers that would take over would have nothing but a huge heap of undocumented code to deal with.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126801</commentid>
+    <comment_count>7</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-07 13:32:08 -0500</bug_when>
+    <thetext>There is a willingness to improve and as I mentioned we are actively looking for solutions. As with all projects, the CDT is strapped for resources and we appreciate all help in cleaning this up. But whatever you do, please don&apos;t interpret the lack of progess on willingness.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126809</commentid>
+    <comment_count>8</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-07 13:40:13 -0500</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; Today&apos;s post on cdt-dev:
+&gt; | Subject: [cdt-dev] Need info on CPPUnknownClass
+&gt; |
+&gt; | Hi Andrew, Bryan and Doug,
+&gt; | For understanding issues related to bug 214017 I need background information
+&gt; | on ICPPInternalUnknown, CPPUnknownClass, CPPUnknownScope and few related
+&gt; | classes.
+&gt; |    1. What do CPPUnknownClass and CPPUnknownScope classes represent? What is
+&gt; |       the basic idea behind them? What purpose do they serve? 
+&gt; |    2. Why are there no PDOM equivalents? Should they be added?
+&gt; |    3. Why does CPPTemplateTypeParameter implement ICPPInternalUnknown, but
+&gt; |       PDOMCPPTemplateTypeParameter does not?
+&gt; |    4. Why doesn&apos;t CPPTemplateTemplateParameter have a PDOM equivalent? Should 
+&gt; |       it be added? 
+&gt; | Any insight will be highly appreciated.
+&gt; |
+&gt; | -sergey
+&gt;
+&gt; As if he was posting it exactly to support my points...
+&gt;   1. so it indeed *does* happen that CDT developers themselves are not sure
+&gt;      what purpose some class serves -- docu would benefit them too
+&gt;   2. what he misses (esp. in bullet 1) is exactly what should have been written
+&gt;      down in the class-level doc of those classes in the first place. This
+&gt;      seems to confirm that documenting should begin with class-comments of
+&gt;      interface classes and a few central classes
+&gt; Now he cannot continue for a few days, until he actively gathers all
+&gt; information he needs. This delay and wasted effort could have been spared (but
+&gt; at least reduced) by the author of those classes spending 10 minutes on writing
+&gt; a useful class comment.
+
+You do need to understand the history and structure of the CDT. We are all CDT developers. The fact that you are looking at the code makes you a CDT developer too. As you learn about the code you are reading, and given your enthusiasm for the issue, I should be able to expect patches with new documentation from you, no?
+
+Second, the code Sergey is talking about was written in haste to meet deadlines by developers that no longer work on the CDT. It would be a hell of a lot easier if we didn&apos;t have turnover or fixed deadlines, but that is the fact of life that we have to endure on the CDT and what makes solutions even more difficult.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126841</commentid>
+    <comment_count>9</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-07 14:19:26 -0500</bug_when>
+    <thetext>(In reply to comment #7)
+
+&gt; There is a willingness to improve and as I mentioned we are actively looking
+&gt; for solutions. As with all projects, the CDT is strapped for resources and we
+&gt; appreciate all help in cleaning this up. But whatever you do, please don&apos;t
+&gt; interpret the lack of progess on willingness.
+
+If there really was willingness then there wouldn&apos;t even be a problem. In fact the real problem here is exactly the lack of willingness, the lack of motivation. 
+
+How are we actively looking for solutions? What potential solutions have been considered?
+
+&gt; As you learn about the code you are reading, and given your enthusiasm for
+&gt; the issue, I should be able to expect patches with new documentation from you,
+&gt; no?
+
+I have done exactly this in the past. I wrote up a wiki page describing how the DOM parsers work, then I posted a link to the dev list. That dev list post got zero replies. Not one correction to the docs, not one single reply saying &quot;thanks for writing documentation&quot;. So you can see why I personally believe that the documentation issue is being ignored.
+
+And wouldn&apos;t it make much more sense for the author of the code to write the docs, especially when its fresh in his mind.
+
+&gt; It would be a hell of a lot
+&gt; easier if we didn&apos;t have turnover or fixed deadlines, but that is the fact of
+&gt; life that we have to endure on the CDT and what makes solutions even more
+&gt; difficult.
+
+This is a very weak argument. This is like saying that you can&apos;t jog a mile because the earth&apos;s atmosphere doesn&apos;t contain enough oxygen. Deadlines are an environmental constant, they will always be there, they are not unique to CDT, and they are not an excuse.
+
+Furthermore, as I have pointed out, documentation has the potential to *increase* productivity. And turnover becomes less of an issue if you have docs because new developers can get up to speed quicker. It seems to me that docs would actually help improve the issues you mention here.
+
+And really, how long does it take to put in a simple &quot;this is what this class is for&quot; description.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126868</commentid>
+    <comment_count>10</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-07 14:54:13 -0500</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; (In reply to comment #7)
+&gt; &gt; There is a willingness to improve and as I mentioned we are actively looking
+&gt; &gt; for solutions. As with all projects, the CDT is strapped for resources and we
+&gt; &gt; appreciate all help in cleaning this up. But whatever you do, please don&apos;t
+&gt; &gt; interpret the lack of progess on willingness.
+&gt; If there really was willingness then there wouldn&apos;t even be a problem. In fact
+&gt; the real problem here is exactly the lack of willingness, the lack of
+&gt; motivation. 
+
+Well, Mike, it sounds like you&apos;re motivated. I look forward to any solutions you come up and your efforts to achieve buy-in from the CDT community. I will certainly support you on this.
+
+In the meantime, I intend to follow through with the committment I made at the CDT Summit to get the ISV docs going in CDT 5.0.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127036</commentid>
+    <comment_count>11</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-07 18:28:35 -0500</bug_when>
+    <thetext>Doug, 
+
+Nobody&apos;s in a better situation to actually do something than you. 
+
+You are the CDT Project Lead. If you publicly say documentation is important, people will listen.
+
+If you say, that, for example, by CDT 5.0 you&apos;d like to see all public interface classes to be documented on class level, it may actually happen. For the next milestone, you may ask X to document interface classes in package org.eclipse.cdt.blah (class level comments only), ask Y to document classes in package org.eclipse.cdt.blahblah, and so on. That&apos;s maybe 2-3 hours of their time? Won&apos;t kill them. They&apos;ve all wasted much more time in the past, on figuring out undocumented classes written by someone else.
+
+It&apos;s all on you. If you need to be convinced that it&apos;s worth it, re-read previous comments. 
+
+If you don&apos;t act, that will be also a testament of something.
+
+&gt; And really, how long does it take to put in a simple &quot;this is what this class
+&gt; is for&quot; description.
+
+Exactly.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127461</commentid>
+    <comment_count>12</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-08 11:36:23 -0500</bug_when>
+    <thetext>(In reply to comment #11)
+&gt; Doug, 
+&gt; Nobody&apos;s in a better situation to actually do something than you. 
+&gt; You are the CDT Project Lead. If you publicly say documentation is important,
+&gt; people will listen.
+&gt; If you say, that, for example, by CDT 5.0 you&apos;d like to see all public
+&gt; interface classes to be documented on class level, it may actually happen. For
+&gt; the next milestone, you may ask X to document interface classes in package
+&gt; org.eclipse.cdt.blah (class level comments only), ask Y to document classes in
+&gt; package org.eclipse.cdt.blahblah, and so on. That&apos;s maybe 2-3 hours of their
+&gt; time? Won&apos;t kill them. They&apos;ve all wasted much more time in the past, on
+&gt; figuring out undocumented classes written by someone else.
+&gt; It&apos;s all on you. If you need to be convinced that it&apos;s worth it, re-read
+&gt; previous comments. 
+&gt; If you don&apos;t act, that will be also a testament of something.
+&gt; &gt; And really, how long does it take to put in a simple &quot;this is what this class
+&gt; &gt; is for&quot; description.
+&gt; Exactly.
+
+I have and that is what I&apos;m referring to with the ISV docs I&apos;ve committed to get going. We did have a good discussion on this at the CDT Summit. The committers are aware of it. But it will take time to get together, especially given that I&apos;m trying to get up to speed on my new job.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127702</commentid>
+    <comment_count>13</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-08 15:51:12 -0500</bug_when>
+    <thetext>Doug,
+
+Writing CDT documentation for ISVs is very welcome and going to be 
+very useful. However, it sounds like standalone docs -- how is that 
+going to solve the problem of missing source code comments? 
+
+What are you as Project Lead going to do about missing source code comments?
+Encouragement? Policy? Goals? Deadlines?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127737</commentid>
+    <comment_count>14</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-08 16:22:49 -0500</bug_when>
+    <thetext>(In reply to comment #13)
+&gt; Doug,
+&gt; Writing CDT documentation for ISVs is very welcome and going to be 
+&gt; very useful. However, it sounds like standalone docs -- how is that 
+&gt; going to solve the problem of missing source code comments? 
+
+Well, much of the ISV docs will be generated from Javadoc, we&apos;ll at least get comments for the APIs.
+
+&gt; What are you as Project Lead going to do about missing source code comments?
+&gt; Encouragement? Policy? Goals? Deadlines?
+
+I&apos;ve already encouraged. The CDT committers are all professional developers. They already know the value of code documentation. And to be honest, the code you are complaining about was written by people no longer contributing to the project, so there&apos;s not much I can do there.
+
+And to be further honest, we really do have bigger issues than the shortage of code comments that need my attention in the short term. That is why I am looking for help from the community to drive this issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127782</commentid>
+    <comment_count>15</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-08 17:30:02 -0500</bug_when>
+    <thetext>(In reply to comment #14)
+
+
+&gt; The CDT committers are all professional developers.
+&gt; They already know the value of code documentation. 
+
+Clearly some don&apos;t because if they did they would be writing it. If this were true we wouldn&apos;t be having this discussion (or flame war, I&apos;m not sure anymore).
+
+&gt; And to be further honest, we really do have bigger issues than the shortage of
+&gt; code comments that need my attention in the short term. 
+
+This is probably true for existing code that isn&apos;t commented. Many of us don&apos;t have time to go back and dig through old code at this point in the cycle. But after the 5.0 release would be a perfect time to take a breath, relax, then go on a refactoring and documentation frenzy over the summer. This is an example of a potential solution that we should be discussing here instead of arguing back and forth. 
+
+New code thats being written right now is different. Everyone should be commenting their code as they go, starting right now. I find its really not an issue at all to write comments as I code. Sometimes I&apos;ll be in the middle of describing my solution and I&apos;ll realize that I forgot a corner case. Writing docs as you go forces you to think twice about your solutions, and that leads to better code.
+
+And frankly it seems to me that you just want this issue to go away. Thats not going to work, we need to do something. We need to work together, arguing is not helping.
+
+&gt; And to be honest, the code
+&gt; you are complaining about was written by people no longer contributing to the
+&gt; project, so there&apos;s not much I can do there.
+
+We should still try to go back and do something at some point. In fact its the older code thats the worst offending in many respects. Again, I suggest a major refactoring pass when the heat is off. Taking a break from writing new features and just focusing on improving existing code for a bit would help greatly. (In fact I think cleaning up the code itself is even more important than comments.)
+
+&gt; That is why I am looking for help from the community to drive this issue.
+
+Right, the community is the key here.
+
+Doug, if you really want me to take the lead on this I will. But frankly I don&apos;t think I have enough clout in the CDT community to make much of a difference. But if you say you will back me up then I&apos;ll try. All I can think of right now is to to create a discussion on the cdt-dev list, get the community to work together to come up with a set of official CDT best practices, and perhaps take a vote on it. I guess it would be unofficial but if we actually followed it that would be a big win for CDT.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131595</commentid>
+    <comment_count>16</comment_count>
+    <who name="Mike Kucera">mikekucera</who>
+    <bug_when>2008-01-15 11:58:58 -0500</bug_when>
+    <thetext>Well its been a week since I posted what I thought was a real potential solution, and there has been no replies.
+
+Screw it, I&apos;m not going out on a limb for this. I would need backup from you Doug anyway, and your lack of reply means I can&apos;t count on you for that, even though you said you would support me, I just don&apos;t believe it.
+
+Besides, new documentation policies are not my job, its your job as project lead. And if you don&apos;t see the problem here, then so be it. CDT will remain mostly undocumented, and that will be the official policy. Case closed.
+
+I will continue to fully comment my own code, but I&apos;m not wasting any more of my time discussing this issue.
+
+Closing this bug as WONTFIX.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152646</commentid>
+    <comment_count>17</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-02-08 05:43:55 -0500</bug_when>
+    <thetext>Reopening because the problem still exists, and it is a real problem.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

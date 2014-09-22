@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214650</bug_id>
+          
+          <creation_ts>2008-01-08 14:04:00 -0500</creation_ts>
+          <short_desc>Execution Env description file allows only one source archive</short_desc>
+          <delta_ts>2008-02-04 15:20:35 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Debug</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Sridhar pakanati">srid</reporter>
+          <assigned_to name="Curtis Windatt">cwindatt</assigned_to>
+          <cc>berthold_lebert</cc>
+    
+    <cc>darin.eclipse</cc>
+    
+    <cc>mpcarl</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127611</commentid>
+    <comment_count>0</comment_count>
+    <who name="Sridhar pakanati">srid</who>
+    <bug_when>2008-01-08 14:04:07 -0500</bug_when>
+    <thetext>Build ID: I20070921-0919
+
+Steps To Reproduce:
+1.Create an ee file and put it in the bin directory of the JRE.
+2.Use -Dee.src file(s) to specify source files for class libraries.
+3.Use windows-&gt;pref to select a JRE by selecting the ee file. It takes only one source archive file.
+
+
+More information:
+When implementing org.eclipse.jdt.launching.vmInstalls extension for jclDesktop in Expeditor we have a list of class libraries with corresponding source paths for each specified as -
+
+&lt;library  path=&quot;lib/jclDEE/classes.zip&quot;	    		sourcePath=&quot;lib/jclDEE/source/source.zip&quot;/&gt;
+&lt;library  path=&quot;lib/jclDEE/charconv.zip&quot;	    		sourcePath=&quot;lib/jclDEE/source/charcov-src.zip&quot;/&gt;
+
+and so on...
+
+We are trying to use the Execution Environment description file and move these libraries and the corresponding source archive paths/files to the ee file. The ee file setting -Dee.src takes only one source archive file. We have almost 15-18 source archive files and they need to be specified in the ee file. So the ee file should be able to provide a way to 
+
+(a) List more than one source archive.
+(b) Able to associate a source archive with a class library.
+
+I have talked to the J9 team (Berthold) and they say there are possible issues with trying to bundle them into one huge source archive file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147589</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 11:57:09 -0500</bug_when>
+    <thetext>I think the simplest way to do this is to add a property like &quot;ee.srcpath&quot; that lists source archives in the same order as entries on the &quot;ee.bootclasspath&quot; entry. There would have to be one source entry per bootclasspath entry. It&apos;s a little awkward if there are shared source archives, but simplest in the case that each jar has a different source archive.
+
+The existing ee.src would be used when the ee.srcpath is not specified.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147594</commentid>
+    <comment_count>2</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 11:59:26 -0500</bug_when>
+    <thetext>Actually, why don&apos;t we just use ee.src - it can be a list or single entry. If it&apos;s a list, we match against the bootpath based on order.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147628</commentid>
+    <comment_count>3</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 12:25:37 -0500</bug_when>
+    <thetext>Fixed. Updated description on wiki:
+
+http://wiki.eclipse.org/Execution_Environment_Descriptions#EE_Properties
+
+&quot;Source archive(s) for class libraries. Each entry is applied to its corresponding boot class path entry (based on order). When there are more boot class path entries than source entries, the last source entry is applied to remaining boot class path entries.&quot;
+
+Example:
+
+-Dee.bootclasspath=..\lib\jclFoundation11\classes.zip;..\lib\charconv.zip;..\lib\jclFoundation11\locale.zip;..\lib\jclFoundation11\ext\j9jce.jar;..\lib\jclFoundation11\ext\j9jsse.jar
+-Dee.src=../lib/jclFoundation11/source/source.zip;../lib/charconv-src.zip;../lib/jclFoundation11/source/source.zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147629</commentid>
+    <comment_count>4</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 12:25:52 -0500</bug_when>
+    <thetext>Please verify, Curtis.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147645</commentid>
+    <comment_count>5</comment_count>
+    <who name="Pierre Carlson">mpcarl</who>
+    <bug_when>2008-02-01 12:38:07 -0500</bug_when>
+    <thetext>Will empty entries work (e.g. &quot;...;;...&quot; ) in the case where not all jar files on the bootclasspath have source associated with them?
+
+-Dee.src=../lib/jclFoundation11/source/source.zip;;../lib/charconv-src.zip;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147664</commentid>
+    <comment_count>6</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 12:59:46 -0500</bug_when>
+    <thetext>It now allows for the empty path using &quot;;;&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147688</commentid>
+    <comment_count>7</comment_count>
+    <who name="Berthold Lebert">berthold_lebert</who>
+    <bug_when>2008-02-01 13:19:33 -0500</bug_when>
+    <thetext>How would this work with the jars in the endorsed and the extension directories? The jars in them are not explicitly listed. Only the directory names are specified in their corresponding ee.*.dirs property. Does one need to specify files in these dirs in -Dee.bootclasspath, too? What&apos;s the purpose of the ee.*.dirs options then?
+
+Looking at the example in comment #3, for DesktopEE this list would be quite long. Currently we have 27 binary jars and 20 source zips. Can one define variables in an ee file to shorten the list? Like:
+ee.tmp={ee.home}lib/jclFoundation11/source
+ee.src={ee.tmp}/source.zip;{ee.home}/lib/charconv-src.zip;{ee.tmp}/locale-src.zip
+
+Also, patch files might be applied in the endorsed dir after the ee file was created, so it would have to be modified then, too. Which leads me to another question: who &quot;owns&quot; the default.ee? The JRE provider or the toolkit?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147694</commentid>
+    <comment_count>8</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 13:29:35 -0500</bug_when>
+    <thetext>The ee.src is only for the bootpath. Note that automated source attachments on ext/endorsded dirs were never supported in the past.
+
+Support for explicit source attachements per library in those directories would require to list them explicitly. However, that would require new properties (please open a new bug if this is required).
+
+Currently, we don&apos;t intend to support variable substitution.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147804</commentid>
+    <comment_count>9</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-02-01 15:05:29 -0500</bug_when>
+    <thetext>Verified.  Please open separate bug reports for any additional problems/enhancements.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149178</commentid>
+    <comment_count>10</comment_count>
+    <who name="Sridhar pakanati">srid</who>
+    <bug_when>2008-02-04 15:20:35 -0500</bug_when>
+    <thetext>I tried this with Build I20080204-0800 when I use like 3 paths in -Dee.src and three in -Dee.bootclasspath it worked but once I added the entire class lib paths/source specified for jclDesktop VM it fails with an exception. Opened a seperate Bug #217736.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

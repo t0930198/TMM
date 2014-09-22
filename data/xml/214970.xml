@@ -1,0 +1,336 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214970</bug_id>
+          
+          <creation_ts>2008-01-10 17:38:00 -0500</creation_ts>
+          <short_desc>Introduce ability to upload EclipseLink jars to maven repository</short_desc>
+          <delta_ts>2010-12-09 11:18:52 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>EclipseLink</product>
+          <component>Foundation</component>
+          <version>1.0</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>Fixed in 1.0M4</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>1.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mitesh Meswani">mitesh.meswani</reporter>
+          <assigned_to name="Project Inbox">eclipselink.foundation-inbox</assigned_to>
+          <cc>mitesh.meswani</cc>
+    
+    <cc>tom.ware</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129350</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-10 17:38:35 -0500</bug_when>
+    <thetext>Current nightly and promoted builds of EclipseLink are published on EclipseLink download site &lt;http://www.eclipse.org/eclipselink/downloads/index.php&gt;. Having these builds in a maven repository with corresponding sources will help EclipseLink users who develop using maven.
+
+This bug is entered to track this activity</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129352</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-10 17:41:43 -0500</bug_when>
+    <thetext>Given that EclipseLink is not built using maven and there is no maven repository available on eclipse.org, we will go with following approach
+    * Use the svn repository for EclipseLink
+      &lt;https://dev.eclipse.org/svnroot/technology/org.eclipse.persistence/&gt; 
+      as the   maven
+      repository to publish to.
+    * The build infrastructure that builds and publishes
+      nightly/promoted builds of EclipseLink will be updated to 
+      publish EclipseLink artifacts into this repository
+    * This can be done using simple ant scripts. The only maven
+      artifact required on EclipseLink build infrastructure is the jar
+      antlib for maven &lt;http://maven.apache.org/ant-tasks.html&gt;
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131977</commentid>
+    <comment_count>2</comment_count>
+      <attachid>87001</attachid>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-15 22:04:13 -0500</bug_when>
+    <thetext>Created attachment 87001
+Ant acript that can upload to maven repository
+
+Need to resolve TODO comments in file</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131978</commentid>
+    <comment_count>3</comment_count>
+      <attachid>87002</attachid>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-15 22:05:13 -0500</bug_when>
+    <thetext>Created attachment 87002
+Template for corresponding pom</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132637</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-16 14:26:42 -0500</bug_when>
+    <thetext>Here are the steps to try the scripts in your environment :
+
+1. Download the ant script (uploadToMaven.xml) and pom.xml.template attached to the bug in top level dir of your workspace (at same level as top level build.xml). 
+
+2. Create a lib dir under your top level dir of your workspace and download ant tasks for maven from http://www.apache.org/dyn/closer.cgi/maven/binaries/maven-ant-tasks-2.0.8.jar
+
+3. Update the &lt;url&gt; under &lt;distributionManagement&gt; in pom.xml.template to point to your svn repository
+
+4.Make sure you have built a version of eclipselink.jar in your workspace. 
+
+5. Run the ant script using ant -f uploadToMaven.xml. It will upload eclipselink.jar from your workspace to the svn repository
+
+6. To test whether the upload was successful, In a separate maven app, try declaring dependency on eclipselink as follows
+    &lt;dependency&gt;
+      &lt;groupId&gt;org.eclipse.persistence&lt;/groupId&gt;
+      &lt;artifactId&gt;eclipselink&lt;/artifactId&gt;
+      &lt;version&gt;1.0-SNAPSHOT&lt;/version&gt;
+      &lt;scope&gt;compile&lt;/scope&gt;
+    &lt;/dependency&gt;
+    
+   Add the repository to which you uploaded to your repositories section
+     &lt;repositories&gt;
+    &lt;repository&gt;
+       &lt;id&gt;local svn&lt;/id&gt;
+       &lt;name&gt;local svn repo&lt;/name&gt;
+       &lt;url&gt;http://&lt;pointer to your svn repository&gt; &lt;/url&gt;
+    &lt;/repository&gt;    
+  &lt;/repositories&gt; 
+
+7. when you try to compile the maven app, eclipselink jar would be downloaded</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144815</commentid>
+    <comment_count>5</comment_count>
+      <attachid>88205</attachid>
+    <who name="Mitesh Meswani">mitesh.meswani</who>
+    <bug_when>2008-01-29 17:00:17 -0500</bug_when>
+    <thetext>Created attachment 88205
+Version of ant script removing dependency on wagon-svn</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145758</commentid>
+    <comment_count>6</comment_count>
+    <who name="Tom Ware">tom.ware</who>
+    <bug_when>2008-01-30 15:38:50 -0500</bug_when>
+    <thetext>pom.xml.template and pom.xml.template have been checked into the trunk directory.
+
+&apos;still working on including them in the builds.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152336</commentid>
+    <comment_count>7</comment_count>
+    <who name="Tom Ware">tom.ware</who>
+    <bug_when>2008-02-07 15:40:15 -0500</bug_when>
+    <thetext>I reviewed and checked in Mitesh&apos;s changes.
+
+Tested through several build script runs.
+
+The build script has been running nightly builds that include these changes for several days without incident.
+
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>87001</attachid>
+            <date>2008-01-15 22:04:00 -0500</date>
+            <delta_ts>2008-01-29 17:00:17 -0500</delta_ts>
+            <desc>Ant acript that can upload to maven repository</desc>
+            <filename>uploadToMaven.xml</filename>
+            <type>text/xml</type>
+            <size>2644</size>
+            <attacher name="Mitesh Meswani">mitesh.meswani</attacher>
+            
+              <data encoding="base64">PHByb2plY3QgbmFtZT0iVXBsb2FkIEVjbGlwc2VMaW5rIGFydGlmYWN0cyB0byBNYXZlbiByZXBv
+c2l0b3J5IiAgYmFzZWRpcj0iLiIgeG1sbnM6YXJ0aWZhY3Q9InVybjptYXZlbi1hcnRpZmFjdC1h
+bnQiIGRlZmF1bHQ9InVwbG9hZC5tYXZlbiI+CiAgPHBhdGggaWQ9Im1hdmVuLWFudC10YXNrcy5j
+bGFzc3BhdGgiIHBhdGg9ImxpYi9tYXZlbi1hbnQtdGFza3MtMi4wLjguamFyIiAvPiA8IS0tIFRP
+RE8gZGlzY3VzcyB3aXRoIFRvbSB3aGVyZSBzaG91bGQgdGhpcyB2YWx1ZSBhbmQgdGhlIGFjdHVh
+bCBsaWIgZ28gLS0+CiAgPHR5cGVkZWYgcmVzb3VyY2U9Im9yZy9hcGFjaGUvbWF2ZW4vYXJ0aWZh
+Y3QvYW50L2FudGxpYi54bWwiIHVyaT0idXJuOm1hdmVuLWFydGlmYWN0LWFudCIKICAgICAgICAg
+ICBjbGFzc3BhdGhyZWY9Im1hdmVuLWFudC10YXNrcy5jbGFzc3BhdGgiIC8+CgogICA8dGFyZ2V0
+IG5hbWU9InVwbG9hZC5tYXZlbiIgPgogICAgICAgPHByb3BlcnR5IGZpbGU9Ii4vYnVpbGQucHJv
+cGVydGllcyIvPiA8IS0tIHJlbGVhc2UudmVyc2lvbiBhbmQgYnVpbGRfaWQgYXJlIGludGlhbGl6
+ZWQgZnJvbSBoZXJlIC0tPgogICAgICAgPGVjaG8gbWVzc2FnZT0icmVsZWFzZS52ZXJzaW9uICR7
+cmVsZWFzZS52ZXJzaW9ufSIvPgogICAgICAgPGVjaG8gbWVzc2FnZT0iYnVpbGRfaWQgJHtidWls
+ZF9pZH0iLz4KICAgICAgIAogICAgICAgPCEtLSBHZXQgdGhlIHN1YnZlcnNpb24gdmVyc2lvbiBm
+b3IgY3VycmVudCB3b3JraW5nIGNvcHkgLS0+CiAgICAgICA8IS0tIEEgZnJlc2hseSBjaGVja2Vk
+IG91dCBjb3B5IG9mIHdvcmtzcGFjZSBpcyBndWFyYW50ZWVkIHRvIG5vdCBoYXZlIG1peGVkIHJl
+dmlzaW9ucyAtLT4KICAgICAgIDxleGVjIG91dHB1dHByb3BlcnR5PSJzdWJ2ZXJzaW9uLnJldmlz
+aW9uIiBmYWlsb25lcnJvcj0idHJ1ZSIgZXhlY3V0YWJsZT0ic3ZudmVyc2lvbiI+CiAgICAgICAg
+ICA8YXJnIGxpbmU9Ii4iLz4KICAgICAgIDwvZXhlYz4KICAgICAgIDxlY2hvIG1lc3NhZ2U9InN1
+YnZlcnNpb24ucmV2aXNpb24gJHtzdWJ2ZXJzaW9uLnJldmlzaW9ufSIvPgogICAgICAgCiAgICAg
+ICA8IS0tIENvcHkgcG9tLnRlbXBsYXRlIHRvIHBvbS54bWwgZmlsdGVyaW5nIHZhcmlvdXMgcHJv
+cGVydGllcyAtLT4KICAgICAgIDxjb3B5IGZpbGU9InBvbS54bWwudGVtcGxhdGUiIHRvZmlsZT0i
+cG9tLnhtbCIgb3ZlcndyaXRlPSJ0cnVlIj4KICAgICAgICAgPGZpbHRlcnNldD4KICAgICAgICAg
+ICA8ZmlsdGVyIHRva2VuPSJyZWxlYXNlLnZlcnNpb24iIHZhbHVlPSIke3JlbGVhc2UudmVyc2lv
+bn0iLz4KICAgICAgICAgICA8IS0tIFRPRE8gRmlndXJlIG91dCBob3cgdG8gbWFwIGJ1aWxkX2lk
+IGZyb20gbmlnaHRseSB0byBTTkFQU0hPVCA8ZmlsdGVyIHRva2VuPSJxdWFsaWZpZXIiICAgICAg
+IHZhbHVlPSIke2J1aWxkX2lkfSIvPiAtLT4KICAgICAgICAgICA8ZmlsdGVyIHRva2VuPSJxdWFs
+aWZpZXIiICAgICAgIHZhbHVlPSJTTkFQU0hPVCIvPgogICAgICAgICAgIDxmaWx0ZXIgdG9rZW49
+InN1YnZlcnNpb24ucmV2aXNpb24iIHZhbHVlPSIke3N1YnZlcnNpb24ucmV2aXNpb259Ii8+CiAg
+ICAgICAgICA8L2ZpbHRlcnNldD4KICAgICAgIDwvY29weT4KICAgICAgIAogICAgICAgPCEtLSBp
+bnN0YWxsIGEgZGVwbG95bWVudCBwcm92aWRlciB0aGF0IGNhbiBkZXBsb3kgdG8gU1ZOIHJlcG9z
+aXRvcmllcyAtLT4KICAgICAgIDxhcnRpZmFjdDppbnN0YWxsLXByb3ZpZGVyIGFydGlmYWN0SWQ9
+IndhZ29uLXN2biIgZ3JvdXBJZD0ib3JnLmp2bmV0LndhZ29uLXN2biIgdmVyc2lvbj0iMS43Ij4K
+ICAgICAgICAgPCEtLSBkb3dubG9hZCB0aGUgcHJvdmlkZXIgZnJvbSBqYXZhLm5ldCByZXBvc2l0
+b3J5IC0tPgogICAgICAgICA8YXJ0aWZhY3Q6cmVtb3RlUmVwb3NpdG9yeSBpZD0iamF2YS5uZXQu
+bWF2ZW4yLnJlcG9zaXRvcnkiIHVybD0iaHR0cDovL2Rvd25sb2FkLmphdmEubmV0L21hdmVuLzIv
+IiAvPgogICAgICAgICA8IS0tIHN0b3JlIHRoZSBwcm92aWRlciBpbiB0ZW1wIGxvY2FsIHJlcG9z
+aXRvcnktLT4KICAgICAgICAgPGFydGlmYWN0OmxvY2FsUmVwb3NpdG9yeSBwYXRoPSJ0YXJnZXQv
+dG1wIi8+CiAgICAgICA8L2FydGlmYWN0Omluc3RhbGwtcHJvdmlkZXI+CgogICAgICAgPCEtLSBE
+ZWxwbG95IHRoZSBqYXIgdG8gbWF2ZW4gcmVwb3NpdG9yeSBhbG9uZyB3aXRoIHNvdXJjZXMgLS0+
+CiAgICAgICA8YXJ0aWZhY3Q6cG9tIGlkPSJtYXZlbi5wcm9qZWN0IiBmaWxlPSJwb20ueG1sIiAv
+PgogICAgICAgPGFydGlmYWN0OmRlcGxveSBmaWxlPSIuL2VjbGlwc2VsaW5rLmphciI+CiAgICAg
+ICAgIDxwb20gcmVmaWQ9Im1hdmVuLnByb2plY3QiLz4KICAgICAgICAgPCEtLSBUT0RPIENvbnNl
+cnZlIHNwYWNlIGJ5IG5vdCB1cGxvYWRpbmcgc291cmNlcyBmb3IgU05BUFNIT1RTLiBJbXBsZW1l
+bnQgYSBtZWNoYW5pc20gdG8gdXBsb2FkIHNvdXJjZXMgb25seSBmb3IgbWlsZXN0b25lcyAtLT4K
+ICAgICAgICAgPCEtLSA8YXJ0aWZhY3Q6YXR0YWNoIGZpbGU9ImVjbGlwc2VsaW5rLXNyYy56aXAi
+IGNsYXNzaWZpZXI9InNvdXJjZXMiLz4gLS0+CiAgICAgICA8L2FydGlmYWN0OmRlcGxveT4KICAg
+PC90YXJnZXQ+CjwvcHJvamVjdD4KCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>87002</attachid>
+            <date>2008-01-15 22:05:00 -0500</date>
+            <delta_ts>2010-12-09 11:18:44 -0500</delta_ts>
+            <desc>Template for corresponding pom </desc>
+            <filename>pom.xml.template</filename>
+            <type>text/plain</type>
+            <size>1573</size>
+            <attacher name="Mitesh Meswani">mitesh.meswani</attacher>
+            
+              <data encoding="base64">PHByb2plY3QgeG1sbnM9Imh0dHA6Ly9tYXZlbi5hcGFjaGUub3JnL1BPTS80LjAuMCIgeG1sbnM6
+eHNpPSJodHRwOi8vd3d3LnczLm9yZy8yMDAxL1hNTFNjaGVtYS1pbnN0YW5jZSIKICB4c2k6c2No
+ZW1hTG9jYXRpb249Imh0dHA6Ly9tYXZlbi5hcGFjaGUub3JnL1BPTS80LjAuMCBodHRwOi8vbWF2
+ZW4uYXBhY2hlLm9yZy9tYXZlbi12NF8wXzAueHNkIj4KICA8bW9kZWxWZXJzaW9uPjQuMC4wPC9t
+b2RlbFZlcnNpb24+CiAgPGdyb3VwSWQ+b3JnLmVjbGlwc2UucGVyc2lzdGVuY2U8L2dyb3VwSWQ+
+CiAgPGFydGlmYWN0SWQ+ZWNsaXBzZWxpbms8L2FydGlmYWN0SWQ+CiAgPHBhY2thZ2luZz5qYXI8
+L3BhY2thZ2luZz4KICA8bmFtZT5FY2xpcHNlTGluazwvbmFtZT4KICA8ZGVzY3JpcHRpb24+RWNs
+aXBzZUxpbmsgc3VidmVyc2lvbiByZXZpc2lvbiBAc3VidmVyc2lvbi5yZXZpc2lvbkA8L2Rlc2Ny
+aXB0aW9uPgogIDx2ZXJzaW9uPkByZWxlYXNlLnZlcnNpb25ALUBxdWFsaWZpZXJAPC92ZXJzaW9u
+PgogIDx1cmw+aHR0cDovL3d3dy5lY2xpcHNlLm9yZy9lY2xpcHNlbGluazwvdXJsPgogIDxpc3N1
+ZU1hbmFnZW1lbnQ+CiAgICA8c3lzdGVtPmppcmE8L3N5c3RlbT4KICAgIDx1cmw+aHR0cHM6Ly9i
+dWdzLmVjbGlwc2Uub3JnL2J1Z3M8L3VybD4KICA8L2lzc3VlTWFuYWdlbWVudD4KICA8aW5jZXB0
+aW9uWWVhcj4yMDA3PC9pbmNlcHRpb25ZZWFyPgogIDxtYWlsaW5nTGlzdHM+CiAgICA8bWFpbGlu
+Z0xpc3Q+CiAgICAgIDxuYW1lPkVjbGlwc2VMaW5rIERldmVsb3BlciBMaXN0PC9uYW1lPgogICAg
+ICA8cG9zdD5lY2xpcHNlbGluay1kZXZAZWNsaXBzZS5vcmc8L3Bvc3Q+CiAgICAgIDxhcmNoaXZl
+Pmh0dHA6Ly9kZXYuZWNsaXBzZS5vcmcvbWhvbmFyYy9saXN0cy9lY2xpcHNlbGluay1kZXY8L2Fy
+Y2hpdmU+CiAgICA8L21haWxpbmdMaXN0PgogICAgPG1haWxpbmdMaXN0PgogICAgICA8bmFtZT5F
+Y2xpcHNlTGluayBVc2VyIExpc3Q8L25hbWU+CiAgICAgIDxwb3N0PmVjbGlwc2VsaW5rLXVzZXJz
+QGVjbGlwc2Uub3JnPC9wb3N0PgogICAgICA8YXJjaGl2ZT5odHRwOi8vZGV2LmVjbGlwc2Uub3Jn
+L21ob25hcmMvbGlzdHMvZWNsaXBzZWxpbmstdXNlcnM8L2FyY2hpdmU+CiAgICA8L21haWxpbmdM
+aXN0PgogIDwvbWFpbGluZ0xpc3RzPgogIDxsaWNlbnNlcz4KICAgICAgPGxpY2Vuc2U+CiAgICAg
+ICAgPG5hbWU+RWNsaXBzZSBQdWJsaWMgTGljZW5zZSAtIHYgMS4wPC9uYW1lPgogICAgICAgIDx1
+cmw+aHR0cDovL3d3dy5lY2xpcHNlLm9yZy9sZWdhbC9lcGwtdjEwLmh0bWw8L3VybD4KICAgICAg
+PC9saWNlbnNlPgogIDwvbGljZW5zZXM+CiAgPGRpc3RyaWJ1dGlvbk1hbmFnZW1lbnQ+CiAgICA8
+cmVwb3NpdG9yeT4KICAgICAgPGlkPmVjbGlwc2VsaW5rLW1hdmVuLXJlcG88L2lkPgogICAgICA8
+dXJsPnN2bjpzdm46Ly9kZXYuZWNsaXBzZS5vcmcvc3Zucm9vdC90ZWNobm9sb2d5L29yZy5lY2xp
+cHNlLnBlcnNpc3RlbmNlL21hdmVuLXJlcG88L3VybD4KICAgIDwvcmVwb3NpdG9yeT4KIDwvZGlz
+dHJpYnV0aW9uTWFuYWdlbWVudD4KPC9wcm9qZWN0PgoKCg==
+</data>
+<flag name="iplog"
+          id="37663"
+          type_id="7"
+          status="+"
+          setter="peter.krogh"
+    />
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>88205</attachid>
+            <date>2008-01-29 17:00:00 -0500</date>
+            <delta_ts>2010-12-09 11:18:52 -0500</delta_ts>
+            <desc>Version of ant script removing dependency on wagon-svn</desc>
+            <filename>uploadToMaven.xml</filename>
+            <type>text/xml</type>
+            <size>1984</size>
+            <attacher name="Mitesh Meswani">mitesh.meswani</attacher>
+            
+              <data encoding="base64">PHByb2plY3QgbmFtZT0iVXBsb2FkIEVjbGlwc2VMaW5rIGFydGlmYWN0cyB0byBNYXZlbiByZXBv
+c2l0b3J5IiAgYmFzZWRpcj0iLiIgeG1sbnM6YXJ0aWZhY3Q9InVybjptYXZlbi1hcnRpZmFjdC1h
+bnQiIGRlZmF1bHQ9InVwbG9hZC5tYXZlbiI+CiAgPHBhdGggaWQ9Im1hdmVuLWFudC10YXNrcy5j
+bGFzc3BhdGgiIHBhdGg9ImxpYi9tYXZlbi1hbnQtdGFza3MtMi4wLjguamFyIiAvPiA8IS0tIFRP
+RE8gZGlzY3VzcyB3aXRoIFRvbSB3aGVyZSBzaG91bGQgdGhpcyB2YWx1ZSBhbmQgdGhlIGFjdHVh
+bCBsaWIgZ28gLS0+CiAgPHR5cGVkZWYgcmVzb3VyY2U9Im9yZy9hcGFjaGUvbWF2ZW4vYXJ0aWZh
+Y3QvYW50L2FudGxpYi54bWwiIHVyaT0idXJuOm1hdmVuLWFydGlmYWN0LWFudCIKICAgICAgICAg
+ICBjbGFzc3BhdGhyZWY9Im1hdmVuLWFudC10YXNrcy5jbGFzc3BhdGgiIC8+CgogICA8dGFyZ2V0
+IG5hbWU9InVwbG9hZC5tYXZlbiIgPgogICAgICAgPHByb3BlcnR5IGZpbGU9Ii4vYnVpbGQucHJv
+cGVydGllcyIvPiA8IS0tIHJlbGVhc2UudmVyc2lvbiBhbmQgYnVpbGRfaWQgYXJlIGludGlhbGl6
+ZWQgZnJvbSBoZXJlIC0tPgogICAgICAgPGVjaG8gbWVzc2FnZT0icmVsZWFzZS52ZXJzaW9uICR7
+cmVsZWFzZS52ZXJzaW9ufSIvPgogICAgICAgPGVjaG8gbWVzc2FnZT0iYnVpbGRfaWQgJHtidWls
+ZF9pZH0iLz4KICAgICAgIAogICAgICAgPCEtLSBHZXQgdGhlIHN1YnZlcnNpb24gdmVyc2lvbiBm
+b3IgY3VycmVudCB3b3JraW5nIGNvcHkgLS0+CiAgICAgICA8IS0tIEEgZnJlc2hseSBjaGVja2Vk
+IG91dCBjb3B5IG9mIHdvcmtzcGFjZSBpcyBndWFyYW50ZWVkIHRvIG5vdCBoYXZlIG1peGVkIHJl
+dmlzaW9ucyAtLT4KICAgICAgIDxleGVjIG91dHB1dHByb3BlcnR5PSJzdWJ2ZXJzaW9uLnJldmlz
+aW9uIiBmYWlsb25lcnJvcj0idHJ1ZSIgZXhlY3V0YWJsZT0ic3ZudmVyc2lvbiI+CiAgICAgICAg
+ICA8YXJnIGxpbmU9Ii4iLz4KICAgICAgIDwvZXhlYz4KICAgICAgIDxlY2hvIG1lc3NhZ2U9InN1
+YnZlcnNpb24ucmV2aXNpb24gJHtzdWJ2ZXJzaW9uLnJldmlzaW9ufSIvPgogICAgICAgCiAgICAg
+ICA8IS0tIENvcHkgcG9tLnRlbXBsYXRlIHRvIHBvbS54bWwgZmlsdGVyaW5nIHZhcmlvdXMgcHJv
+cGVydGllcyAtLT4KICAgICAgIDxjb3B5IGZpbGU9InBvbS54bWwudGVtcGxhdGUiIHRvZmlsZT0i
+cG9tLnhtbCIgb3ZlcndyaXRlPSJ0cnVlIj4KICAgICAgICAgPGZpbHRlcnNldD4KICAgICAgICAg
+ICA8ZmlsdGVyIHRva2VuPSJyZWxlYXNlLnZlcnNpb24iIHZhbHVlPSIke3JlbGVhc2UudmVyc2lv
+bn0iLz4KICAgICAgICAgICA8IS0tIFRPRE8gRmlndXJlIG91dCBob3cgdG8gbWFwIGJ1aWxkX2lk
+IGZyb20gbmlnaHRseSB0byBTTkFQU0hPVCA8ZmlsdGVyIHRva2VuPSJxdWFsaWZpZXIiICAgICAg
+IHZhbHVlPSIke2J1aWxkX2lkfSIvPiAtLT4KICAgICAgICAgICA8ZmlsdGVyIHRva2VuPSJxdWFs
+aWZpZXIiICAgICAgIHZhbHVlPSJTTkFQU0hPVCIvPgogICAgICAgICAgIDxmaWx0ZXIgdG9rZW49
+InN1YnZlcnNpb24ucmV2aXNpb24iIHZhbHVlPSIke3N1YnZlcnNpb24ucmV2aXNpb259Ii8+CiAg
+ICAgICAgICA8L2ZpbHRlcnNldD4KICAgICAgIDwvY29weT4KICAgICAgIAogICAgICAgPCEtLSBE
+ZWxwbG95IHRoZSBqYXIgdG8gbWF2ZW4gcmVwb3NpdG9yeSBhbG9uZyB3aXRoIHNvdXJjZXMgLS0+
+CiAgICAgICA8YXJ0aWZhY3Q6cG9tIGlkPSJtYXZlbi5wcm9qZWN0IiBmaWxlPSJwb20ueG1sIiAv
+PgogICAgICAgPGFydGlmYWN0OmRlcGxveSBmaWxlPSIuL2VjbGlwc2VsaW5rLmphciI+CiAgICAg
+ICAgIDxwb20gcmVmaWQ9Im1hdmVuLnByb2plY3QiLz4KICAgICAgICAgPGFydGlmYWN0OmF0dGFj
+aCBmaWxlPSJlY2xpcHNlbGluay1zcmMuemlwIiBjbGFzc2lmaWVyPSJzb3VyY2VzIi8+CiAgICAg
+ICA8L2FydGlmYWN0OmRlcGxveT4KICAgPC90YXJnZXQ+CjwvcHJvamVjdD4KCg==
+</data>
+<flag name="iplog"
+          id="37664"
+          type_id="7"
+          status="+"
+          setter="peter.krogh"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

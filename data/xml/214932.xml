@@ -1,0 +1,316 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214932</bug_id>
+          
+          <creation_ts>2008-01-10 13:25:00 -0500</creation_ts>
+          <short_desc>empty adapter factory contributions cause &quot;Plug-in .. was unable to load class .&quot;</short_desc>
+          <delta_ts>2008-01-30 08:52:56 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Debug</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>208062</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Markus Keller">markus_keller</reporter>
+          <assigned_to name="Platform-Debug-Inbox">platform-debug-inbox</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>jsong</cc>
+    
+    <cc>kaloyan.r</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129078</commentid>
+    <comment_count>0</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-10 13:25:18 -0500</bug_when>
+    <thetext>I20080108-1320
+
+- new workspace
+- new Java Project
+- new Java Class
+- open editor context menu
+- open Profile submenu
+- press Esc
+- open editor context menu again
+=&gt; Log entry:
+
+!ENTRY org.eclipse.equinox.registry 4 0 2008-01-10 19:10:12.406
+!MESSAGE Plug-in org.eclipse.debug.ui was unable to load class .
+
+Bug 214760 deals with the mediocre content of this message.
+
+The issue is that the plugin.xml of debug.ui and jdt.debug.ui contain invalid adapter factory declarations with an empty class, e.g.:
+	&lt;extension point=&quot;org.eclipse.core.runtime.adapters&quot;&gt;
+...
+         &lt;factory 
+            class=&quot;&quot; 
+            adaptableType=&quot;org.eclipse.ui.part.FileEditorInput&quot;&gt;
+            &lt;adapter type=&quot;org.eclipse.debug.ui.actions.ILaunchable&quot;/&gt;
+         &lt;/factory&gt;
+
+This became an issue with the fix from bug 208062 comment 26.
+
+We either need proper adapter factories here, or the &lt;adapt&gt; expression will have to avoid actually instantiating the factory in this case.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129106</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-10 13:54:44 -0500</bug_when>
+    <thetext>I think it would be wrong to change the definition of the org.eclipse.core.runtime.adapters extension point (see bug 214929 for why its schema description is not easily available in latest builds) and to work around this in the AdaptExpression.
+
+I suggest to add a dummy ILaunchable to (Java)DebugElementAdapterFactory.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129665</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86676</attachid>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-11 10:32:46 -0500</bug_when>
+    <thetext>Created attachment 86676
+suggested fix</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133019</commentid>
+    <comment_count>3</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-17 05:19:22 -0500</bug_when>
+    <thetext>org.eclipse.ant.ui has the same problem (e.g. when you open a context menu on a .log file). o.e.debug.ui should maybe offer a public IAdapterFactory to save clients from having to write dummy adapters for ILaunchable.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133112</commentid>
+    <comment_count>4</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-17 09:07:45 -0500</bug_when>
+    <thetext>All debuggers will have the same problem... We created ILaunchable as a &quot;tag&quot; interface and never intended there to be implementors.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133188</commentid>
+    <comment_count>5</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-17 10:18:46 -0500</bug_when>
+    <thetext>This problem is caused by the patch in bug 208062. In the past, we only ever called &quot;hasAdapter(ILaunchable)&quot;. The adpat expression introduced in bug 208062 causes &quot;getAdapter(ILaunchable)&quot; to be called, causing the error message.
+
+I will revert the fix to bug 208062.
+
+*** This bug has been marked as a duplicate of bug 208062 ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135846</commentid>
+    <comment_count>6</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-22 09:49:19 -0500</bug_when>
+    <thetext>*** Bug 216025 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138465</commentid>
+    <comment_count>7</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-25 06:34:01 -0500</bug_when>
+    <thetext>The empty &apos;class&apos; attribute in the contribution to &apos;org.eclipse.core.runtime.adapters&apos; is still against the spec of that extension point.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145244</commentid>
+    <comment_count>8</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-30 08:52:56 -0500</bug_when>
+    <thetext>*** Bug 217034 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86676</attachid>
+            <date>2008-01-11 10:32:00 -0500</date>
+            <delta_ts>2008-01-11 10:32:46 -0500</delta_ts>
+            <desc>suggested fix</desc>
+            <filename>214932_patch.txt</filename>
+            <type>text/plain</type>
+            <size>8346</size>
+            <attacher name="Markus Keller">markus_keller</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZGVidWcudWkN
+CkluZGV4OiB1aS9vcmcvZWNsaXBzZS9kZWJ1Zy9pbnRlcm5hbC91aS92aWV3cy9sYXVuY2gvRGVi
+dWdFbGVtZW50QWRhcHRlckZhY3RvcnkuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNy
+b290L2VjbGlwc2Uvb3JnLmVjbGlwc2UuZGVidWcudWkvdWkvb3JnL2VjbGlwc2UvZGVidWcvaW50
+ZXJuYWwvdWkvdmlld3MvbGF1bmNoL0RlYnVnRWxlbWVudEFkYXB0ZXJGYWN0b3J5LmphdmEsdg0K
+cmV0cmlldmluZyByZXZpc2lvbiAxLjM4DQpkaWZmIC11IC1yMS4zOCBEZWJ1Z0VsZW1lbnRBZGFw
+dGVyRmFjdG9yeS5qYXZhDQotLS0gdWkvb3JnL2VjbGlwc2UvZGVidWcvaW50ZXJuYWwvdWkvdmll
+d3MvbGF1bmNoL0RlYnVnRWxlbWVudEFkYXB0ZXJGYWN0b3J5LmphdmEJMTQgTm92IDIwMDcgMTQ6
+NTI6MTIgLTAwMDAJMS4zOA0KKysrIHVpL29yZy9lY2xpcHNlL2RlYnVnL2ludGVybmFsL3VpL3Zp
+ZXdzL2xhdW5jaC9EZWJ1Z0VsZW1lbnRBZGFwdGVyRmFjdG9yeS5qYXZhCTExIEphbiAyMDA4IDE1
+OjMxOjU2IC0wMDAwDQpAQCAtMSw1ICsxLDUgQEANCiAvKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0K
+LSAqIENvcHlyaWdodCAoYykgMjAwMCwgMjAwNyBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4N
+CisgKiBDb3B5cmlnaHQgKGMpIDIwMDAsIDIwMDggSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMu
+DQogICogQWxsIHJpZ2h0cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55
+aW5nIG1hdGVyaWFscw0KICAqIGFyZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2Yg
+dGhlIEVjbGlwc2UgUHVibGljIExpY2Vuc2UgdjEuMA0KICAqIHdoaWNoIGFjY29tcGFuaWVzIHRo
+aXMgZGlzdHJpYnV0aW9uLCBhbmQgaXMgYXZhaWxhYmxlIGF0DQpAQCAtMTIsNiArMTIsOSBAQA0K
+IHBhY2thZ2Ugb3JnLmVjbGlwc2UuZGVidWcuaW50ZXJuYWwudWkudmlld3MubGF1bmNoOw0KIA0K
+IGltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuSUFkYXB0ZXJGYWN0b3J5Ow0KKw0KK2lt
+cG9ydCBvcmcuZWNsaXBzZS51aS5wYXJ0LkZpbGVFZGl0b3JJbnB1dDsNCisNCiBpbXBvcnQgb3Jn
+LmVjbGlwc2UuZGVidWcuY29yZS5JRXhwcmVzc2lvbk1hbmFnZXI7DQogaW1wb3J0IG9yZy5lY2xp
+cHNlLmRlYnVnLmNvcmUuSUxhdW5jaDsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuZGVidWcuY29yZS5J
+TGF1bmNoTWFuYWdlcjsNCkBAIC03MCw2ICs3Myw3IEBADQogaW1wb3J0IG9yZy5lY2xpcHNlLmRl
+YnVnLmludGVybmFsLnVpLnZpZXdlcnMudXBkYXRlLkRlZmF1bHRNb2RlbFByb3h5RmFjdG9yeTsN
+CiBpbXBvcnQgb3JnLmVjbGlwc2UuZGVidWcuaW50ZXJuYWwudWkudmlld2Vycy51cGRhdGUuRGVm
+YXVsdE1vZGVsU2VsZWN0aW9uUG9saWN5RmFjdG9yeTsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuZGVi
+dWcuaW50ZXJuYWwudWkudmlld3MubWVtb3J5LnJlbmRlcmluZ3MuTWVtb3J5U2VnbWVudDsNCitp
+bXBvcnQgb3JnLmVjbGlwc2UuZGVidWcudWkuYWN0aW9ucy5JTGF1bmNoYWJsZTsNCiBpbXBvcnQg
+b3JnLmVjbGlwc2UuZGVidWcudWkuc291cmNlbG9va3VwLklTb3VyY2VEaXNwbGF5Ow0KIA0KIC8q
+Kg0KQEAgLTEyMCw2ICsxMjQsOCBAQA0KICAgICBwcml2YXRlIHN0YXRpYyBJVmlld2VySW5wdXRQ
+cm92aWRlciBmZ0RlZmF1bHRWaWV3ZXJJbnB1dFByb3ZpZGVyID0gbmV3IERlZmF1bHRWaWV3ZXJJ
+bnB1dFByb3ZpZGVyKCk7DQogICAgIHByaXZhdGUgc3RhdGljIElWaWV3ZXJJbnB1dFByb3ZpZGVy
+IGZnU3RhY2tGcmFtZVZpZXdlcklucHV0UHJvdmlkZXIgPSBuZXcgU3RhY2tGcmFtZVZpZXdlcklu
+cHV0UHJvdmlkZXIoKTsNCiAgICAgDQorICAgIHByaXZhdGUgc3RhdGljIElMYXVuY2hhYmxlIGZn
+TGF1bmNoYWJsZSA9IG5ldyBJTGF1bmNoYWJsZSgpIHsgLypkdW1teSBhbm9ueW1vdXMgaW5zdGFu
+Y2UqLyB9Ow0KKyAgICANCiAgICAgLyogKG5vbi1KYXZhZG9jKQ0KICAgICAgKiBAc2VlIG9yZy5l
+Y2xpcHNlLmNvcmUucnVudGltZS5JQWRhcHRlckZhY3RvcnkjZ2V0QWRhcHRlcihqYXZhLmxhbmcu
+T2JqZWN0LCBqYXZhLmxhbmcuQ2xhc3MpDQogICAgICAqLw0KQEAgLTI2Myw2ICsyNjksMTIgQEAN
+CiAgICAgICAgIAl9DQogICAgICAgICB9DQogICAgICAgICANCisgICAgICAgIGlmIChhZGFwdGVy
+VHlwZS5lcXVhbHMoSUxhdW5jaGFibGUuY2xhc3MpKSB7DQorICAgICAgICAJaWYgKGFkYXB0YWJs
+ZU9iamVjdCBpbnN0YW5jZW9mIEZpbGVFZGl0b3JJbnB1dCkgew0KKyAgICAgICAgCQlyZXR1cm4g
+ZmdMYXVuY2hhYmxlOw0KKyAgICAgICAgCX0NCisgICAgICAgIH0NCisgICAgICAgIA0KICAgICAg
+ICAgcmV0dXJuIG51bGw7DQogICAgIH0NCiANCkBAIC0yODEsNyArMjkzLDggQEANCiAgICAgICAg
+IAkJSUVsZW1lbnRMYWJlbFByb3ZpZGVyLmNsYXNzLA0KICAgICAgICAgCQlJRWxlbWVudE1lbWVu
+dG9Qcm92aWRlci5jbGFzcywNCiAgICAgICAgIAkJSUVsZW1lbnRFZGl0b3IuY2xhc3MsDQotICAg
+ICAgICAJCUlWaWV3ZXJJbnB1dFByb3ZpZGVyLmNsYXNzfTsNCisgICAgICAgIAkJSVZpZXdlcklu
+cHV0UHJvdmlkZXIuY2xhc3MsDQorICAgICAgICAJCUlMYXVuY2hhYmxlLmNsYXNzfTsNCiAgICAg
+fQ0KIA0KIH0NCkluZGV4OiBwbHVnaW4ueG1sDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jv
+b3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5kZWJ1Zy51aS9wbHVnaW4ueG1sLHYNCnJldHJpZXZpbmcg
+cmV2aXNpb24gMS40MTcNCmRpZmYgLXUgLXIxLjQxNyBwbHVnaW4ueG1sDQotLS0gcGx1Z2luLnht
+bAk0IEphbiAyMDA4IDE3OjE2OjIyIC0wMDAwCTEuNDE3DQorKysgcGx1Z2luLnhtbAkxMSBKYW4g
+MjAwOCAxNTozMTo1NiAtMDAwMA0KQEAgLTIwNzgsNyArMjA3OCw3IEBADQogICAgICAgICAgICAg
+PGFkYXB0ZXIgdHlwZT0ib3JnLmVjbGlwc2UudWkubW9kZWwuSVdvcmtiZW5jaEFkYXB0ZXIiLz4N
+CiAgICAgICAgICA8L2ZhY3Rvcnk+DQogICAgICAgICAgPGZhY3RvcnkgDQotICAgICAgICAgICAg
+Y2xhc3M9IiIgDQorICAgICAgICAgICAgY2xhc3M9Im9yZy5lY2xpcHNlLmRlYnVnLmludGVybmFs
+LnVpLnZpZXdzLmxhdW5jaC5EZWJ1Z0VsZW1lbnRBZGFwdGVyRmFjdG9yeSIgDQogICAgICAgICAg
+ICAgYWRhcHRhYmxlVHlwZT0ib3JnLmVjbGlwc2UudWkucGFydC5GaWxlRWRpdG9ySW5wdXQiPg0K
+ICAgICAgICAgICAgIDxhZGFwdGVyIHR5cGU9Im9yZy5lY2xpcHNlLmRlYnVnLnVpLmFjdGlvbnMu
+SUxhdW5jaGFibGUiLz4NCiAgICAgICAgICA8L2ZhY3Rvcnk+DQojUCBvcmcuZWNsaXBzZS5qZHQu
+ZGVidWcudWkNCkluZGV4OiB1aS9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvZGVidWcvdWkvdmFy
+aWFibGVzL0phdmFEZWJ1Z0VsZW1lbnRBZGFwdGVyRmFjdG9yeS5qYXZhDQo9PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpS
+Q1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5qZHQuZGVidWcudWkvdWkvb3Jn
+L2VjbGlwc2UvamR0L2ludGVybmFsL2RlYnVnL3VpL3ZhcmlhYmxlcy9KYXZhRGVidWdFbGVtZW50
+QWRhcHRlckZhY3RvcnkuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNA0KZGlmZiAtdSAt
+cjEuNCBKYXZhRGVidWdFbGVtZW50QWRhcHRlckZhY3RvcnkuamF2YQ0KLS0tIHVpL29yZy9lY2xp
+cHNlL2pkdC9pbnRlcm5hbC9kZWJ1Zy91aS92YXJpYWJsZXMvSmF2YURlYnVnRWxlbWVudEFkYXB0
+ZXJGYWN0b3J5LmphdmEJMjEgQXVnIDIwMDcgMjA6NDU6MTIgLTAwMDAJMS40DQorKysgdWkvb3Jn
+L2VjbGlwc2UvamR0L2ludGVybmFsL2RlYnVnL3VpL3ZhcmlhYmxlcy9KYXZhRGVidWdFbGVtZW50
+QWRhcHRlckZhY3RvcnkuamF2YQkxMSBKYW4gMjAwOCAxNTozMTo1OSAtMDAwMA0KQEAgLTEsNSAr
+MSw1IEBADQogLyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioNCi0gKiBDb3B5cmlnaHQgKGMpIDIwMDYs
+IDIwMDcgSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQorICogQ29weXJpZ2h0IChjKSAyMDA2
+LCAyMDA4IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KICAqIEFsbCByaWdodHMgcmVzZXJ2
+ZWQuIFRoaXMgcHJvZ3JhbSBhbmQgdGhlIGFjY29tcGFueWluZyBtYXRlcmlhbHMNCiAgKiBhcmUg
+bWFkZSBhdmFpbGFibGUgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBFY2xpcHNlIFB1YmxpYyBMaWNl
+bnNlIHYxLjANCiAgKiB3aGljaCBhY2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwgYW5kIGlz
+IGF2YWlsYWJsZSBhdA0KQEAgLTExLDE2ICsxMSwyNiBAQA0KIHBhY2thZ2Ugb3JnLmVjbGlwc2Uu
+amR0LmludGVybmFsLmRlYnVnLnVpLnZhcmlhYmxlczsNCiANCiBpbXBvcnQgb3JnLmVjbGlwc2Uu
+Y29yZS5ydW50aW1lLklBZGFwdGVyRmFjdG9yeTsNCisNCitpbXBvcnQgb3JnLmVjbGlwc2UuY29y
+ZS5yZXNvdXJjZXMuSVJlc291cmNlOw0KKw0KK2ltcG9ydCBvcmcuZWNsaXBzZS5qZHQuY29yZS5J
+SmF2YUVsZW1lbnQ7DQorDQoraW1wb3J0IG9yZy5lY2xpcHNlLmpkdC5kZWJ1Zy5jb3JlLklKYXZh
+U3RhY2tGcmFtZTsNCitpbXBvcnQgb3JnLmVjbGlwc2UuamR0LmRlYnVnLmNvcmUuSUphdmFWYXJp
+YWJsZTsNCisNCiBpbXBvcnQgb3JnLmVjbGlwc2UuZGVidWcuaW50ZXJuYWwudWkubW9kZWwuZWxl
+bWVudHMuRXhwcmVzc2lvbkxhYmVsUHJvdmlkZXI7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmRlYnVn
+LmludGVybmFsLnVpLnZpZXdlcnMubW9kZWwucHJvdmlzaW9uYWwuSUVsZW1lbnRDb250ZW50UHJv
+dmlkZXI7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmRlYnVnLmludGVybmFsLnVpLnZpZXdlcnMubW9k
+ZWwucHJvdmlzaW9uYWwuSUVsZW1lbnRMYWJlbFByb3ZpZGVyOw0KIGltcG9ydCBvcmcuZWNsaXBz
+ZS5kZWJ1Zy5pbnRlcm5hbC51aS52aWV3ZXJzLm1vZGVsLnByb3Zpc2lvbmFsLklFbGVtZW50TWVt
+ZW50b1Byb3ZpZGVyOw0KK2ltcG9ydCBvcmcuZWNsaXBzZS5kZWJ1Zy51aS5hY3Rpb25zLklMYXVu
+Y2hhYmxlOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5kZWJ1Zy51aS5hY3Rpb25zLklXYXRjaEV4cHJl
+c3Npb25GYWN0b3J5QWRhcHRlcjsNCi1pbXBvcnQgb3JnLmVjbGlwc2UuamR0LmRlYnVnLmNvcmUu
+SUphdmFTdGFja0ZyYW1lOw0KLWltcG9ydCBvcmcuZWNsaXBzZS5qZHQuZGVidWcuY29yZS5JSmF2
+YVZhcmlhYmxlOw0KKw0KIGltcG9ydCBvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwuZGVidWcudWku
+ZGlzcGxheS5KYXZhSW5zcGVjdEV4cHJlc3Npb247DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpkdC5p
+bnRlcm5hbC5kZWJ1Zy51aS5oZWFwd2Fsa2luZy5KYXZhV2F0Y2hFeHByZXNzaW9uRmlsdGVyOw0K
+IA0KK2ltcG9ydCBvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwudWkuamF2YWVkaXRvci5JQ2xhc3NG
+aWxlRWRpdG9ySW5wdXQ7DQorDQogLyoqDQogICogUHJvdmlkZXMgcHJvdmlkZXIgYWRhcHRlcnMg
+Zm9yIElKYXZhVmFyaWFibGVzIGFuZCBJSmF2YVN0YWNrRnJhbWVzDQogICogDQpAQCAtNDIsNiAr
+NTIsOCBAQA0KIAlwcml2YXRlIHN0YXRpYyBmaW5hbCBJV2F0Y2hFeHByZXNzaW9uRmFjdG9yeUFk
+YXB0ZXIgZmdXRVZhcmlhYmxlID0gbmV3IEphdmFXYXRjaEV4cHJlc3Npb25GaWx0ZXIoKTsNCiAJ
+cHJpdmF0ZSBzdGF0aWMgZmluYWwgSUVsZW1lbnRNZW1lbnRvUHJvdmlkZXIgZmdNUFN0YWNrRnJh
+bWUgPSBuZXcgSmF2YVN0YWNrRnJhbWVNZW1lbnRvUHJvdmlkZXIoKTsNCiANCisgICAgcHJpdmF0
+ZSBzdGF0aWMgZmluYWwgSUxhdW5jaGFibGUgZmdMYXVuY2hhYmxlID0gbmV3IElMYXVuY2hhYmxl
+KCkgeyAvKmR1bW15IGFub255bW91cyBpbnN0YW5jZSovIH07DQorICAgIA0KIAkvKiAobm9uLUph
+dmFkb2MpDQogCSAqIEBzZWUgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1lLklBZGFwdGVyRmFjdG9y
+eSNnZXRBZGFwdGVyKGphdmEubGFuZy5PYmplY3QsIGphdmEubGFuZy5DbGFzcykNCiAJICovDQpA
+QCAtNzUsNiArODcsMTEgQEANCiAJCQkJcmV0dXJuIGZnTVBTdGFja0ZyYW1lOw0KIAkJCX0NCiAJ
+CX0NCisgICAgICAgIGlmIChJTGF1bmNoYWJsZS5jbGFzcy5lcXVhbHMoYWRhcHRlclR5cGUpKSB7
+DQorICAgICAgICAJaWYgKGFkYXB0YWJsZU9iamVjdCBpbnN0YW5jZW9mIElKYXZhRWxlbWVudCB8
+fCBhZGFwdGFibGVPYmplY3QgaW5zdGFuY2VvZiBJUmVzb3VyY2UgfHwgYWRhcHRhYmxlT2JqZWN0
+IGluc3RhbmNlb2YgSUNsYXNzRmlsZUVkaXRvcklucHV0KSB7DQorICAgICAgICAJCXJldHVybiBm
+Z0xhdW5jaGFibGU7DQorICAgICAgICAJfQ0KKyAgICAgICAgfQ0KIAkJcmV0dXJuIG51bGw7DQog
+CX0NCiANCkBAIC04Miw3ICs5OSw3IEBADQogCSAqIEBzZWUgb3JnLmVjbGlwc2UuY29yZS5ydW50
+aW1lLklBZGFwdGVyRmFjdG9yeSNnZXRBZGFwdGVyTGlzdCgpDQogCSAqLw0KIAlwdWJsaWMgQ2xh
+c3NbXSBnZXRBZGFwdGVyTGlzdCgpIHsNCi0JCXJldHVybiBuZXcgQ2xhc3NbXXtJRWxlbWVudExh
+YmVsUHJvdmlkZXIuY2xhc3MsSUVsZW1lbnRDb250ZW50UHJvdmlkZXIuY2xhc3MsSVdhdGNoRXhw
+cmVzc2lvbkZhY3RvcnlBZGFwdGVyLmNsYXNzfTsNCisJCXJldHVybiBuZXcgQ2xhc3NbXXtJRWxl
+bWVudExhYmVsUHJvdmlkZXIuY2xhc3MsSUVsZW1lbnRDb250ZW50UHJvdmlkZXIuY2xhc3MsSVdh
+dGNoRXhwcmVzc2lvbkZhY3RvcnlBZGFwdGVyLmNsYXNzLElMYXVuY2hhYmxlLmNsYXNzfTsNCiAJ
+fQ0KIA0KIH0NCkluZGV4OiBwbHVnaW4ueG1sDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jv
+b3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5qZHQuZGVidWcudWkvcGx1Z2luLnhtbCx2DQpyZXRyaWV2
+aW5nIHJldmlzaW9uIDEuNDY2DQpkaWZmIC11IC1yMS40NjYgcGx1Z2luLnhtbA0KLS0tIHBsdWdp
+bi54bWwJMTYgT2N0IDIwMDcgMTc6MjE6NTkgLTAwMDAJMS40NjYNCisrKyBwbHVnaW4ueG1sCTEx
+IEphbiAyMDA4IDE1OjMxOjU5IC0wMDAwDQpAQCAtMzA5OCwxNyArMzA5OCwxNyBAQA0KICAgICAg
+ICAgIA0KICAgICAgPCEtLSBBZGFwdGVycyBmb3IgY29udGV4dHVhbCBsYXVuY2ggLS0+DQogICAg
+ICAJIDxmYWN0b3J5IA0KLSAgICAgICAgICAgIGNsYXNzPSIiIA0KKyAgICAgICAgICAgIGNsYXNz
+PSJvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwuZGVidWcudWkudmFyaWFibGVzLkphdmFEZWJ1Z0Vs
+ZW1lbnRBZGFwdGVyRmFjdG9yeSIgDQogICAgICAgICAgICAgYWRhcHRhYmxlVHlwZT0ib3JnLmVj
+bGlwc2UuamR0LmNvcmUuSUphdmFFbGVtZW50Ij4NCiAgICAgICAgICAgICA8YWRhcHRlciB0eXBl
+PSJvcmcuZWNsaXBzZS5kZWJ1Zy51aS5hY3Rpb25zLklMYXVuY2hhYmxlIi8+DQogICAgICAgICAg
+PC9mYWN0b3J5Pg0KICAgICAgICAgIDxmYWN0b3J5IA0KLSAgICAgICAgICAgIGNsYXNzPSIiIA0K
+KyAgICAgICAgICAgIGNsYXNzPSJvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwuZGVidWcudWkudmFy
+aWFibGVzLkphdmFEZWJ1Z0VsZW1lbnRBZGFwdGVyRmFjdG9yeSIgDQogICAgICAgICAgICAgYWRh
+cHRhYmxlVHlwZT0ib3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVJlc291cmNlIj4NCiAgICAg
+ICAgICAgICA8YWRhcHRlciB0eXBlPSJvcmcuZWNsaXBzZS5kZWJ1Zy51aS5hY3Rpb25zLklMYXVu
+Y2hhYmxlIi8+DQogICAgICAgICAgPC9mYWN0b3J5Pg0KICAgICAgICAgIDxmYWN0b3J5IA0KLSAg
+ICAgICAgICAgIGNsYXNzPSIiIA0KKyAgICAgICAgICAgIGNsYXNzPSJvcmcuZWNsaXBzZS5qZHQu
+aW50ZXJuYWwuZGVidWcudWkudmFyaWFibGVzLkphdmFEZWJ1Z0VsZW1lbnRBZGFwdGVyRmFjdG9y
+eSIgDQogICAgICAgICAgICAgYWRhcHRhYmxlVHlwZT0ib3JnLmVjbGlwc2UuamR0LmludGVybmFs
+LnVpLmphdmFlZGl0b3IuSUNsYXNzRmlsZUVkaXRvcklucHV0Ij4NCiAgICAgICAgICAgICA8YWRh
+cHRlciB0eXBlPSJvcmcuZWNsaXBzZS5kZWJ1Zy51aS5hY3Rpb25zLklMYXVuY2hhYmxlIi8+DQog
+ICAgICAgICAgPC9mYWN0b3J5PiAgIA0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214224</bug_id>
+          
+          <creation_ts>2008-01-03 08:31:00 -0500</creation_ts>
+          <short_desc>[UML] Ignore visibility of features in supertypes</short_desc>
+          <delta_ts>2011-05-27 02:41:04 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>MDT.OCL</product>
+          <component>Core</component>
+          <version>1.1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Christian W. Damus">give.a.damus</reporter>
+          <assigned_to name="Christian W. Damus">give.a.damus</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124891</commentid>
+    <comment_count>0</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-03 08:31:45 -0500</bug_when>
+    <thetext>1.1 Release build
+
+A compliance point of the OCL specification suggests that implementations should ignore declared visibilities of namespace members when resolving references.  The UML binding attempts, to a large extent, to do this.  However, for attribute and operation look-up, its reliance on the Classifier::getAllOperations() and Classifier::getAllAttributes() API results in look-ups failing to find private features of supertypes.  The cause is in the Classifier::inherit() operation, which does not make private features of general classifiers available as members of the inheriting classifier.
+
+The MDT OCL implementation should work around this, to &quot;inherit&quot; private features.  This is particularly of value for client applications that previously used this OCL implementation for UML by adapting UML to Ecore, which does not have a visibility concept, and have since picked up the UML support in the 1.1 release.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124975</commentid>
+    <comment_count>1</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-03 10:29:57 -0500</bug_when>
+    <thetext>Fix committed to CVS HEAD (1.2 branch).  Improves also the look-up of signal receptions in supertypes to ignore visibility.
+
+Added JUnits to test for look-up of private attributes, operations, and receptions in general classifiers.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125294</commentid>
+    <comment_count>2</comment_count>
+    <who name="Christian W. Damus">give.a.damus</who>
+    <bug_when>2008-01-03 16:28:32 -0500</bug_when>
+    <thetext>Fixed in I200801031555.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1141103</commentid>
+    <comment_count>3</comment_count>
+    <who name="Nick Boldt">nickboldt</who>
+    <bug_when>2008-01-28 16:39:27 -0500</bug_when>
+    <thetext>Move to verified as per bug 206558.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1141833</commentid>
+    <comment_count>4</comment_count>
+    <who name="Nick Boldt">nickboldt</who>
+    <bug_when>2008-01-28 16:42:11 -0500</bug_when>
+    <thetext>Move to verified as per bug 206558.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1938610</commentid>
+    <comment_count>5</comment_count>
+    <who name="Ed Willink">ed</who>
+    <bug_when>2011-05-27 02:38:23 -0400</bug_when>
+    <thetext>Closing after over a year in verified state.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1938847</commentid>
+    <comment_count>6</comment_count>
+    <who name="Ed Willink">ed</who>
+    <bug_when>2011-05-27 02:41:04 -0400</bug_when>
+    <thetext>Closing after over a year in verified state.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

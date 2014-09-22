@@ -1,0 +1,192 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214994</bug_id>
+          
+          <creation_ts>2008-01-11 01:28:00 -0500</creation_ts>
+          <short_desc>ArrayIndexOutOfBoundsException</short_desc>
+          <delta_ts>2008-03-24 15:48:40 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>AspectJ</product>
+          <component>Compiler</component>
+          <version>DEVELOPMENT</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>1.6.0 RC1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="kunalrock">kunalpathak2006</reporter>
+          <assigned_to name="AJDT-inbox">AJDT-inbox</assigned_to>
+          <cc>aclement</cc>
+    
+    <cc>lsolbach</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129459</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86642</attachid>
+    <who name="kunalrock">kunalpathak2006</who>
+    <bug_when>2008-01-11 01:28:13 -0500</bug_when>
+    <thetext>Created attachment 86642
+Aspect J program in which I got bug
+
+Hi,
+I got ArrayOutOfBoundException for my aspectJ program that is attached with this email.
+Just before the compilation, I added a generic element &lt;E&gt; while declaring an inter-type variable.
+
+Initially the successfully compiled code was :
+public List &lt; Observer&lt; LinkedList&lt;E&gt;&gt; &gt; LinkedList.observersList = new Vector&lt; Observer&lt;LinkedList&lt;E&gt;&gt; &gt;();
+
+I changed to 
+public List &lt; Observer&lt; LinkedList&lt;E&gt;&gt; &gt; LinkedList&lt;E&gt;.observersList = new Vector&lt; Observer&lt;LinkedList&lt;E&gt;&gt; &gt;();
+
+and I got below exception message:
+
+
+java.lang.ArrayIndexOutOfBoundsException
+at org.aspectj.ajdt.internal.compiler.lookup.EclipseFactory.internalMakeMethodBinding(EclipseFactory.java:824)
+at org.aspectj.ajdt.internal.compiler.lookup.EclipseFactory.internalMakeMethodBinding(EclipseFactory.java:793)
+at org.aspectj.ajdt.internal.compiler.lookup.EclipseFactory.makeMethodBinding(EclipseFactory.java:773)
+at org.aspectj.ajdt.internal.compiler.ast.InterTypeFieldDeclaration.resolve ... ob.run(AutoBuildJob.java:235)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+Compile error: ArrayIndexOutOfBoundsException thrown: 0
+
+
+Thanks,
+Kunal Pathak.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1182475</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ludger Solbach">lsolbach</who>
+    <bug_when>2008-03-24 13:16:30 -0400</bug_when>
+    <thetext>Hi,
+
+I&apos;ve got the same exception on the same line while compiling a generic aspect.
+
+The problem seems to be caused by trying to access a field declared on a generic type via an inter-type declaration.
+
+
+public abstract aspect Composite&lt;Item, Container&gt; {
+
+  private C CompositeItem&lt;C&gt;.container;
+
+  public List&lt;I&gt; CompositeContainer&lt;I&gt;.itemList = new ArrayList&lt;I&gt;();
+
+  public CompositeContainer&lt;I&gt; CompositeContainer&lt;I&gt;.addItem(I i) {
+    itemList.add(i);
+
+// Commenting out this line results in the described Exception
+//  i.container = this;
+
+    return this;
+  }
+
+// interface/parents declaration and further methods left out
+}
+
+Replacing the field access with a setter method doesn&apos;t help...
+
+The Bug is still present in AJDT 1.5.1.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1182644</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrew Clement">aclement</who>
+    <bug_when>2008-03-24 15:48:40 -0400</bug_when>
+    <thetext>test and fix committed for AspectJ1.6.0rc1.  Will be in AJDT shortly.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86642</attachid>
+            <date>2008-01-11 01:28:00 -0500</date>
+            <delta_ts>2008-01-11 01:28:13 -0500</delta_ts>
+            <desc>Aspect J program in which I got bug</desc>
+            <filename>ObserverPattern.java</filename>
+            <type>application/octet-stream</type>
+            <size>2446</size>
+            <attacher name="kunalrock">kunalpathak2006</attacher>
+            
+              <data encoding="base64">cGFja2FnZSBlZHUucml0LmNzLmhlbGlvLnV0aWw7DQoNCi8vIHBhY2thZ2UgZWR1LnJpdC5jcy5o
+ZWxpby51dGlsOw0KDQppbXBvcnQgamF2YS51dGlsLkxpc3Q7DQppbXBvcnQgamF2YS51dGlsLlZl
+Y3RvcjsNCmltcG9ydCBqYXZhLnV0aWwuSXRlcmF0b3I7DQoNCg0KcHVibGljIGFzcGVjdCBPYnNl
+cnZlclBhdHRlcm57DQoNCglwdWJsaWMgTGlzdCA8IE9ic2VydmVyPCBMaW5rZWRMaXN0PEU+PiA+
+IExpbmtlZExpc3Q8RT4ub2JzZXJ2ZXJzTGlzdCA9IG5ldyBWZWN0b3I8IE9ic2VydmVyPExpbmtl
+ZExpc3Q8RT4+ID4oKTsNCg0KCXB1YmxpYyB2b2lkIExpbmtlZExpc3QucmVnaXN0ZXIoT2JzZXJ2
+ZXI8TGlua2VkTGlzdDxFPj4gb2IpIHsNCgkJdGhpcy5vYnNlcnZlcnNMaXN0LmFkZChvYik7DQoJ
+fQ0KDQoJcHVibGljIHZvaWQgTGlua2VkTGlzdC51blJlZ2lzdGVyKE9ic2VydmVyPExpbmtlZExp
+c3Q8RT4+IG9iKSB7DQoJCXRoaXMub2JzZXJ2ZXJzTGlzdC5yZW1vdmUob2IpOw0KCX0NCg0KCXB1
+YmxpYyB2b2lkIExpbmtlZExpc3Qubm90aWZ5T2JzZXJ2ZXJzKCkgew0KCQlJdGVyYXRvciA8T2Jz
+ZXJ2ZXI8TGlua2VkTGlzdD4+IGl0ZXIgID0gb2JzZXJ2ZXJzTGlzdC5pdGVyYXRvcigpOw0KCQl3
+aGlsZShpdGVyLmhhc05leHQoKSkgew0KCQkJKGl0ZXIubmV4dCgpKS5hbm5vdW5jZSh0aGlzKTsN
+CgkJfQ0KCX0NCg0KCS8vIHBvaW50Y3V0IHRvIGNhcHR1cmUgam9pblBvaW50cyBvbiBjYWxsIHRv
+IHNvcnQoKQ0KCXBvaW50Y3V0IHNvcnRMaXN0KCkgOiBleGVjdXRpb24ocHVibGljIHZvaWQgTGlu
+a2VkTGlzdC5zb3J0KC4uKSk7DQoNCgkvLyBwb2ludGN1dCB0byBjYXB0dXJlIGpvaW5Qb2ludHMg
+b24gY2FsbCB0byByb3RhdGUoKQ0KCXBvaW50Y3V0IHJvdGF0ZUxpc3QoKSA6IGV4ZWN1dGlvbiAo
+cHVibGljIHZvaWQgTGlua2VkTGlzdC5yb3RhdGUoLi4pKTsNCg0KCS8vIHBvaW50Y3V0IHRvIGNh
+cHR1cmUgdGhlIGxpbmtlZCBsaXN0IGNoYW5nZQ0KCXBvaW50Y3V0IGxpbmtlZExpc3RDaGFuZ2Uo
+TGlua2VkTGlzdCBsbCkgOiBzZXQoaW50IExpbmtlZExpc3Quc2l6ZSkgJiYNCgkJCQkhY2Zsb3co
+c29ydExpc3QoKSB8fCByb3RhdGVMaXN0KCkpICYmIHRoaXMobGwpOyANCgkNCgkvLyBUaGUgcG9p
+bnRjdXQgbWFrZSBzdXJlIHRoYXQgbXkgYWR2aWNlIGlzIGdldHRpbmcgY2FsbGVkDQoJLy8gb25s
+eSBhZnRlciBjb21wbGV0ZSBleGVjdXRpb24gb2YgOg0KCS8vIDEuIHJvdGF0ZSgpIG1ldGhvZCwg
+YnV0IGl0J3Mgbm90IGNhbGxlZCBmcm9tIHNvcnQoKSBtZXRob2QuIG9yDQoJLy8gMi4gc29ydCgp
+IG1ldGhvZC4NCglwb2ludGN1dCByb3RhdGVkT3JTb3J0ZWQgKExpbmtlZExpc3QgbGwpIDogKChy
+b3RhdGVMaXN0KCkgJiYgIWNmbG93KHNvcnRMaXN0KCkpKSB8fCBzb3J0TGlzdCgpICkmJiB0aGlz
+KGxsKSA7DQoJDQoJLy8gVGhlIHBvaW50Y3V0IG1ha2Ugc3VyZSB0aGF0IG15IGFkdmljZSBpcyBn
+ZXR0aW5nIGNhbGxlZA0KCS8vIG9ubHkgYWZ0ZXIgY29tcGxldGUgZXhlY3V0aW9uIG9mIHNvcnQo
+KSBtZXRob2QuDQoJLy8gcG9pbnRjdXQgbGlua2VkTGlzdENoYW5nZU9uU29ydChMaW5rZWRMaXN0
+IGxsKSA6IHNvcnRMaXN0KCkgJiYgdGhpcyhsbCk7DQoJDQoJcG9pbnRjdXQgbGlua2VkTGlzdENy
+ZWF0aW9uKExpbmtlZExpc3QgbGwpOiBleGVjdXRpb24ocHVibGljIExpbmtlZExpc3QubmV3KCkp
+JiYgdGhpcyhsbCk7DQoNCgkvLyBQcm9ibGVtYXRpYyBkZWNsYXJlIHBhcmVudHMNCi8vIGRlY2xh
+cmUgcGFyZW50cyA6IExpc3RPYnNlcnZlcjxMaW5rZWRMaXN0PiBpbXBsZW1lbnRzDQovLyBPYnNl
+cnZlcjxMaW5rZWRMaXN0PjsNCi8vIGRlY2xhcmUgcGFyZW50cyA6IEVtcHR5T2JzZXJ2ZXI8TGlu
+a2VkTGlzdD4gaW1wbGVtZW50cw0KLy8gT2JzZXJ2ZXI8TGlua2VkTGlzdD47DQoJDQoJcHVibGlj
+IExpc3RPYnNlcnZlcjxMaW5rZWRMaXN0PEU+PiBsbyA9IG5ldyBMaXN0T2JzZXJ2ZXI8TGlua2Vk
+TGlzdD4oKTsNCg0KCXB1YmxpYyBFbXB0eU9ic2VydmVyPExpbmtlZExpc3Q+IGVvID0gbmV3IEVt
+cHR5T2JzZXJ2ZXI8TGlua2VkTGlzdD4oKTsNCgkNCglhZnRlcihMaW5rZWRMaXN0IGxsKSByZXR1
+cm5pbmcgOiBsaW5rZWRMaXN0Q2hhbmdlKGxsKSB8fCByb3RhdGVkT3JTb3J0ZWQgKGxsKSAvKg0K
+CQkJCQkJCQkJCQkJCQkJCQkJCQkJICogfHwNCgkJCQkJCQkJCQkJCQkJCQkJCQkJCSAqIGxpbmtl
+ZExpc3RDaGFuZ2VPblNvcnQobGwpDQoJCQkJCQkJCQkJCQkJCQkJCQkJCQkgKi97DQoJCWxsLm5v
+dGlmeU9ic2VydmVycygpOw0KCX0NCg0KLy8gQFN1cHByZXNzV2FybmluZ3MoInVuY2hlY2tlZCIp
+DQoJYWZ0ZXIoTGlua2VkTGlzdCBsbCkgcmV0dXJuaW5nIDogbGlua2VkTGlzdENyZWF0aW9uKGxs
+KSB7DQoJCWxsLnJlZ2lzdGVyKGxvKTsNCgkJbGwucmVnaXN0ZXIoZW8pOw0KCX0NCn0NCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

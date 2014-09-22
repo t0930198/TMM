@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214228</bug_id>
+          
+          <creation_ts>2008-01-03 09:10:00 -0500</creation_ts>
+          <short_desc>[xslt] [launcher] [debugging] XSLT Launching Configurations only look for *.xml extensions</short_desc>
+          <delta_ts>2009-04-30 14:25:32 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.xsl</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Carver">d_a_carver</reporter>
+          <assigned_to name="David Carver">d_a_carver</assigned_to>
+          
+          <qa_contact name="David Williams">david_williams</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124912</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-03 09:10:06 -0500</bug_when>
+    <thetext>The XSLT launcher configuration only looks for .xml files.   This should look based on Content-Type, and allow for editing that appears either directly or indirectly under the XML Content type.
+
+To reproduce:
+
+1. Create an XSD file.
+2. Create a new launch configuration for an XSL debug/launching configuration.
+3. Select Workspace for the XML Input.
+4. The XSD file that was created is not one of the available options.
+
+Again, we should be going off of Content-Type or not have filtering.  The reason being is that XSLT 2.0 can work with Text files as input without having to have XML files be the drivers.
+
+We should also allow for the input to come from a URI.  As input could be driven off an XQuery database that publishes it is accessible from the web as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134537</commentid>
+    <comment_count>1</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-20 11:37:21 -0500</bug_when>
+    <thetext>I&apos;ll take a shot at this, for 0.5M5
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148189</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-02-02 18:52:52 -0500</bug_when>
+    <thetext>The issue.  The XSL launch configuration only looked for xml or xhtml for the input files.
+
+The solution.  Use the Platform.getContentTypeManager() to retrieve a contentTypeManager, and then get the content Type file extensions that are under the main org.eclipse.wst.xml.core.xmlsource for the content type.  This correctly allows xml, xhtml, wsdl, xsd, xsl, etc.  Basically any extension that falls under the XML Content type can be used as input for a launch configuration.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1260827</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-06-05 09:35:37 -0400</bug_when>
+    <thetext>Mass Migration to wtp.inc.xsl</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1399025</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-12-25 12:45:52 -0500</bug_when>
+    <thetext>This is only showing XML content types, and not any sub content types.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1399027</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-12-25 13:31:43 -0500</bug_when>
+    <thetext>Somehow it was only looking at the org.eclipse.runtime.core.xml content type, instead of the xmlsource content type.   The later is the one that is needed so that it correctly picks up all sub type extensions.
+
+I&apos;ve added a unit test so that it tests for this and makes sure that we get at least the xml, xsl, and xslt extensions returned.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1487805</commentid>
+    <comment_count>6</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2009-04-30 14:25:32 -0400</bug_when>
+    <thetext>mass update to 3.1 target due to movement from wtp incubator to wtp source editing lost the original milestones.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

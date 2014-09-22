@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214716</bug_id>
+          
+          <creation_ts>2008-01-09 03:17:00 -0500</creation_ts>
+          <short_desc>[JFace] Incorrect validation in StringFieldEditor</short_desc>
+          <delta_ts>2008-12-09 17:28:18 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.5 M4</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Dmitriy Kovalev">kds</reporter>
+          <assigned_to name="Susan McCourt ">susan</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127931</commentid>
+    <comment_count>0</comment_count>
+    <who name="Dmitriy Kovalev">kds</who>
+    <bug_when>2008-01-09 03:17:26 -0500</bug_when>
+    <thetext>See class StringFieldEditor, method getTextControl. For now validation (on key stroke)is added by using following code:
+
+textField.addKeyListener(new KeyAdapter() {
+    public void keyReleased(KeyEvent e) {
+          valueChanged();
+    }
+});
+
+This approach gives problems because you can press and hold the key, so validation will occur only when you release the key. The problem is that you can press OK in preference dialog while holding the key in pressed state. For example, we have an integer field with entered value 100 and then press &quot;q&quot; button, hold it and press OK using mouse. I think the correct code for adding validation should be like this:
+
+textField.addModifyListener(new ModifyListener() {
+    public void modifyText(ModifyEvent e) {
+          valueChanged();
+    }
+});</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1184235</commentid>
+    <comment_count>1</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-03-26 00:22:52 -0400</bug_when>
+    <thetext>I&apos;ll look at this during M7.  It seems straightforward enough, but I want to make sure there wasn&apos;t some reason not to use the modify callback originally.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1217826</commentid>
+    <comment_count>2</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-04-29 13:51:55 -0400</bug_when>
+    <thetext>marking RC1, did not make it for M7 due to bigger fires</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1245695</commentid>
+    <comment_count>3</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-05-23 04:29:37 -0400</bug_when>
+    <thetext>Please adjust the target milestone, so it does not point at a closed milestone in the past.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1246200</commentid>
+    <comment_count>4</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-05-23 11:17:30 -0400</bug_when>
+    <thetext>marking 3.5 so we can address this early in the cycle.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1364219</commentid>
+    <comment_count>5</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-11-03 19:36:00 -0500</bug_when>
+    <thetext>In bug 40615, the code was changed to listen to keyRelease instead of keyPress.  This was an improvement, but I think the modify callback is the better choice. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1365166</commentid>
+    <comment_count>6</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-11-04 16:36:25 -0500</bug_when>
+    <thetext>Fixed in HEAD &gt;20081104.
+
+After thinking about it a bit, I realized we shouldn&apos;t be using the modify callback to fix this problem, so I fixed the problem by calling the valueChanged() method in both the keyReleased event and also on focus loss, to catch this particular case.
+
+The problem with using the modify callback is that it is triggered not just on user changes, but also on programmatic changes to the widget using setText(String).  The validation strategy is called VALIDATE_ON_KEY_STROKE, which certainly implies validation on user keystrokes, but not necessarily on programmatic modification.  Clients have public access to the control through getTextControl(Composite composite), so we&apos;ve made programmatic text changes easy.  Further, there are places in the field editor framework itself where setText(String) is used, sometimes calling valueChanged, sometimes calling checkValid(), sometimes doing nothing.  We&apos;d have to change all of these internal setText clients to check the validation strategy first, and also prove that newly introduced validations (where there were none previously) weren&apos;t causing a problem.  Not to mention the clients/extenders who would be affected by the new events or who were already setting their own modify callbacks to achieve programmatic validation.
+
+Given all those complications, a surgical fix seems preferred.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1387970</commentid>
+    <comment_count>7</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-12-09 17:28:18 -0500</bug_when>
+    <thetext>verified on WinXP, Build id: I20081209-0100
+
+- Preferences&gt;Field Assist Preferences&gt;Content Assist preferences
+- press and old the 1 key and then press &quot;Apply&quot; with the mouse
+- now we get a validation error.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

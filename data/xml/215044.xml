@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215044</bug_id>
+          
+          <creation_ts>2008-01-11 11:04:00 -0500</creation_ts>
+          <short_desc>[patch] Improve SQL Server 2000 schema loading</short_desc>
+          <delta_ts>2008-07-01 17:42:15 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>9</classification_id>
+          <classification>DataTools</classification>
+          <product>Data Tools</product>
+          <component>Enablement</component>
+          <version>1.6</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>1.6M5</target_milestone>
+          <dependson>208776</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Brian Fitzpatrick">bfitzpat</reporter>
+          <assigned_to name="Brian Fitzpatrick">bfitzpat</assigned_to>
+          <cc>jesper</cc>
+    
+    <cc>ledunnel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129702</commentid>
+    <comment_count>0</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-01-11 11:04:45 -0500</bug_when>
+    <thetext>+++ This bug was initially created as a clone of Bug #208776  -- cloned to report bug against the Ganymede (1.6) stream also +++
+
+In the past, there has been some problems with loading schema information for Microsoft SQL Server (various versions). Bug 192550 fixes this for SQL Server 2005 using the Microsoft JDBC driver.
+
+For SQL Server 2000 in combination with the jTDS driver (tested version 1.2.2), this issue is not fixed; it falls between two chairs: jTDS complies with JDBC 3 and so it always returns both columns for in getSchemas() and thus misses the special case in &quot;JDBCSchemaLoader.isSchemaInCatalog&quot;, but returns NULL for the catalog column (and so never finds anything). Returning NULL is not forbidden in the JDBC 3.0 spec.
+
+Also, it is not covered by the more rigourous approach taken in bug 192550 either, where a dedicated schema loader is specified, returning a more correct resultset - but for SQL Server 2005 only.
+
+I&apos;ve tried two fixes:
+ * Introducing a more lenient handling of NULL catalog values from getSchemas()
+ * Specifying SQL2005SchemaLoader for SQL Server 2000 as well:
+
+ &lt;overrideLoader
+provider=&quot;org.eclipse.datatools.enablement.msft.sqlserver.profile.ui.loaders.SQL2005SchemaLoader&quot;
+  eclass=&quot;org.eclipse.datatools.modelbase.sql.schema.Schema&quot;
+  product=&quot;SQL Server&quot;
+  version=&quot;2000&quot;/&gt;
+
+Both fix works well (one is enough!)
+
+I&apos;d love to see one of these vary minor fixes in the upcoming releases, since they improve the out-of-the-box experience a lot.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129703</commentid>
+    <comment_count>1</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-01-11 11:05:11 -0500</bug_when>
+    <thetext>Will deliver to Ganymede stream as well as 1.5.2</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129713</commentid>
+    <comment_count>2</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-01-11 11:11:24 -0500</bug_when>
+    <thetext>Delivered fix to 1.6 stream</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1282371</commentid>
+    <comment_count>3</comment_count>
+    <who name="Brian Fitzpatrick">bfitzpat</who>
+    <bug_when>2008-07-01 17:42:15 -0400</bug_when>
+    <thetext>Closing bugs</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

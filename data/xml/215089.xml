@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215089</bug_id>
+          
+          <creation_ts>2008-01-11 16:25:00 -0500</creation_ts>
+          <short_desc>[api tooling] @noreference not working on inherited interface method</short_desc>
+          <delta_ts>2008-02-25 16:34:03 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>API Tools</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          <dependson>217516</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Darin Wright">darin.eclipse</reporter>
+          <assigned_to name="Michael Rennie">Michael_Rennie</assigned_to>
+          <cc>Michael_Rennie</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129958</commentid>
+    <comment_count>0</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-11 16:25:00 -0500</bug_when>
+    <thetext>If interfaceA implements foo(), and interfaceB extends interfaceA, a call to foo() on an implementor of interfaceB is not found as an error (if foo() has a @noreference flag).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129959</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-11 16:26:00 -0500</bug_when>
+    <thetext>Fixed method resolution for interfaces. We were resolving methods up the class hierarchy rather than the interface hierarchy in this case.
+
+Allowed @noreference tag to be added to interface methods.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129960</commentid>
+    <comment_count>2</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-11 16:26:24 -0500</bug_when>
+    <thetext>Fixed. Please verify.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147768</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-02-01 14:37:48 -0500</bug_when>
+    <thetext>Testing this I do not get any problem makers.
+
+Steps I used:
+
+1. Create interface I and I2 in plugin projct P1 where I provides the method public void doSomething() and I2 extends I
+
+2. add a noreference tag to doSomething()
+
+3. provide an implementor (C) for I2 in plugin project P2 (which is dependent on P1)
+
+4. provide a main method class, instantiate C and call doSomething().
+
+
+Expected:
+the call to doSomething() should be flagged as a problem
+
+Happens:
+nothing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147854</commentid>
+    <comment_count>4</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-01 16:10:20 -0500</bug_when>
+    <thetext>This is working, but it appears the OSGi State was not re-resolved after there were state changes in the workspace (creating, exporting packages, etc).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152382</commentid>
+    <comment_count>5</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-07 16:12:50 -0500</bug_when>
+    <thetext>This is working for me, with the fix to bug 216312.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152383</commentid>
+    <comment_count>6</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-07 16:13:09 -0500</bug_when>
+    <thetext>Please verify, Mike.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163998</commentid>
+    <comment_count>7</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-02-25 16:34:03 -0500</bug_when>
+    <thetext>verified.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215122</bug_id>
+          
+          <creation_ts>2008-01-12 12:49:00 -0500</creation_ts>
+          <short_desc>[1.5][compiler] unhelpful errors on generics with wildcards and multiple bounds</short_desc>
+          <delta_ts>2008-01-15 13:04:50 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.2.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Waite">mass</reporter>
+          <assigned_to name="David Audel">david_audel</assigned_to>
+          <cc>philippe_mulet</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130185</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Waite">mass</who>
+    <bug_when>2008-01-12 12:49:19 -0500</bug_when>
+    <thetext>Build ID: I20080108-1320
+
+Steps To Reproduce:
+Under situations where a generic type is specified in terms of its generic parameter extending multiple interfaces, the compiler will emit errors which do not help the user understand what they are doing wrong. It would be useful to explain to the user that multiple bounds cannot be used within a generic type definition.
+
+Sample code of success and failures provided below
+
+More information:
+public interface Testable {
+	&lt;T extends Comparable&lt;?&gt; &amp; Iterable&lt;?&gt;&gt; void w1(T foo); // Works
+	&lt;T extends Comparable&lt;?&gt; &amp; Iterable&lt;?&gt;&gt; void w2(Class&lt;T&gt; foo); // Works
+	&lt;T extends Comparable&lt;?&gt; &amp; Iterable&lt;?&gt;&gt; Class&lt;T&gt; w3(); // Works
+
+	Class&lt;? extends Comparable&lt;?&gt; &amp; Iterable&lt;?&gt; &gt; f1(); // Fails
+	void f2(Class&lt;? extends Comparable&lt;?&gt; &amp; Iterable&lt;?&gt;&gt; foo); // Fails	
+}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131660</commentid>
+    <comment_count>1</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-01-15 13:03:45 -0500</bug_when>
+    <thetext>This would mean making the grammar more permissive and report the issue later on....</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131661</commentid>
+    <comment_count>2</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-01-15 13:04:50 -0500</bug_when>
+    <thetext>Note that javac doesn&apos;t do any better than we do.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

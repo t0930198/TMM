@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214993</bug_id>
+          
+          <creation_ts>2008-01-11 01:04:00 -0500</creation_ts>
+          <short_desc>DTD parser incorrectly handling comments</short_desc>
+          <delta_ts>2009-02-06 14:51:57 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.dtd</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Gabriel Indik">gindik</reporter>
+          <assigned_to name="Gabriel Indik">gindik</assigned_to>
+          <cc>valentinbaciu</cc>
+          <qa_contact name="Nitin Dahyabhai">nitind</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="5533"
+          type_id="1"
+          status="+"
+          setter="nitind"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129452</commentid>
+    <comment_count>0</comment_count>
+    <who name="Gabriel Indik">gindik</who>
+    <bug_when>2008-01-11 01:04:11 -0500</bug_when>
+    <thetext>The DTD parser does not calculate comment coordinates correctly, leading to unexpected results when these are found.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129453</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86641</attachid>
+    <who name="Gabriel Indik">gindik</who>
+    <bug_when>2008-01-11 01:06:09 -0500</bug_when>
+    <thetext>Created attachment 86641
+Patch
+
+The attached patch fixes the issue, ensuring comments are correctly parsed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129815</commentid>
+    <comment_count>2</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-01-11 13:13:44 -0500</bug_when>
+    <thetext>Gabriel, instead of using a String and new-ing a string every time to append it to the comment string, perhaps a better approach would be to use a StringBuffer. Using a StringBuffer used to be more efficient, at least with older JVMs.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131059</commentid>
+    <comment_count>3</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-14 17:46:55 -0500</bug_when>
+    <thetext>Assigning to Gabriel.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131145</commentid>
+    <comment_count>4</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-01-14 22:03:46 -0500</bug_when>
+    <thetext>Gabriel, please create and attach a JUnit test for the fix.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1168741</commentid>
+    <comment_count>5</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-03-02 09:52:18 -0500</bug_when>
+    <thetext>Nitin, it would be great if we could get this fix in for M6.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1170532</commentid>
+    <comment_count>6</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-03-04 15:17:54 -0500</bug_when>
+    <thetext>Gabriel, is there a unit test available as Valentin asked?  If not, can you give more detail about what behavior is being corrected beyond &quot;unexpected results&quot;?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1172225</commentid>
+    <comment_count>7</comment_count>
+    <who name="Gabriel Indik">gindik</who>
+    <bug_when>2008-03-06 14:22:24 -0500</bug_when>
+    <thetext>Nitin,
+A test plugin is being developed and will be added as soon as possible. The problem in this bug consists of the following:
+The callback method that processes comments in line 436 of the DTDParser class is passed an array of characters and the two integer parameters with the position and length of comments within the array. In line 443, these two integer parameters are ignored and the complete array is accessed. This is a problem since the array can potentially contain invalid characters as well as other portions of the document being parsed.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1172258</commentid>
+    <comment_count>8</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-03-06 14:44:31 -0500</bug_when>
+    <thetext>(In reply to comment #7)
+&gt; Nitin,
+&gt; A test plugin is being developed and will be added as soon as possible. 
+
+Just clarifying that the org.eclipse.wst.dtd.core.tests is already in CVS, albeit not visible through a top level shortcut. The component path is sourceediting/tests/org.eclipse.wst.dtd.core.tests</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1172349</commentid>
+    <comment_count>9</comment_count>
+      <attachid>91801</attachid>
+    <who name="Gabriel Indik">gindik</who>
+    <bug_when>2008-03-06 16:31:03 -0500</bug_when>
+    <thetext>Created attachment 91801
+JUnit test
+
+This test case verifies that the parser is correctly handling comments.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1176504</commentid>
+    <comment_count>10</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-03-12 18:31:48 -0400</bug_when>
+    <thetext>Released.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1194732</commentid>
+    <comment_count>11</comment_count>
+    <who name="Gabriel Indik">gindik</who>
+    <bug_when>2008-04-04 17:06:47 -0400</bug_when>
+    <thetext>Verified with S-3.0M6-20080404114343</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1212667</commentid>
+    <comment_count>12</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-04-24 00:43:56 -0400</bug_when>
+    <thetext>mass change to add &apos;contributed&apos; keyword based on bugzilla query, please correct if that&apos;s not accurate (by marking patches as obsolete and removing the &apos;contributed&apos; keyword. 
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1425158</commentid>
+    <comment_count>13</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2009-02-06 14:51:57 -0500</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86641</attachid>
+            <date>2008-01-11 01:06:00 -0500</date>
+            <delta_ts>2008-10-29 10:12:36 -0400</delta_ts>
+            <desc>Patch</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>994</size>
+            <attacher name="Gabriel Indik">gindik</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uud3N0LmR0ZC5j
+b3JlDQpJbmRleDogc2F4cGFyc2VyL29yZy9lY2xpcHNlL3dzdC9kdGQvY29yZS9pbnRlcm5hbC9z
+YXhwYXJzZXIvRFREUGFyc2VyLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC93
+ZWJ0b29scy9zb3VyY2VlZGl0aW5nL3BsdWdpbnMvb3JnLmVjbGlwc2Uud3N0LmR0ZC5jb3JlL3Nh
+eHBhcnNlci9vcmcvZWNsaXBzZS93c3QvZHRkL2NvcmUvaW50ZXJuYWwvc2F4cGFyc2VyL0RURFBh
+cnNlci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xNA0KZGlmZiAtdSAtcjEuMTQgRFRE
+UGFyc2VyLmphdmENCi0tLSBzYXhwYXJzZXIvb3JnL2VjbGlwc2Uvd3N0L2R0ZC9jb3JlL2ludGVy
+bmFsL3NheHBhcnNlci9EVERQYXJzZXIuamF2YQkxMCBBcHIgMjAwNyAyMDowNzowMSAtMDAwMAkx
+LjE0DQorKysgc2F4cGFyc2VyL29yZy9lY2xpcHNlL3dzdC9kdGQvY29yZS9pbnRlcm5hbC9zYXhw
+YXJzZXIvRFREUGFyc2VyLmphdmEJMTEgSmFuIDIwMDggMDU6NTQ6NDQgLTAwMDANCkBAIC00Mzks
+NyArNDM5LDcgQEANCiAJCWlmIChjb21tZW50ID09IG51bGwpDQogCQkJY29tbWVudCA9IG5ldyBT
+dHJpbmcoY2gsIHN0YXJ0LCBsZW5ndGgpOw0KIAkJZWxzZQ0KLQkJCWNvbW1lbnQgKz0gIlxuIiAr
+IG5ldyBTdHJpbmcoY2gpOyAvLyBhcHBlbmQgYWxsIGNvbW1lbnRzLiAvLyROT04tTkxTLTEkDQor
+CQkJY29tbWVudCArPSAiXG4iICsgbmV3IFN0cmluZyhjaCwgc3RhcnQsIGxlbmd0aCk7IC8vIGFw
+cGVuZCBhbGwgY29tbWVudHMuIC8vJE5PTi1OTFMtMSQNCiAJCS8vIFRoZSBjb21tZW50IHdpbGwg
+Z2V0IHJlc2V0IGFmdGVyDQogCQkvLyBpdCBoYXMgYmVlbiBhdHRhY2hlZCB0byB0aGUgZm9sbG93
+aW5nDQogCQkvLyBkZWNsYXJhdGlvbi4NCg==
+</data>
+<flag name="iplog"
+          id="13252"
+          type_id="7"
+          status="+"
+          setter="bjorn.freeman-benson"
+    />
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>91801</attachid>
+            <date>2008-03-06 16:31:00 -0500</date>
+            <delta_ts>2008-10-29 10:12:36 -0400</delta_ts>
+            <desc>JUnit test</desc>
+            <filename>JUnit.txt</filename>
+            <type>text/plain</type>
+            <size>4161</size>
+            <attacher name="Gabriel Indik">gindik</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uud3N0LmR0ZC5j
+b3JlLnRlc3RzDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL3dzdC9kdGQvY29yZS90ZXN0cy9EVERD
+b3JlVGVzdFN1aXRlLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC93ZWJ0b29s
+cy9zb3VyY2VlZGl0aW5nL3Rlc3RzL29yZy5lY2xpcHNlLndzdC5kdGQuY29yZS50ZXN0cy9zcmMv
+b3JnL2VjbGlwc2Uvd3N0L2R0ZC9jb3JlL3Rlc3RzL0RURENvcmVUZXN0U3VpdGUuamF2YSx2DQpy
+ZXRyaWV2aW5nIHJldmlzaW9uIDEuMQ0KZGlmZiAtdSAtcjEuMSBEVERDb3JlVGVzdFN1aXRlLmph
+dmENCi0tLSBzcmMvb3JnL2VjbGlwc2Uvd3N0L2R0ZC9jb3JlL3Rlc3RzL0RURENvcmVUZXN0U3Vp
+dGUuamF2YQkxNSBKYW4gMjAwOCAwMjowNzoxMyAtMDAwMAkxLjENCisrKyBzcmMvb3JnL2VjbGlw
+c2Uvd3N0L2R0ZC9jb3JlL3Rlc3RzL0RURENvcmVUZXN0U3VpdGUuamF2YQk2IE1hciAyMDA4IDIx
+OjI4OjMyIC0wMDAwDQpAQCAtMTgsNiArMTgsNyBAQA0KIAlwdWJsaWMgRFREQ29yZVRlc3RTdWl0
+ZSgpIHsNCiAJCXN1cGVyKCJEVEQgQ29yZSBUZXN0U3VpdGUiKTsNCiAJCWFkZFRlc3QobmV3IFRl
+c3RTdWl0ZShWZXJpZnlQbHVnaW4uY2xhc3MpKTsNCisJCWFkZFRlc3QobmV3IFRlc3RTdWl0ZShE
+VERQYXJzZXJUZXN0LmNsYXNzKSk7DQogCX0NCiAJcHVibGljIHN0YXRpYyBUZXN0IHN1aXRlKCkg
+ew0KIAkJcmV0dXJuIG5ldyBEVERDb3JlVGVzdFN1aXRlKCk7DQpJbmRleDogTUVUQS1JTkYvTUFO
+SUZFU1QuTUYNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC93ZWJ0b29scy9zb3VyY2Vl
+ZGl0aW5nL3Rlc3RzL29yZy5lY2xpcHNlLndzdC5kdGQuY29yZS50ZXN0cy9NRVRBLUlORi9NQU5J
+RkVTVC5NRix2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMQ0KZGlmZiAtdSAtcjEuMSBNQU5JRkVT
+VC5NRg0KLS0tIE1FVEEtSU5GL01BTklGRVNULk1GCTE1IEphbiAyMDA4IDAyOjA3OjEyIC0wMDAw
+CTEuMQ0KKysrIE1FVEEtSU5GL01BTklGRVNULk1GCTYgTWFyIDIwMDggMjE6Mjg6MzIgLTAwMDAN
+CkBAIC0xNyw2ICsxNyw3IEBADQogIG9yZy5lY2xpcHNlLndzdC54bWwuY29yZSwNCiAgb3JnLmVj
+bGlwc2UudWksDQogIG9yZy5qdW5pdDtidW5kbGUtdmVyc2lvbj0iWzMuOC4wLDQuMC4wKSIsDQot
+IGNvbS5pYm0uaWN1DQorIGNvbS5pYm0uaWN1LA0KKyBvcmcuZWNsaXBzZS5lbWYuZWNvcmUNCiBF
+Y2xpcHNlLUxhenlTdGFydDogdHJ1ZQ0KIEJ1bmRsZS1SZXF1aXJlZEV4ZWN1dGlvbkVudmlyb25t
+ZW50OiBKMlNFLTEuNA0KSW5kZXg6IHJlc291cmNlcy9kdGRQYXJzZXJUZXN0L3NhbXBsZS5kdGQN
+Cj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0NClJDUyBmaWxlOiByZXNvdXJjZXMvZHRkUGFyc2VyVGVzdC9zYW1wbGUuZHRk
+DQpkaWZmIC1OIHJlc291cmNlcy9kdGRQYXJzZXJUZXN0L3NhbXBsZS5kdGQNCi0tLSAvZGV2L251
+bGwJMSBKYW4gMTk3MCAwMDowMDowMCAtMDAwMA0KKysrIHJlc291cmNlcy9kdGRQYXJzZXJUZXN0
+L3NhbXBsZS5kdGQJMSBKYW4gMTk3MCAwMDowMDowMCAtMDAwMA0KQEAgLTAsMCArMSwzIEBADQor
+PCEtLSBsaW5lIG9uZSAtLT4NCis8IS0tIGxpbmUgdHdvIC0tPg0KKzwhRUxFTUVOVCBzb21ldGhp
+bmcgQU5ZPg0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS93c3QvZHRkL2NvcmUvdGVzdHMvRFREUGFy
+c2VyVGVzdC5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogc3JjL29yZy9lY2xpcHNlL3dzdC9k
+dGQvY29yZS90ZXN0cy9EVERQYXJzZXJUZXN0LmphdmENCmRpZmYgLU4gc3JjL29yZy9lY2xpcHNl
+L3dzdC9kdGQvY29yZS90ZXN0cy9EVERQYXJzZXJUZXN0LmphdmENCi0tLSAvZGV2L251bGwJMSBK
+YW4gMTk3MCAwMDowMDowMCAtMDAwMA0KKysrIHNyYy9vcmcvZWNsaXBzZS93c3QvZHRkL2NvcmUv
+dGVzdHMvRFREUGFyc2VyVGVzdC5qYXZhCTEgSmFuIDE5NzAgMDA6MDA6MDAgLTAwMDANCkBAIC0w
+LDAgKzEsNDkgQEANCisvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KKyAqIENvcHlyaWdodCAoYykg
+MjAwNSwgMjAwOCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCisgKiBBbGwgcmlnaHRzIHJl
+c2VydmVkLiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQorICog
+YXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMg
+TGljZW5zZSB2MS4wDQorICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFu
+ZCBpcyBhdmFpbGFibGUgYXQNCisgKiBodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2xlZ2FsL2VwbC12
+MTAuaHRtbA0KKyAqDQorICogQ29udHJpYnV0b3JzOg0KKyAqICAgICBJQk0gQ29ycG9yYXRpb24g
+LSBpbml0aWFsIEFQSSBhbmQgaW1wbGVtZW50YXRpb24NCisgKiAgICAgDQorICoqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKiovDQorcGFja2FnZSBvcmcuZWNsaXBzZS53c3QuZHRkLmNvcmUudGVzdHM7DQor
+DQoraW1wb3J0IGphdmEubmV0LlVSTDsNCisNCitpbXBvcnQganVuaXQuZnJhbWV3b3JrLlRlc3RD
+YXNlOw0KKw0KK2ltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuRmlsZUxvY2F0b3I7DQor
+aW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5QYXRoOw0KK2ltcG9ydCBvcmcuZWNsaXBz
+ZS53c3QuZHRkLmNvcmUuaW50ZXJuYWwuZW1mLkRUREVsZW1lbnQ7DQoraW1wb3J0IG9yZy5lY2xp
+cHNlLndzdC5kdGQuY29yZS5pbnRlcm5hbC5lbWYuRFRERmlsZTsNCitpbXBvcnQgb3JnLmVjbGlw
+c2Uud3N0LmR0ZC5jb3JlLmludGVybmFsLmVtZi51dGlsLkRURFV0aWw7DQoraW1wb3J0IG9yZy5l
+Y2xpcHNlLndzdC5kdGQuY29yZS50ZXN0cy5pbnRlcm5hbC5EVERDb3JlVGVzdHNQbHVnaW47DQor
+DQorcHVibGljIGNsYXNzIERURFBhcnNlclRlc3QgZXh0ZW5kcyBUZXN0Q2FzZSB7DQorCQ0KKwlw
+cml2YXRlIHN0YXRpYyBmaW5hbCBTdHJpbmcgVU5FWFBFQ1RFRF9GSUxFX0NPTlRFTlRTID0gIlVu
+ZXhwZWN0ZWQgZmlsZSBjb250ZW50cyI7DQorCQ0KKwlwdWJsaWMgdm9pZCB0ZXN0TXVsdGlwbGVD
+b21tZW50UGFyc2luZygpIHsNCisJICAgIERURFV0aWwgdXRpbCA9IG5ldyBEVERVdGlsKCk7DQor
+CSAgICBVUkwgZmlsZVVSTCA9IEZpbGVMb2NhdG9yLmZpbmQoRFREQ29yZVRlc3RzUGx1Z2luLmdl
+dERlZmF1bHQoKS5nZXRCdW5kbGUoKSwgbmV3IFBhdGgoInJlc291cmNlcy9kdGRQYXJzZXJUZXN0
+L3NhbXBsZS5kdGQiKSwgbnVsbCk7DQorCSAgICB1dGlsLnBhcnNlKGZpbGVVUkwudG9FeHRlcm5h
+bEZvcm0oKSk7DQorCSAgICBEVERGaWxlIGR0ZEZpbGUgPSB1dGlsLmdldERUREZpbGUoKTsNCisJ
+ICAgIGlmKGR0ZEZpbGUuZ2V0RFREQ29udGVudCgpLnNpemUoKSA9PSAxKSB7DQorCQkgICAgT2Jq
+ZWN0IG9iamVjdCA9IGR0ZEZpbGUuZ2V0RFREQ29udGVudCgpLmdldCgwKTsNCisJCSAgICBpZihv
+YmplY3QgaW5zdGFuY2VvZiBEVERFbGVtZW50KSB7DQorCQkgICAgCURUREVsZW1lbnQgZHRkRWxl
+bWVudCA9IChEVERFbGVtZW50KW9iamVjdDsNCisJCSAgICAJU3RyaW5nIGNvbW1lbnQgPSBkdGRF
+bGVtZW50LmdldENvbW1lbnQoKTsNCisJCSAgICAJYXNzZXJ0RXF1YWxzKCIgbGluZSBvbmUgXG4g
+bGluZSB0d28gIiwgY29tbWVudCk7DQorCQkgICAgfSBlbHNlIHsNCisJCSAgICAJZmFpbChVTkVY
+UEVDVEVEX0ZJTEVfQ09OVEVOVFMpOwkNCisJCSAgICB9DQorCSAgICB9ZWxzZSB7DQorCSAgICAJ
+ZmFpbChVTkVYUEVDVEVEX0ZJTEVfQ09OVEVOVFMpOw0KKwkgICAgfQ0KKw0KKwl9DQorDQorfQ0K
+</data>
+<flag name="iplog"
+          id="13291"
+          type_id="7"
+          status="+"
+          setter="bjorn.freeman-benson"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

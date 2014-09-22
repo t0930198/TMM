@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214385</bug_id>
+          
+          <creation_ts>2008-01-04 14:38:00 -0500</creation_ts>
+          <short_desc>JSF Semantics validator attempts to validate every resource</short_desc>
+          <delta_ts>2008-05-02 15:08:32 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Java Server Faces</product>
+          <component>Core</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>3.0 M7</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Amy Wu">for.work.things</reporter>
+          <assigned_to name="Cameron Bateman">cameron.bateman</assigned_to>
+          <cc>raghunathan.srinivasan</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125984</commentid>
+    <comment_count>0</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-01-04 14:38:35 -0500</bug_when>
+    <thetext>using the wtp 3.0 m4 candidate build
+
+The jsf semantics validator attempts to validate every resource (files, folders).  Looking in jsf.core/plugin.xml, it looks like JSFNonELAttributeValueValidator has no filters.  Shouldn&apos;t it at least have the same filters as the JSP validators?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138967</commentid>
+    <comment_count>1</comment_count>
+    <who name="Cameron Bateman">cameron.bateman</who>
+    <bug_when>2008-01-25 17:41:48 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; using the wtp 3.0 m4 candidate build
+&gt; The jsf semantics validator attempts to validate every resource (files,
+&gt; folders).  Looking in jsf.core/plugin.xml, it looks like
+&gt; JSFNonELAttributeValueValidator has no filters.  Shouldn&apos;t it at least have the
+&gt; same filters as the JSP validators?
+
+Just verified this.  
+
+We were under the impression that the contentTypeBinding option would restrict us to only jsp and jsp fragment files.  Filters based on file extension don&apos;t make a lot sense because the user can effectly use anything at runtime that they want; this is especially true as move to view definition metadata other than JSP (this is coming in the JSF 2.0 spec).
+
+As it stands, the validator normally exits immediately if the file being loaded doesn&apos;t have a JSP DOM model associated.
+
+I will try and add the facet enabled test though to ensure that it only gets run if the JSF facet is present.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151480</commentid>
+    <comment_count>2</comment_count>
+    <who name="Raghunathan Srinivasan">raghunathan.srinivasan</who>
+    <bug_when>2008-02-06 18:20:47 -0500</bug_when>
+    <thetext>Triaged for 3.0</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1210847</commentid>
+    <comment_count>3</comment_count>
+    <who name="Cameron Bateman">cameron.bateman</who>
+    <bug_when>2008-04-22 17:49:58 -0400</bug_when>
+    <thetext>Issue is fixed.  The validator does a facet check when it is called and returns
+immediately if the resource being validated does not belong to a JSF project.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1221879</commentid>
+    <comment_count>4</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-05-02 15:08:32 -0400</bug_when>
+    <thetext>verified in wtp3.0M7 20080502091049 sdk</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

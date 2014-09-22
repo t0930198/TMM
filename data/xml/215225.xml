@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215225</bug_id>
+          
+          <creation_ts>2008-01-14 10:41:00 -0500</creation_ts>
+          <short_desc>rearrange code structure</short_desc>
+          <delta_ts>2008-01-31 04:57:31 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>13</classification_id>
+          <classification>SOA</classification>
+          <product>JWT</product>
+          <component>WE</component>
+          <version>0.4.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Christian Saad">christian.saad</reporter>
+          <assigned_to name="Christian Saad">christian.saad</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130679</commentid>
+    <comment_count>0</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-14 10:41:05 -0500</bug_when>
+    <thetext>Currently the main packages of the project are: editors, figures, model, parts, util. However, there are some classes which don&apos;t quite fit into one of these categories and were added to the package which was most suitable for the respective functionality. This leads to a sometimes very confusing, overloaded package hierarchy where it&apos;s unclear where some specialized classes are being kept.
+A possible solution would be to create another package especially for the classes that don&apos;t really fit anywhere else, for example:
+
+currently in &apos;editors&apos; package
+- the converter
+- dialogs (about dialog)
+- the factories for copying ecore elements
+- possibly the wizards
+
+currently in &apos;model&apos; package
+- the gef commands
+
+currently in &apos;parts&apos; package
+- the classes for managing the view system
+- the parser for the guards</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139143</commentid>
+    <comment_count>1</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-26 14:28:33 -0500</bug_when>
+    <thetext>the packages/files have been moved/renamed (see below)
+the now empty packages still have to be deleted from cvs manually.
+
+moved to new misc package:
+
+editors.converter
+editors.dialogs
+editors.wizards
+editors.factories
+model.commands
+model.processes.boolguards
+parts.views
+util.logging
+util
+
+moved/renamed:
+WEActionBarContributor, WEPerspective, WEPlugin, WEPluginProperties</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144129</commentid>
+    <comment_count>2</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-29 02:53:12 -0500</bug_when>
+    <thetext>ToDo: Fix bug described in 216795. 
+
+The mentioned packages are already deleted. There still exists a package parts.application which is empty (besides the package.html) and the parts.view only contains the class GraphicalElementEditPartHelper. Shall these be removed, too?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145907</commentid>
+    <comment_count>3</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-30 18:08:27 -0500</bug_when>
+    <thetext>Bug 216795 is fixed now.
+
+Ok, it seems that CVS did delete the packages this time from the server :)
+
+I guess it would probably be best to leave the editparts packages until the applications in the metamodel are remodeled because then we can decide if they are still needed or not.
+
+If that&apos;s ok, then this bug can be closed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146191</commentid>
+    <comment_count>4</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-31 04:57:31 -0500</bug_when>
+    <thetext>That&apos;s fine, bug fixed then.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

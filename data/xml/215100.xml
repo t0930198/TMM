@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215100</bug_id>
+          
+          <creation_ts>2008-01-11 20:13:00 -0500</creation_ts>
+          <short_desc>[performance] optimize the network usage and performance of Bugzilla queries</short_desc>
+          <delta_ts>2008-02-20 18:49:35 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Bugzilla</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          <dependson>215156</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mik Kersten">mik.kersten</reporter>
+          <assigned_to name="Robert Elves">robert.elves</assigned_to>
+          <cc>mm105</cc>
+    
+    <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130069</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-11 20:13:12 -0500</bug_when>
+    <thetext>We have a reasonable architecture, but have not done a major pass at optimizing the task and query synchronization lifecycle.  I think that we need to focus on the following areas:
+* Minimize round-trips to the server.  
+* Reduce the number of long-running queries.
+* Provide better feedback to the user to avoid the stick at 0%. 
+
+After we&apos;ve done a pass for Bugzilla lets consider JIRA.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130070</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-11 20:16:17 -0500</bug_when>
+    <thetext>While we probably can&apos;t commit to it yet, let&apos;s discuss for 2.3.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130321</commentid>
+    <comment_count>2</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-13 15:41:34 -0500</bug_when>
+    <thetext>Bugzilla now makes a single request when marking stale tasks, speeding things up considerably.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130323</commentid>
+    <comment_count>3</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-13 15:52:01 -0500</bug_when>
+    <thetext>Currently markStale is called for all tasks even if only manually syncing a single query. We could just do a mark stale on tasks in selected queries. If this optimization is implemented, a possible negative side effect is that unmatched won&apos;t get updated until either a background sync or the user presses the Synchronize Changed button in the toolbar.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130324</commentid>
+    <comment_count>4</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-13 16:03:47 -0500</bug_when>
+    <thetext>+1 that sounds exactly like the desired/expected behavior</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130430</commentid>
+    <comment_count>5</comment_count>
+    <who name="maarten meijer">mm105</who>
+    <bug_when>2008-01-14 03:39:38 -0500</bug_when>
+    <thetext>Maybe it&apos;s an idea to first list when a wider update is warranted, i.e. when does a changed task attribute have (URGENT) external consequences requiring a markStale for all (or some):
+
+adding a comment has no external consequences, but changing depends on, blocks, assigned to, resolve duplicate  can change the tree layout.
+Then you cann make the update code smarter by onkly synching what is required.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130440</commentid>
+    <comment_count>6</comment_count>
+    <who name="maarten meijer">mm105</who>
+    <bug_when>2008-01-14 04:03:01 -0500</bug_when>
+    <thetext>May I add that gzipping and content negotiation is now implemented for bugzilla (bug 205708) but this still needs to be done for JIRA, TRAC, and others. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131195</commentid>
+    <comment_count>7</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-15 01:36:05 -0500</bug_when>
+    <thetext>Gzip compression is supported for JIRA as well through a setting in the repository properties. It needs to be explictly enabled on the server to work though (which it is not by default).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131653</commentid>
+    <comment_count>8</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-15 12:54:21 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; +1 that sounds exactly like the desired/expected behavior
+
++1 from me too
+
+Maarten offers an interesting suggestion that we should keep in mind.  There are structural changes to tasks (e.g. changing component) and non-structural (e.g. adding a comment).  We could consider the refresh triggers these cause to be different.  The challenge is that someone could have a query on &quot;all bugs I&apos;ve commented on&quot; (e.g. I have a query like that for Eclipse).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160866</commentid>
+    <comment_count>9</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-02-20 18:49:35 -0500</bug_when>
+    <thetext> (In reply to comment #8)
+&gt; (In reply to comment #4)
+&gt; &gt; +1 that sounds exactly like the desired/expected behavior
+&gt; 
+&gt; +1 from me too
+&gt; 
+
+Done. For now I&apos;ve gone with the baby step optimization mentioned in my original post. At some point we can look into further optimization if need be.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

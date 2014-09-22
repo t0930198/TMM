@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214264</bug_id>
+          
+          <creation_ts>2008-01-03 14:43:00 -0500</creation_ts>
+          <short_desc>ServerCore.addServerLifecycleListener() not thread safe</short_desc>
+          <delta_ts>2008-05-01 15:01:15 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP ServerTools</product>
+          <component>wst.server</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.0.2 M202</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Danny Ju">danny.ju</reporter>
+          <assigned_to name="Tim deBoer">deboer</assigned_to>
+          <cc>konstantin.komissarchik</cc>
+          <qa_contact name="Tim deBoer">deboer</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125209</commentid>
+    <comment_count>0</comment_count>
+    <who name="Danny Ju">danny.ju</who>
+    <bug_when>2008-01-03 14:43:13 -0500</bug_when>
+    <thetext>Build ID:  M20070921-1145
+
+Steps To Reproduce:
+This problem was initially reported to WebLogic server 10.0 adapter plugin with detail in:
+http://bugzilla.bea.com/show_bug.cgi?id=162
+where calling ServerCore.addServerLifecycleListener() during 
+ServerBehaviourDelegate.initialize() caused ArrayIndexOutOfBoundsException.
+
+Looked into the implementation of ServerCore, I found it stores listener in ArrayList, which is not thread safe.
+
+This problem is very hard to reproduce but in theory is not specific to WebLogic, e.g. both ServerEditor and ServerTableViewer calls addServerLifecycleListener() during UI initialization. There will be a chance the concurrent update causes the exception.
+
+
+More information:
+Exception stack trace:
+&quot;Could not create behaviour delegate BEA WebLogic Server v10.0 at localhost&quot;
+java.lang.ArrayIndexOutOfBoundsException: 5
+at java.util.ArrayList.add(ArrayList.java:352)
+at
+org.eclipse.wst.server.core.internal.ResourceManager.addServerLifecycleListener(ResourceManager.java:400)
+at
+org.eclipse.wst.server.core.ServerCore.addServerLifecycleListener(ServerCore.java:332)
+at
+com.bea.workshop.wls.core.server.internal.WeblogicServerBehaviour.initialize(WeblogicServerBehaviour.java:277)
+at
+org.eclipse.wst.server.core.model.ServerBehaviourDelegate.initialize(ServerBehaviourDelegate.java:104)
+at
+org.eclipse.wst.server.core.model.InternalInitializer.initializeServerBehaviourDelegate(InternalInitializer.java:41)
+at
+org.eclipse.wst.server.core.internal.Server.getBehaviourDelegate(Server.java:315)
+at org.eclipse.wst.server.core.internal.Server.loadAdapter(Server.java:1095)
+at
+org.eclipse.wst.server.core.internal.UpdateServerJob.run(UpdateServerJob.java:33)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125753</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-01-04 09:43:42 -0500</bug_when>
+    <thetext>Will fix for 3.0. Are you looking for a fix in 2.0.2 as well, or have you found a workaround?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125935</commentid>
+    <comment_count>2</comment_count>
+    <who name="Danny Ju">danny.ju</who>
+    <bug_when>2008-01-04 13:05:58 -0500</bug_when>
+    <thetext>We only have a partial workaround in WebLogic adapter code. Will appreciate if the fix can be in 2.0.2 as well. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127689</commentid>
+    <comment_count>3</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-01-08 15:35:29 -0500</bug_when>
+    <thetext>Fix released to 2.0.2 builds and 3.0 M5 builds.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220822</commentid>
+    <comment_count>4</comment_count>
+    <who name="Tim deBoer">deboer</who>
+    <bug_when>2008-05-01 15:01:15 -0400</bug_when>
+    <thetext>Verified, closing.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214104</bug_id>
+          
+          <creation_ts>2008-01-02 08:09:00 -0500</creation_ts>
+          <short_desc>[DataBinding] [DataBinding] Compatibility to Eclipse 3.2 broken</short_desc>
+          <delta_ts>2008-07-09 12:31:50 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.2.2</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ovidio Mallo">mallo.ovidio</reporter>
+          <assigned_to name="Boris Bokowski">bokowski</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124085</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ovidio Mallo">mallo.ovidio</who>
+    <bug_when>2008-01-02 08:09:31 -0500</bug_when>
+    <thetext>I&apos;m using Eclipse 3.2 and have recently downloaded the latest version
+of the JFace data binding framework from CVS. Upon compilation, I got
+a single compilation error in the class ObservableListContentProvider
+on line 50, where the method AbstractListViewer#insert(Object,int) is
+invoked which, however, is not present in Eclipse 3.2.
+According to the CVS history, this method call was introduced as part
+of the fix for bug
+    https://bugs.eclipse.org/bugs/show_bug.cgi?id=198603
+Previously, the method AbstractListViewer#add(Object) had been used
+instead (which exists in Eclipse 3.2).
+
+As I think that backward-compatibility to Eclipse 3.2 is still one of the
+goals of the JFace data binding framework, this may be regarded to be a bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124228</commentid>
+    <comment_count>1</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-02 11:44:05 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; As I think that backward-compatibility to Eclipse 3.2 is still one of the
+&gt; goals of the JFace data binding framework, this may be regarded to be a bug.
+
+To make it easier for early adopters, we decided to be compatible with the previous release of JFace and SWT. The goal for 3.4 is that data binding will work with SWT and JFace 3.3, but not 3.2. Can you not use the released version of data binding if you are targeting 3.2?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124898</commentid>
+    <comment_count>2</comment_count>
+    <who name="Ovidio Mallo">mallo.ovidio</who>
+    <bug_when>2008-01-03 08:44:22 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; [...] Can you not use the released version
+&gt; of data binding if you are targeting 3.2?
+I don&apos;t want to use the provisional JDB API which ships with Eclipse 3.2 as it differs quite a bit from the current API but I think that the version of JDB with the CVS tag &quot;R3_1_1&quot; is perfectly fine for me as it is still compatible to Eclipse 3.2. Beside that, it&apos;s obvious that the HEAD revision can not stay compatible to Eclipse 3.2 forever :). In any case, thanks a lot for the immediate feedback on the bug report, Boris!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125032</commentid>
+    <comment_count>3</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-03 11:33:25 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; I don&apos;t want to use the provisional JDB API which ships with Eclipse 3.2
+
+Sorry, I should have made myself clearer. I wanted to suggest that you use data binding from the 3.3 (Europa) release. It should be possible to use that with Eclipse SDK 3.2 (Callisto). You might have to recompile it though - see http://wiki.eclipse.org/JFace_Data_Binding_FAQ#Can_JFace_Data_Binding_run_against_Eclipse_3.2.x.3F or bug 177476.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126246</commentid>
+    <comment_count>4</comment_count>
+    <who name="Ovidio Mallo">mallo.ovidio</who>
+    <bug_when>2008-01-05 13:24:43 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; (In reply to comment #2)
+&gt; &gt; I don&apos;t want to use the provisional JDB API which ships with Eclipse 3.2
+&gt; 
+&gt; Sorry, I should have made myself clearer. I wanted to suggest that you use data
+&gt; binding from the 3.3 (Europa) release. It should be possible to use that with
+&gt; Eclipse SDK 3.2 (Callisto). You might have to recompile it though - see
+&gt; http://wiki.eclipse.org/JFace_Data_Binding_FAQ#Can_JFace_Data_Binding_run_against_Eclipse_3.2.x.3F
+&gt; or bug 177476.
+&gt; 
+Thanks for the clarification, Boris! That worked just fine :).</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

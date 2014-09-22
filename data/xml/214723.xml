@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214723</bug_id>
+          
+          <creation_ts>2008-01-09 04:58:00 -0500</creation_ts>
+          <short_desc>Wiki Search fails for three-letter-words like &quot;SVN&quot;</short_desc>
+          <delta_ts>2008-05-16 15:29:01 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Wiki</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Martin Oberhuber">martin.oberhuber</reporter>
+          <assigned_to name="Eclipse Webmaster">webmaster</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127962</commentid>
+    <comment_count>0</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-09 04:58:07 -0500</bug_when>
+    <thetext>In the Eclipsepedia search box, enter &quot;SVN&quot; and press Search.
+No matches are found.
+
+But the following articles exist, with either SVN in the title or text:
+
+http://wiki.eclipse.org/SVN_Howto
+http://wiki.eclipse.org/STP
+http://wiki.eclipse.org/Releng_SVN_Support
+
+Either the search is totally broken, or information is missing how to search properly. I&apos;m also missing an &quot;advanced search&quot; feature where I can specify whether I want to search topic titles only, or topic text as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128449</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-01-09 15:54:49 -0500</bug_when>
+    <thetext>The issue is that MySql sets the minimum word length for FULLTEXT indexes to 4, and as &apos;svn&apos; is below the minimum it&apos;s being ignored.  I&apos;ve looked into changing this but it requires: 
+1)restarting the MySql server 
+2)re-indexing all of the FULLTEXT indexes 
+So it&apos;s not going to happen(see http://dev.mysql.com/doc/refman/5.0/en/fulltext-fine-tuning.html ).
+
+Mediawiki doesn&apos;t have an &apos;advanced&apos; search, but the buttons beside the search box do different things.  The &apos;Go&apos; button takes you to a page with the same title and &apos;Search&apos; actually looks through the page text(see http://www.mediawiki.org/wiki/Help:Searching ).  On the &apos;search&apos; page you can make adjustments to what/where your search is done.
+
+I&apos;ve built a page called &apos;SVN&apos; that links to the how to article so that if you search for SVN and hit &apos;go&apos; you will at least find the core information.
+
+
+-M.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128936</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 11:00:35 -0500</bug_when>
+    <thetext>Just creating a page with title &quot;SVN&quot; is a very weak workaround because it will miss any future Wiki pages talking about SVN.
+
+When you say that re-indexing the database will not happen, is it because that would require taking the Wiki offline? Is there any estimate how many tables / fulltext indexes / time would be needed? Given that many important acronyms have only 3 letters I&apos;d like to see 3-letter-searches succeed.
+
+In the meantime, I found a better workaround than you: just google it --
+   svn site:wiki.eclipse.org
+will bring up lots of good matches. I&apos;d thus encourage adding a customized google search to Eclipse Wiki, as Bjorn has done recently for www.eclipse:
+   http://eclipse-projects.blogspot.com/2007/12/google-search-across-eclipse-projects.html
+
+Perhaps the Google search could be integrated into the search results page, for instance:
+   &quot;Not finding what you&apos;ve been looking for? Try Google Search on this site:&quot;
+Wikipedia.org also supports multiple search engines:
+   http://en.wikipedia.org/wiki/Special:Search?search=&amp;fulltext=Search
+
+Apart from that, ability to do a substring search on topic titles would be nice. I entered http://bugzilla.wikimedia.org/show_bug.cgi?id=12577 against MediaWiki requesting this feature.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129004</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-01-10 11:57:40 -0500</bug_when>
+    <thetext>The reason is that the re-index will not only affect the wiki, but also Bugzilla, Download stats and EPIC. So it seems like over kill to take all of those down for the several hours it will undoubtably take.  That doesn&apos;t mean it won&apos;t happen at some point, but it&apos;s currently not a priority.
+
+As for the SVN page, I wasn&apos;t providing a work around, which would have been more along the lines of &apos;try searching for subversion instead of SVN&apos;, I was trying to connect people most likely to type in SVN and hit &apos;go&apos;/Enter with the core SVN information.  
+
+Adding Google search is a cool idea - I would suggest that you create a new bug request for that, as it will help us track the issue.
+
+Re-closing as &apos;worksforme&apos; since all of the code in question is working as it&apos;s developers intended.
+
+-M</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129030</commentid>
+    <comment_count>4</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 12:15:47 -0500</bug_when>
+    <thetext>Added bug 214925 for the Google Search capability.
+
+Still reopening this one, because it might work as intended by the developers, but it does certainly not work properly for users. I think that there should be some information for users telling them that 3-letter-words are not searchable, and that searching with Google can be a workaround.
+
+That information should be simple to add by editing the template here:
+http://wiki.eclipse.org/index.php?title=MediaWiki:Nonefound&amp;action=edit
+
+I don&apos;t have permission to edit since it&apos;s locked.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129243</commentid>
+    <comment_count>5</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-01-10 15:46:08 -0500</bug_when>
+    <thetext>FWIW, I agree with Martin that the FT limit of 4 characters is a hindrance that we should fix.
+
+I also agree with Matt that to change this is not trivial, so I think Matt&apos;s statement captures the spirit of this bug:
+
+&gt; That doesn&apos;t mean
+&gt; it won&apos;t happen at some point, but it&apos;s currently not a priority.
+
+We&apos;ll eventually reduce the FT limit to three characters, after testing this on a sandbox to see:
+
+- how long it takes to reindex Bugzilla and the Wiki
+- what level of performance/functionality is cut while the indexer works (ie, do we have to disable Bugzilla, or will it just be slow).
+
+Once we know what we&apos;re up against, we will enable a new 3-character FT search only when we need to restart MySQL; in other words, we won&apos;t down the DB server just for this.
+
+This doesn&apos;t stop us from implementing a Google search etc. such as bug 214925.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129247</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 15:49:09 -0500</bug_when>
+    <thetext>Sounds cool. 
+
+For now, is it possible to update the informational text that comes with the search results? If Google search comes anytime soon, doing that might make sense once Google is available.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1238893</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2008-05-16 15:29:01 -0400</bug_when>
+    <thetext>We changed the fulltext limit to 3 characters, and everything seems to be working well.  Closing.
+
+-M.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

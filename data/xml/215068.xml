@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215068</bug_id>
+          
+          <creation_ts>2008-01-11 13:59:00 -0500</creation_ts>
+          <short_desc>[source lookup] When starting debugger from perspective other than Debug DebugUITools.displaySource is called before perspective switch is done</short_desc>
+          <delta_ts>2011-06-03 17:10:11 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Debug</component>
+          <version>3.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Maria Koshkina">mkoshkin</reporter>
+          <assigned_to name="Platform-Debug-Inbox">platform-debug-inbox</assigned_to>
+          <cc>e.sacristan</cc>
+    
+    <cc>pawel.1.piech</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129836</commentid>
+    <comment_count>0</comment_count>
+    <who name="Maria Koshkina">mkoshkin</who>
+    <bug_when>2008-01-11 13:59:56 -0500</bug_when>
+    <thetext>Build ID: M20070212-1330
+
+Steps To Reproduce:
+1. Start debugger from perspective other than Debug perspective
+2. When breakpoint pops, notice that DebugUITools.displaySource is called before the perspective is changed to Debug perspective
+
+More information:
+This happens in particular the first time the debugger runs.  This causes problems in our debugger since in our OurModelPresentation.addAnnotation we use org.eclipse.ui.internal.WorkbenchPage.findView 
+to locate the correct view. WorkbenchPage.findView function returns null if the active perspective is other than Debug.  Therefore if the first time our debugger runs it is started from another perspective the markers are not updated.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1746628</commentid>
+    <comment_count>1</comment_count>
+    <who name="esmecard">e.sacristan</who>
+    <bug_when>2010-05-26 06:40:32 -0400</bug_when>
+    <thetext>Open the file eclipse.ini and double the sizes of the variables. For example, if -Xms256m change it -Xms512m</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1944159</commentid>
+    <comment_count>2</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2011-06-03 17:10:11 -0400</bug_when>
+    <thetext>If this is still a problem, please reopen.   One option you have is to force the view to open.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

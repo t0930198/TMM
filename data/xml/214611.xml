@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214611</bug_id>
+          
+          <creation_ts>2008-01-08 09:28:00 -0500</creation_ts>
+          <short_desc>[update] Sometimes but not selden i get the error: InteractionContextManager.getScalingFactors</short_desc>
+          <delta_ts>2008-01-08 16:19:21 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>UI</component>
+          <version>2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>214301</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Steininger">tsteininger</reporter>
+          <assigned_to name="Mylyn Inbox">mylyn-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127283</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas Steininger">tsteininger</who>
+    <bug_when>2008-01-08 09:28:58 -0500</bug_when>
+    <thetext>Build ID: Build id: M20071023-1652
+
+Steps To Reproduce:
+1. navigating between eclipse-views. i dont&apos;t know which action exactly brings up this error
+
+
+More information:
+!ENTRY org.eclipse.ui.workbench 4 2 2008-01-08 15:22:23.471
+!MESSAGE Problems occurred when invoking code from plug-in: &quot;org.eclipse.ui.workbench&quot;.
+!STACK 0
+java.lang.NoSuchMethodError: org.eclipse.mylyn.internal.context.core.InteractionContextManager.getScalingFactors()Lorg/eclipse/mylyn/internal/context/core/ScalingFactors;
+	at org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager.shouldRemove(ContextActiveChangeSetManager.java:261)
+	at org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager.interestChanged(ContextActiveChangeSetManager.java:229)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.notifyInterestDelta(InteractionContextManager.java:391)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:312)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:287)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:283)
+	at org.eclipse.mylyn.internal.resources.ui.EditorInteractionMonitor.editorBroughtToTop(EditorInteractionMonitor.java:47)
+	at org.eclipse.mylyn.monitor.ui.AbstractEditorTracker.partBroughtToTop(AbstractEditorTracker.java:39)
+	at org.eclipse.ui.internal.PartListenerList$2.run(PartListenerList.java:87)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.PartListenerList.fireEvent(PartListenerList.java:57)
+	at org.eclipse.ui.internal.PartListenerList.firePartBroughtToTop(PartListenerList.java:85)
+	at org.eclipse.ui.internal.PartService.firePartBroughtToTop(PartService.java:87)
+	at org.eclipse.ui.internal.WWinPartService$1.partBroughtToTop(WWinPartService.java:40)
+	at org.eclipse.ui.internal.PartListenerList2$2.run(PartListenerList2.java:83)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.PartListenerList2.fireEvent(PartListenerList2.java:53)
+	at org.eclipse.ui.internal.PartListenerList2.firePartBroughtToTop(PartListenerList2.java:81)
+	at org.eclipse.ui.internal.PartService.firePartBroughtToTop(PartService.java:90)
+	at org.eclipse.ui.internal.WorkbenchPagePartList.firePartBroughtToTop(WorkbenchPagePartList.java:75)
+	at org.eclipse.ui.internal.WorkbenchPagePartList.fireActiveEditorChanged(WorkbenchPagePartList.java:51)
+	at org.eclipse.ui.internal.PartList.setActiveEditor(PartList.java:152)
+	at org.eclipse.ui.internal.WorkbenchPage.makeActiveEditor(WorkbenchPage.java:1224)
+	at org.eclipse.ui.internal.WorkbenchPage.setActivePart(WorkbenchPage.java:3395)
+	at org.eclipse.ui.internal.WorkbenchPage.requestActivation(WorkbenchPage.java:2946)
+	at org.eclipse.ui.internal.PartPane.requestActivation(PartPane.java:265)
+	at org.eclipse.ui.internal.EditorPane.requestActivation(EditorPane.java:98)
+	at org.eclipse.ui.internal.PartPane.setFocus(PartPane.java:311)
+	at org.eclipse.ui.internal.EditorPane.setFocus(EditorPane.java:127)
+	at org.eclipse.ui.internal.PartStack.presentationSelectionChanged(PartStack.java:846)
+	at org.eclipse.ui.internal.PartStack.access$1(PartStack.java:829)
+	at org.eclipse.ui.internal.PartStack$1.selectPart(PartStack.java:139)
+	at org.eclipse.ui.internal.presentations.util.TabbedStackPresentation$1.handleEvent(TabbedStackPresentation.java:131)
+	at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:267)
+	at org.eclipse.ui.internal.presentations.util.AbstractTabFolder.fireEvent(AbstractTabFolder.java:276)
+	at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder.access$1(DefaultTabFolder.java:1)
+	at org.eclipse.ui.internal.presentations.defaultpresentation.DefaultTabFolder$2.handleEvent(DefaultTabFolder.java:84)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:962)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:706)
+	at org.eclipse.swt.custom.CTabFolder.setSelection(CTabFolder.java:3227)
+	at org.eclipse.swt.custom.CTabFolder.onMouse(CTabFolder.java:2005)
+	at org.eclipse.swt.custom.CTabFolder$1.handleEvent(CTabFolder.java:316)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3682)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3293)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127734</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-08 16:19:21 -0500</bug_when>
+    <thetext>
+
+*** This bug has been marked as a duplicate of bug 214301 ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214166</bug_id>
+          
+          <creation_ts>2008-01-02 17:27:00 -0500</creation_ts>
+          <short_desc>Unsupported major.minor version 49.0 in JSP Compile</short_desc>
+          <delta_ts>2010-06-10 13:40:32 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Webservices</product>
+          <component>wst.ws</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Future</target_milestone>
+          <dependson>162132</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Williams">david_williams</reporter>
+          <assigned_to name="Mark Hutchinson">mahutch</assigned_to>
+          <cc>j.hiller</cc>
+    
+    <cc>kchong</cc>
+    
+    <cc>mahutch</cc>
+    
+    <cc>nitind</cc>
+          <qa_contact name="Keith Chong">kchong</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124587</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86033</attachid>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-01-02 17:27:15 -0500</bug_when>
+    <thetext>Created attachment 86033
+excerpt showing build problem
+
+I&apos;ve recently seen this error buried in our build logs, which I&apos;ll attach. 
+
+It appears the JSP compile step is using Java 1.4, and something it depends on was compiled with 1.5. 
+
+While I will probably change the &quot;default&quot; VM to 1.5, it would be best if this custom build was not sensitive to the overall build process (but instead was &quot;self contained&quot;). 
+
+Mostly wanted to document it, so it wouldn&apos;t be lost. I suspect it&apos;s not a serious problem, and all would still work at runtime (though the JSP would be re-compiled at that time, presumably, instead of pre-compiled).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128544</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-01-09 17:24:59 -0500</bug_when>
+    <thetext>Gil, please look to see if the WSE have custom build scripts that specific a particular version of Java to build with.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1221994</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-05-02 16:11:47 -0400</bug_when>
+    <thetext>David, is this still a problem with recent builds?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1222219</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-05-02 22:19:52 -0400</bug_when>
+    <thetext>Yes, it&apos;s still there. 
+
+There&apos;s no link to it, but with every build, the whole log is captured in a file named &apos;antBuilderOutput.log&apos;, 
+so if you navigate to the &quot;top&quot; of any build, such as 
+http://build.eclipse.org/webtools/committers/wtp-R3.0-S/20080502203011/S-3.0M7-20080502203011/
+you can add that file name to the end of it to see the whole log and search for 
+UnsupportedClassVersionError
+
+(it&apos;s a pretty big log, and the error is the same as what&apos;s attached here). 
+
+In an actual build distribution, I suspect you&apos;d see the problem manifest itself inside the explorer app war ... I suspect there, the JSPs are not &quot;pre compiled&quot; as you expect. (i.e. only jsp files, not yet translated to java and .class files). 
+
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1258360</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-06-03 15:43:30 -0400</bug_when>
+    <thetext>Deferring to WTP 3.0.1 since there does not seem to have any observable problem with this.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1294331</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-07-18 09:23:13 -0400</bug_when>
+    <thetext>Andrew,
+
+Could you please take a look at this problem?
+
+Thanks!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1295334</commentid>
+    <comment_count>6</comment_count>
+    <who name="Andrew Mak">makandre</who>
+    <bug_when>2008-07-21 13:14:52 -0400</bug_when>
+    <thetext>Looking at the log from 3.0 release:
+
+http://download.eclipse.org/webtools/downloads/drops/R3.0/R-3.0-20080616152118/antBuilderOutput.log
+
+I couldn&apos;t find the error in it (actually I don&apos;t see a post.compile.explorer.jar target in the log, is it skipped?)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1296304</commentid>
+    <comment_count>7</comment_count>
+    <who name="Andrew Mak">makandre</who>
+    <bug_when>2008-07-22 14:59:27 -0400</bug_when>
+    <thetext>Ok... this will be a long one...
+
+For the version problem, it is as David suspected; I can reproduce the error if I pre-compile the JSPs using Java 1.4.  The mismatch occurs because the rest of the wsexplorer plugin is compiled using Java 1.5.  I&apos;m actually not quite sure why the pre-compile part is using 1.4, we are not specifying this level anywhere in the plugin.  David, perhaps you know of some flag we can set to make sure it uses the same level as the plugin?
+
+Now, the reason this error didn&apos;t show up in the 3.0 release build log is because the JSP pre-compile is not run at all due to a change in the target name.  Apparently, there is no longer a compile.explorer.jar target in the main build, therefore the code we put in post.compile.explorer.jar has not been running.  I will post a patch for buildJSPs.xml that fixes this name problem among other things.
+
+But it&apos;s just as well that the pre-compile is not running because we wouldn&apos;t be able to use the JSPs in their servlet forms anyways.  That&apos;s because the jetty/equinox registration mechanism requires us to register each servlet, either in plugin.xml or programmatically, but that would not be practical given that the wsexplorer has over 300 servlets after pre-compilation.  What we really need is some form of dynamic registration mechanism that would read the servlet mappings in web.xml from the pre-compile phase (Jasper gens this), something like what is propsed in bug 162132.
+
+So in summary, we should not make any changes to the build now until we have some way to take advantage of pre-compiling the JSPs.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1296306</commentid>
+    <comment_count>8</comment_count>
+      <attachid>108115</attachid>
+    <who name="Andrew Mak">makandre</who>
+    <bug_when>2008-07-22 15:02:06 -0400</bug_when>
+    <thetext>Created attachment 108115
+patch that fixes some problems in buildJSPs.xml
+
+This patch should not be applied until the time is right (see previous comment)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1296321</commentid>
+    <comment_count>9</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-07-22 15:13:39 -0400</bug_when>
+    <thetext>can this same patch can be used on build streams? 3.1, 3.0, 3.0.1, 2.0.x, 1.5.x? 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1296340</commentid>
+    <comment_count>10</comment_count>
+    <who name="Andrew Mak">makandre</who>
+    <bug_when>2008-07-22 15:29:25 -0400</bug_when>
+    <thetext>buildJSPs.xml is new to WTP 3.0, so patch only works on 3.x streams.  I think it&apos;ll work on all 3.x since we have not made any changes in this area.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1297300</commentid>
+    <comment_count>11</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-07-23 17:11:33 -0400</bug_when>
+    <thetext>Deferring this defect to WTP 3.1 because of the dependency on bug 162132 to have the full solution working.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1442626</commentid>
+    <comment_count>12</comment_count>
+    <who name="Mark Hutchinson">mahutch</who>
+    <bug_when>2009-03-03 15:54:53 -0500</bug_when>
+    <thetext>*** Bug 254527 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1518505</commentid>
+    <comment_count>13</comment_count>
+    <who name="Keith Chong">kchong</who>
+    <bug_when>2009-06-04 12:06:40 -0400</bug_when>
+    <thetext>Retargetting to next release.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86033</attachid>
+            <date>2008-01-02 17:27:00 -0500</date>
+            <delta_ts>2008-01-02 17:27:15 -0500</delta_ts>
+            <desc>excerpt showing build problem</desc>
+            <filename>Document2.txt</filename>
+            <type>text/plain</type>
+            <size>3134</size>
+            <attacher name="David Williams">david_williams</attacher>
+            
+              <data encoding="base64">ICAzNzA1MyAgcG9zdC5jb21waWxlLmV4cGxvcmVyLmphcjoNCiAgMzcwNTQNCiAgMzcwNTUgIGNv
+bXBpbGU6DQogIDM3MDU2ICAgICAgIFtqYXZhXSBFeGNlcHRpb24gaW4gdGhyZWFkICJtYWluIiBq
+YXZhLmxhbmcuVW5zdXBwb3J0ZWRDbGFzc1ZlcnNpb25FcnJvcjogb3JnL2VjbGlwc2Uvd3N0L3dz
+L2ludGVybmFsL2V4cGxvcmVyL3BsYXRmb3JtL3BlcnNwZWN0aXZlL0NvbnRyb2xsZXIgKFVuc3Vw
+cG9ydGVkIG1ham9yLm1pbm9yIHZlcnNpb24gNDkuMCkNCiAgMzcwNTcgICAgICAgW2phdmFdICAg
+ICBhdCBqYXZhLmxhbmcuQ2xhc3NMb2FkZXIuZGVmaW5lQ2xhc3MwKE5hdGl2ZSBNZXRob2QpDQog
+IDM3MDU4ICAgICAgIFtqYXZhXSAgICAgYXQgamF2YS5sYW5nLkNsYXNzTG9hZGVyLmRlZmluZUNs
+YXNzKENsYXNzTG9hZGVyLmphdmE6ODA4KQ0KICAzNzA1OSAgICAgICBbamF2YV0gICAgIGF0IGph
+dmEuc2VjdXJpdHkuU2VjdXJlQ2xhc3NMb2FkZXIuZGVmaW5lQ2xhc3MoU2VjdXJlQ2xhc3NMb2Fk
+ZXIuamF2YToxNDcpDQogIDM3MDYwICAgICAgIFtqYXZhXSAgICAgYXQgamF2YS5uZXQuVVJMQ2xh
+c3NMb2FkZXIuZGVmaW5lQ2xhc3MoVVJMQ2xhc3NMb2FkZXIuamF2YTo0NzUpDQogIDM3MDYxICAg
+ICAgIFtqYXZhXSAgICAgYXQgamF2YS5uZXQuVVJMQ2xhc3NMb2FkZXIuYWNjZXNzNTAwKFVSTENs
+YXNzTG9hZGVyLmphdmE6MTA5KQ0KICAzNzA2MiAgICAgICBbamF2YV0gICAgIGF0IGphdmEubmV0
+LlVSTENsYXNzTG9hZGVyQ2xhc3NGaW5kZXIucnVuKFVSTENsYXNzTG9hZGVyLmphdmE6ODQ4KQ0K
+ICAzNzA2MyAgICAgICBbamF2YV0gICAgIGF0IGphdmEuc2VjdXJpdHkuQWNjZXNzQ29udHJvbGxl
+ci5kb1ByaXZpbGVnZWQxKE5hdGl2ZSBNZXRob2QpDQogIDM3MDY0ICAgICAgIFtqYXZhXSAgICAg
+YXQgamF2YS5zZWN1cml0eS5BY2Nlc3NDb250cm9sbGVyLmRvUHJpdmlsZWdlZChBY2Nlc3NDb250
+cm9sbGVyLmphdmE6Mzg5KQ0KICAzNzA2NSAgICAgICBbamF2YV0gICAgIGF0IGphdmEubmV0LlVS
+TENsYXNzTG9hZGVyLmZpbmRDbGFzcyhVUkxDbGFzc0xvYWRlci5qYXZhOjM3MSkNCiAgMzcwNjYg
+ICAgICAgW2phdmFdICAgICBhdCBqYXZhLmxhbmcuQ2xhc3NMb2FkZXIubG9hZENsYXNzKENsYXNz
+TG9hZGVyLmphdmE6NTcwKQ0KICAzNzA2NyAgICAgICBbamF2YV0gICAgIGF0IHN1bi5taXNjLkxh
+dW5jaGVyQXBwQ2xhc3NMb2FkZXIubG9hZENsYXNzKExhdW5jaGVyLmphdmE6NDQyKQ0KICAzNzA2
+OCAgICAgICBbamF2YV0gICAgIGF0IGphdmEubGFuZy5DbGFzc0xvYWRlci5sb2FkQ2xhc3MoQ2xh
+c3NMb2FkZXIuamF2YTo1NjEpDQogIDM3MDY5ICAgICAgIFtqYXZhXSAgICAgYXQgamF2YS5sYW5n
+LkNsYXNzTG9hZGVyLmxvYWRDbGFzcyhDbGFzc0xvYWRlci5qYXZhOjUwMikNCiAgMzcwNzAgICAg
+ICAgW2phdmFdICAgICBhdCBvcmcuYXBhY2hlLmphc3Blci5jb21waWxlci5HZW5lcmF0b3JHZW5l
+cmF0ZVZpc2l0b3IudmlzaXQoR2VuZXJhdG9yLmphdmE6MTE1MCkNCiAgMzcwNzEgICAgICAgW2ph
+dmFdICAgICBhdCBvcmcuYXBhY2hlLmphc3Blci5jb21waWxlci5Ob2RlVXNlQmVhbi5hY2NlcHQo
+Tm9kZS5qYXZhOjExMTYpDQogIDM3MDcyICAgICAgIFtqYXZhXSAgICAgYXQgb3JnLmFwYWNoZS5q
+YXNwZXIuY29tcGlsZXIuTm9kZU5vZGVzLnZpc2l0KE5vZGUuamF2YToyMTYzKQ0KICAzNzA3MyAg
+ICAgICBbamF2YV0gICAgIGF0IG9yZy5hcGFjaGUuamFzcGVyLmNvbXBpbGVyLk5vZGVWaXNpdG9y
+LnZpc2l0Qm9keShOb2RlLmphdmE6MjIxMykNCiAgMzcwNzQgICAgICAgW2phdmFdICAgICBhdCBv
+cmcuYXBhY2hlLmphc3Blci5jb21waWxlci5Ob2RlVmlzaXRvci52aXNpdChOb2RlLmphdmE6MjIx
+OSkNCiAgMzcwNzUgICAgICAgW2phdmFdICAgICBhdCBvcmcuYXBhY2hlLmphc3Blci5jb21waWxl
+ci5Ob2RlUm9vdC5hY2NlcHQoTm9kZS5qYXZhOjQ1NikNCiAgMzcwNzYgICAgICAgW2phdmFdICAg
+ICBhdCBvcmcuYXBhY2hlLmphc3Blci5jb21waWxlci5Ob2RlTm9kZXMudmlzaXQoTm9kZS5qYXZh
+OjIxNjMpDQogIDM3MDc3ICAgICAgIFtqYXZhXSAgICAgYXQgb3JnLmFwYWNoZS5qYXNwZXIuY29t
+cGlsZXIuR2VuZXJhdG9yLmdlbmVyYXRlKEdlbmVyYXRvci5qYXZhOjMzMDUpDQogIDM3MDc4ICAg
+ICAgIFtqYXZhXSAgICAgYXQgb3JnLmFwYWNoZS5qYXNwZXIuY29tcGlsZXIuQ29tcGlsZXIuZ2Vu
+ZXJhdGVKYXZhKENvbXBpbGVyLmphdmE6MTk4KQ0KICAzNzA3OSAgICAgICBbamF2YV0gICAgIGF0
+IG9yZy5hcGFjaGUuamFzcGVyLmNvbXBpbGVyLkNvbXBpbGVyLmNvbXBpbGUoQ29tcGlsZXIuamF2
+YToyOTUpDQogIDM3MDgwICAgICAgIFtqYXZhXSAgICAgYXQgb3JnLmFwYWNoZS5qYXNwZXIuSnNw
+Qy5wcm9jZXNzRmlsZShKc3BDLmphdmE6OTg2KQ0KICAzNzA4MSAgICAgICBbamF2YV0gICAgIGF0
+IG9yZy5hcGFjaGUuamFzcGVyLkpzcEMuZXhlY3V0ZShKc3BDLmphdmE6MTEzNSkNCiAgMzcwODIg
+ICAgICAgW2phdmFdICAgICBhdCBvcmcuYXBhY2hlLmphc3Blci5Kc3BDLm1haW4oSnNwQy5qYXZh
+OjI0NSkNCiAgMzcwODMgICAgIFtzdWJhbnRdIEZhaWx1cmUgZm9yIHRhcmdldCAncG9zdC5jb21w
+aWxlLmV4cGxvcmVyLmphcicgb2Y6IC9zaGFyZWQvd2VidG9vbHMvcHJvamVjdHMvd3RwLVIzLjAt
+Uy93b3JrZGlyL3BsdWdpbnMvb3JnLmVjbGlwc2Uud3N0LndzLmV4cGxvcmVyL2J1aWxkSlNQcy54
+bWwNCiAgMzcwODQgICAgIFtzdWJhbnRdIFRoZSBmb2xsb3dpbmcgZXJyb3Igb2NjdXJyZWQgd2hp
+bGUgZXhlY3V0aW5nIHRoaXMgbGluZToNCiAgMzcwODUgICAgIFtzdWJhbnRdIC9zaGFyZWQvd2Vi
+dG9vbHMvcHJvamVjdHMvd3RwLVIzLjAtUy93b3JrZGlyL3BsdWdpbnMvb3JnLmVjbGlwc2Uud3N0
+LndzLmV4cGxvcmVyL2J1aWxkSlNQcy54bWw6MTMyOiBUaGUgZm9sbG93aW5nIGVycm9yIG9jY3Vy
+cmVkIHdoaWxlIGV4ZWN1dGluZyB0aGlzIGxpbmU6DQogIDM3MDg2ICAgICBbc3ViYW50XSAvc2hh
+cmVkL3dlYnRvb2xzL3Byb2plY3RzL3d0cC1SMy4wLVMvd29ya2Rpci9wbHVnaW5zL29yZy5lY2xp
+cHNlLndzdC53cy5leHBsb3Jlci9idWlsZEpTUHMueG1sOjUzOiBKYXZhIHJldHVybmVkOiAxDQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>108115</attachid>
+            <date>2008-07-22 15:02:00 -0400</date>
+            <delta_ts>2008-07-22 15:02:06 -0400</delta_ts>
+            <desc>patch that fixes some problems in buildJSPs.xml</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>3690</size>
+            <attacher name="Andrew Mak">makandre</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uud3N0LndzLmV4
+cGxvcmVyDQpJbmRleDogYnVpbGRKU1BzLnhtbA0KPT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNy
+b290L3dlYnRvb2xzL3dlYnNlcnZpY2VzL3BsdWdpbnMvb3JnLmVjbGlwc2Uud3N0LndzLmV4cGxv
+cmVyL2J1aWxkSlNQcy54bWwsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjENCmRpZmYgLXUgLXIx
+LjEgYnVpbGRKU1BzLnhtbA0KLS0tIGJ1aWxkSlNQcy54bWwJNSBTZXAgMjAwNyAyMDo1ODowNSAt
+MDAwMAkxLjENCisrKyBidWlsZEpTUHMueG1sCTIyIEp1bCAyMDA4IDE4OjM1OjEyIC0wMDAwDQpA
+QCAtMTAsNyArMTAsNyBAQA0KIAk8dGFyZ2V0IG5hbWU9ImJ1aWxkIj4NCiANCiAJCTwhLS0gQ29u
+c3RydWN0IHRoZSBmdWxsIGNsYXNzcGF0aCAtLT4NCi0JCTxwYXRoIGlkPSJleHBsb3Jlci5qYXIu
+Y2xhc3NwYXRoIiA+DQorCQk8cGF0aCBpZD0iQGRvdC5jbGFzc3BhdGgiID4NCiAJCQk8cGF0aGVs
+ZW1lbnQgcGF0aD0iJHt0YXJnZXQuZm9sZGVyfSIvPg0KIAkJCTxkaXJzZXQgZGlyPSIke3dvcmtz
+cGFjZV9sb2N9Ij4NCiAJCQkJPHBhdHRlcm5zZXQ+DQpAQCAtMzMsNyArMzMsNyBAQA0KIA0KIAkJ
+PCEtLSBDb21waWxlIHRoZSBKU1BzIC0tPg0KIAkJPGFudGNhbGwgdGFyZ2V0PSJjb21waWxlIj4N
+Ci0JCQk8cmVmZXJlbmNlIHJlZmlkPSJleHBsb3Jlci5qYXIuY2xhc3NwYXRoIi8+DQorCQkJPHJl
+ZmVyZW5jZSByZWZpZD0iQGRvdC5jbGFzc3BhdGgiLz4NCiAJCTwvYW50Y2FsbD4NCiAJCQ0KIAk8
+L3RhcmdldD4NCkBAIC00OCwxNiArNDgsMTggQEANCiAJCTwhLS0gSW52b2tlIEphc3BlciBjb21w
+aWxlciAtLT4NCiAJCTxqYXZhDQogCQkJY2xhc3NuYW1lPSJvcmcuYXBhY2hlLmphc3Blci5Kc3BD
+Ig0KLQkJCWNsYXNzcGF0aHJlZj0iZXhwbG9yZXIuamFyLmNsYXNzcGF0aCINCisJCQljbGFzc3Bh
+dGhyZWY9IkBkb3QuY2xhc3NwYXRoIg0KIAkJCWZvcms9InRydWUiDQogCQkJZmFpbG9uZXJyb3I9
+InRydWUiPg0KIAkJCTxhcmcgdmFsdWU9Ii1jb21waWxlIi8+DQogCQkJPGFyZyB2YWx1ZT0iLWQi
+Lz4NCi0JCQk8YXJnIHZhbHVlPSIke3dzZXhwbG9yZXJEaXJ9IiAvPg0KKwkJCTxhcmcgdmFsdWU9
+IiR7d3NleHBsb3JlckRpcn0vV0VCLUlORi9jbGFzc2VzIi8+DQogCQkJPGFyZyB2YWx1ZT0iLXAi
+Lz4NCiAJCQk8YXJnIHZhbHVlPSJvcmcuZWNsaXBzZS53c3Qud3MuZXhwbG9yZXIuanNwIi8+DQog
+CQkJPGFyZyB2YWx1ZT0iLXdlYmFwcCIvPg0KIAkJCTxhcmcgdmFsdWU9IiR7d3NleHBsb3JlckRp
+cn0iLz4NCisJCQk8YXJnIHZhbHVlPSItd2VieG1sIi8+DQorCQkJPGFyZyB2YWx1ZT0iJHt3c2V4
+cGxvcmVyRGlyfS9XRUItSU5GL3dlYi54bWwiLz4JCQkJCQkNCiAJCQk8YXJnIHZhbHVlPSItZGll
+Ii8+DQogCQkJPGNsYXNzcGF0aD4NCiAJCQkJPHBhdGhlbGVtZW50IHBhdGg9IiR7dGFyZ2V0LmZv
+bGRlcn0iLz4NCkBAIC0xMTMsNyArMTE1LDcgQEANCiAJPCEtLSAgIDxuYW1lPi5jbGFzc3BhdGgg
+OiBuYW1lID0gbmFtZSBvZiB0aGUgY29tcGlsYXRpb24gdGFyZ2V0LiBBICAgICAgICAgLS0+DQog
+CTwhLS0gICAgICAgICAgICAgICAgICAgICAgcmVmZXJlbmNlIHRvIHRoZSBjbGFzc3BhdGggc3Ry
+dWN0dXJlLiAgICAgICAgICAgIC0tPg0KIAk8IS0tID09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSAtLT4NCi0JPHRhcmdl
+dCBuYW1lPSJwcmUuZXhwbG9yZXIuamFyIj4NCisJPHRhcmdldCBuYW1lPSJwcmUuQGRvdCI+DQog
+CTwvdGFyZ2V0Pg0KIA0KIAk8IS0tID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PSAtLT4NCkBAIC0xMjYsMTYgKzEyOCwx
+NiBAQA0KIAk8IS0tICAgPG5hbWU+LmNsYXNzcGF0aCA6IG5hbWUgPSBuYW1lIG9mIHRoZSBjb21w
+aWxhdGlvbiB0YXJnZXQuIEEgICAgICAgICAtLT4NCiAJPCEtLSAgICAgICAgICAgICAgICAgICAg
+ICByZWZlcmVuY2UgdG8gdGhlIGNsYXNzcGF0aCBzdHJ1Y3R1cmUuICAgICAgICAgICAgLS0+DQog
+CTwhLS0gPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09IC0tPg0KLQk8dGFyZ2V0IG5hbWU9InBvc3QuY29tcGlsZS5leHBs
+b3Jlci5qYXIiPg0KKwk8dGFyZ2V0IG5hbWU9InBvc3QuY29tcGlsZS5AZG90Ij4NCiAJCQ0KIAkJ
+PCEtLSBDb21waWxlIHRoZSBKU1BzIC0tPg0KIAkJPGFudGNhbGwgdGFyZ2V0PSJjb21waWxlIj4N
+Ci0JCQk8cmVmZXJlbmNlIHJlZmlkPSJleHBsb3Jlci5qYXIuY2xhc3NwYXRoIi8+DQorCQkJPHJl
+ZmVyZW5jZSByZWZpZD0iQGRvdC5jbGFzc3BhdGgiLz4NCiAJCTwvYW50Y2FsbD4NCiAJCQ0KIAkJ
+PCEtLSBKc3BDIGFsd2F5cyBnZW5lcmF0ZXMgLmphdmEgZmlsZXM7IGRlbGV0ZSB0aGVtIC0tPg0K
+IAkJPGRlbGV0ZT4NCi0JCQk8ZmlsZXNldCBkaXI9IiR7dGFyZ2V0LmZvbGRlcn0iIGluY2x1ZGVz
+PSIqKi8qLmphdmEiLz4NCisJCQk8ZmlsZXNldCBkaXI9IiR7d3NleHBsb3JlckRpcn0iIGluY2x1
+ZGVzPSIqKi8qLmphdmEiLz4NCiAJCTwvZGVsZXRlPg0KIA0KIAk8L3RhcmdldD4NCkBAIC0xNDgs
+NyArMTUwLDcgQEANCiAJPCEtLSAgIDxuYW1lPi5jbGFzc3BhdGggOiBuYW1lID0gbmFtZSBvZiB0
+aGUgY29tcGlsYXRpb24gdGFyZ2V0LiBBICAgICAgICAgLS0+DQogCTwhLS0gICAgICAgICAgICAg
+ICAgICAgICAgcmVmZXJlbmNlIHRvIHRoZSBjbGFzc3BhdGggc3RydWN0dXJlLiAgICAgICAgICAg
+IC0tPg0KIAk8IS0tID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PSAtLT4NCi0JPHRhcmdldCBuYW1lPSJwb3N0LmV4cGxv
+cmVyLmphciI+DQorCTx0YXJnZXQgbmFtZT0icG9zdC5AZG90Ij4NCiAJPC90YXJnZXQ+DQogCQ0K
+IAk8IS0tID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PSAtLT4NCkBAIC0yMTYsNyArMjE4LDkgQEANCiAJPCEtLSAgIGJ1
+aWxkLnJlc3VsdC5mb2xkZXIgLSByZXN1bHRzIG9mIHRoZSBjb21waWxhdGlvbiAgICAgICAgICAg
+ICAgICAgICAgLS0+DQogCTwhLS0gICB0ZW1wLmZvbGRlciAtIHRlbXBvcmFyeSBmb2xkZXIgICAg
+ICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIC0tPg0KIAk8IS0tID09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PSAtLT4NCi0JPHRhcmdldCBuYW1lPSJwb3N0LmNsZWFuIj4gICAgICAgICAgICAgDQorCTx0YXJn
+ZXQgbmFtZT0icG9zdC5jbGVhbiI+DQorCQk8ZGVsZXRlIGRpcj0iJHt3c2V4cGxvcmVyRGlyfS9X
+RUItSU5GL2NsYXNzZXMvb3JnIi8+DQorCQk8ZGVsZXRlIGZpbGU9IiR7d3NleHBsb3JlckRpcn0v
+V0VCLUlORi93ZWIueG1sIi8+DQogCTwvdGFyZ2V0Pg0KIA0KIAk8dGFyZ2V0IG5hbWU9InByZS53
+c2V4cGxvcmVyLXByb3BlcnRpZXMuamFyIj4gICAgICAgICAgICAgIA0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

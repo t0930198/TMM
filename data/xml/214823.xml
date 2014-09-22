@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214823</bug_id>
+          
+          <creation_ts>2008-01-09 16:52:00 -0500</creation_ts>
+          <short_desc>[package explorer] Fold Empty packages in hierarchical package view ignores filter</short_desc>
+          <delta_ts>2014-04-28 14:23:42 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>ASSIGNED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>fix candidate</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kristoff Kiefer">kiewie</reporter>
+          <assigned_to name="JDT-UI-Inbox">jdt-ui-inbox</assigned_to>
+          <cc>a.nesheret</cc>
+    
+    <cc>cs01lg</cc>
+    
+    <cc>daniel_megert</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>me</cc>
+    
+    <cc>me</cc>
+    
+    <cc>rob</cc>
+    
+    <cc>zwilliam</cc>
+          
+          <votes>10</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128508</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kristoff Kiefer">kiewie</who>
+    <bug_when>2008-01-09 16:52:09 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Put a file that is filtered into a package that otherwise only has subpackages
+2. Switch to hierarchical package view
+3. Packages appear empty and are not folded (they should be, they are semantically empty after all)
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128759</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-10 04:08:57 -0500</bug_when>
+    <thetext>Can reproduce using I20080108-1320.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1378639</commentid>
+    <comment_count>2</comment_count>
+    <who name="Laurie Green">cs01lg</who>
+    <bug_when>2008-11-26 05:39:24 -0500</bug_when>
+    <thetext>Reproduced with
+Version: 3.4.1
+Build id: M20080911-1700
+
+Most obvious to me when working with subversion and filtering the .svn directories</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1378681</commentid>
+    <comment_count>3</comment_count>
+    <who name="Laurie Green">cs01lg</who>
+    <bug_when>2008-11-26 06:43:17 -0500</bug_when>
+    <thetext>(in case it wasn&apos;t clear &apos;folding&apos; is set in Preferences &gt; Java &gt; Appearence &gt; Fold empty packages in hierarchical layout in Package and Package Explorer)
+
+Looks like this method needs to have access to the filters
+org.eclipse.jdt.internal.ui.packageview.PackageExplorerContentProvider.isEmpty(IPackageFragment)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1460935</commentid>
+    <comment_count>4</comment_count>
+    <who name="Robert Elliot">rob</who>
+    <bug_when>2009-03-27 09:05:18 -0400</bug_when>
+    <thetext>Just as a further point, this is a pain on a Mac because of OS/X&apos;s insistence on putting .DS_Store files in every folder - means that empty packages are basically never folded for Mac users.  Don&apos;t know if that might up the priority a little?  Be nice to see it in 3.5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1460940</commentid>
+    <comment_count>5</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2009-03-27 09:16:56 -0400</bug_when>
+    <thetext>&gt;Be nice to see it in 3.5.
+No work planned on this but if someone really wants this he can provide a good quality patch.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1482381</commentid>
+    <comment_count>6</comment_count>
+      <attachid>133275</attachid>
+    <who name="Robert Elliot">rob</who>
+    <bug_when>2009-04-26 18:01:08 -0400</bug_when>
+    <thetext>Created attachment 133275
+Patch to apply filters before deciding whether a package should be considered empty
+
+Attached is a patch against org.eclipse.jdt.ui version r342_v20090107-1800 that applies filters to check whether a package should be considered empty and hence folded or not.
+
+It&apos;s really a spike - no test case, and the new methods have been cut and pasted from org.eclipse.jdt.internal.ui.viewsupport.ProblemTreeViewer.  I haven&apos;t even run the tests against it.  Just putting it up in case I get no opportunity to take this any further.  To do:
+* Write a decent unit test
+* Move the &quot;containsNonFiltered&quot; and &quot;isFiltered&quot; methods to somewhere common so that that code is not duplicated
+* Run all the UI tests to check nothing else is broken</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1482516</commentid>
+    <comment_count>7</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2009-04-27 03:18:02 -0400</bug_when>
+    <thetext>Thanks Robert. I didn&apos;t look at the patch yet but one thing to keep in mind is performance i.e. we don&apos;t want to (deeply) open folders and packages just to fix this issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1719637</commentid>
+    <comment_count>8</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2010-04-23 04:00:06 -0400</bug_when>
+    <thetext>*** Bug 310014 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>133275</attachid>
+            <date>2009-04-26 18:01:00 -0400</date>
+            <delta_ts>2009-04-26 18:01:08 -0400</delta_ts>
+            <desc>Patch to apply filters before deciding whether a package should be considered empty</desc>
+            <filename>filteredfoldedview.txt</filename>
+            <type>text/plain</type>
+            <size>2806</size>
+            <attacher name="Robert Elliot">rob</attacher>
+            
+              <data encoding="base64">SW5kZXg6IHVpL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC91aS9wYWNrYWdldmlldy9QYWNrYWdl
+RXhwbG9yZXJDb250ZW50UHJvdmlkZXIuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9v
+dC9lY2xpcHNlL29yZy5lY2xpcHNlLmpkdC51aS91aS9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwv
+dWkvcGFja2FnZXZpZXcvUGFja2FnZUV4cGxvcmVyQ29udGVudFByb3ZpZGVyLmphdmEsdgpyZXRy
+aWV2aW5nIHJldmlzaW9uIDEuNzkuMi4yCmRpZmYgLXUgLXIxLjc5LjIuMiBQYWNrYWdlRXhwbG9y
+ZXJDb250ZW50UHJvdmlkZXIuamF2YQotLS0gdWkvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL3Vp
+L3BhY2thZ2V2aWV3L1BhY2thZ2VFeHBsb3JlckNvbnRlbnRQcm92aWRlci5qYXZhCTIwIEF1ZyAy
+MDA4IDA3OjMxOjQ0IC0wMDAwCTEuNzkuMi4yCisrKyB1aS9vcmcvZWNsaXBzZS9qZHQvaW50ZXJu
+YWwvdWkvcGFja2FnZXZpZXcvUGFja2FnZUV4cGxvcmVyQ29udGVudFByb3ZpZGVyLmphdmEJMjYg
+QXByIDIwMDkgMjE6NTQ6MzcgLTAwMDAKQEAgLTM3LDYgKzM3LDcgQEAKIGltcG9ydCBvcmcuZWNs
+aXBzZS5qZmFjZS52aWV3ZXJzLlN0cnVjdHVyZWRTZWxlY3Rpb247CiBpbXBvcnQgb3JnLmVjbGlw
+c2UuamZhY2Uudmlld2Vycy5UcmVlVmlld2VyOwogaW1wb3J0IG9yZy5lY2xpcHNlLmpmYWNlLnZp
+ZXdlcnMuVmlld2VyOworaW1wb3J0IG9yZy5lY2xpcHNlLmpmYWNlLnZpZXdlcnMuVmlld2VyRmls
+dGVyOwogCiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuSVdvcmtpbmdTZXQ7CiBpbXBvcnQgb3JnLmVj
+bGlwc2UudWkucHJvZ3Jlc3MuVUlKb2I7CkBAIC00ODUsNyArNDg2LDcgQEAKIAkJcmV0dXJuIHBh
+cmVudDsKIAl9CiAJCi0JcHJpdmF0ZSBzdGF0aWMgSVBhY2thZ2VGcmFnbWVudCBnZXRGb2xkZWQo
+SUphdmFFbGVtZW50W10gY2hpbGRyZW4sIElQYWNrYWdlRnJhZ21lbnQgcGFjaykgdGhyb3dzIEph
+dmFNb2RlbEV4Y2VwdGlvbiB7CisJcHJpdmF0ZSBJUGFja2FnZUZyYWdtZW50IGdldEZvbGRlZChJ
+SmF2YUVsZW1lbnRbXSBjaGlsZHJlbiwgSVBhY2thZ2VGcmFnbWVudCBwYWNrKSB0aHJvd3MgSmF2
+YU1vZGVsRXhjZXB0aW9uIHsKIAkJd2hpbGUgKGlzRW1wdHkocGFjaykpIHsKIAkJCUlQYWNrYWdl
+RnJhZ21lbnQgY29sbGFwc2VkPSBmaW5kU2luZ2xlUGFja2FnZUNoaWxkKHBhY2ssIGNoaWxkcmVu
+KTsKIAkJCWlmIChjb2xsYXBzZWQgPT0gbnVsbCkgewpAQCAtNDk2LDggKzQ5Nyw4IEBACiAJCXJl
+dHVybiBwYWNrOwogCX0KIAkJCi0JcHJpdmF0ZSBzdGF0aWMgYm9vbGVhbiBpc0VtcHR5KElQYWNr
+YWdlRnJhZ21lbnQgZnJhZ21lbnQpIHRocm93cyBKYXZhTW9kZWxFeGNlcHRpb24gewotCQlyZXR1
+cm4gIWZyYWdtZW50LmNvbnRhaW5zSmF2YVJlc291cmNlcygpICYmIGZyYWdtZW50LmdldE5vbkph
+dmFSZXNvdXJjZXMoKS5sZW5ndGggPT0gMDsKKwlwcml2YXRlIGJvb2xlYW4gaXNFbXB0eShJUGFj
+a2FnZUZyYWdtZW50IGZyYWdtZW50KSB0aHJvd3MgSmF2YU1vZGVsRXhjZXB0aW9uIHsKKwkJcmV0
+dXJuICFmcmFnbWVudC5jb250YWluc0phdmFSZXNvdXJjZXMoKSAmJiAhY29udGFpbnNOb25GaWx0
+ZXJlZChmcmFnbWVudC5nZXROb25KYXZhUmVzb3VyY2VzKCksIGZyYWdtZW50KTsKIAl9CiAJCiAJ
+cHJpdmF0ZSBzdGF0aWMgSVBhY2thZ2VGcmFnbWVudCBmaW5kU2luZ2xlUGFja2FnZUNoaWxkKElQ
+YWNrYWdlRnJhZ21lbnQgZnJhZ21lbnQsIElKYXZhRWxlbWVudFtdIGNoaWxkcmVuKSB7CkBAIC05
+OTksNCArMTAwMCwzOSBAQAogCQkJfQogCQl9CiAJfQorCQorCXByaXZhdGUgYm9vbGVhbiBjb250
+YWluc05vbkZpbHRlcmVkKE9iamVjdFtdIGVsZW1lbnRzLCBPYmplY3QgcGFyZW50KSB7CisJCWlm
+IChlbGVtZW50cy5sZW5ndGggPT0gMCkgeworCQkJcmV0dXJuIGZhbHNlOworCQl9CisJCVZpZXdl
+ckZpbHRlcltdIGZpbHRlcnMgPSBmVmlld2VyLmdldEZpbHRlcnMoKTsKKwkJaWYgKGZpbHRlcnMu
+bGVuZ3RoID09IDApIHsKKwkJCXJldHVybiB0cnVlOworCQl9CisJCWZvciAoaW50IGkgPSAwOyBp
+IDwgZWxlbWVudHMubGVuZ3RoOyBpKyspIHsKKwkJCU9iamVjdCBvYmplY3QgPSBlbGVtZW50c1tp
+XTsKKwkJCWlmICghaXNGaWx0ZXJlZChvYmplY3QsIHBhcmVudCwgZmlsdGVycykpIHsKKwkJCQly
+ZXR1cm4gdHJ1ZTsKKwkJCX0KKwkJfQorCQlyZXR1cm4gZmFsc2U7CisJfQorCQorCS8qKgorCSAq
+IEFsbCBlbGVtZW50IGZpbHRlciB0ZXN0cyBtdXN0IGdvIHRocm91Z2ggdGhpcyBtZXRob2QuCisJ
+ICogQ2FuIGJlIG92ZXJyaWRkZW4gYnkgc3ViY2xhc3Nlcy4KKwkgKiAKKwkgKiBAcGFyYW0gb2Jq
+ZWN0IHRoZSBvYmplY3QgdG8gZmlsdGVyCisJICogQHBhcmFtIHBhcmVudCB0aGUgcGFyZW50CisJ
+ICogQHBhcmFtIGZpbHRlcnMgdGhlIGZpbHRlcnMgdG8gYXBwbHkKKwkgKiBAcmV0dXJuIHRydWUg
+aWYgdGhlIGVsZW1lbnQgaXMgZmlsdGVyZWQKKwkgKi8KKwlwcml2YXRlIGJvb2xlYW4gaXNGaWx0
+ZXJlZChPYmplY3Qgb2JqZWN0LCBPYmplY3QgcGFyZW50LCBWaWV3ZXJGaWx0ZXJbXSBmaWx0ZXJz
+KSB7CisJCWZvciAoaW50IGkgPSAwOyBpIDwgZmlsdGVycy5sZW5ndGg7IGkrKykgeworCQkJVmll
+d2VyRmlsdGVyIGZpbHRlciA9IGZpbHRlcnNbaV07CisJCQlpZiAoIWZpbHRlci5zZWxlY3QoZlZp
+ZXdlciwgcGFyZW50LCBvYmplY3QpKQorCQkJCXJldHVybiB0cnVlOworCQl9CisJCXJldHVybiBm
+YWxzZTsKKwl9CiB9Cg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

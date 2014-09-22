@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214438</bug_id>
+          
+          <creation_ts>2008-01-06 08:06:00 -0500</creation_ts>
+          <short_desc>If workspace resides on  drive different to the mingw installation  compilation  of  hello world application  will  fail</short_desc>
+          <delta_ts>2008-01-07 13:43:33 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-build</component>
+          <version>4.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Oleg Kobyzev">okobyzev</reporter>
+          <assigned_to name="cdt-build-inbox@eclipse.org">cdt-build-inbox</assigned_to>
+          <cc>dschaefer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126290</commentid>
+    <comment_count>0</comment_count>
+    <who name="Oleg Kobyzev">okobyzev</who>
+    <bug_when>2008-01-06 08:06:31 -0500</bug_when>
+    <thetext>Build ID: 200709241202
+
+Steps To Reproduce:
+1. Install mingw to its  default  location ( C:\mingw ) 
+2. Create a new worspace on different drive ( e.g. D:\ws-1 ) 
+3. Create a  C++ HelloWorld project 
+4. Try to build it.  
+  The  build  output  looks  like 
+
+g++ -O0 -g3 -Wall -c -fmessage-length=0 -osrc\x1.o ..\src\x1.cpp
+..\src\x1.cpp:9:20: no include path in which to search for iostream
+..\src\x1.cpp: In function `int main()&apos;:
+..\src\x1.cpp:13: error: `cout&apos; was not declared in this scope
+..\src\x1.cpp:13: error: `endl&apos; was not declared in this scope
+..\src\x1.cpp:13: warning: unused variable &apos;cout&apos;
+..\src\x1.cpp:13: warning: unused variable &apos;endl&apos;
+
+More information:
+The verbose compiler  output looks like 
+Thread model: win32
+gcc version 3.4.5 (mingw special)
+ cc1plus -quiet -v -iprefix ../lib/gcc/mingw32/3.4.5/ -dD ..\src\x1.cpp -quiet -dumpbase x1.cpp -auxbase-strip src\x1.o -g3 -O0 -Wall -version -fmessage-length=0 -o ./ccwzaaaa.s
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/../../../../include/c++/3.4.5&quot;
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/../../../../include/c++/3.4.5/mingw32&quot;
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/../../../../include/c++/3.4.5/backward&quot;
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/../../../../include&quot;
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/include&quot;
+ignoring nonexistent directory &quot;../lib/gcc/mingw32/3.4.5/../../../../mingw32/include&quot;
+ignoring nonexistent directory &quot;/mingw/include/c++/3.4.5&quot;
+ignoring nonexistent directory &quot;/mingw/include/c++/3.4.5/mingw32&quot;
+ignoring nonexistent directory &quot;/mingw/include/c++/3.4.5/backward&quot;
+ignoring nonexistent directory &quot;/mingw/include&quot;
+ignoring nonexistent directory &quot;/mingw/include&quot;
+ignoring nonexistent directory &quot;/mingw/lib/gcc/mingw32/3.4.5/include&quot;
+ignoring nonexistent directory &quot;/mingw/mingw32/include&quot;
+ignoring nonexistent directory &quot;/mingw/include&quot;
+#include &quot;...&quot; search starts here:
+#include &lt;...&gt; search starts here:
+....</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126812</commentid>
+    <comment_count>1</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-07 13:43:33 -0500</bug_when>
+    <thetext>Which version of MinGW are you using. Are you using the one with the Vista fix? I had this scenario with Wascana (which uses the fixed MinGW) and I didn&apos;t have this problem.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

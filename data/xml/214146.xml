@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214146</bug_id>
+          
+          <creation_ts>2008-01-02 14:55:00 -0500</creation_ts>
+          <short_desc>Typedef in a .cc file affects other .cc files</short_desc>
+          <delta_ts>2008-02-04 11:17:29 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>5.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>5.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Sergey Prigogin">eclipse.sprigogin</reporter>
+          <assigned_to name="Markus Schorn">markus.schorn</assigned_to>
+          <cc>dschaefer</cc>
+    
+    <cc>markus.schorn</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124444</commentid>
+    <comment_count>0</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-01-02 14:55:34 -0500</bug_when>
+    <thetext>CDT HEAD:
+Create a project with three files:
+
+test.h
+------
+class A {};
+
+test.cc
+-------
+#include &quot;test.h&quot;
+A a;  // Problem on A
+
+unrelated.cc
+------------
+typedef int A;
+
+The problem goes away if the typedef in unrelated.cc is removed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124456</commentid>
+    <comment_count>1</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-02 15:07:14 -0500</bug_when>
+    <thetext>Yes, that&apos;s one of the pitfalls in the &quot;Fast&quot; indexing strategy. This will happen. The hope, though, is that it won&apos;t happen often.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124458</commentid>
+    <comment_count>2</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-02 15:09:22 -0500</bug_when>
+    <thetext>Having said that, however, we may want to think of instituting a file scoping strategy. For example, make the typedef global only if it is declared in a header file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124463</commentid>
+    <comment_count>3</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-01-02 15:18:45 -0500</bug_when>
+    <thetext>Markus, in a comment to bug 203385 you suggested that typedefs, unlike &quot;using&quot; declarations, don&apos;t need macro-like treatment. Should we reconsider that decision in light of this use case? </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124899</commentid>
+    <comment_count>4</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-03 08:46:06 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; Markus, in a comment to bug 203385 you suggested that typedefs, unlike &quot;using&quot;
+&gt; declarations, don&apos;t need macro-like treatment. Should we reconsider that
+&gt; decision in light of this use case? 
+
+I&apos;d say no. Part of the problem is, that you can always create a test-case that
+does not work. I would argue that the code from the sample is bad code, because you are not able to include &apos;test.h&apos; in &apos;unrelated.cc&apos;. (Because A has a global meaning it should not be used in any other way).
+
+It may make sense to limit the name-resolution to declarations found in headers, only. (like Doug suggests in comment 2). </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125100</commentid>
+    <comment_count>5</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-01-03 12:54:14 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+I agree that the code is bad, but it is based on a real life example. Dealing with bad code seems to be an inevitable part of life.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125506</commentid>
+    <comment_count>6</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-04 02:30:53 -0500</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; (In reply to comment #4)
+&gt; I agree that the code is bad, but it is based on a real life example. Dealing
+&gt; with bad code seems to be an inevitable part of life.
+
+The suggestion to limit the name-resolution to declarations found in
+headers, only, would solve the problem.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125821</commentid>
+    <comment_count>7</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-04 11:03:06 -0500</bug_when>
+    <thetext>(In reply to comment #6)
+&gt; (In reply to comment #5)
+&gt; &gt; (In reply to comment #4)
+&gt; &gt; I agree that the code is bad, but it is based on a real life example. Dealing
+&gt; &gt; with bad code seems to be an inevitable part of life.
+&gt; The suggestion to limit the name-resolution to declarations found in
+&gt; headers, only, would solve the problem.
+
+Yes, as long as we consider that all files included by some other file is a header file, not just files with &apos;.h&apos; as their extension. That will be difficult to code up, though, so extensions maybe the best way to get us closer.
+
+Unfortunately this will be a lot of work for a fairly rare case.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126437</commentid>
+    <comment_count>8</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-07 05:22:55 -0500</bug_when>
+    <thetext>&gt; ...
+&gt; Yes, as long as we consider that all files included by some other file is a
+&gt; header file, not just files with &apos;.h&apos; as their extension. That will be
+&gt; difficult to code up, though, so extensions maybe the best way to get us
+&gt; closer.
+&gt; ...
+The indexer is already capable of making the distinction between headers and sources. I needed that for modelling static vars/functions declared in headers.
+(bug 180305). Yet, it will take some effort to get this right.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148861</commentid>
+    <comment_count>9</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-02-04 11:17:29 -0500</bug_when>
+    <thetext>Types defined in source-files are file-local now. Added testcase IndexBugsTest.testUnrelatedTypedef_Bug214146().
+
+Fixed in 5.0 &gt; 20080204.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

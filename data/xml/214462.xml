@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214462</bug_id>
+          
+          <creation_ts>2008-01-07 05:02:00 -0500</creation_ts>
+          <short_desc>Grid showSelection throws an IllegalArgumentException</short_desc>
+          <delta_ts>2008-01-07 11:46:53 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Nebula</product>
+          <component>Grid</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Marco Maccaferri">macca</reporter>
+          <assigned_to name="Chris Gross">cgross</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126422</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86293</attachid>
+    <who name="Marco Maccaferri">macca</who>
+    <bug_when>2008-01-07 05:02:47 -0500</bug_when>
+    <thetext>Created attachment 86293
+Sample source code
+
+I&apos;m receiving an exception when updating a grid widget after changing the sort order of the model. Seems caused by showSelection.
+
+Steps to reproduce with the attached example:
+
+1. Expand &apos;Row 14&apos;
+2. Select &apos;Row 0&apos;
+3. Click on &apos;Col 1&apos; header to change the sort (row 0 should be moved to the bottom along the selection)
+3. Click again on &apos;Col 1&apos;, you should see the exception
+
+This is the exception:
+
+Exception in thread &quot;main&quot; java.lang.IllegalArgumentException: Argument not valid
+	at org.eclipse.swt.SWT.error(SWT.java:3547)
+	at org.eclipse.swt.SWT.error(SWT.java:3481)
+	at org.eclipse.swt.SWT.error(SWT.java:3452)
+	at org.eclipse.nebula.widgets.grid.Grid.getRowRange(Grid.java:2503)
+	at org.eclipse.nebula.widgets.grid.Grid.getBottomIndex(Grid.java:2388)
+	at org.eclipse.nebula.widgets.grid.Grid.isShown(Grid.java:3890)
+	at org.eclipse.nebula.widgets.grid.Grid.showItem(Grid.java:3923)
+	at org.eclipse.nebula.widgets.grid.Grid.showSelection(Grid.java:3983)
+	at com.maccasoft.eclipse.GridSelectionBug.updateSorting(GridSelectionBug.java:134)
+	at com.maccasoft.eclipse.GridSelectionBug.access$1(GridSelectionBug.java:75)
+	at com.maccasoft.eclipse.GridSelectionBug$1.widgetSelected(GridSelectionBug.java:54)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:227)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1101)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1125)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1110)
+	at org.eclipse.swt.widgets.Widget.notifyListeners(Widget.java:951)
+	at org.eclipse.nebula.widgets.grid.GridColumn.fireListeners(GridColumn.java:424)
+	at org.eclipse.nebula.widgets.grid.Grid.onMouseUp(Grid.java:6469)
+	at org.eclipse.nebula.widgets.grid.Grid.access$7(Grid.java:6442)
+	at org.eclipse.nebula.widgets.grid.Grid$10.mouseUp(Grid.java:6029)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:206)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1101)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3319)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2971)
+	at com.maccasoft.eclipse.GridSelectionBug.main(GridSelectionBug.java:152)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126699</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Gross">cgross</who>
+    <bug_when>2008-01-07 11:46:53 -0500</bug_when>
+    <thetext>Fixed. Please download tomorrows nightly build.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86293</attachid>
+            <date>2008-01-07 05:02:00 -0500</date>
+            <delta_ts>2008-01-07 05:02:47 -0500</delta_ts>
+            <desc>Sample source code</desc>
+            <filename>GridSelectionBug.java</filename>
+            <type>text/plain</type>
+            <size>4771</size>
+            <attacher name="Marco Maccaferri">macca</attacher>
+            
+              <data encoding="base64">LyoKICogQ29weXJpZ2h0IChjKSAyMDA0LTIwMDcgTWFyY28gTWFjY2FmZXJyaSBhbmQgb3RoZXJz
+LgogKiBBbGwgcmlnaHRzIHJlc2VydmVkLiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlp
+bmcgbWF0ZXJpYWxzCiAqIGFyZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhl
+IEVjbGlwc2UgUHVibGljIExpY2Vuc2UgdjEuMAogKiB3aGljaCBhY2NvbXBhbmllcyB0aGlzIGRp
+c3RyaWJ1dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdAogKiBodHRwOi8vd3d3LmVjbGlwc2Uub3Jn
+L2xlZ2FsL2VwbC12MTAuaHRtbAogKgogKiBDb250cmlidXRvcnM6CiAqICAgICBNYXJjbyBNYWNj
+YWZlcnJpIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uCiAqLwoKcGFja2FnZSBjb20u
+bWFjY2Fzb2Z0LmVjbGlwc2U7CgppbXBvcnQgamF2YS51dGlsLkFycmF5TGlzdDsKaW1wb3J0IGph
+dmEudXRpbC5BcnJheXM7CmltcG9ydCBqYXZhLnV0aWwuQ29sbGVjdGlvbnM7CmltcG9ydCBqYXZh
+LnV0aWwuQ29tcGFyYXRvcjsKaW1wb3J0IGphdmEudXRpbC5IYXNoTWFwOwppbXBvcnQgamF2YS51
+dGlsLkhhc2hTZXQ7CmltcG9ydCBqYXZhLnV0aWwuTGlzdDsKaW1wb3J0IGphdmEudXRpbC5NYXA7
+CmltcG9ydCBqYXZhLnV0aWwuU2V0OwoKaW1wb3J0IG9yZy5lY2xpcHNlLm5lYnVsYS53aWRnZXRz
+LmdyaWQuR3JpZDsKaW1wb3J0IG9yZy5lY2xpcHNlLm5lYnVsYS53aWRnZXRzLmdyaWQuR3JpZENv
+bHVtbjsKaW1wb3J0IG9yZy5lY2xpcHNlLm5lYnVsYS53aWRnZXRzLmdyaWQuR3JpZEl0ZW07Cmlt
+cG9ydCBvcmcuZWNsaXBzZS5zd3QuU1dUOwppbXBvcnQgb3JnLmVjbGlwc2Uuc3d0LmV2ZW50cy5T
+ZWxlY3Rpb25BZGFwdGVyOwppbXBvcnQgb3JnLmVjbGlwc2Uuc3d0LmV2ZW50cy5TZWxlY3Rpb25F
+dmVudDsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5ncmFwaGljcy5Qb2ludDsKaW1wb3J0IG9yZy5l
+Y2xpcHNlLnN3dC5sYXlvdXQuRmlsbExheW91dDsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC53aWRn
+ZXRzLkNvbXBvc2l0ZTsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC53aWRnZXRzLkRpc3BsYXk7Cmlt
+cG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5TaGVsbDsKCnB1YmxpYyBjbGFzcyBHcmlkU2Vs
+ZWN0aW9uQnVnIHsKCXByaXZhdGUgR3JpZCBncmlkOwoJcHJpdmF0ZSBNYXA8U3RyaW5nLExpc3Q8
+U3RyaW5nPj4gcm93cyA9IG5ldyBIYXNoTWFwPFN0cmluZyxMaXN0PFN0cmluZz4+KCk7CgoJcHVi
+bGljIEdyaWRTZWxlY3Rpb25CdWcoQ29tcG9zaXRlIHBhcmVudCkgewoJCWdyaWQgPSBuZXcgR3Jp
+ZChwYXJlbnQsIFNXVC5NVUxUSSB8IFNXVC5GVUxMX1NFTEVDVElPTiB8IFNXVC5WX1NDUk9MTCk7
+CgkJZ3JpZC5zZXRIZWFkZXJWaXNpYmxlKHRydWUpOwoJCWdyaWQuc2V0TGluZXNWaXNpYmxlKGZh
+bHNlKTsKCgkJR3JpZENvbHVtbiBjb2x1bW4gPSBuZXcgR3JpZENvbHVtbihncmlkLCBTV1QuTk9O
+RSk7CgkJY29sdW1uLnNldFRleHQoIkNvbDEiKTsKCQljb2x1bW4uc2V0V2lkdGgoMTI1KTsKCQlj
+b2x1bW4uc2V0VHJlZSh0cnVlKTsKCQljb2x1bW4uYWRkU2VsZWN0aW9uTGlzdGVuZXIobmV3IFNl
+bGVjdGlvbkFkYXB0ZXIoKSB7CiAgICAgICAgICAgIEBPdmVycmlkZQogICAgICAgICAgICBwdWJs
+aWMgdm9pZCB3aWRnZXRTZWxlY3RlZChTZWxlY3Rpb25FdmVudCBlKSB7CiAgICAgICAgICAgIAlH
+cmlkQ29sdW1uIGNvbHVtbiA9IGdyaWQuZ2V0Q29sdW1uKDApOwogICAgICAgICAgICAJaW50IGRp
+cmVjdGlvbiA9IGNvbHVtbi5nZXRTb3J0KCkgPT0gU1dULlVQID8gU1dULkRPV04gOiBTV1QuVVA7
+CiAgICAgICAgICAgIAl1cGRhdGVTb3J0aW5nKGRpcmVjdGlvbik7CiAgICAgICAgICAgIAljb2x1
+bW4uc2V0U29ydChkaXJlY3Rpb24pOwogICAgICAgICAgICB9CgkJfSk7CgoJCWNvbHVtbiA9IG5l
+dyBHcmlkQ29sdW1uKGdyaWQsIFNXVC5OT05FKTsKCQljb2x1bW4uc2V0VGV4dCgiQ29sMiIpOwoJ
+CWNvbHVtbi5zZXRXaWR0aCg3NSk7CgoJCS8vIFNhbXBsZSBtb2RlbAoJCWZvciAoaW50IGkgPSAw
+OyBpIDwgMjU7IGkrKykgewoJCQlMaXN0PFN0cmluZz4gbGlzdCA9IG5ldyBBcnJheUxpc3Q8U3Ry
+aW5nPigpOwoJCQlsaXN0LmFkZCgiUiIgKyBpICsgIiAtIFN1Ykl0ZW0gMCIpOwoJCQlsaXN0LmFk
+ZCgiUiIgKyBpICsgIiAtIFN1Ykl0ZW0gMSIpOwoJCQlsaXN0LmFkZCgiUiIgKyBpICsgIiAtIFN1
+Ykl0ZW0gMiIpOwoJCQlyb3dzLnB1dCgiUm93ICIgKyBpLCBsaXN0KTsKCQl9CgoJCXVwZGF0ZVNv
+cnRpbmcoU1dULlVQKTsKICAgIAlncmlkLmdldENvbHVtbigwKS5zZXRTb3J0KFNXVC5VUCk7Cgl9
+CgoJcHJpdmF0ZSB2b2lkIHVwZGF0ZVNvcnRpbmcoaW50IGRpcmVjdGlvbikgewoJCS8vIFNhdmUg
+dGhlIGN1cnJlbnQgc2VsZWN0aW9uCgkJU3RyaW5nIHNlbGVjdGlvbiA9IG51bGw7CgkJaWYgKGdy
+aWQuZ2V0U2VsZWN0aW9uQ291bnQoKSAhPSAwKSB7CgkJCUdyaWRJdGVtW10gc2VsZWN0ZWRJdGVt
+cyA9IGdyaWQuZ2V0U2VsZWN0aW9uKCk7CgkJCXNlbGVjdGlvbiA9IHNlbGVjdGVkSXRlbXNbMF0u
+Z2V0VGV4dCgpOwoJCX0KCgkJLy8gU2F2ZSB0aGUgZXhwYW5kZWQgLyBjb2xsYXBzZWQgc3RhdGUK
+CQlTZXQ8U3RyaW5nPiBleHBhbmRlZFNldCA9IG5ldyBIYXNoU2V0PFN0cmluZz4oKTsKCQlHcmlk
+SXRlbVtdIGl0ZW1zID0gZ3JpZC5nZXRSb290SXRlbXMoKTsKCQlmb3IgKGludCBpID0gMDsgaSA8
+IGl0ZW1zLmxlbmd0aDsgaSsrKSB7CgkJCWlmIChpdGVtc1tpXS5pc0V4cGFuZGVkKCkpCgkJCQll
+eHBhbmRlZFNldC5hZGQoaXRlbXNbaV0uZ2V0VGV4dCgpKTsKCQl9CgoJCS8vIFJlb3JkZXIgdGhl
+IGl0ZW1zCgkJTGlzdDxTdHJpbmc+IG9yZGVyZWRSb3dzID0gQXJyYXlzLmFzTGlzdChyb3dzLmtl
+eVNldCgpLnRvQXJyYXkobmV3IFN0cmluZ1tyb3dzLmtleVNldCgpLnNpemUoKV0pKTsKCQlpZiAo
+ZGlyZWN0aW9uID09IFNXVC5VUCkgewoJCQlDb2xsZWN0aW9ucy5zb3J0KG9yZGVyZWRSb3dzLCBu
+ZXcgQ29tcGFyYXRvcjxTdHJpbmc+KCkgewogICAgICAgICAgICAgICAgcHVibGljIGludCBjb21w
+YXJlKFN0cmluZyBvMSwgU3RyaW5nIG8yKSB7CgkgICAgICAgICAgICAgICAgcmV0dXJuIG8xLmNv
+bXBhcmVUbyhvMik7CiAgICAgICAgICAgICAgICB9CgkJCX0pOwoJCX0KCQllbHNlIHsKCQkJQ29s
+bGVjdGlvbnMuc29ydChvcmRlcmVkUm93cywgbmV3IENvbXBhcmF0b3I8U3RyaW5nPigpIHsKICAg
+ICAgICAgICAgICAgIHB1YmxpYyBpbnQgY29tcGFyZShTdHJpbmcgbzEsIFN0cmluZyBvMikgewoJ
+ICAgICAgICAgICAgICAgIHJldHVybiBvMi5jb21wYXJlVG8obzEpOwogICAgICAgICAgICAgICAg
+fQoJCQl9KTsKCQl9CgoJCS8vIFVwZGF0ZSB0aGUgZ3JpZAoJCWdyaWQuc2V0UmVkcmF3KGZhbHNl
+KTsKCQl0cnkgewoJCQlHcmlkSXRlbSBzZWxlY3RlZEl0ZW0gPSBudWxsOwoJCQlmb3IgKGludCBp
+ID0gMDsgaSA8IG9yZGVyZWRSb3dzLnNpemUoKTsgaSsrKSB7CgkJCQlHcmlkSXRlbSBpdGVtOwoJ
+CQkJaWYgKGkgPCBncmlkLmdldFJvb3RJdGVtQ291bnQoKSkKCQkJCQlpdGVtID0gZ3JpZC5nZXRS
+b290SXRlbShpKTsKCQkJCWVsc2UKCQkJCQlpdGVtID0gbmV3IEdyaWRJdGVtKGdyaWQsIFNXVC5O
+T05FKTsKCQkJCWl0ZW0uc2V0VGV4dChvcmRlcmVkUm93cy5nZXQoaSkpOwoKCQkJCUxpc3Q8U3Ry
+aW5nPiBzdWJMaXN0ID0gcm93cy5nZXQob3JkZXJlZFJvd3MuZ2V0KGkpKTsKCQkJCWZvciAoaW50
+IHMgPSAwOyBzIDwgc3ViTGlzdC5zaXplKCk7IHMrKykgewoJCQkJCUdyaWRJdGVtIHN1Ykl0ZW07
+CgkJCQkJaWYgKHMgPCBpdGVtLmdldEl0ZW1Db3VudCgpKQoJCQkJCQlzdWJJdGVtID0gaXRlbS5n
+ZXRJdGVtKHMpOwoJCQkJCWVsc2UKCQkJCQkJc3ViSXRlbSA9IG5ldyBHcmlkSXRlbShpdGVtLCBT
+V1QuTk9ORSk7CgkJCQkJc3ViSXRlbS5zZXRUZXh0KHN1Ykxpc3QuZ2V0KHMpKTsKCQkJCX0KCgkJ
+CQkvLyBSZXN0b3JlIHRoZSBpdGVtJ3MgZXhwYW5kZWQgc3RhdGUKCQkJCWl0ZW0uc2V0RXhwYW5k
+ZWQoZXhwYW5kZWRTZXQuY29udGFpbnMoaXRlbS5nZXRUZXh0KCkpKTsKCgkJCQkvLyBDaGVjayBp
+ZiB0aGlzIGlzIHRoZSBpdGVtIHRoYXQgc2hvdWxkIGJlIHNlbGVjdGVkCgkJCQlpZiAoaXRlbS5n
+ZXRUZXh0KCkuZXF1YWxzKHNlbGVjdGlvbikpCgkJCQkJc2VsZWN0ZWRJdGVtID0gaXRlbTsKCQkJ
+fQoKCQkJLy8gUmVzdG9yZSB0aGUgc2VsZWN0aW9uCgkJCWlmIChzZWxlY3RlZEl0ZW0gIT0gbnVs
+bCkgewoJCQkJZ3JpZC5zZXRTZWxlY3Rpb24obmV3IEdyaWRJdGVtW10geyBzZWxlY3RlZEl0ZW0g
+fSk7CgkJCQlncmlkLnNob3dTZWxlY3Rpb24oKTsKCQkJfQoJCX0gZmluYWxseSB7CgkJCWdyaWQu
+c2V0UmVkcmF3KHRydWUpOwoJCX0KCX0KCglwdWJsaWMgc3RhdGljIHZvaWQgbWFpbihTdHJpbmdb
+XSBhcmdzKSB7CgkJRGlzcGxheSBkaXNwbGF5ID0gbmV3IERpc3BsYXkoKTsKCQlTaGVsbCBzaGVs
+bCA9IG5ldyBTaGVsbChkaXNwbGF5KTsKCQlzaGVsbC5zZXRMYXlvdXQobmV3IEZpbGxMYXlvdXQo
+KSk7CgoJCW5ldyBHcmlkU2VsZWN0aW9uQnVnKHNoZWxsKTsKCgkJc2hlbGwuc2V0U2l6ZShuZXcg
+UG9pbnQoMzAwLCAyMDApKTsKCQlzaGVsbC5vcGVuKCk7CgoJCXdoaWxlICghc2hlbGwuaXNEaXNw
+b3NlZCgpKSB7CgkJCWlmICghZGlzcGxheS5yZWFkQW5kRGlzcGF0Y2goKSkKCQkJCWRpc3BsYXku
+c2xlZXAoKTsKCQl9CgoJCWRpc3BsYXkuZGlzcG9zZSgpOwoJfQp9Cg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214444</bug_id>
+          
+          <creation_ts>2008-01-06 20:48:00 -0500</creation_ts>
+          <short_desc>NPE during &quot;Synchronize Classes&quot;</short_desc>
+          <delta_ts>2008-05-29 12:05:53 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Dali JPA Tools</product>
+          <component>General</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.0 M7</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Juergen Zimmermann">Juergen.Zimmermann</reporter>
+          <assigned_to name="Neil Hauge">neil.hauge</assigned_to>
+          <cc>karenfbutzke</cc>
+    
+    <cc>neil.hauge</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126331</commentid>
+    <comment_count>0</comment_count>
+    <who name="Juergen Zimmermann">Juergen.Zimmermann</who>
+    <bug_when>2008-01-06 20:48:27 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Create an empty/initial JPA project
+2. Check out entity classes, META-INF/persistence.xml, META-INF/orm.xml from Subversion
+3. &quot;Problems&quot; subwindow shows: &quot;Invalid content (no root node)&quot; for persistence.xml
+4. right-click on META-INF/persistence.xml: JPA Tools -&gt; Synchronize Classes
+5. This stacktrace can be found in .metadata/log:
+
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-07 02:01:49.570
+!MESSAGE An internal error occurred during: &quot;Synchronizing classes&quot;.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.jpt.core.internal.synch.SynchronizeClassesJob.run(SynchronizeClassesJob.java:106)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.wst.sse.ui 4 2 2008-01-07 02:02:16.659
+!MESSAGE Problems occurred when invoking code from plug-in: &quot;org.eclipse.wst.sse.ui&quot;.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.jpt.core.internal.content.persistence.PersistenceXmlRootContentNode.getContentNode(PersistenceXmlRootContentNode.java:365)
+	at org.eclipse.jpt.core.internal.JpaFile.getContentNode(JpaFile.java:331)
+	at org.eclipse.jpt.ui.internal.selection.TextEditorSelectionParticipant.calculateSelection(TextEditorSelectionParticipant.java:95)
+	at org.eclipse.jpt.ui.internal.selection.TextEditorSelectionParticipant.editorSelectionChanged(TextEditorSelectionParticipant.java:65)
+	at org.eclipse.jpt.ui.internal.selection.TextEditorSelectionParticipant.access$2(TextEditorSelectionParticipant.java:64)
+	at org.eclipse.jpt.ui.internal.selection.TextEditorSelectionParticipant$EditorSelectionListener.selectionChanged(TextEditorSelectionParticipant.java:161)
+	at org.eclipse.wst.sse.ui.StructuredTextEditor$6.run(StructuredTextEditor.java:907)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.wst.sse.ui.StructuredTextEditor$StructuredSelectionProvider.fireSelectionChanged(StructuredTextEditor.java:905)
+	at org.eclipse.wst.sse.ui.StructuredTextEditor$StructuredSelectionProvider.handlePostSelectionChanged(StructuredTextEditor.java:963)
+	at org.eclipse.wst.sse.ui.StructuredTextEditor$5.selectionChanged(StructuredTextEditor.java:886)
+	at org.eclipse.jface.text.TextViewer.firePostSelectionChanged(TextViewer.java:2546)
+	at org.eclipse.jface.text.TextViewer.firePostSelectionChanged(TextViewer.java:2498)
+	at org.eclipse.jface.text.TextViewer$5.run(TextViewer.java:2477)
+	at org.eclipse.swt.widgets.Display.runTimer(Display.java:3745)
+	at org.eclipse.swt.widgets.Display.messageProc(Display.java:2967)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2265)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3291)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1173158</commentid>
+    <comment_count>1</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2008-03-07 15:52:43 -0500</bug_when>
+    <thetext>I&apos;m unable to reproduce this in the latest I-Build.  Let me know if you can still reproduce in the latest code.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1177096</commentid>
+    <comment_count>2</comment_count>
+    <who name="Juergen Zimmermann">Juergen.Zimmermann</who>
+    <bug_when>2008-03-13 12:28:05 -0400</bug_when>
+    <thetext>I tried both Eclipse 3.3.2 &amp; WTP 2.0.2 and Eclipse 3.4M4 &amp; WTP I20080306230652. The issue remains.
+
+BUT if I add the attribute &quot;schema&quot; to each @Table annotation, then the issue is gone. The schema being added is just the default schema of the database user configured via Preferences -&gt; Connectivity -&gt; Driver Definitions.
+
+The database I&apos;m using is PostgreSQL 8.3</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1177136</commentid>
+    <comment_count>3</comment_count>
+    <who name="Juergen Zimmermann">Juergen.Zimmermann</who>
+    <bug_when>2008-03-13 12:53:58 -0400</bug_when>
+    <thetext>Using Oracle XE there are only a few &quot;problems&quot;:
+* colums of type TIMESTAMP with the according entity&apos;s attribute being annotated with @Temporal(TIMESTAMP)
+* Annotations @JoinColumn in 1:1, and n:1 relationships (maybe as a consequence of the TIMESTAMPs)
+Furthermore &quot;Synchronize classes&quot; wasn&apos;t necessary at all.
+
+Anyway: Using Oracle XE the tables are found in the default schema, using PostgreSQL the tables aren&apos;t found in the default schema.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1177163</commentid>
+    <comment_count>4</comment_count>
+    <who name="Juergen Zimmermann">Juergen.Zimmermann</who>
+    <bug_when>2008-03-13 13:18:50 -0400</bug_when>
+    <thetext>Perhaps you are using PostgreSQL&apos;s &quot;public&quot; schema instead of the user&apos;s schema.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1252901</commentid>
+    <comment_count>5</comment_count>
+    <who name="Karen Butzke">karenfbutzke</who>
+    <bug_when>2008-05-29 12:05:53 -0400</bug_when>
+    <thetext>I don&apos;t know how to reproduce the synchronize classes issue and the default schema issue should be resolved with bug 195095 fixed in 2.0 M7.  I am setting this bug to fixed, please reopen with new info if you are still having problems</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

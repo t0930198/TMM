@@ -1,0 +1,441 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214981</bug_id>
+          
+          <creation_ts>2008-01-10 22:01:00 -0500</creation_ts>
+          <short_desc>Race condition allowed with SetClasspathOperation</short_desc>
+          <delta_ts>2008-01-28 05:19:51 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>3.3.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chuck Bridgham">cbridgha</reporter>
+          <assigned_to name="Jerome Lanneluc">jerome_lanneluc</assigned_to>
+          <cc>eric_jodet</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>michael.grosze</cc>
+    
+    <cc>philippe_mulet</cc>
+    
+    <cc>tjbishop</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="pmc_approved"
+          id="5118"
+          type_id="2"
+          status="+"
+          setter="philippe_mulet"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129418</commentid>
+    <comment_count>0</comment_count>
+    <who name="Chuck Bridgham">cbridgha</who>
+    <bug_when>2008-01-10 22:01:45 -0500</bug_when>
+    <thetext>Scenario:
+
+We have project migration jobs running in separate threads modifying the &quot;.project&quot; metadata.  Our jobs use (workspace root) scheduling rules to lock access to the project files.
+
+We noticed that threads were spawned executing the SetClasspathOperation that doesn&apos;t have a scheduling rule, and it modifies the .project file - but because no lock is obtained, other threads can modify this file, and cause corruption.
+
+Here is a case where a JREUpdateJob is spawned:
+
+at org.eclipse.core.internal.resources.Project.setDescription(Project.java:949)
+        at org.eclipse.core.internal.resources.Project.setDescription(Project.java:1062)
+        at org.eclipse.jdt.internal.core.DeltaProcessingState$ProjectUpdateInfo.updateProjectReferencesIfNecessary(DeltaProcessingState.java:160)
+        at org.eclipse.jdt.internal.core.DeltaProcessingState.updateProjectReferences(DeltaProcessingState.java:245)
+        at org.eclipse.jdt.internal.core.SetClasspathOperation.updateProjectReferencesIfNecessary(SetClasspathOperation.java:804)
+        at org.eclipse.jdt.internal.core.SetClasspathOperation.executeOperation(SetClasspathOperation.java:254)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:720)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1737)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.runOperation(JavaModelOperation.java:784)
+        at org.eclipse.jdt.internal.core.JavaProject.setRawClasspath(JavaProject.java:3016)
+        at org.eclipse.jdt.core.JavaCore$5.run(JavaCore.java:4215)
+        at org.eclipse.jdt.internal.core.BatchOperation.executeOperation(BatchOperation.java:39)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:720)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1737)
+        at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:4024)
+        at org.eclipse.jdt.core.JavaCore.setClasspathContainer(JavaCore.java:4198)
+        at org.eclipse.jdt.internal.launching.JREContainerInitializer.initialize(JREContainerInitializer.java:57)
+        at org.eclipse.jdt.internal.launching.LaunchingPlugin$VMChanges.rebind(LaunchingPlugin.java:279)
+        at org.eclipse.jdt.internal.launching.LaunchingPlugin$VMChanges.access$0(LaunchingPlugin.java:244)
+        at org.eclipse.jdt.internal.launching.LaunchingPlugin$1.run(LaunchingPlugin.java:232)
+        at org.eclipse.jdt.internal.core.BatchOperation.executeOperation(BatchOperation.java:39)
+        at org.eclipse.jdt.internal.core.JavaModelOperation.run(JavaModelOperation.java:720)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1737)
+        at org.eclipse.jdt.core.JavaCore.run(JavaCore.java:4024)
+        at org.eclipse.jdt.internal.launching.LaunchingPlugin$VMChanges.doit(LaunchingPlugin.java:236)
+        at org.eclipse.jdt.internal.launching.LaunchingPlugin$JREUpdateJob.run(LaunchingPlugin.java:316)
+
+The same time, our migration job, using a workspace root rule also falls into the same method, but is allowed to finish:
+
+  at org.eclipse.core.internal.resources.Project.setDescription(Project.java:949)
+        at org.eclipse.core.internal.resources.Project.setDescription(Project.java:1062)
+        at com.ibm.etools.common.internal.migration.TacitMigrationEngine.migrateAllMappings(TacitMigrationEngine.java:228)
+        at com.ibm.etools.common.internal.migration.TacitMigrationEngine.migrateAllMappings(TacitMigrationEngine.java:209)
+        at com.ibm.etools.common.internal.migration.TacitMigrationOperation.execute(TacitMigrationOperation.java:105)
+        at com.ibm.etools.common.frameworks.internal.datamodel.WTPOperation.doRun(WTPOperation.java:338)
+        at com.ibm.etools.common.frameworks.internal.datamodel.WTPOperation$1.run(WTPOperation.java:250)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1737)
+        at org.eclipse.core.internal.resources.Workspace.run(Workspace.java:1719)
+        at com.ibm.etools.common.frameworks.internal.datamodel.WTPOperation.run(WTPOperation.java:268)
+        at com.ibm.etools.common.internal.migration.WorkspaceMigrationListener$1.run(WorkspaceMigrationListener.java:142)
+        at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+        at com.ibm.etools.common.internal.migration.WorkspaceMigrationListener$WorkspaceMigrationJob.run(WorkspaceMigrationListener.java:111)
+
+The JDT job then finishes, but with a &quot;stale&quot; IProjectDescription - corrupting the file, and erasing any changes from the migration job.
+
+
+
+Can the SetClasspathOperation use a scheduling rule?   at least the IProject?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129519</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86655</attachid>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-11 05:21:07 -0500</bug_when>
+    <thetext>Created attachment 86655
+Proposed fix against R3_2_maintenance</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129549</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86662</attachid>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-11 06:49:55 -0500</bug_when>
+    <thetext>Created attachment 86662
+Proposed fix against R3_3_maintenance and HEAD</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130462</commentid>
+    <comment_count>3</comment_count>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-14 04:52:23 -0500</bug_when>
+    <thetext>Fix released in R3_2_maintenance stream.
+Note that there is no regression test since this is a concurrency problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130464</commentid>
+    <comment_count>4</comment_count>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-14 04:59:04 -0500</bug_when>
+    <thetext>Fix released for 3.4M5 in HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130468</commentid>
+    <comment_count>5</comment_count>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-14 05:03:55 -0500</bug_when>
+    <thetext>Requesting PMC approval to port to 3.3.2 since:
+- the bug causes a file corruption
+- there is no workaround for clients
+- the fix is simple 
+- the fix is safe - there is no call out to client while we take the lock, so no deadlock can happen</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131308</commentid>
+    <comment_count>6</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-01-15 05:33:21 -0500</bug_when>
+    <thetext>+1 for 3.3.2</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131386</commentid>
+    <comment_count>7</comment_count>
+    <who name="Jerome Lanneluc">jerome_lanneluc</who>
+    <bug_when>2008-01-15 07:43:56 -0500</bug_when>
+    <thetext>Fix released for 3.3.2 in R3_3_maintenance stream.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137528</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eric Jodet">eric_jodet</who>
+    <bug_when>2008-01-24 04:47:02 -0500</bug_when>
+    <thetext>Verified in the code for 3.3.2 using M20080123-0800 build</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86655</attachid>
+            <date>2008-01-11 05:21:00 -0500</date>
+            <delta_ts>2008-01-11 05:21:07 -0500</delta_ts>
+            <desc>Proposed fix against R3_2_maintenance</desc>
+            <filename>214981.txt</filename>
+            <type>text/plain</type>
+            <size>6162</size>
+            <attacher name="Jerome Lanneluc">jerome_lanneluc</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUN
+CkluZGV4OiBtb2RlbC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29yZS9EZWx0YVByb2Nlc3Np
+bmdTdGF0ZS5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcu
+ZWNsaXBzZS5qZHQuY29yZS9tb2RlbC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29yZS9EZWx0
+YVByb2Nlc3NpbmdTdGF0ZS5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4zNg0KZGlmZiAt
+dSAtcjEuMzYgRGVsdGFQcm9jZXNzaW5nU3RhdGUuamF2YQ0KLS0tIG1vZGVsL29yZy9lY2xpcHNl
+L2pkdC9pbnRlcm5hbC9jb3JlL0RlbHRhUHJvY2Vzc2luZ1N0YXRlLmphdmEJMjkgTWFyIDIwMDYg
+MDM6MDg6NDggLTAwMDAJMS4zNg0KKysrIG1vZGVsL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9j
+b3JlL0RlbHRhUHJvY2Vzc2luZ1N0YXRlLmphdmEJMTEgSmFuIDIwMDggMTA6MjA6MTAgLTAwMDAN
+CkBAIC0yMiw2ICsyMiw3IEBADQogDQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2Vz
+Lio7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS4qOw0KK2ltcG9ydCBvcmcuZWNs
+aXBzZS5jb3JlLnJ1bnRpbWUuam9icy5JU2NoZWR1bGluZ1J1bGU7DQogaW1wb3J0IG9yZy5lY2xp
+cHNlLmpkdC5jb3JlLio7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpkdC5jb3JlLmNvbXBpbGVyLkNo
+YXJPcGVyYXRpb247DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpkdC5pbnRlcm5hbC5jb3JlLnV0aWwu
+VXRpbDsNCkBAIC05Myw3ICs5NCw3IEBADQogCQkgKi8NCiAJCXB1YmxpYyB2b2lkIHVwZGF0ZVBy
+b2plY3RSZWZlcmVuY2VzSWZOZWNlc3NhcnkoKSB0aHJvd3MgSmF2YU1vZGVsRXhjZXB0aW9uIHsN
+CiAJCQkNCi0JCQlTdHJpbmdbXSBvbGRSZXF1aXJlZCA9IHRoaXMub2xkUmVzb2x2ZWRQYXRoID09
+IG51bGwgPyBDaGFyT3BlcmF0aW9uLk5PX1NUUklOR1MgOiB0aGlzLnByb2plY3QucHJvamVjdFBy
+ZXJlcXVpc2l0ZXModGhpcy5vbGRSZXNvbHZlZFBhdGgpOw0KKwkJCWZpbmFsIFN0cmluZ1tdIG9s
+ZFJlcXVpcmVkID0gdGhpcy5vbGRSZXNvbHZlZFBhdGggPT0gbnVsbCA/IENoYXJPcGVyYXRpb24u
+Tk9fU1RSSU5HUyA6IHRoaXMucHJvamVjdC5wcm9qZWN0UHJlcmVxdWlzaXRlcyh0aGlzLm9sZFJl
+c29sdmVkUGF0aCk7DQogCQ0KIAkJCWlmICh0aGlzLm5ld1Jlc29sdmVkUGF0aCA9PSBudWxsKSB7
+DQogCQkJCWlmICh0aGlzLm5ld1Jhd1BhdGggPT0gbnVsbCkNCkBAIC0xMDYsNTkgKzEwNyw2NyBA
+QA0KIAkJCQkJCXRydWUvKmdlbmVyYXRlIG1hcmtlciBvbiBlcnJvciovLCANCiAJCQkJCQludWxs
+LypubyByZXZlcnNlIG1hcCovKTsNCiAJCQl9DQotCQkJU3RyaW5nW10gbmV3UmVxdWlyZWQgPSB0
+aGlzLnByb2plY3QucHJvamVjdFByZXJlcXVpc2l0ZXModGhpcy5uZXdSZXNvbHZlZFBhdGgpOw0K
+LQkJCXRyeSB7DQotCQkJCUlQcm9qZWN0IHByb2plY3RSZXNvdXJjZSA9IHRoaXMucHJvamVjdC5n
+ZXRQcm9qZWN0KCk7DQotCQkJCUlQcm9qZWN0RGVzY3JpcHRpb24gZGVzY3JpcHRpb24gPSBwcm9q
+ZWN0UmVzb3VyY2UuZ2V0RGVzY3JpcHRpb24oKTsNCi0JCQkJIA0KLQkJCQlJUHJvamVjdFtdIHBy
+b2plY3RSZWZlcmVuY2VzID0gZGVzY3JpcHRpb24uZ2V0RHluYW1pY1JlZmVyZW5jZXMoKTsNCi0J
+CQkJDQotCQkJCUhhc2hTZXQgb2xkUmVmZXJlbmNlcyA9IG5ldyBIYXNoU2V0KHByb2plY3RSZWZl
+cmVuY2VzLmxlbmd0aCk7DQotCQkJCWZvciAoaW50IGkgPSAwOyBpIDwgcHJvamVjdFJlZmVyZW5j
+ZXMubGVuZ3RoOyBpKyspew0KLQkJCQkJU3RyaW5nIHByb2plY3ROYW1lID0gcHJvamVjdFJlZmVy
+ZW5jZXNbaV0uZ2V0TmFtZSgpOw0KLQkJCQkJb2xkUmVmZXJlbmNlcy5hZGQocHJvamVjdE5hbWUp
+Ow0KLQkJCQl9DQotCQkJCUhhc2hTZXQgbmV3UmVmZXJlbmNlcyA9IChIYXNoU2V0KW9sZFJlZmVy
+ZW5jZXMuY2xvbmUoKTsNCi0JCQ0KLQkJCQlmb3IgKGludCBpID0gMDsgaSA8IG9sZFJlcXVpcmVk
+Lmxlbmd0aDsgaSsrKXsNCi0JCQkJCVN0cmluZyBwcm9qZWN0TmFtZSA9IG9sZFJlcXVpcmVkW2ld
+Ow0KLQkJCQkJbmV3UmVmZXJlbmNlcy5yZW1vdmUocHJvamVjdE5hbWUpOw0KLQkJCQl9DQotCQkJ
+CWZvciAoaW50IGkgPSAwOyBpIDwgbmV3UmVxdWlyZWQubGVuZ3RoOyBpKyspew0KLQkJCQkJU3Ry
+aW5nIHByb2plY3ROYW1lID0gbmV3UmVxdWlyZWRbaV07DQotCQkJCQluZXdSZWZlcmVuY2VzLmFk
+ZChwcm9qZWN0TmFtZSk7DQotCQkJCX0NCi0JCQ0KLQkJCQlJdGVyYXRvciBpdGVyOw0KLQkJCQlp
+bnQgbmV3U2l6ZSA9IG5ld1JlZmVyZW5jZXMuc2l6ZSgpOw0KLQkJCQkNCi0JCQkJY2hlY2tJZGVu
+dGl0eTogew0KLQkJCQkJaWYgKG9sZFJlZmVyZW5jZXMuc2l6ZSgpID09IG5ld1NpemUpew0KLQkJ
+CQkJCWl0ZXIgPSBuZXdSZWZlcmVuY2VzLml0ZXJhdG9yKCk7DQotCQkJCQkJd2hpbGUgKGl0ZXIu
+aGFzTmV4dCgpKXsNCi0JCQkJCQkJaWYgKCFvbGRSZWZlcmVuY2VzLmNvbnRhaW5zKGl0ZXIubmV4
+dCgpKSl7DQotCQkJCQkJCQlicmVhayBjaGVja0lkZW50aXR5Ow0KKwkJCWZpbmFsIFN0cmluZ1td
+IG5ld1JlcXVpcmVkID0gdGhpcy5wcm9qZWN0LnByb2plY3RQcmVyZXF1aXNpdGVzKHRoaXMubmV3
+UmVzb2x2ZWRQYXRoKTsNCisJCQlmaW5hbCBJUHJvamVjdCBwcm9qZWN0UmVzb3VyY2UgPSB0aGlz
+LnByb2plY3QuZ2V0UHJvamVjdCgpOw0KKwkJCUlXb3Jrc3BhY2VSdW5uYWJsZSBydW5uYWJsZSA9
+IG5ldyBJV29ya3NwYWNlUnVubmFibGUoKSB7DQorCQkJCXB1YmxpYyB2b2lkIHJ1bihJUHJvZ3Jl
+c3NNb25pdG9yIG1vbml0b3IpIHRocm93cyBDb3JlRXhjZXB0aW9uIHsNCisJCQkJCUlQcm9qZWN0
+RGVzY3JpcHRpb24gZGVzY3JpcHRpb24gPSBwcm9qZWN0UmVzb3VyY2UuZ2V0RGVzY3JpcHRpb24o
+KTsNCisJCQkJCSANCisJCQkJCUlQcm9qZWN0W10gcHJvamVjdFJlZmVyZW5jZXMgPSBkZXNjcmlw
+dGlvbi5nZXREeW5hbWljUmVmZXJlbmNlcygpOw0KKwkJCQkJDQorCQkJCQlIYXNoU2V0IG9sZFJl
+ZmVyZW5jZXMgPSBuZXcgSGFzaFNldChwcm9qZWN0UmVmZXJlbmNlcy5sZW5ndGgpOw0KKwkJCQkJ
+Zm9yIChpbnQgaSA9IDA7IGkgPCBwcm9qZWN0UmVmZXJlbmNlcy5sZW5ndGg7IGkrKyl7DQorCQkJ
+CQkJU3RyaW5nIHByb2plY3ROYW1lID0gcHJvamVjdFJlZmVyZW5jZXNbaV0uZ2V0TmFtZSgpOw0K
+KwkJCQkJCW9sZFJlZmVyZW5jZXMuYWRkKHByb2plY3ROYW1lKTsNCisJCQkJCX0NCisJCQkJCUhh
+c2hTZXQgbmV3UmVmZXJlbmNlcyA9IChIYXNoU2V0KW9sZFJlZmVyZW5jZXMuY2xvbmUoKTsNCisJ
+CQkNCisJCQkJCWZvciAoaW50IGkgPSAwOyBpIDwgb2xkUmVxdWlyZWQubGVuZ3RoOyBpKyspew0K
+KwkJCQkJCVN0cmluZyBwcm9qZWN0TmFtZSA9IG9sZFJlcXVpcmVkW2ldOw0KKwkJCQkJCW5ld1Jl
+ZmVyZW5jZXMucmVtb3ZlKHByb2plY3ROYW1lKTsNCisJCQkJCX0NCisJCQkJCWZvciAoaW50IGkg
+PSAwOyBpIDwgbmV3UmVxdWlyZWQubGVuZ3RoOyBpKyspew0KKwkJCQkJCVN0cmluZyBwcm9qZWN0
+TmFtZSA9IG5ld1JlcXVpcmVkW2ldOw0KKwkJCQkJCW5ld1JlZmVyZW5jZXMuYWRkKHByb2plY3RO
+YW1lKTsNCisJCQkJCX0NCisJCQkNCisJCQkJCUl0ZXJhdG9yIGl0ZXI7DQorCQkJCQlpbnQgbmV3
+U2l6ZSA9IG5ld1JlZmVyZW5jZXMuc2l6ZSgpOw0KKwkJCQkJDQorCQkJCQljaGVja0lkZW50aXR5
+OiB7DQorCQkJCQkJaWYgKG9sZFJlZmVyZW5jZXMuc2l6ZSgpID09IG5ld1NpemUpew0KKwkJCQkJ
+CQlpdGVyID0gbmV3UmVmZXJlbmNlcy5pdGVyYXRvcigpOw0KKwkJCQkJCQl3aGlsZSAoaXRlci5o
+YXNOZXh0KCkpew0KKwkJCQkJCQkJaWYgKCFvbGRSZWZlcmVuY2VzLmNvbnRhaW5zKGl0ZXIubmV4
+dCgpKSl7DQorCQkJCQkJCQkJYnJlYWsgY2hlY2tJZGVudGl0eTsNCisJCQkJCQkJCX0NCiAJCQkJ
+CQkJfQ0KKwkJCQkJCQlyZXR1cm47DQogCQkJCQkJfQ0KLQkJCQkJCXJldHVybjsNCiAJCQkJCX0N
+CisJCQkJCVN0cmluZ1tdIHJlcXVpcmVkUHJvamVjdE5hbWVzID0gbmV3IFN0cmluZ1tuZXdTaXpl
+XTsNCisJCQkJCWludCBpbmRleCA9IDA7DQorCQkJCQlpdGVyID0gbmV3UmVmZXJlbmNlcy5pdGVy
+YXRvcigpOw0KKwkJCQkJd2hpbGUgKGl0ZXIuaGFzTmV4dCgpKXsNCisJCQkJCQlyZXF1aXJlZFBy
+b2plY3ROYW1lc1tpbmRleCsrXSA9IChTdHJpbmcpaXRlci5uZXh0KCk7DQorCQkJCQl9DQorCQkJ
+CQlVdGlsLnNvcnQocmVxdWlyZWRQcm9qZWN0TmFtZXMpOyAvLyBlbnN1cmUgdGhhdCBpZiBjaGFu
+Z2VkLCB0aGUgb3JkZXIgaXMgY29uc2lzdGVudA0KKwkJCQkJDQorCQkJCQlJUHJvamVjdFtdIHJl
+cXVpcmVkUHJvamVjdEFycmF5ID0gbmV3IElQcm9qZWN0W25ld1NpemVdOw0KKwkJCQkJSVdvcmtz
+cGFjZVJvb3Qgd2tzUm9vdCA9IHByb2plY3RSZXNvdXJjZS5nZXRXb3Jrc3BhY2UoKS5nZXRSb290
+KCk7DQorCQkJCQlmb3IgKGludCBpID0gMDsgaSA8IG5ld1NpemU7IGkrKyl7DQorCQkJCQkJcmVx
+dWlyZWRQcm9qZWN0QXJyYXlbaV0gPSB3a3NSb290LmdldFByb2plY3QocmVxdWlyZWRQcm9qZWN0
+TmFtZXNbaV0pOw0KKwkJCQkJfQ0KKwkJCQkJZGVzY3JpcHRpb24uc2V0RHluYW1pY1JlZmVyZW5j
+ZXMocmVxdWlyZWRQcm9qZWN0QXJyYXkpOw0KKwkJCQkJcHJvamVjdFJlc291cmNlLnNldERlc2Ny
+aXB0aW9uKGRlc2NyaXB0aW9uLCBudWxsKTsNCiAJCQkJfQ0KLQkJCQlTdHJpbmdbXSByZXF1aXJl
+ZFByb2plY3ROYW1lcyA9IG5ldyBTdHJpbmdbbmV3U2l6ZV07DQotCQkJCWludCBpbmRleCA9IDA7
+DQotCQkJCWl0ZXIgPSBuZXdSZWZlcmVuY2VzLml0ZXJhdG9yKCk7DQotCQkJCXdoaWxlIChpdGVy
+Lmhhc05leHQoKSl7DQotCQkJCQlyZXF1aXJlZFByb2plY3ROYW1lc1tpbmRleCsrXSA9IChTdHJp
+bmcpaXRlci5uZXh0KCk7DQotCQkJCX0NCi0JCQkJVXRpbC5zb3J0KHJlcXVpcmVkUHJvamVjdE5h
+bWVzKTsgLy8gZW5zdXJlIHRoYXQgaWYgY2hhbmdlZCwgdGhlIG9yZGVyIGlzIGNvbnNpc3RlbnQN
+Ci0JCQkJDQotCQkJCUlQcm9qZWN0W10gcmVxdWlyZWRQcm9qZWN0QXJyYXkgPSBuZXcgSVByb2pl
+Y3RbbmV3U2l6ZV07DQotCQkJCUlXb3Jrc3BhY2VSb290IHdrc1Jvb3QgPSBwcm9qZWN0UmVzb3Vy
+Y2UuZ2V0V29ya3NwYWNlKCkuZ2V0Um9vdCgpOw0KLQkJCQlmb3IgKGludCBpID0gMDsgaSA8IG5l
+d1NpemU7IGkrKyl7DQotCQkJCQlyZXF1aXJlZFByb2plY3RBcnJheVtpXSA9IHdrc1Jvb3QuZ2V0
+UHJvamVjdChyZXF1aXJlZFByb2plY3ROYW1lc1tpXSk7DQotCQkJCX0NCi0JCQkJZGVzY3JpcHRp
+b24uc2V0RHluYW1pY1JlZmVyZW5jZXMocmVxdWlyZWRQcm9qZWN0QXJyYXkpOw0KLQkJCQlwcm9q
+ZWN0UmVzb3VyY2Uuc2V0RGVzY3JpcHRpb24oZGVzY3JpcHRpb24sIG51bGwpOw0KLQkJDQorCQkJ
+fTsNCisJCQl0cnkgew0KKwkJCQkvLyBlbnN1cmUgdGhhdCBhIHNoZWR1bGluZyBydWxlIGlzIHVz
+ZWQgc28gdGhhdCB0aGUgcHJvamVjdCBkZXNjcmlwdGlvbiBpcyBub3QgbW9kaWZpZWQgYnkgYW5v
+dGhlciB0aHJlYWQgd2hpbGUgd2UgdXBkYXRlIGl0DQorCQkJCS8vIHNlZSBodHRwczovL2J1Z3Mu
+ZWNsaXBzZS5vcmcvYnVncy9zaG93X2J1Zy5jZ2k/aWQ9MjE0OTgxDQorCQkJCUlXb3Jrc3BhY2Ug
+d29ya3NwYWNlID0gcHJvamVjdFJlc291cmNlLmdldFdvcmtzcGFjZSgpOw0KKwkJCQlJU2NoZWR1
+bGluZ1J1bGUgcnVsZSA9IHdvcmtzcGFjZS5nZXRSdWxlRmFjdG9yeSgpLm1vZGlmeVJ1bGUocHJv
+amVjdFJlc291cmNlKTsgLy8gc2hlZHVsaW5nIHJ1bGUgZm9yIG1vZGlmeWluZyB0aGUgcHJvamVj
+dA0KKwkJCQl3b3Jrc3BhY2UucnVuKHJ1bm5hYmxlLCBydWxlLCBJV29ya3NwYWNlLkFWT0lEX1VQ
+REFURSwgbnVsbCk7DQogCQkJfSBjYXRjaChDb3JlRXhjZXB0aW9uIGUpew0KIAkJCQlpZiAoIUV4
+dGVybmFsSmF2YVByb2plY3QuRVhURVJOQUxfUFJPSkVDVF9OQU1FLmVxdWFscyh0aGlzLnByb2pl
+Y3QuZ2V0RWxlbWVudE5hbWUoKSkpDQogCQkJCQl0aHJvdyBuZXcgSmF2YU1vZGVsRXhjZXB0aW9u
+KGUpOw0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86662</attachid>
+            <date>2008-01-11 06:49:00 -0500</date>
+            <delta_ts>2008-01-11 06:49:55 -0500</delta_ts>
+            <desc>Proposed fix against R3_3_maintenance and HEAD</desc>
+            <filename>214981_3.3.x.txt</filename>
+            <type>text/plain</type>
+            <size>6267</size>
+            <attacher name="Jerome Lanneluc">jerome_lanneluc</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUN
+CkluZGV4OiBtb2RlbC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29yZS9Qcm9qZWN0UmVmZXJl
+bmNlQ2hhbmdlLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29y
+Zy5lY2xpcHNlLmpkdC5jb3JlL21vZGVsL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb3JlL1By
+b2plY3RSZWZlcmVuY2VDaGFuZ2UuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMw0KZGlm
+ZiAtdSAtcjEuMyBQcm9qZWN0UmVmZXJlbmNlQ2hhbmdlLmphdmENCi0tLSBtb2RlbC9vcmcvZWNs
+aXBzZS9qZHQvaW50ZXJuYWwvY29yZS9Qcm9qZWN0UmVmZXJlbmNlQ2hhbmdlLmphdmEJNiBNYXIg
+MjAwNyAwMjozODo0OSAtMDAwMAkxLjMNCisrKyBtb2RlbC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJu
+YWwvY29yZS9Qcm9qZWN0UmVmZXJlbmNlQ2hhbmdlLmphdmEJMTEgSmFuIDIwMDggMTE6MzI6Mjgg
+LTAwMDANCkBAIC0xNSw4ICsxNSwxMiBAQA0KIA0KIGltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJl
+c291cmNlcy5JUHJvamVjdDsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVBy
+b2plY3REZXNjcmlwdGlvbjsNCitpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVdv
+cmtzcGFjZTsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVdvcmtzcGFjZVJv
+b3Q7DQoraW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLklXb3Jrc3BhY2VSdW5uYWJs
+ZTsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1lLkNvcmVFeGNlcHRpb247DQoraW1w
+b3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5JUHJvZ3Jlc3NNb25pdG9yOw0KK2ltcG9ydCBv
+cmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuam9icy5JU2NoZWR1bGluZ1J1bGU7DQogaW1wb3J0IG9y
+Zy5lY2xpcHNlLmpkdC5jb3JlLklDbGFzc3BhdGhFbnRyeTsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uu
+amR0LmNvcmUuSmF2YU1vZGVsRXhjZXB0aW9uOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5qZHQuY29y
+ZS5jb21waWxlci5DaGFyT3BlcmF0aW9uOw0KQEAgLTM3LDYxICs0MSw2OSBAQA0KIAkgKi8NCiAJ
+cHVibGljIHZvaWQgdXBkYXRlUHJvamVjdFJlZmVyZW5jZXNJZk5lY2Vzc2FyeSgpIHRocm93cyBK
+YXZhTW9kZWxFeGNlcHRpb24gew0KIAkJDQotCQlTdHJpbmdbXSBvbGRSZXF1aXJlZCA9IHRoaXMu
+b2xkUmVzb2x2ZWRDbGFzc3BhdGggPT0gbnVsbCA/IENoYXJPcGVyYXRpb24uTk9fU1RSSU5HUyA6
+IHRoaXMucHJvamVjdC5wcm9qZWN0UHJlcmVxdWlzaXRlcyh0aGlzLm9sZFJlc29sdmVkQ2xhc3Nw
+YXRoKTsNCisJCWZpbmFsIFN0cmluZ1tdIG9sZFJlcXVpcmVkID0gdGhpcy5vbGRSZXNvbHZlZENs
+YXNzcGF0aCA9PSBudWxsID8gQ2hhck9wZXJhdGlvbi5OT19TVFJJTkdTIDogdGhpcy5wcm9qZWN0
+LnByb2plY3RQcmVyZXF1aXNpdGVzKHRoaXMub2xkUmVzb2x2ZWRDbGFzc3BhdGgpOw0KIAkJSUNs
+YXNzcGF0aEVudHJ5W10gbmV3UmVzb2x2ZWRDbGFzc3BhdGggPSB0aGlzLnByb2plY3QuZ2V0UmVz
+b2x2ZWRDbGFzc3BhdGgoKTsNCi0JCVN0cmluZ1tdIG5ld1JlcXVpcmVkID0gdGhpcy5wcm9qZWN0
+LnByb2plY3RQcmVyZXF1aXNpdGVzKG5ld1Jlc29sdmVkQ2xhc3NwYXRoKTsNCi0JCXRyeSB7DQot
+CQkJSVByb2plY3QgcHJvamVjdFJlc291cmNlID0gdGhpcy5wcm9qZWN0LmdldFByb2plY3QoKTsN
+Ci0JCQlJUHJvamVjdERlc2NyaXB0aW9uIGRlc2NyaXB0aW9uID0gcHJvamVjdFJlc291cmNlLmdl
+dERlc2NyaXB0aW9uKCk7DQotCQkJIA0KLQkJCUlQcm9qZWN0W10gcHJvamVjdFJlZmVyZW5jZXMg
+PSBkZXNjcmlwdGlvbi5nZXREeW5hbWljUmVmZXJlbmNlcygpOw0KLQkJCQ0KLQkJCUhhc2hTZXQg
+b2xkUmVmZXJlbmNlcyA9IG5ldyBIYXNoU2V0KHByb2plY3RSZWZlcmVuY2VzLmxlbmd0aCk7DQot
+CQkJZm9yIChpbnQgaSA9IDA7IGkgPCBwcm9qZWN0UmVmZXJlbmNlcy5sZW5ndGg7IGkrKyl7DQot
+CQkJCVN0cmluZyBwcm9qZWN0TmFtZSA9IHByb2plY3RSZWZlcmVuY2VzW2ldLmdldE5hbWUoKTsN
+Ci0JCQkJb2xkUmVmZXJlbmNlcy5hZGQocHJvamVjdE5hbWUpOw0KLQkJCX0NCi0JCQlIYXNoU2V0
+IG5ld1JlZmVyZW5jZXMgPSAoSGFzaFNldClvbGRSZWZlcmVuY2VzLmNsb25lKCk7DQotCQ0KLQkJ
+CWZvciAoaW50IGkgPSAwOyBpIDwgb2xkUmVxdWlyZWQubGVuZ3RoOyBpKyspew0KLQkJCQlTdHJp
+bmcgcHJvamVjdE5hbWUgPSBvbGRSZXF1aXJlZFtpXTsNCi0JCQkJbmV3UmVmZXJlbmNlcy5yZW1v
+dmUocHJvamVjdE5hbWUpOw0KLQkJCX0NCi0JCQlmb3IgKGludCBpID0gMDsgaSA8IG5ld1JlcXVp
+cmVkLmxlbmd0aDsgaSsrKXsNCi0JCQkJU3RyaW5nIHByb2plY3ROYW1lID0gbmV3UmVxdWlyZWRb
+aV07DQotCQkJCW5ld1JlZmVyZW5jZXMuYWRkKHByb2plY3ROYW1lKTsNCi0JCQl9DQotCQ0KLQkJ
+CUl0ZXJhdG9yIGl0ZXI7DQotCQkJaW50IG5ld1NpemUgPSBuZXdSZWZlcmVuY2VzLnNpemUoKTsN
+Ci0JCQkNCi0JCQljaGVja0lkZW50aXR5OiB7DQotCQkJCWlmIChvbGRSZWZlcmVuY2VzLnNpemUo
+KSA9PSBuZXdTaXplKXsNCi0JCQkJCWl0ZXIgPSBuZXdSZWZlcmVuY2VzLml0ZXJhdG9yKCk7DQot
+CQkJCQl3aGlsZSAoaXRlci5oYXNOZXh0KCkpew0KLQkJCQkJCWlmICghb2xkUmVmZXJlbmNlcy5j
+b250YWlucyhpdGVyLm5leHQoKSkpew0KLQkJCQkJCQlicmVhayBjaGVja0lkZW50aXR5Ow0KKwkJ
+ZmluYWwgU3RyaW5nW10gbmV3UmVxdWlyZWQgPSB0aGlzLnByb2plY3QucHJvamVjdFByZXJlcXVp
+c2l0ZXMobmV3UmVzb2x2ZWRDbGFzc3BhdGgpOw0KKwkJZmluYWwgSVByb2plY3QgcHJvamVjdFJl
+c291cmNlID0gdGhpcy5wcm9qZWN0LmdldFByb2plY3QoKTsNCisJCUlXb3Jrc3BhY2VSdW5uYWJs
+ZSBydW5uYWJsZSA9IG5ldyBJV29ya3NwYWNlUnVubmFibGUoKSB7DQorCQkJcHVibGljIHZvaWQg
+cnVuKElQcm9ncmVzc01vbml0b3IgbW9uaXRvcikgdGhyb3dzIENvcmVFeGNlcHRpb24gew0KKwkJ
+CQlJUHJvamVjdERlc2NyaXB0aW9uIGRlc2NyaXB0aW9uID0gcHJvamVjdFJlc291cmNlLmdldERl
+c2NyaXB0aW9uKCk7DQorCQkJCSANCisJCQkJSVByb2plY3RbXSBwcm9qZWN0UmVmZXJlbmNlcyA9
+IGRlc2NyaXB0aW9uLmdldER5bmFtaWNSZWZlcmVuY2VzKCk7DQorCQkJCQ0KKwkJCQlIYXNoU2V0
+IG9sZFJlZmVyZW5jZXMgPSBuZXcgSGFzaFNldChwcm9qZWN0UmVmZXJlbmNlcy5sZW5ndGgpOw0K
+KwkJCQlmb3IgKGludCBpID0gMDsgaSA8IHByb2plY3RSZWZlcmVuY2VzLmxlbmd0aDsgaSsrKXsN
+CisJCQkJCVN0cmluZyBwcm9qZWN0TmFtZSA9IHByb2plY3RSZWZlcmVuY2VzW2ldLmdldE5hbWUo
+KTsNCisJCQkJCW9sZFJlZmVyZW5jZXMuYWRkKHByb2plY3ROYW1lKTsNCisJCQkJfQ0KKwkJCQlI
+YXNoU2V0IG5ld1JlZmVyZW5jZXMgPSAoSGFzaFNldClvbGRSZWZlcmVuY2VzLmNsb25lKCk7DQor
+CQkNCisJCQkJZm9yIChpbnQgaSA9IDA7IGkgPCBvbGRSZXF1aXJlZC5sZW5ndGg7IGkrKyl7DQor
+CQkJCQlTdHJpbmcgcHJvamVjdE5hbWUgPSBvbGRSZXF1aXJlZFtpXTsNCisJCQkJCW5ld1JlZmVy
+ZW5jZXMucmVtb3ZlKHByb2plY3ROYW1lKTsNCisJCQkJfQ0KKwkJCQlmb3IgKGludCBpID0gMDsg
+aSA8IG5ld1JlcXVpcmVkLmxlbmd0aDsgaSsrKXsNCisJCQkJCVN0cmluZyBwcm9qZWN0TmFtZSA9
+IG5ld1JlcXVpcmVkW2ldOw0KKwkJCQkJbmV3UmVmZXJlbmNlcy5hZGQocHJvamVjdE5hbWUpOw0K
+KwkJCQl9DQorCQkNCisJCQkJSXRlcmF0b3IgaXRlcjsNCisJCQkJaW50IG5ld1NpemUgPSBuZXdS
+ZWZlcmVuY2VzLnNpemUoKTsNCisJCQkJDQorCQkJCWNoZWNrSWRlbnRpdHk6IHsNCisJCQkJCWlm
+IChvbGRSZWZlcmVuY2VzLnNpemUoKSA9PSBuZXdTaXplKXsNCisJCQkJCQlpdGVyID0gbmV3UmVm
+ZXJlbmNlcy5pdGVyYXRvcigpOw0KKwkJCQkJCXdoaWxlIChpdGVyLmhhc05leHQoKSl7DQorCQkJ
+CQkJCWlmICghb2xkUmVmZXJlbmNlcy5jb250YWlucyhpdGVyLm5leHQoKSkpew0KKwkJCQkJCQkJ
+YnJlYWsgY2hlY2tJZGVudGl0eTsNCisJCQkJCQkJfQ0KIAkJCQkJCX0NCisJCQkJCQlyZXR1cm47
+DQogCQkJCQl9DQotCQkJCQlyZXR1cm47DQogCQkJCX0NCisJCQkJU3RyaW5nW10gcmVxdWlyZWRQ
+cm9qZWN0TmFtZXMgPSBuZXcgU3RyaW5nW25ld1NpemVdOw0KKwkJCQlpbnQgaW5kZXggPSAwOw0K
+KwkJCQlpdGVyID0gbmV3UmVmZXJlbmNlcy5pdGVyYXRvcigpOw0KKwkJCQl3aGlsZSAoaXRlci5o
+YXNOZXh0KCkpew0KKwkJCQkJcmVxdWlyZWRQcm9qZWN0TmFtZXNbaW5kZXgrK10gPSAoU3RyaW5n
+KWl0ZXIubmV4dCgpOw0KKwkJCQl9DQorCQkJCVV0aWwuc29ydChyZXF1aXJlZFByb2plY3ROYW1l
+cyk7IC8vIGVuc3VyZSB0aGF0IGlmIGNoYW5nZWQsIHRoZSBvcmRlciBpcyBjb25zaXN0ZW50DQor
+CQkJCQ0KKwkJCQlJUHJvamVjdFtdIHJlcXVpcmVkUHJvamVjdEFycmF5ID0gbmV3IElQcm9qZWN0
+W25ld1NpemVdOw0KKwkJCQlJV29ya3NwYWNlUm9vdCB3a3NSb290ID0gcHJvamVjdFJlc291cmNl
+LmdldFdvcmtzcGFjZSgpLmdldFJvb3QoKTsNCisJCQkJZm9yIChpbnQgaSA9IDA7IGkgPCBuZXdT
+aXplOyBpKyspew0KKwkJCQkJcmVxdWlyZWRQcm9qZWN0QXJyYXlbaV0gPSB3a3NSb290LmdldFBy
+b2plY3QocmVxdWlyZWRQcm9qZWN0TmFtZXNbaV0pOw0KKwkJCQl9DQorCQkJCWRlc2NyaXB0aW9u
+LnNldER5bmFtaWNSZWZlcmVuY2VzKHJlcXVpcmVkUHJvamVjdEFycmF5KTsNCisJCQkJcHJvamVj
+dFJlc291cmNlLnNldERlc2NyaXB0aW9uKGRlc2NyaXB0aW9uLCBudWxsKTsNCiAJCQl9DQotCQkJ
+U3RyaW5nW10gcmVxdWlyZWRQcm9qZWN0TmFtZXMgPSBuZXcgU3RyaW5nW25ld1NpemVdOw0KLQkJ
+CWludCBpbmRleCA9IDA7DQotCQkJaXRlciA9IG5ld1JlZmVyZW5jZXMuaXRlcmF0b3IoKTsNCi0J
+CQl3aGlsZSAoaXRlci5oYXNOZXh0KCkpew0KLQkJCQlyZXF1aXJlZFByb2plY3ROYW1lc1tpbmRl
+eCsrXSA9IChTdHJpbmcpaXRlci5uZXh0KCk7DQotCQkJfQ0KLQkJCVV0aWwuc29ydChyZXF1aXJl
+ZFByb2plY3ROYW1lcyk7IC8vIGVuc3VyZSB0aGF0IGlmIGNoYW5nZWQsIHRoZSBvcmRlciBpcyBj
+b25zaXN0ZW50DQotCQkJDQotCQkJSVByb2plY3RbXSByZXF1aXJlZFByb2plY3RBcnJheSA9IG5l
+dyBJUHJvamVjdFtuZXdTaXplXTsNCi0JCQlJV29ya3NwYWNlUm9vdCB3a3NSb290ID0gcHJvamVj
+dFJlc291cmNlLmdldFdvcmtzcGFjZSgpLmdldFJvb3QoKTsNCi0JCQlmb3IgKGludCBpID0gMDsg
+aSA8IG5ld1NpemU7IGkrKyl7DQotCQkJCXJlcXVpcmVkUHJvamVjdEFycmF5W2ldID0gd2tzUm9v
+dC5nZXRQcm9qZWN0KHJlcXVpcmVkUHJvamVjdE5hbWVzW2ldKTsNCi0JCQl9DQotCQkJZGVzY3Jp
+cHRpb24uc2V0RHluYW1pY1JlZmVyZW5jZXMocmVxdWlyZWRQcm9qZWN0QXJyYXkpOw0KLQkJCXBy
+b2plY3RSZXNvdXJjZS5zZXREZXNjcmlwdGlvbihkZXNjcmlwdGlvbiwgbnVsbCk7DQotCQ0KKwkJ
+fTsNCisJCXRyeSB7DQorCQkJLy8gZW5zdXJlIHRoYXQgYSBzaGVkdWxpbmcgcnVsZSBpcyB1c2Vk
+IHNvIHRoYXQgdGhlIHByb2plY3QgZGVzY3JpcHRpb24gaXMgbm90IG1vZGlmaWVkIGJ5IGFub3Ro
+ZXIgdGhyZWFkIHdoaWxlIHdlIHVwZGF0ZSBpdA0KKwkJCS8vIHNlZSBodHRwczovL2J1Z3MuZWNs
+aXBzZS5vcmcvYnVncy9zaG93X2J1Zy5jZ2k/aWQ9MjE0OTgxDQorCQkJSVdvcmtzcGFjZSB3b3Jr
+c3BhY2UgPSBwcm9qZWN0UmVzb3VyY2UuZ2V0V29ya3NwYWNlKCk7DQorCQkJSVNjaGVkdWxpbmdS
+dWxlIHJ1bGUgPSB3b3Jrc3BhY2UuZ2V0UnVsZUZhY3RvcnkoKS5tb2RpZnlSdWxlKHByb2plY3RS
+ZXNvdXJjZSk7IC8vIHNoZWR1bGluZyBydWxlIGZvciBtb2RpZnlpbmcgdGhlIHByb2plY3QNCisJ
+CQl3b3Jrc3BhY2UucnVuKHJ1bm5hYmxlLCBydWxlLCBJV29ya3NwYWNlLkFWT0lEX1VQREFURSwg
+bnVsbCk7DQogCQl9IGNhdGNoKENvcmVFeGNlcHRpb24gZSl7DQogCQkJaWYgKCFFeHRlcm5hbEph
+dmFQcm9qZWN0LkVYVEVSTkFMX1BST0pFQ1RfTkFNRS5lcXVhbHModGhpcy5wcm9qZWN0LmdldEVs
+ZW1lbnROYW1lKCkpKQ0KIAkJCQl0aHJvdyBuZXcgSmF2YU1vZGVsRXhjZXB0aW9uKGUpOw0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

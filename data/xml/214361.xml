@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214361</bug_id>
+          
+          <creation_ts>2008-01-04 11:40:00 -0500</creation_ts>
+          <short_desc>[xdoclet] no validation if an xdoclet servlet is created in a non-xdoclet web project</short_desc>
+          <delta_ts>2008-04-10 14:46:09 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Java EE Tools</product>
+          <component>jst.servlet</component>
+          <version>2.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kaloyan Raev">kaloyan.r</reporter>
+          <assigned_to name="Kaloyan Raev">kaloyan.r</assigned_to>
+          <cc>ccc</cc>
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125848</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kaloyan Raev">kaloyan.r</who>
+    <bug_when>2008-01-04 11:40:47 -0500</bug_when>
+    <thetext>Steps to reproduce:
+1. Create a Web 2.4 XDoclet project. Name it &quot;web24x&quot;. 
+2. Create a Web 2.5 project (it cannot be XDoclet enabled). Name it &quot;web25&quot;. 
+3. Right-click on the web24x project and call the Servlet wizard. At the bottom of the first wizard page the &quot;Generate an annotated servlet class&quot; checkbox is visible, because the web24x project has the XDoclet facet installed. 
+4. Change the Project to web25. The &quot;Generate an annotated servlet class&quot; checkbox is still visible.
+5. Check the &quot;Generate an annotated servlet class&quot; checkbox on. 
+6. Finish the wizard. 
+
+As a result we have an XDoclet Servlet created in a non-XDoclet project. This is erroneous, because the Servlet is not registered in the web.xml - it is expected that the XDoclet builder will do it, but the latter is not activated, because the project does not have the XDoclet facet installed (and in the Web 2.5 case this is not possible at all). 
+
+There should a validation implemented in the first wizard page that checks whether the &quot;Generate an annotated servlet class&quot; checkbox is checked on when the selected project is a non-XDoclet one. 
+
+Even better, it could be done so the &quot;Generate an annotated servlet class&quot; checkbox appears only when a XDoclet project is selected and disappears when the Project field is changed to a non-XDoclet project.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

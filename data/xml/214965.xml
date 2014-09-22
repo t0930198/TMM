@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214965</bug_id>
+          
+          <creation_ts>2008-01-10 16:18:00 -0500</creation_ts>
+          <short_desc>Hang opening large compressed Javascript file</short_desc>
+          <delta_ts>2008-04-07 10:57:19 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Text</component>
+          <version>3.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Nick Edgar">nick_edgar</reporter>
+          <assigned_to name="Platform-Text-Inbox">platform-text-inbox</assigned_to>
+          <cc>daniel_megert</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129279</commentid>
+    <comment_count>0</comment_count>
+    <who name="Nick Edgar">nick_edgar</who>
+    <bug_when>2008-01-10 16:18:24 -0500</bug_when>
+    <thetext>Tried opening the digit_all.js file from Dojo 1.0.2, in a plain text editor
+The editor started to open it, but 15 minutes later it still had not completed.
+
+During this time, CPU consumption was around 50%, and the UI would redraw, albeit slowly at times.
+
+Ctrl+Break in the console showed the main thread doing the following (no other threads doing anything interesting).
+
+4XESTACKTRACE          at org/eclipse/swt/internal/win32/OS.HeapAlloc(Native Method)
+4XESTACKTRACE          at org/eclipse/swt/graphics/TextLayout.shape(TextLayout.java:2390(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/graphics/TextLayout.computeRuns(TextLayout.java:222(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/graphics/TextLayout.getLineCount(TextLayout.java:1212(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledTextRenderer.getTextLayout(StyledTextRenderer.java:841(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledTextRenderer.getTextLayout(StyledTextRenderer.java:648(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledTextRenderer.calculate(StyledTextRenderer.java:201(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledTextRenderer.calculateClientArea(StyledTextRenderer.java:219(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledText.resetCache(StyledText.java:6319(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/custom/StyledText.redrawRange(StyledText.java:6016(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter$SquigglesStrategy.draw(AnnotationPainter.java:126(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter.drawDecoration(AnnotationPainter.java:1354(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter.handleDrawRequest(AnnotationPainter.java:1325(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter.enablePainting(AnnotationPainter.java:385(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter.updatePainting(AnnotationPainter.java:908(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter.access$1(AnnotationPainter.java:900(Compiled Code))
+4XESTACKTRACE          at org/eclipse/jface/text/source/AnnotationPainter$1.run(AnnotationPainter.java:1037(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/widgets/RunnableLock.run(RunnableLock.java:35(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/widgets/Synchronizer.runAsyncMessages(Synchronizer.java:123(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/widgets/Display.runAsyncMessages(Display.java:3659(Compiled Code))
+4XESTACKTRACE          at org/eclipse/swt/widgets/Display.readAndDispatch(Display.java:3296(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/Workbench.runEventLoop(Workbench.java:2389(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/Workbench.runUI(Workbench.java:2353(Compiled Code))
+4XESTACKTRACE          at org/eclipse/ui/internal/Workbench.access$4(Workbench.java:2219)
+4XESTACKTRACE          at org/eclipse/ui/internal/Workbench$4.run(Workbench.java:466)
+4XESTACKTRACE          at org/eclipse/core/databinding/observable/Realm.runWithDefault(Realm.java:289)
+4XESTACKTRACE          at org/eclipse/ui/internal/Workbench.createAndRunWorkbench(Workbench.java:461)
+4XESTACKTRACE          at org/eclipse/ui/PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+4XESTACKTRACE          at org/eclipse/ui/internal/ide/application/IDEApplication.start(IDEApplication.java:106)
+4XESTACKTRACE          at org/eclipse/equinox/internal/app/EclipseAppHandle.run(EclipseAppHandle.java:169)
+4XESTACKTRACE          at org/eclipse/core/runtime/internal/adaptor/EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+4XESTACKTRACE          at org/eclipse/core/runtime/internal/adaptor/EclipseAppLauncher.start(EclipseAppLauncher.java:76(Compiled Code))
+4XESTACKTRACE          at org/eclipse/core/runtime/adaptor/EclipseStarter.run(EclipseStarter.java:363)
+4XESTACKTRACE          at org/eclipse/core/runtime/adaptor/EclipseStarter.run(EclipseStarter.java:176)
+4XESTACKTRACE          at sun/reflect/NativeMethodAccessorImpl.invoke0(Native Method)
+4XESTACKTRACE          at sun/reflect/NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:64)
+4XESTACKTRACE          at sun/reflect/DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+4XESTACKTRACE          at java/lang/reflect/Method.invoke(Method.java:615)
+4XESTACKTRACE          at org/eclipse/equinox/launcher/Main.invokeFramework(Main.java:508)
+4XESTACKTRACE          at org/eclipse/equinox/launcher/Main.basicRun(Main.java:447)
+4XESTACKTRACE          at org/eclipse/equinox/launcher/Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129478</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-11 03:34:09 -0500</bug_when>
+    <thetext>I assume you use an old build. We fixed this some time ago. Please always put in the build ID.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195688</commentid>
+    <comment_count>2</comment_count>
+    <who name="Nick Edgar">nick_edgar</who>
+    <bug_when>2008-04-07 10:48:51 -0400</bug_when>
+    <thetext>Yes it was an old build. As indicated in the Version field, this was 3.3.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195701</commentid>
+    <comment_count>3</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-04-07 10:55:49 -0400</bug_when>
+    <thetext>&gt; As indicated in the Version field, this was 3.3.
+The same version is normally used for a whole year, so build id is always welcome. Also, often the browser stores the previous value and hence this information can be wrong.
+
+In 3.4 there&apos;s still a performance problem in SWT&apos;s TextLayout in case the file has long lines.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195705</commentid>
+    <comment_count>4</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-04-07 10:57:19 -0400</bug_when>
+    <thetext>FYI: The SWT bug is bug 213305.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

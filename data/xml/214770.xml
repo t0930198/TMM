@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214770</bug_id>
+          
+          <creation_ts>2008-01-09 11:49:00 -0500</creation_ts>
+          <short_desc>[implementation] Errors with getColumn() in RuleBasedScanner and BufferedRuleBasedScanner</short_desc>
+          <delta_ts>2008-01-10 07:21:07 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Text</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Anthony Juckel">ajuckel</reporter>
+          <assigned_to name="Platform-Text-Inbox">platform-text-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128237</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86480</attachid>
+    <who name="Anthony Juckel">ajuckel</who>
+    <bug_when>2008-01-09 11:49:14 -0500</bug_when>
+    <thetext>Created attachment 86480
+Simple patch to fix the read() and unread() behavior.
+
+Build ID: M20071023-1652
+
+Steps To Reproduce:
+When scanning a document with RuleBasedScanner, the value returned by getColumn() is invalid after an unread() until the next read() operation.  Also, with a BufferedRuleBasedScanner, the value returned by getColumn() is invalid after a read() or unread() operation until the next nextToken() operation.
+
+More information:
+If this behavior is not in error, then I believe the docs for each of these classes/methods should be updated to better reflect when the value returned by getColumn() is considered valid.  I had a tough to track down bug in my code, which turned out to be due to relying on getColumn() to be updated after every read() and unread() operation.  I&apos;ve fixed this in my own scanner by overriding read() and unread().</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128239</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86481</attachid>
+    <who name="Anthony Juckel">ajuckel</who>
+    <bug_when>2008-01-09 11:50:33 -0500</bug_when>
+    <thetext>Created attachment 86481
+JUnit Plugin Project to exercise the bug.
+
+I don&apos;t have the actual tests for jface.text downloaded, so I&apos;m not sure where this test would fit in.  But it&apos;s a simple project to exercise this specific bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128812</commentid>
+    <comment_count>2</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-10 07:21:07 -0500</bug_when>
+    <thetext>Fixed in HEAD.
+Available in builds &gt; N20080110-0010.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86480</attachid>
+            <date>2008-01-09 11:49:00 -0500</date>
+            <delta_ts>2008-01-09 11:49:14 -0500</delta_ts>
+            <desc>Simple patch to fix the read() and unread() behavior.</desc>
+            <filename>org.eclipse.jface.text.diff</filename>
+            <type>text/plain</type>
+            <size>1432</size>
+            <attacher name="Anthony Juckel">ajuckel</attacher>
+            
+              <data encoding="base64">IyBIRyBjaGFuZ2VzZXQgcGF0Y2gNCiMgVXNlciBhanVja2VsQGdtYWlsLmNvbQ0KIyBEYXRlIDEx
+OTk4OTYzMjkgMjE2MDANCiMgTm9kZSBJRCA4NTVmNDcyZGJkMWMxN2JhNDM0OGIzN2UzZGJhZjM3
+MDMzMTBkNDYzDQojIFBhcmVudCAgODBmOWMzNTFiZmM3ZDNmMDhmYmQ1ZWQzZTk3Yjk0ZWRhNjFm
+NDMwOA0KQWRkIGNvbHVtbiBpbnZhbGlkYXRpb24gdG8gcmVhZCBhbmQgdW5yZWFkIGluIEJ1ZmZl
+cmVkUnVsZUJhc2VkU2Nhbm5lciwgYXMgd2VsbCBhcyBhZGRpbmcgaXQgdG8gdW5yZWFkIGluIFJ1
+bGVCYXNlZFNjYW5uZXIuDQoNCmRpZmYgLXIgODBmOWMzNTFiZmM3IC1yIDg1NWY0NzJkYmQxYyBz
+cmMvb3JnL2VjbGlwc2UvamZhY2UvdGV4dC9ydWxlcy9CdWZmZXJlZFJ1bGVCYXNlZFNjYW5uZXIu
+amF2YQ0KLS0tIGEvc3JjL29yZy9lY2xpcHNlL2pmYWNlL3RleHQvcnVsZXMvQnVmZmVyZWRSdWxl
+QmFzZWRTY2FubmVyLmphdmEJV2VkIEphbiAwOSAxMDoyMjoxNSAyMDA4IC0wNjAwDQorKysgYi9z
+cmMvb3JnL2VjbGlwc2UvamZhY2UvdGV4dC9ydWxlcy9CdWZmZXJlZFJ1bGVCYXNlZFNjYW5uZXIu
+amF2YQlXZWQgSmFuIDA5IDEwOjMyOjA5IDIwMDggLTA2MDANCkBAIC0xMTYsNiArMTE2LDcgQEAg
+cHVibGljIGNsYXNzIEJ1ZmZlcmVkUnVsZUJhc2VkU2Nhbm5lciBleA0KIAkJZWxzZSBpZiAoZk9m
+ZnNldCA8IGZTdGFydCB8fCBmRW5kIDwgZk9mZnNldCkNCiAJCQlzaGlmdEJ1ZmZlcihmT2Zmc2V0
+KTsNCiANCisJCWZDb2x1bW4gPSBVTkRFRklORUQ7DQogCQlyZXR1cm4gZkJ1ZmZlcltmT2Zmc2V0
+KysgLSBmU3RhcnRdOw0KIAl9DQogDQpAQCAtMTI4LDYgKzEyOSw3IEBAIHB1YmxpYyBjbGFzcyBC
+dWZmZXJlZFJ1bGVCYXNlZFNjYW5uZXIgZXgNCiAJCQlzaGlmdEJ1ZmZlcihNYXRoLm1heCgwLCBm
+U3RhcnQgLSAoZkJ1ZmZlclNpemUgLyAyKSkpOw0KIA0KIAkJLS0gZk9mZnNldDsNCisJCWZDb2x1
+bW4gPSBVTkRFRklORUQ7DQogCX0NCiB9DQogDQpkaWZmIC1yIDgwZjljMzUxYmZjNyAtciA4NTVm
+NDcyZGJkMWMgc3JjL29yZy9lY2xpcHNlL2pmYWNlL3RleHQvcnVsZXMvUnVsZUJhc2VkU2Nhbm5l
+ci5qYXZhDQotLS0gYS9zcmMvb3JnL2VjbGlwc2UvamZhY2UvdGV4dC9ydWxlcy9SdWxlQmFzZWRT
+Y2FubmVyLmphdmEJV2VkIEphbiAwOSAxMDoyMjoxNSAyMDA4IC0wNjAwDQorKysgYi9zcmMvb3Jn
+L2VjbGlwc2UvamZhY2UvdGV4dC9ydWxlcy9SdWxlQmFzZWRTY2FubmVyLmphdmEJV2VkIEphbiAw
+OSAxMDozMjowOSAyMDA4IC0wNjAwDQpAQCAtMjA5LDYgKzIwOSw3IEBAIHB1YmxpYyBjbGFzcyBS
+dWxlQmFzZWRTY2FubmVyIGltcGxlbWVudHMNCiAJICovDQogCXB1YmxpYyB2b2lkIHVucmVhZCgp
+IHsNCiAJICAgIAktLWZPZmZzZXQ7DQorCSAgICAJZkNvbHVtbiA9IFVOREVGSU5FRDsNCiAJfQ0K
+IH0NCiANCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86481</attachid>
+            <date>2008-01-09 11:50:00 -0500</date>
+            <delta_ts>2008-01-09 11:50:33 -0500</delta_ts>
+            <desc>JUnit Plugin Project to exercise the bug.</desc>
+            <filename>rulebasedparsertest.zip</filename>
+            <type>application/octet-stream</type>
+            <size>3347</size>
+            <attacher name="Anthony Juckel">ajuckel</attacher>
+            
+              <data encoding="base64">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
+YVfDROs/ftO/+HsJmNv7YTSa3UfD6PF5PnuauhUIgyAvoAmztylNEv8n9H9//uL+eF65Qe7xBVBL
+BwhG1IN2iQEAAA0GAABQSwECFAAUAAgACADpVCk41Ryc0qUAAAAzAQAAHgAAAAAAAAAAAAAAAAAA
+AAAAcnVsZWJhc2VkcGFyc2VydGVzdC8uY2xhc3NwYXRoUEsBAhQAFAAIAAgA6VQpONQkjnPtAAAA
+qAIAABwAAAAAAAAAAAAAAAAA8QAAAHJ1bGViYXNlZHBhcnNlcnRlc3QvLnByb2plY3RQSwECFAAU
+AAgACADpVCk44HIhfRYFAACZEwAANQAAAAAAAAAAAAAAAAAoAgAAcnVsZWJhc2VkcGFyc2VydGVz
+dC9SdWxlQmFzZWRTY2FubmVyQ29sdW1uVGVzdC5sYXVuY2hQSwECFAAUAAgACADpVCk40ltg+z8A
+AABQAAAAJAAAAAAAAAAAAAAAAAChBwAAcnVsZWJhc2VkcGFyc2VydGVzdC9idWlsZC5wcm9wZXJ0
+aWVzUEsBAhQAFAAIAAgA6VQpOP52GIqBAAAAywAAACgAAAAAAAAAAAAAAAAAMggAAHJ1bGViYXNl
+ZHBhcnNlcnRlc3QvTUVUQS1JTkYvTUFOSUZFU1QuTUZQSwECFAAUAAgACADpVCk4RtSDdokBAAAN
+BgAANwAAAAAAAAAAAAAAAAAJCQAAcnVsZWJhc2VkcGFyc2VydGVzdC9zcmMvUnVsZUJhc2VkU2Nh
+bm5lckNvbHVtblRlc3QuamF2YVBLBQYAAAAABgAGAAYCAAD3CgAAAAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

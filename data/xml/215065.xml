@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215065</bug_id>
+          
+          <creation_ts>2008-01-11 13:07:00 -0500</creation_ts>
+          <short_desc>Two threadth deadlocked while using different synchronization model</short_desc>
+          <delta_ts>2008-02-14 07:03:01 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>216996</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>4.0.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alex Chapiro">achapiro</reporter>
+          <assigned_to name="Oleg Krasilnikov">oleg.krasilnikov</assigned_to>
+          <cc>oleg.krasilnikov</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129809</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86703</attachid>
+    <who name="Alex Chapiro">achapiro</who>
+    <bug_when>2008-01-11 13:07:40 -0500</bug_when>
+    <thetext>Created attachment 86703
+Just a patch
+
+Build ID:  I20070503-1400
+
+Steps To Reproduce:
+I cannot provide an example, or, rather to say, it&apos;s too big to be attached, but for me it is easy reproducible. The tracing in debug mode demonstrates thar Eclipse detect deadlock and tries to resolve it by temporary release of one of the locked resources and fails  because it is not able to release resource locked using synchronized Java directive. The better way is to use lockers which implement ILock interface in order to lock workspace resources   or data objects. I attach the patch which I tried on my huge workspace, and resolution of deadlocking worked fine. 
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156667</commentid>
+    <comment_count>1</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-02-14 07:01:52 -0500</bug_when>
+    <thetext>
+Thanks, your patch is applied.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156668</commentid>
+    <comment_count>2</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-02-14 07:03:01 -0500</bug_when>
+    <thetext>
+Marking this bug as duplicate for #216996
+
+*** This bug has been marked as a duplicate of bug 216996 ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86703</attachid>
+            <date>2008-01-11 13:07:00 -0500</date>
+            <delta_ts>2008-01-11 13:07:40 -0500</delta_ts>
+            <desc>Just a patch</desc>
+            <filename>Synch.bug</filename>
+            <type>text/plain</type>
+            <size>1504</size>
+            <attacher name="Alex Chapiro">achapiro</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuY2R0LmNvcmUN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvY2R0L2ludGVybmFsL2NvcmUvQ0NvbmZpZ0Jhc2VkRGVz
+Y3JpcHRvck1hbmFnZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3Rvb2xz
+L29yZy5lY2xpcHNlLmNkdC1jb3JlL29yZy5lY2xpcHNlLmNkdC5jb3JlL3NyYy9vcmcvZWNsaXBz
+ZS9jZHQvaW50ZXJuYWwvY29yZS9DQ29uZmlnQmFzZWREZXNjcmlwdG9yTWFuYWdlci5qYXZhLHYN
+CnJldHJpZXZpbmcgcmV2aXNpb24gMS4xOQ0KZGlmZiAtdSAtcjEuMTkgQ0NvbmZpZ0Jhc2VkRGVz
+Y3JpcHRvck1hbmFnZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9jZHQvaW50ZXJuYWwvY29y
+ZS9DQ29uZmlnQmFzZWREZXNjcmlwdG9yTWFuYWdlci5qYXZhCTMwIEF1ZyAyMDA3IDE1OjU3OjE5
+IC0wMDAwCTEuMTkNCisrKyBzcmMvb3JnL2VjbGlwc2UvY2R0L2ludGVybmFsL2NvcmUvQ0NvbmZp
+Z0Jhc2VkRGVzY3JpcHRvck1hbmFnZXIuamF2YQkxMSBKYW4gMjAwOCAxNzozNzozOCAtMDAwMA0K
+QEAgLTUyLDYgKzUyLDggQEANCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1lLlF1YWxp
+ZmllZE5hbWU7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5TYWZlUnVubmVyOw0K
+IGltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuU3RhdHVzOw0KK2ltcG9ydCBvcmcuZWNs
+aXBzZS5jb3JlLnJ1bnRpbWUuam9icy5JTG9jazsNCitpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5y
+dW50aW1lLmpvYnMuSm9iOw0KIGltcG9ydCBvcmcudzNjLmRvbS5FbGVtZW50Ow0KIA0KIHB1Ymxp
+YyBjbGFzcyBDQ29uZmlnQmFzZWREZXNjcmlwdG9yTWFuYWdlciBpbXBsZW1lbnRzIElDRGVzY3Jp
+cHRvck1hbmFnZXIgew0KQEAgLTE5MywxMSArMTk1LDE1IEBADQogCXB1YmxpYyBJQ0Rlc2NyaXB0
+b3IgZ2V0RGVzY3JpcHRvcihJUHJvamVjdCBwcm9qZWN0KSB0aHJvd3MgQ29yZUV4Y2VwdGlvbiB7
+DQogCQlyZXR1cm4gZ2V0RGVzY3JpcHRvcihwcm9qZWN0LCB0cnVlKTsNCiAJfQ0KKwlwcml2YXRl
+IElMb2NrIGZJbnN0YW5jZUxvY2sgPSBKb2IuZ2V0Sm9iTWFuYWdlcigpLm5ld0xvY2soKTsNCiAN
+CiAJcHVibGljIElDRGVzY3JpcHRvciBnZXREZXNjcmlwdG9yKElQcm9qZWN0IHByb2plY3QsIGJv
+b2xlYW4gY3JlYXRlKQ0KIAkJCXRocm93cyBDb3JlRXhjZXB0aW9uIHsNCi0JCXN5bmNocm9uaXpl
+ZCAoQ1Byb2plY3REZXNjcmlwdGlvbk1hbmFnZXIuZ2V0SW5zdGFuY2UoKSkgew0KKwkJdHJ5IHsN
+CisJCQlmSW5zdGFuY2VMb2NrLmFjcXVpcmUoKTsNCiAJCQlyZXR1cm4gZmluZERlc2NyaXB0b3Io
+cHJvamVjdCwgY3JlYXRlKTsNCisJCX0gZmluYWxseSB7DQorCQkJZkluc3RhbmNlTG9jay5yZWxl
+YXNlKCk7DQogCQl9DQogCX0NCiANCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

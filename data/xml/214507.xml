@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214507</bug_id>
+          
+          <creation_ts>2008-01-07 11:46:00 -0500</creation_ts>
+          <short_desc>Stereotype values lost when updating from API</short_desc>
+          <delta_ts>2008-04-04 08:19:18 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Tigerstripe</product>
+          <component>Annotations</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Richard Craddock">rcraddoc</reporter>
+          <assigned_to name="Project Inbox">tigerstripe.annotations-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126698</commentid>
+    <comment_count>0</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-01-07 11:46:44 -0500</bug_when>
+    <thetext>Build ID: N/A
+
+Steps To Reproduce:
+If a stereotype is applied to a model component, yet that stereotype is not in the active profile then..
+
+when you use the API to make other (unrelated) updates to the artifact and save it, the *value* of the stereotype gets lost. The stereotype itself remains in place,but with no value(s).
+
+
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1193956</commentid>
+    <comment_count>1</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-04-04 04:50:48 -0400</bug_when>
+    <thetext>This effect can also be seen using the gui.
+
+Create two profiles - 
+one with an annotation that has an attribute.
+
+The second just needs an annotation of any type.
+
+Apply #1, set the Annotation and attribute.
+
+Apply #2, apply its annotation.
+
+Save.
+
+
+The value of the annotation #1 has disapperaed.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1194015</commentid>
+    <comment_count>2</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-04-04 07:03:36 -0400</bug_when>
+    <thetext>The problem here is in the &quot;persist&quot; templates.
+
+In the code here, the stereotypeInstance does not have a CharacterizingStereotype in the current profile.
+
+ #foreach( $stereotype in $artifact.getStereotypeInstances() )
+ * @tigerstripe.stereotype st.name = &quot;$stereotype.Name&quot;
+ #foreach( $stAttr in $stereotype.getCharacterizingStereotype().getAttributes() )
+ #if ( $stAttr.isArray() )
+ *	   $stAttr.Name = &quot;$stereotype.getStringifiedAttributeValues($stAttr)&quot;	
+	#else
+ *     $stAttr.Name = &quot;$xmlEncode.encode($stereotype.getAttributeValue($stAttr))&quot;
+ #end
+ #end
+ #end</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1194062</commentid>
+    <comment_count>3</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-04-04 08:12:30 -0400</bug_when>
+    <thetext>Amended templates to output any attributes of UnresolvedStereotypes.
+
+Added a method to the UnresolvedStereotype to get the attributes that have been found.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1194066</commentid>
+    <comment_count>4</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-04-04 08:19:18 -0400</bug_when>
+    <thetext>Change made for all sterotype capable objects.
+
+I also took the opportunity to improve the formatting of the comments in the source. </thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

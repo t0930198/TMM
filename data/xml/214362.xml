@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214362</bug_id>
+          
+          <creation_ts>2008-01-04 11:41:00 -0500</creation_ts>
+          <short_desc>For grouped configurations, root files are gathered in arbitrary order</short_desc>
+          <delta_ts>2008-01-10 11:30:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>Build</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Peter Nehrer">pnehrer</reporter>
+          <assigned_to name="pde-build-inbox">pde-build-inbox</assigned_to>
+          <cc>aniefer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125850</commentid>
+    <comment_count>0</comment_count>
+    <who name="Peter Nehrer">pnehrer</who>
+    <bug_when>2008-01-04 11:41:05 -0500</bug_when>
+    <thetext>When groupConfigurations=true, the assemble script executes gather.bin.parts in arbitrary order. The effect is that it is impossible to control what root files end up in the archive. For instance, a top-level feature&apos;s root files may get overwritten by an included feature&apos;s root files. This doesn&apos;t seem to be a problem for the Eclipse build as it uses a separate feature for root files, but it would still be nice to have this working.
+
+The problem seems to be in AssembleScriptGenerator.generateMainTarget():
+...
+if (groupConfigs) {
+	Collection allPlugins = new HashSet();
+	Collection allFeatures = new HashSet();
+	Collection features = new HashSet();
+	Collection rootFiles = new HashSet();
+	for (Iterator allConfigs = getConfigInfos().iterator(); allConfigs.hasNext();) {
+		Collection[] configInfo = getConfigInfos((Config) allConfigs.next());
+		allPlugins.addAll(configInfo[0]);
+		allFeatures.addAll(configInfo[1]);
+		features.addAll(configInfo[2]);
+		rootFiles.addAll(configInfo[3]);
+	}
+	basicGenerateAssembleConfigFileTargetCall(new Config(&quot;group&quot;,&quot;group&quot;,&quot;group&quot;) , allPlugins, allFeatures, features, rootFiles);
+...
+
+Because HashSet is used to collect features/plugins/root providers from all configs, the relative ordering gets lost. Using LinkedHashSet instead preserves this ordering and results in the correct assemble script.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128974</commentid>
+    <comment_count>1</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-01-10 11:30:47 -0500</bug_when>
+    <thetext>done in HEAD</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

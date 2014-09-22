@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214689</bug_id>
+          
+          <creation_ts>2008-01-08 17:33:00 -0500</creation_ts>
+          <short_desc>[prov] [ui] Showing busy feedback while fetching repo contents</short_desc>
+          <delta_ts>2008-02-18 13:48:08 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="Susan McCourt ">susan</assigned_to>
+          <cc>john_arthorne</cc>
+    
+    <cc>remysuen</cc>
+    
+    <cc>Tod_Creasey</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127787</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 17:33:03 -0500</bug_when>
+    <thetext>The UpdateInstall dialog/Available Features Page uses deferred content providers to retrieve the categories for each repo.  It would be cool to show some progress animation until each repo is done.
+
+At a quick glance, it didn&apos;t seem simple at all to associate a dialog-based progress monitor part with a job, without implementing my own progress service or something like WorkbenchSiteProgressService.  I was hoping I could just do something like &quot;job.setProgressMonitor(blort)&quot;.
+
+I&apos;m using jobs, and I&apos;m not using a wizard dialog, so using the WizardDialog.run() stuff isn&apos;t an option.  Am I missing something?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128055</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-09 08:49:35 -0500</bug_when>
+    <thetext>You could call run and then forward the progress information from the job to the wizards progress monitor.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128065</commentid>
+    <comment_count>2</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-01-09 08:58:26 -0500</bug_when>
+    <thetext>I guess setUser(boolean) isn&apos;t going to fly here?
+
+(In reply to comment #0)
+&gt; I&apos;m using jobs, and I&apos;m not using a wizard dialog, so using the
+&gt; WizardDialog.run() stuff isn&apos;t an option.
+(In reply to comment #1)
+&gt; You could call run and then forward the progress information from the job to
+&gt; the wizards progress monitor.
+
+Wait, are wizards being used or not?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128132</commentid>
+    <comment_count>3</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 10:10:15 -0500</bug_when>
+    <thetext>I&apos;m not using a wizard dialog, but I was considering adding a similar progress part into my own dialog if I knew it would work.  I&apos;m still unsure.  And I thought using dialog.run uses ModalContext (and threads), not jobs?  Another example of this issue is in bug #210670, where a dialog initiates a job and the progress gets shown in the underlying workbench window.  Remy, I suppose I could use setUser(false) to prevent it from showing there, but it&apos;s not simple to redirect the progress elsewhere.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128136</commentid>
+    <comment_count>4</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-01-09 10:23:59 -0500</bug_when>
+    <thetext>I&apos;ve never used it before, but maybe the ProgressMonitorDialog could be subclassed and then have the IPM&apos;s information be forwarded like what (I think) Tod was suggesting in comment 2?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128141</commentid>
+    <comment_count>5</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 10:27:14 -0500</bug_when>
+    <thetext>A suggestion by John is to use italics for the case where I&apos;m retrieving info for a viewer element.
+
+For the other case, is what you are suggesting that I create a job family, create a progress group, etc...and then when I get progress info, I call the monitor that I&apos;ve created in my dialog?  If so, then I think I understand.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128295</commentid>
+    <comment_count>6</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 12:56:38 -0500</bug_when>
+    <thetext>If the work is happening in the background and the user isn&apos;t being blocked, I suggest a simple affordance such as an animation and/or italics is sufficient. I wouldn&apos;t flash progress messages from the background job because it would be quite distracting. For a simple animation that starts/stop along with the background job, a simple job change listener added to the job might be sufficient.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128301</commentid>
+    <comment_count>7</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-09 13:01:09 -0500</bug_when>
+    <thetext>For the repos in the &quot;Available Features&quot; list I&apos;ll probably go with italics.  I&apos;ll update bug #210760 with details for the dialog case.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158727</commentid>
+    <comment_count>8</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-02-18 13:47:21 -0500</bug_when>
+    <thetext>Fixed in HEAD, we now use italics while the repo contents are being fetched.
+Changed bug title to better describe the issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158729</commentid>
+    <comment_count>9</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-02-18 13:48:08 -0500</bug_when>
+    <thetext>marking FIXED.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

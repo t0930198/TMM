@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214760</bug_id>
+          
+          <creation_ts>2008-01-09 10:53:00 -0500</creation_ts>
+          <short_desc>Uninformative error message from AdapterFactoryProxy.loadFactory(..)</short_desc>
+          <delta_ts>2008-01-10 16:06:57 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Compendium</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Olivier Thomann">Olivier_Thomann</reporter>
+          <assigned_to name="equinox.compendium-inbox">equinox.compendium-inbox</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>ob1.eclipse</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128187</commentid>
+    <comment_count>0</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-09 10:53:14 -0500</bug_when>
+    <thetext>Using:
+
+!SESSION 2008-01-09 10:24:39.234 -----------------------------------------------
+eclipse.buildId=I20080108-1320
+java.fullversion=J2RE 1.6.0 IBM J9 2.4 Windows XP x86-32 jvmwi3260-20071121_15015 (JIT enabled)
+J9VM - 20071121_015015_lHdSMR
+JIT  - r9_20071121_1330
+GC   - 20071031_AA
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=fr_CA
+Framework arguments:  -showlocation
+Command-line arguments:  -os win32 -ws win32 -arch x86 -consolelog -console -showlocation
+
+I got this error message in the log and I have no idea what could be wrong.
+
+!ENTRY org.eclipse.equinox.registry 4 0 2008-01-09 10:34:05.453
+!MESSAGE Plug-in org.eclipse.debug.ui was unable to load class .
+
+Darin also got it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128230</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-09 11:44:08 -0500</bug_when>
+    <thetext>Maybe invalid extension which specifies an empty class name?  or maybe the registry is currupt?  From the code it appears that the registry is trying to load a class specified in an extension, but for some reason the class name is the empty string.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128244</commentid>
+    <comment_count>2</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-09 11:53:58 -0500</bug_when>
+    <thetext>So you mean the problem should be in the debug ui plugin?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128279</commentid>
+    <comment_count>3</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-09 12:41:23 -0500</bug_when>
+    <thetext>Oleg, is my assessment correct?  Is this either a bug in the extension definition in the plugin.xml of org.eclipse.debug.ui or a corrupted registry cache?  Olivier, is this consistently reproduced?
+
+It would be helpful if the registry could give information on what extension (id?) the class load is happening for.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128289</commentid>
+    <comment_count>4</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-09 12:47:23 -0500</bug_when>
+    <thetext>Yes, I can reproduce it at some point when running Eclipse.
+So if I could get more details on what extension fails I could report a bug against debug ui.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128329</commentid>
+    <comment_count>5</comment_count>
+    <who name="Oleg Besedin">ob1.eclipse</who>
+    <bug_when>2008-01-09 13:34:12 -0500</bug_when>
+    <thetext>The error message is displayed when registry tries to create an executable extension and fails in the contributingBundle.loadClass(className). In this case it looks like class name was not specified in the plugin.xml (and so the class name is not present in the erorr message).
+
+The org.eclipse.debug.ui has a long list of extensions and pretty much anything could be used as an executable extension so the best way to see where it is coming from would be to put a breakpoint into RegistryStrategyOSGI.createExecutableExtension() to back trace the origin.
+
+As for the error message - the call is done on a configuration element; configuration elements don&apos;t have much of anything that could be used to construct a better error message. This is a rather common problem with registry error messages as errors are not tied to originating XML and elements themselves might be non-informative.
+
+I guess we could try to attach a stack trace and/or add processing to go around and try to collect context (i.e., what is the parent of this config element; what are the children) and create some user-readable string from it. 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128342</commentid>
+    <comment_count>6</comment_count>
+    <who name="Oleg Besedin">ob1.eclipse</who>
+    <bug_when>2008-01-09 13:59:48 -0500</bug_when>
+    <thetext>Actually, the #createExecutableExtension() throws CoreException with the original exception attached when this happens. So caller has to catch the exception and process it in some way. 
+
+As debug UI does, it is ignored in some place, in some places it is logged in a &quot;generic&quot; fashion just duplicating the error message created by the registry; in some places it adds specific error messages like &quot;Unable to add the selected rendering.&quot;. 
+
+So overall picture is that registry produces a generic error message with the exception and when it becomes up to the caller to add some more specific contextual information to it.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129062</commentid>
+    <comment_count>7</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-10 13:03:28 -0500</bug_when>
+    <thetext>I&apos;ve set a breakpoint in org.eclipse.core.internal.runtime.RuntimeLog.log(IStatus)  and found that org.eclipse.core.internal.adapter.AdapterFactoryProxy.loadFactory(boolean) swallows the stack trace by using the anti-pattern
+
+		} catch (CoreException e) {
+			String msg = e.getStatus().getMessage();
+			RuntimeLog.log(new Status(IStatus.ERROR, RegistryMessages.OWNER_NAME, 0, msg, null));
+
+1.) You should never catch a CoreException and then log a status with an empty exception.
+
+2.) 
+&gt; I guess we could try to attach a stack trace and/or add processing to go around
+&gt; and try to collect context (i.e., what is the parent of this config element;
+&gt; what are the children) and create some user-readable string from it. 
+
+Yes, please use this bug to do this. Interesting would be the full parent chain of the attribute in question, and the contributing bundle id.
+
+I&apos;ll follow up with Debug on the cause of this message.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129067</commentid>
+    <comment_count>8</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-10 13:11:46 -0500</bug_when>
+    <thetext>Could it come from these extensions ?
+
+     	 &lt;factory 
+            class=&quot;&quot; 
+            adaptableType=&quot;org.eclipse.jdt.core.IJavaElement&quot;&gt;
+            &lt;adapter type=&quot;org.eclipse.debug.ui.actions.ILaunchable&quot;/&gt;
+         &lt;/factory&gt;
+         &lt;factory 
+            class=&quot;&quot; 
+            adaptableType=&quot;org.eclipse.core.resources.IResource&quot;&gt;
+            &lt;adapter type=&quot;org.eclipse.debug.ui.actions.ILaunchable&quot;/&gt;
+         &lt;/factory&gt;
+         &lt;factory 
+            class=&quot;&quot;            adaptableType=&quot;org.eclipse.jdt.internal.ui.javaeditor.IClassFileEditorInput&quot;&gt;
+            &lt;adapter type=&quot;org.eclipse.debug.ui.actions.ILaunchable&quot;/&gt;
+         &lt;/factory&gt;   
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129072</commentid>
+    <comment_count>9</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-10 13:15:55 -0500</bug_when>
+    <thetext>According to the documentation, the class name is not supposed to be empty.
+
+&lt;!ELEMENT factory (adapter+)&gt;
+&lt;!ATTLIST factory
+adaptableType CDATA #REQUIRED
+class         CDATA #REQUIRED&gt;
+...
+
+See http://help.eclipse.org/help33/index.jsp?topic=/org.eclipse.platform.doc.isv/reference/extension-points/org_eclipse_core_runtime_adapters.html
+
+Darin, any thoughts?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129095</commentid>
+    <comment_count>10</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-10 13:43:30 -0500</bug_when>
+    <thetext>(In reply to comment #7, comment #8, comment #9)
+
+As I wrote before, I followed up on the concrete problem in a new bug for Debug (bug 214932). Please continue discussions on that issue in that bug and keep this for the uninformative message.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129269</commentid>
+    <comment_count>11</comment_count>
+    <who name="Oleg Besedin">ob1.eclipse</who>
+    <bug_when>2008-01-10 16:06:57 -0500</bug_when>
+    <thetext>Released fix in the CVS Head that will produce error message like:
+
+Error instantiating adapter factory for &quot;abc.MyAdaptable&quot; declared by &quot;abc&quot;.
+	Plug-in abc was unable to load class .
+&lt;stack trace&gt;
+
+I&apos;ll mark this one as fixed and open an enhancement request 214960 to remind myself to look at the generic #createExecutableExtension() error message.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

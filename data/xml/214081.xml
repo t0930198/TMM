@@ -1,0 +1,231 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214081</bug_id>
+          
+          <creation_ts>2008-01-02 04:14:00 -0500</creation_ts>
+          <short_desc>Exported user XML catalog is out of sync</short_desc>
+          <delta_ts>2009-06-11 15:19:40 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.xml</component>
+          <version>3.0</version>
+          <rep_platform>Macintosh</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.1 M3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Nitin Dahyabhai">nitind</reporter>
+          <assigned_to name="Steven Hung">sghung</assigned_to>
+          <cc>d_a_carver</cc>
+    
+    <cc>for.work.things</cc>
+    
+    <cc>gindik</cc>
+    
+    <cc>valentinbaciu</cc>
+          <qa_contact name="Nitin Dahyabhai">nitind</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="12545"
+          type_id="1"
+          status="+"
+          setter="for.work.things"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124002</commentid>
+    <comment_count>0</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-02 04:14:51 -0500</bug_when>
+    <thetext>S-3.0M4-20071229165007
+
+If I try to open a catalog file (should there be naming constraints?) created by exporting my user catalog entries into the workspace, the Text Editor complains that it&apos;s out of sync with the filesystem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125673</commentid>
+    <comment_count>1</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-04 07:34:08 -0500</bug_when>
+    <thetext>Yikes, it may not even support projects not directly under the workspace folder.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126143</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-04 18:33:05 -0500</bug_when>
+    <thetext>May need to force a workspace refresh.
+
+I&apos;ll take a look and see what I can come up with.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126146</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-04 19:09:48 -0500</bug_when>
+    <thetext>Hmm....I tried to duplicate this on linux, with the current org.eclipse.wst.xml.ui plugin and couldn&apos;t do it.
+
+Here are the steps I followed:
+
+1. Added a file to the Catalog.
+2. Launched the Export Wizard by going to File-&gt;Export-&gt;XML-&gt;XML Catalog
+3. Selected the Project to export to.
+4. Gave it a file name.
+5. Hit finish.
+6. Navigated to where the file was saved, and opened it with the XML editor.
+
+File opened correctly and with out error.  I also tried it using the Text Editor and it worked as well.
+
+As for if there should be restrictions on the name, I don&apos;t think so.  As People should be able to name them what they want.  Standandard may be .xml, but catalogs don&apos;t have to have a .xml extension.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126148</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-04 19:15:01 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; Yikes, it may not even support projects not directly under the workspace
+&gt; folder.
+&gt; 
+
+Correct the current export only exports to the current workspaces... It needs to be enhanced to export outside of the workspace.  I&apos;ll take a look at how the Export Archive works and see if I can come up with some there.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128876</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-10 09:48:12 -0500</bug_when>
+    <thetext>Okay, I was finally able to duplicate this.  The odd thing is, that it doesn&apos;t happen when you are in development mode and have launched the application from PDE.   Hitting F5 on the workspace will force a refresh of the file contents.   Also, if the Workspace preference, Refresh Automatically is checked, the problem doesn&apos;t exist.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1331719</commentid>
+    <comment_count>6</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-09-15 18:49:50 -0400</bug_when>
+    <thetext>I&apos;m guessing it&apos;s related to ICatalog using filesystem locations and not an in-workspace path during export.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1332111</commentid>
+    <comment_count>7</comment_count>
+      <attachid>112664</attachid>
+    <who name="Steven Hung">sghung</who>
+    <bug_when>2008-09-16 09:33:10 -0400</bug_when>
+    <thetext>Created attachment 112664
+Patch
+
+Manually synchronize the exported XML Catalog file via a call to iFile.refreshLocal after the file is created in the XML Catalog Wizard.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1344618</commentid>
+    <comment_count>8</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-10-06 15:48:10 -0400</bug_when>
+    <thetext>Amy, please review and commit the fix from Steven.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1344619</commentid>
+    <comment_count>9</comment_count>
+      <attachid>112664</attachid>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2008-10-06 15:49:07 -0400</bug_when>
+    <thetext>Comment on attachment 112664
+Patch
+
+This patch is contributed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1346525</commentid>
+    <comment_count>10</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-10-08 18:06:29 -0400</bug_when>
+    <thetext>fix looks good.  released for wtp 3.1 m3 builds &gt; 200810082210</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1396101</commentid>
+    <comment_count>11</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-12-17 15:25:12 -0500</bug_when>
+    <thetext>Verified with S-3.1M4-20081215095735, on OSX and Windows XP.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1523487</commentid>
+    <comment_count>12</comment_count>
+    <who name="Valentin Baciu">valentinbaciu</who>
+    <bug_when>2009-06-11 15:19:40 -0400</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>112664</attachid>
+            <date>2008-09-16 09:33:00 -0400</date>
+            <delta_ts>2008-10-06 15:49:07 -0400</delta_ts>
+            <desc>Patch</desc>
+            <filename>214081.txt</filename>
+            <type>text/plain</type>
+            <size>1537</size>
+            <attacher name="Steven Hung">sghung</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uud3N0LnhtbC51
+aQ0KSW5kZXg6IHNyYy13aXphcmRzL29yZy9lY2xpcHNlL3dzdC94bWwvdWkvaW50ZXJuYWwvd2l6
+YXJkcy9FeHBvcnRYTUxDYXRhbG9nV2l6YXJkLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAv
+Y3Zzcm9vdC93ZWJ0b29scy9zb3VyY2VlZGl0aW5nL3BsdWdpbnMvb3JnLmVjbGlwc2Uud3N0Lnht
+bC51aS9zcmMtd2l6YXJkcy9vcmcvZWNsaXBzZS93c3QveG1sL3VpL2ludGVybmFsL3dpemFyZHMv
+RXhwb3J0WE1MQ2F0YWxvZ1dpemFyZC5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xDQpk
+aWZmIC11IC1yMS4xIEV4cG9ydFhNTENhdGFsb2dXaXphcmQuamF2YQ0KLS0tIHNyYy13aXphcmRz
+L29yZy9lY2xpcHNlL3dzdC94bWwvdWkvaW50ZXJuYWwvd2l6YXJkcy9FeHBvcnRYTUxDYXRhbG9n
+V2l6YXJkLmphdmEJMTggRGVjIDIwMDcgMDM6NTE6MTQgLTAwMDAJMS4xDQorKysgc3JjLXdpemFy
+ZHMvb3JnL2VjbGlwc2Uvd3N0L3htbC91aS9pbnRlcm5hbC93aXphcmRzL0V4cG9ydFhNTENhdGFs
+b2dXaXphcmQuamF2YQkxNiBTZXAgMjAwOCAxMzoyNjoyNiAtMDAwMA0KQEAgLTE1LDggKzE1LDEw
+IEBADQogDQogaW1wb3J0IGphdmEuaW8uRmlsZTsNCiANCitpbXBvcnQgb3JnLmVjbGlwc2UuY29y
+ZS5yZXNvdXJjZXMuSUZpbGU7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLklX
+b3Jrc3BhY2U7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLklXb3Jrc3BhY2VS
+b290Ow0KK2ltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNlcy5JUmVzb3VyY2U7DQogaW1w
+b3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLlJlc291cmNlc1BsdWdpbjsNCiBpbXBvcnQg
+b3JnLmVjbGlwc2UuamZhY2UucmVzb3VyY2UuSW1hZ2VEZXNjcmlwdG9yOw0KIGltcG9ydCBvcmcu
+ZWNsaXBzZS5qZmFjZS52aWV3ZXJzLklTdHJ1Y3R1cmVkU2VsZWN0aW9uOw0KQEAgLTY1LDkgKzY3
+LDEwIEBADQogCQlTdHJpbmcgZnVsbFBhdGggPSB3b3Jrc3BhY2VQYXRoICsgZXhwb3J0UGFnZS5n
+ZXRDb250YWluZXJGdWxsUGF0aCgpLnRvT1NTdHJpbmcoKTsNCiAJCVN0cmluZyByZXF1aXJlZFN0
+cmluZz1mdWxsUGF0aCArIEZpbGUuc2VwYXJhdG9yICsgZXhwb3J0UGFnZS5nZXRGaWxlTmFtZSgp
+Ow0KIAkJdHJ5IHsNCi0JCQlleHBvcnRQYWdlLmNyZWF0ZU5ld0ZpbGUoKTsNCisJCQlJRmlsZSBm
+aWxlID0gZXhwb3J0UGFnZS5jcmVhdGVOZXdGaWxlKCk7DQogCQkJd29ya2luZ1VzZXJDYXRhbG9n
+LnNldExvY2F0aW9uKHJlcXVpcmVkU3RyaW5nKTsNCiAJCQl3b3JraW5nVXNlckNhdGFsb2cuc2F2
+ZSgpOw0KKwkJCWZpbGUucmVmcmVzaExvY2FsKElSZXNvdXJjZS5ERVBUSF9aRVJPLCBudWxsKTsN
+CiAJCX0gY2F0Y2ggKEV4Y2VwdGlvbiBleCkgew0KIAkJCXJldHVybiBmYWxzZTsNCiAJCX0NCg==
+</data>
+<flag name="iplog"
+          id="12546"
+          type_id="7"
+          status="+"
+          setter="valentinbaciu"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

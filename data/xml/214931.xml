@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214931</bug_id>
+          
+          <creation_ts>2008-01-10 13:18:00 -0500</creation_ts>
+          <short_desc>An &quot;ssh&quot; window pops up for every operation with the JavaHL connector</short_desc>
+          <delta_ts>2008-02-07 09:57:17 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Subversive</product>
+          <component>Connectors</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Martin Oberhuber">martin.oberhuber</reporter>
+          <assigned_to name="Alexander Gurov">alexander.gurov</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129074</commentid>
+    <comment_count>0</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 13:18:20 -0500</bug_when>
+    <thetext>When I enable the JavaHL connector, a black DOS-Prompt-like window with title &quot;SSH&quot; pops up on every operation. 
+
+That&apos;s ugly, and also it seems to show that separate ssh sessions are created for each and every operation. That&apos;s slow when sitting in a remote location. It would be better to have a single ssh session and re-use that one for multiple commands.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129075</commentid>
+    <comment_count>1</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 13:20:21 -0500</bug_when>
+    <thetext>Also, the native cygwin/ssh.exe program does not use the information about my SSH home directory so it does not find my private keys and asks for a password on each and every invocation.
+
+The Preferences from Eclipse General &gt; Network Connections &gt; SSH2 should be used.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151746</commentid>
+    <comment_count>2</comment_count>
+    <who name="Alexander Gurov">alexander.gurov</who>
+    <bug_when>2008-02-07 04:39:47 -0500</bug_when>
+    <thetext>The native JavaHL library does not have built-in support of SSH protocol. So, it use external tool in order to work through this protocol.
+You can avoid this &quot;DOS-like&quot; windows by using SVN Kit client which provides built-in support of SSH protocol. Also SVN Kit reuses existing sessions. So, it can work faster than JavaHL with SSH protocol in some cases.
+If you use SVN 1.5 compatible connector, please note that JavaHL 1.5.0 at this moment much more stable that SVN Kit 1.2.0 which also supports SVN 1.5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151747</commentid>
+    <comment_count>3</comment_count>
+    <who name="Alexander Gurov">alexander.gurov</who>
+    <bug_when>2008-02-07 04:41:03 -0500</bug_when>
+    <thetext>P.S.
+When SVN Kit is used SSH settings could be defined in the Repository Location properties.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151874</commentid>
+    <comment_count>4</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-02-07 09:00:19 -0500</bug_when>
+    <thetext>Well other windows clients just come with their own compiled ssh.exe version to avoid the very problem of DOS-windows popping up: TortoiseSVN, for instance, ships with TortoisePlink.exe, a variant of PuTTY&apos;s plink that&apos;s compiled with /subsystem:windows to avoid the DOS prompt.
+
+I had thought that Subversive could do the same.
+
+Given that JavaHL is deemed more stable and mature than SVNKit I had hoped that one can get it to work properly -- currently I find it unusable on windows such that I&apos;d prefer not having it at all on windows since it just caused confusion for me.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151885</commentid>
+    <comment_count>5</comment_count>
+    <who name="Alexander Gurov">alexander.gurov</who>
+    <bug_when>2008-02-07 09:24:19 -0500</bug_when>
+    <thetext>You can use in the Windows environment the same executable (TortoisePlink.exe) as described here: http://www.woodwardweb.com/java/000155.html
+
+This will remove &quot;DOS-like&quot; window for JavaHL, but you still prompted for password each time when accessing repository. So, regarding to this I preffer to use SVN Kit in order to access SSH repositories from the Windows environment.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151941</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-02-07 09:57:17 -0500</bug_when>
+    <thetext>PLink can also made to run without password, either via PuTTY&apos;s pageant program or via private key without passphrase:
+
+http://tortoisesvn.net/ssh_howto
+http://tortoisesvn.net/node/35
+http://www.tortoisecvs.org/ssh.shtml
+
+It would be helpful if the Subversive JavaHL client supported changing the ssh executable to use, and provided docs similar to the ones mentioned.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

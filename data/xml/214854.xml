@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214854</bug_id>
+          
+          <creation_ts>2008-01-10 00:54:00 -0500</creation_ts>
+          <short_desc>[implementation] Streams not being closed in Javadoc views</short_desc>
+          <delta_ts>2008-01-10 05:48:54 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Text</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Brock Janiczak">brockj</reporter>
+          <assigned_to name="JDT-Text-Inbox">jdt-text-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128701</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86538</attachid>
+    <who name="Brock Janiczak">brockj</who>
+    <bug_when>2008-01-10 00:54:45 -0500</bug_when>
+    <thetext>Created attachment 86538
+Patch to org.eclipse.jdt.ui
+
+Version: 3.4.0
+Build id: I20071213-1700
+
+Both the javadoc view and hover are forgetting to close their streams after reading the css file.  This causes a fie handle to &apos;leak&apos; until the stream is garbage collected.
+
+I have attached a patch that will close the input streams after reading them.  I also changed the string buffer to pre-allocated to 1500 bytes (slightly larger than the css file being loaded) to reduce the amount of garbage created.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128791</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-10 05:48:54 -0500</bug_when>
+    <thetext>Thanks for the patch.
+Added your credentials to the copyright header and updated the date.
+
+Fixed in HEAD.
+Available in builds &gt; I20080110-0010.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86538</attachid>
+            <date>2008-01-10 00:54:00 -0500</date>
+            <delta_ts>2008-01-10 00:54:45 -0500</delta_ts>
+            <desc>Patch to org.eclipse.jdt.ui</desc>
+            <filename>javadoc.patch</filename>
+            <type>text/plain</type>
+            <size>2761</size>
+            <attacher name="Brock Janiczak">brockj</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LnVpDQpJ
+bmRleDogdWkvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL3VpL2luZm92aWV3cy9KYXZhZG9jVmll
+dy5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBz
+ZS5qZHQudWkvdWkvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL3VpL2luZm92aWV3cy9KYXZhZG9j
+Vmlldy5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS42Mg0KZGlmZiAtdSAtcjEuNjIgSmF2
+YWRvY1ZpZXcuamF2YQ0KLS0tIHVpL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC91aS9pbmZvdmll
+d3MvSmF2YWRvY1ZpZXcuamF2YQk0IERlYyAyMDA3IDA3OjM3OjQyIC0wMDAwCTEuNjINCisrKyB1
+aS9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvdWkvaW5mb3ZpZXdzL0phdmFkb2NWaWV3LmphdmEJ
+MTAgSmFuIDIwMDggMDU6NDY6MDcgLTAwMDANCkBAIC00MDAsOSArNDAwLDEwIEBADQogCQlpZiAo
+c3R5bGVTaGVldFVSTCA9PSBudWxsKQ0KIAkJCXJldHVybiBudWxsOw0KIA0KKwkJQnVmZmVyZWRS
+ZWFkZXIgcmVhZGVyPSBudWxsOw0KIAkJdHJ5IHsNCi0JCQlCdWZmZXJlZFJlYWRlciByZWFkZXI9
+IG5ldyBCdWZmZXJlZFJlYWRlcihuZXcgSW5wdXRTdHJlYW1SZWFkZXIoc3R5bGVTaGVldFVSTC5v
+cGVuU3RyZWFtKCkpKTsNCi0JCQlTdHJpbmdCdWZmZXIgYnVmZmVyPSBuZXcgU3RyaW5nQnVmZmVy
+KDIwMCk7DQorCQkJcmVhZGVyPSBuZXcgQnVmZmVyZWRSZWFkZXIobmV3IElucHV0U3RyZWFtUmVh
+ZGVyKHN0eWxlU2hlZXRVUkwub3BlblN0cmVhbSgpKSk7DQorCQkJU3RyaW5nQnVmZmVyIGJ1ZmZl
+cj0gbmV3IFN0cmluZ0J1ZmZlcigxNTAwKTsNCiAJCQlTdHJpbmcgbGluZT0gcmVhZGVyLnJlYWRM
+aW5lKCk7DQogCQkJd2hpbGUgKGxpbmUgIT0gbnVsbCkgew0KIAkJCQlidWZmZXIuYXBwZW5kKGxp
+bmUpOw0KQEAgLTQxNSw2ICs0MTYsMTMgQEANCiAJCX0gY2F0Y2ggKElPRXhjZXB0aW9uIGV4KSB7
+DQogCQkJSmF2YVBsdWdpbi5sb2coZXgpOw0KIAkJCXJldHVybiBudWxsOw0KKwkJfSBmaW5hbGx5
+IHsNCisJCQl0cnkgew0KKwkJCQlpZiAocmVhZGVyICE9IG51bGwpIHsNCisJCQkJCXJlYWRlci5j
+bG9zZSgpOw0KKwkJCQl9DQorCQkJfSBjYXRjaCAoSU9FeGNlcHRpb24gZSkgew0KKwkJCX0NCiAJ
+CX0NCiAJfQ0KIA0KSW5kZXg6IHVpL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC91aS90ZXh0L2ph
+dmEvaG92ZXIvQWJzdHJhY3RKYXZhRWRpdG9yVGV4dEhvdmVyLmphdmENCj09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJD
+UyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLmpkdC51aS91aS9vcmcvZWNsaXBz
+ZS9qZHQvaW50ZXJuYWwvdWkvdGV4dC9qYXZhL2hvdmVyL0Fic3RyYWN0SmF2YUVkaXRvclRleHRI
+b3Zlci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4zNg0KZGlmZiAtdSAtcjEuMzYgQWJz
+dHJhY3RKYXZhRWRpdG9yVGV4dEhvdmVyLmphdmENCi0tLSB1aS9vcmcvZWNsaXBzZS9qZHQvaW50
+ZXJuYWwvdWkvdGV4dC9qYXZhL2hvdmVyL0Fic3RyYWN0SmF2YUVkaXRvclRleHRIb3Zlci5qYXZh
+CTI2IE5vdiAyMDA3IDE2OjEwOjEyIC0wMDAwCTEuMzYNCisrKyB1aS9vcmcvZWNsaXBzZS9qZHQv
+aW50ZXJuYWwvdWkvdGV4dC9qYXZhL2hvdmVyL0Fic3RyYWN0SmF2YUVkaXRvclRleHRIb3Zlci5q
+YXZhCTEwIEphbiAyMDA4IDA1OjQ2OjA3IC0wMDAwDQpAQCAtMTY3LDkgKzE2NywxMCBAQA0KIAkJ
+QnVuZGxlIGJ1bmRsZT0gUGxhdGZvcm0uZ2V0QnVuZGxlKEphdmFQbHVnaW4uZ2V0UGx1Z2luSWQo
+KSk7DQogCQlVUkwgc3R5bGVTaGVldFVSTD0gYnVuZGxlLmdldEVudHJ5KCIvSmF2YWRvY0hvdmVy
+U3R5bGVTaGVldC5jc3MiKTsgLy8kTk9OLU5MUy0xJA0KIAkJaWYgKHN0eWxlU2hlZXRVUkwgIT0g
+bnVsbCkgew0KKwkJCUJ1ZmZlcmVkUmVhZGVyIHJlYWRlciA9IG51bGw7DQogCQkJdHJ5IHsNCi0J
+CQkJQnVmZmVyZWRSZWFkZXIgcmVhZGVyPSBuZXcgQnVmZmVyZWRSZWFkZXIobmV3IElucHV0U3Ry
+ZWFtUmVhZGVyKHN0eWxlU2hlZXRVUkwub3BlblN0cmVhbSgpKSk7DQotCQkJCVN0cmluZ0J1ZmZl
+ciBidWZmZXI9IG5ldyBTdHJpbmdCdWZmZXIoMjAwKTsNCisJCQkJcmVhZGVyPSBuZXcgQnVmZmVy
+ZWRSZWFkZXIobmV3IElucHV0U3RyZWFtUmVhZGVyKHN0eWxlU2hlZXRVUkwub3BlblN0cmVhbSgp
+KSk7DQorCQkJCVN0cmluZ0J1ZmZlciBidWZmZXI9IG5ldyBTdHJpbmdCdWZmZXIoMTUwMCk7DQog
+CQkJCVN0cmluZyBsaW5lPSByZWFkZXIucmVhZExpbmUoKTsNCiAJCQkJd2hpbGUgKGxpbmUgIT0g
+bnVsbCkgew0KIAkJCQkJYnVmZmVyLmFwcGVuZChsaW5lKTsNCkBAIC0xODAsNiArMTgxLDEzIEBA
+DQogCQkJfSBjYXRjaCAoSU9FeGNlcHRpb24gZXgpIHsNCiAJCQkJSmF2YVBsdWdpbi5sb2coZXgp
+Ow0KIAkJCQlyZXR1cm4gIiI7IC8vJE5PTi1OTFMtMSQNCisJCQl9IGZpbmFsbHkgew0KKwkJCQlp
+ZiAocmVhZGVyICE9IG51bGwpIHsNCisJCQkJCXRyeSB7DQorCQkJCQkJcmVhZGVyLmNsb3NlKCk7
+DQorCQkJCQl9IGNhdGNoIChJT0V4Y2VwdGlvbiBlKSB7DQorCQkJCQl9DQorCQkJCX0NCiAJCQl9
+DQogCQl9DQogCQlyZXR1cm4gbnVsbDsNCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214543</bug_id>
+          
+          <creation_ts>2008-01-07 16:10:00 -0500</creation_ts>
+          <short_desc>Add COSMOS broker and domain war file to the build.</short_desc>
+          <delta_ts>2012-01-03 13:46:05 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Cosmos</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Hubert Leung">hkyleung</reporter>
+          <assigned_to name="Jagmit">jagmits</assigned_to>
+          <cc>bsubram</cc>
+    
+    <cc>jagmits</cc>
+    
+    <cc>shivashankari.n</cc>
+          <qa_contact name="Hubert Leung">hkyleung</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126939</commentid>
+    <comment_count>0</comment_count>
+    <who name="Hubert Leung">hkyleung</who>
+    <bug_when>2008-01-07 16:10:08 -0500</bug_when>
+    <thetext>Code resides in org.eclipse.cosmos/data-collection/org.eclipse.cosmos.dc.broker
+
+Compile the code and create a war file called cosmos.war.  
+
+The war file will have this structure:
+META-INF/MANIFEST.MF
+WEB-INF/classes/broker-entries/ServiceGroupEntry/service-group-entry-1.xml
+WEB-INF/classes/broker-entries/ServiceGroupEntry/service-group-entry-2.xml
+WEB-INF/classes/domain-entries/ServiceGroupEntry/service-group-entry-1.xml
+WEB-INF/classes/domainEPR.xml
+WEB-INF/classes/muse.xml
+WEB-INF/classes/org/eclipse/cosmos/dc/broker/Broker.class
+WEB-INF/classes/org/eclipse/cosmos/dc/broker/CustomSimpleServiceGroup.class
+WEB-INF/classes/org/eclipse/cosmos/dc/broker/IBroker.class
+WEB-INF/classes/router-entries/broker/resource-instance-0.xml
+WEB-INF/classes/router-entries/domain/resource-instance-2.xml
+WEB-INF/classes/wsdl/broker.rmd
+WEB-INF/classes/wsdl/broker.wsdl
+WEB-INF/classes/wsdl/domain.rmd
+WEB-INF/classes/wsdl/domain.wsdl
+WEB-INF/classes/wsdl/ServiceGroupEntry.rmd
+WEB-INF/classes/wsdl/ServiceGroupEntry.wsdl
+WEB-INF/lib/domain-client.jar
+WEB-INF/lib/muse-core-2.2.0.jar
+WEB-INF/lib/muse-platform-mini-2.2.0.jar
+WEB-INF/lib/muse-tools-2.2.0.jar
+WEB-INF/lib/muse-util-2.2.0.jar
+WEB-INF/lib/muse-util-xml-2.2.0.jar
+WEB-INF/lib/muse-wsa-soap-2.2.0.jar
+WEB-INF/lib/muse-wsdm-muws-adv-api-2.2.0.jar
+WEB-INF/lib/muse-wsdm-muws-adv-impl-2.2.0.jar
+WEB-INF/lib/muse-wsdm-muws-api-2.2.0.jar
+WEB-INF/lib/muse-wsdm-muws-impl-2.2.0.jar
+WEB-INF/lib/muse-wsdm-wef-api-2.2.0.jar
+WEB-INF/lib/muse-wsdm-wef-impl-2.2.0.jar
+WEB-INF/lib/muse-wsn-api-2.2.0.jar
+WEB-INF/lib/muse-wsn-impl-2.2.0.jar
+WEB-INF/lib/muse-wsrf-api-2.2.0.jar
+WEB-INF/lib/muse-wsrf-impl-2.2.0.jar
+WEB-INF/lib/muse-wsrf-rmd-2.2.0.jar
+WEB-INF/lib/muse-wsx-api-2.2.0.jar
+WEB-INF/lib/muse-wsx-impl-2.2.0.jar
+WEB-INF/lib/tools.jar
+WEB-INF/lib/wsdl4j-1.6.1.jar
+WEB-INF/lib/xalan-2.7.0.jar
+WEB-INF/lib/xercesImpl-2.8.1.jar
+WEB-INF/lib/xml-apis-1.3.03.jar
+WEB-INF/web.xml</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127690</commentid>
+    <comment_count>1</comment_count>
+    <who name="Jagmit">jagmits</who>
+    <bug_when>2008-01-08 15:36:42 -0500</bug_when>
+    <thetext>the plugin org.eclipse.cosmos.dc.broker, failed on compiling. With the following errors
+
+[javac] /tmp/cosmos/plugins/org.eclipse.cosmos.dc.broker/JavaSource/org/eclipse/cosmos/dc/broker/Broker.java:106: cannot find symbol
+[javac] symbol  : method add(org.apache.muse.ws.addressing.EndpointReference,&lt;nulltype&gt;)
+[javac] location: class org.eclipse.cosmos.dc.management.domain.client.ManagementDomainClient
+    [javac]                     domainClient.add(brokerEpr, null);
+    [javac]                             ^
+
+Can you look into.
+
+Also noticed that MANIFEST.MF is empty. Is it ok to be like that?
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127695</commentid>
+    <comment_count>2</comment_count>
+    <who name="Hubert Leung">hkyleung</who>
+    <bug_when>2008-01-08 15:41:48 -0500</bug_when>
+    <thetext>Jagmit,  you will need to add the jar file in the lib directory in the classpath to compile the code.
+
+Thanks, 
+Hubert</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128177</commentid>
+    <comment_count>3</comment_count>
+    <who name="Jagmit">jagmits</who>
+    <bug_when>2008-01-09 10:44:52 -0500</bug_when>
+    <thetext>Included in the Build (COSMOS-1.0.0-200801091017). Please verify</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130409</commentid>
+    <comment_count>4</comment_count>
+    <who name="Shivashankari">shivashankari.n</who>
+    <bug_when>2008-01-14 02:20:17 -0500</bug_when>
+    <thetext>Jagmit
+
+I brought down the last build&apos;s (COSMOS-1.0.0-200801131634)DC component zip and saw that the Broker and Domain missing.
+
+Can you explain how you have packaged these components into the current build if what I see is incorrect?</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

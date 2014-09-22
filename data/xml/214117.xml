@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214117</bug_id>
+          
+          <creation_ts>2008-01-02 10:29:00 -0500</creation_ts>
+          <short_desc>[ClassD] Error when delete an Association between an AssociationClass and Association</short_desc>
+          <delta_ts>2013-05-12 08:56:28 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMF-Tooling</product>
+          <component>Samples-UML</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Marc Gil">marcgise</reporter>
+          <assigned_to name="Dummy mdt uml2 tools inbox">mdt-uml2tools-inbox</assigned_to>
+          <cc>fjcano</cc>
+    
+    <cc>tatiana.fesenko</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124159</commentid>
+    <comment_count>0</comment_count>
+    <who name="Marc Gil">marcgise</who>
+    <bug_when>2008-01-02 10:29:41 -0500</bug_when>
+    <thetext>When we try to delete a simple Association between an AssociationClass and another Association, it is deleted from the diagram, but still persist in the model.
+
+Steps:
+1. Create a Class A
+2. Create a Class B
+3. Create an Association X between Class A and B
+4. Create an AssociationClass C
+5. Create an Association Y between Association X and AssociationClass C
+6. Delete the Association Y
+7. Verify the model. Association Y still appears!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137763</commentid>
+    <comment_count>1</comment_count>
+    <who name="Marc Gil">marcgise</who>
+    <bug_when>2008-01-24 09:47:12 -0500</bug_when>
+    <thetext>This problem is from GMF. GMF has problems with the links between nodes and other links, like in this case, that we want to delete an Link (Association) between a Node (AssociationClass) and another Link (Association).
+
+I have created a new little project where I can associate a Node and a Link, and the problem exists too when I delete this association.
+
+I have solved it with overrideing the method getCommand from the AssociationEditPart. The code is the following:
+
+@Override
+public Command getCommand(Request _request) {
+  if(_request instanceof GroupRequestViaKeyboard)
+  {
+    boolean shouldShowPrompt = ((GroupRequestViaKeyboard) _request).isShowInformationDialog();
+
+    EditCommandRequestWrapper ecrw = new EditCommandRequestWrapper(new DestroyElementRequest(getEditingDomain(), shouldShowPrompt), _request.getExtendedData());
+
+    return super.getCommand(ecrw);
+  }
+  return super.getCommand(_request);
+}
+
+I will notify this bug to GMF.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1231791</commentid>
+    <comment_count>2</comment_count>
+    <who name="Tatiana Fesenko">tatiana.fesenko</who>
+    <bug_when>2008-05-12 11:39:38 -0400</bug_when>
+    <thetext>Marc is correct, this request is caused by GMF #185798 &apos;[Connections] ConnectionEditPolicy.shouldDeleteSemantic() always return false for Links to/from other Links&apos;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2255478</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michael Golubev">golubev</who>
+    <bug_when>2013-05-12 08:56:28 -0400</bug_when>
+    <thetext>Batch Update: UML2Tools is sample component for GMF-Tooling after restructuring</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

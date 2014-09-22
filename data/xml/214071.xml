@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214071</bug_id>
+          
+          <creation_ts>2008-01-02 01:58:00 -0500</creation_ts>
+          <short_desc>[Help] About eclipse help pop-up information does not vanish for off focus</short_desc>
+          <delta_ts>2009-01-23 15:01:34 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Vivek Thakyal">tvivek</reporter>
+          <assigned_to name="Bogdan Gheorghe">gheorghe</assigned_to>
+          <cc>cgold</cc>
+    
+    <cc>gheorghe</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1123949</commentid>
+    <comment_count>0</comment_count>
+    <who name="Vivek Thakyal">tvivek</who>
+    <bug_when>2008-01-02 01:58:35 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Steps To Reproduce:
+1. Start eclipse. Click on Help -&gt; About Eclipse SDK.
+2. About Eclipse SDK dialog would appear. Click on &apos;?&apos; help icon.
+3. The help information pop-up comes up saying &quot;This dialog displays product information&quot;.
+4. Try to remove the pop-up information by clicking the mouse outside the popup
+area.
+
+More information:
+Clicking anywhere outside the pop-up area does not remove the pop-up. To remove the pop-up focus needs to be changed to some other application or eclipse has to be minimized or closed. However, &lt;esc&gt; operation removes the pop-up.
+
+This does not happen on Windows XP SP2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1294891</commentid>
+    <comment_count>1</comment_count>
+    <who name="Vivek Thakyal">tvivek</who>
+    <bug_when>2008-07-21 03:17:53 -0400</bug_when>
+    <thetext> A similar problem seems to there with org.eclipse.jface.dialogs.PopupDialog when the shellStyle is set to PopupDialog.INFOPOPUP_SHELLSTYLE. Such a pop-up does not vanish even when focus is removed from it. This problem occurs only in Linux. 
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1412503</commentid>
+    <comment_count>2</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2009-01-21 18:42:24 -0500</bug_when>
+    <thetext>The problem still exists in I20090120-1700, I think the problem is in SWT, we should be getting an SWT.Deactivate event when the user clicks outside the infopop. The problem with PopupDialog is another symptom of the this.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1413036</commentid>
+    <comment_count>3</comment_count>
+    <who name="Bogdan Gheorghe">gheorghe</who>
+    <bug_when>2009-01-22 09:27:37 -0500</bug_when>
+    <thetext>Just to have all the info: which GTK version are you running? Which Linux?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1413220</commentid>
+    <comment_count>4</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2009-01-22 12:20:56 -0500</bug_when>
+    <thetext>I&apos;m using Ubuntu 7.1 but I have also seen it on RHEL 5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1413456</commentid>
+    <comment_count>5</comment_count>
+    <who name="Bogdan Gheorghe">gheorghe</who>
+    <bug_when>2009-01-22 16:17:09 -0500</bug_when>
+    <thetext>I wasn&apos;t able to reproduce this on my RHEL5 machine - but I&apos;m probably missing some steps. I followed all of the steps outlined in comment 1 and got the pop-up to show in the About Eclipse SDK dialog. The only way I can get the dialog to go back to its original form is by clicking on the X in the popup area. Clicking outside it, like suggested in the comment, doesn&apos;t do anything for me (neither does hitting ESC). This is true on Windows as well, BTW. What am I missing?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1413468</commentid>
+    <comment_count>6</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2009-01-22 16:32:39 -0500</bug_when>
+    <thetext>You need to change your help preferences to use infopops. Set the radio buttons to Open Window context help in an infopop and open Dialog context help in an infopop. Then hitting ctrl + F1 should show a yellow square with some links in it. However I just tried this today on my Ubuntu system and it did not fail using the latest I-build or with 3.4.1. I was pretty sure that I had seen this recently so I&apos;m not sure what&apos;s happening. Can you try again on RHEL5 with the modified help preferences.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1414457</commentid>
+    <comment_count>7</comment_count>
+    <who name="Bogdan Gheorghe">gheorghe</who>
+    <bug_when>2009-01-23 15:01:34 -0500</bug_when>
+    <thetext>I tried this out with the 3.5 M4 build and GTK 2.10, 2.12 and 2.14 as well as the most recent 3.4.2 candidate build and it all worked for me. I&apos;m going to close as WORKSFORME but please reopen if you start seeing this again.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215051</bug_id>
+          
+          <creation_ts>2008-01-11 11:29:00 -0500</creation_ts>
+          <short_desc>[OLE] OleEditor content changed after losing focus</short_desc>
+          <delta_ts>2011-05-17 13:14:06 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>ASSIGNED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Nicolas von Mellenthin">nico</reporter>
+          <assigned_to name="Platform UI Triaged">platform-ui-triaged</assigned_to>
+          <cc>cpgeiss</cc>
+    
+    <cc>damodhar.akula</cc>
+    
+    <cc>duongn</cc>
+    
+    <cc>macorrai</cc>
+          
+          <votes>2</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129729</commentid>
+    <comment_count>0</comment_count>
+    <who name="Nicolas von Mellenthin">nico</who>
+    <bug_when>2008-01-11 11:29:34 -0500</bug_when>
+    <thetext>Build ID: I20071213-1700
+
+Steps To Reproduce:
+1. Open Excel document with File/Open File...
+2. Open Word document with File/Open File...
+3. Move Word Document to a second editor group to view both documents simultaneously
+4. Scroll both documents
+5. Select documents with mouse.
+
+
+More information:
+When losing focus, menu bar and scroll bars are disposed and the font is changed. This does not look very nice.
+
+The word document is scrolled back to beginning, so I can´t view the whished content area.
+
+The Excel document keeps position, but after some losing/setting focus it starts to change the zoom factor.
+This happens with Office 2003 and Office2007.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132393</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-16 10:58:06 -0500</bug_when>
+    <thetext>
+I&apos;ve tried it on my XP box and see the effects as described...
+
+Duong, any thoughts on this? I&apos;m suspecting it&apos;s related to the adding/removing of the command framework (i.e. the toolbars and such) as the focus changes. This seems &apos;unnatural&apos; (why should the TB&apos;s disappear on the unfocused editor?)
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132809</commentid>
+    <comment_count>2</comment_count>
+    <who name="Duong Nguyen">duongn</who>
+    <bug_when>2008-01-16 18:24:53 -0500</bug_when>
+    <thetext>I believe we are doing the right thing. When the editor lose focus, we deactivate one ole client and when another editor gains focus, we activate the underlying ole client.
+
+This is necessary so that when you switch editor and start typing that the text goes into the right editor. As an experiment, I commented out the code in OleEditor that deactivates the associated ole client. When I switch to another editor, the new editor gets focus but any text I typed still goes to the first editor.
+
+It&apos;s unfortunate that Excel and Powerpoint displayed their deactivated controls in a strange way. When stacked you don&apos;t see it but when both editors are visible, it does look strange.
+
+As for the menus and toolbar items being added and removed, that&apos;s pretty standard that the new ole client would contribute its menus and the old one remove its menu.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132964</commentid>
+    <comment_count>3</comment_count>
+    <who name="Nicolas von Mellenthin">nico</who>
+    <bug_when>2008-01-17 02:52:30 -0500</bug_when>
+    <thetext>Do You have any ideas about the zooming?
+
+Below some steps to reproduce:
+1) open two excel files in different editor group panes
+2) resize editor group panes vertically
+
+Result: deactivated excel views are zoomed.
+
+1) open two excel files in different editor group panes
+2) resize editor group panes horizontally
+
+Result: deactivated excel views are as expected.
+
+1) open two excel files in different editor group panes
+2) select an excel view
+3) select an outline view (or package explorer)
+
+Result: deactivated excel view looks strange (multiple overwriting of content)
+
+Is there a possibility not to deactivate ole client but to programmatically lose focus? Perhaps you could find workarounds to solve such MS problems (as in handleWord()).
+
+Please help!
+
+BTW:
+Do you already know that Save (As) Action from file menu don´t work?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133426</commentid>
+    <comment_count>4</comment_count>
+    <who name="Duong Nguyen">duongn</who>
+    <bug_when>2008-01-17 14:02:52 -0500</bug_when>
+    <thetext>I tried to just perform focusIn/focusOut to prevent the deactivation call from &quot;zooming&quot; in Excel. While it may look good at first, after switching back and forth twice, the ole control got confused and would give me focus to one editor but displayed typed characters in the other. I don&apos;t know of any stable work around for this problem.
+
+I don&apos;t know about the SaveAs problem. You should log a separate bug for that. Thanks.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

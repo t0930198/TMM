@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214947</bug_id>
+          
+          <creation_ts>2008-01-10 14:53:00 -0500</creation_ts>
+          <short_desc>[prov] SimpleArtifactRepository should not allow opening output stream if remote</short_desc>
+          <delta_ts>2008-01-10 17:31:11 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="John Arthorne">john_arthorne</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129196</commentid>
+    <comment_count>0</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 14:53:29 -0500</bug_when>
+    <thetext>After running our automated test suites, I am seeing files/directories added at the root of my c: drive. I see a directory called .blobstore/ and an artifacts.xml file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129344</commentid>
+    <comment_count>1</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 17:27:43 -0500</bug_when>
+    <thetext>The bug is actually in SimpleArtifactRepository. If a client calls getOutputStream on the repository when it is a non-local HTTP repository, it allows the stream to be opened. However, since the file for writing is obtained via new File(location.getFile()), it ends up being a local file at the root of the file system. The fix is for SimpleArtifactRepository to throw an exception if a caller attempts to open an output stream and the location is non-local. This was being done by ArtifactOutputStreamTest.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129346</commentid>
+    <comment_count>2</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-10 17:31:11 -0500</bug_when>
+    <thetext>Fix released.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

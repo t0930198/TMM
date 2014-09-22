@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214169</bug_id>
+          
+          <creation_ts>2008-01-02 17:40:00 -0500</creation_ts>
+          <short_desc>removeTrailingSlash() fails for &quot;/&quot;</short_desc>
+          <delta_ts>2011-01-31 07:51:24 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>PTP</product>
+          <component>Remote Tools</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Greg Watson">g.watson</reporter>
+          <assigned_to name="Daniel Felix Ferber">dfferber</assigned_to>
+          <cc>lagarcia</cc>
+    
+    <cc>richardm</cc>
+          <qa_contact name="Greg Watson">g.watson</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124597</commentid>
+    <comment_count>0</comment_count>
+    <who name="Greg Watson">g.watson</who>
+    <bug_when>2008-01-02 17:40:13 -0500</bug_when>
+    <thetext>The removeTrailingSlash() method in org.eclipse.ptp.remotetools.internal.ssh.FileTools does not work for the root path (&quot;/&quot;). Removing the trailing slash from &quot;/&quot; should result in the same path, not in an empty path as happens currently. I suggest explicitly testing for this case:
+
+		if (!path.equals(&quot;/&quot;) &amp;&amp; path.endsWith(&quot;/&quot;)) { //$NON-NLS-1$ //$NON-NLS-2
+			return path.substring(0, path.length() - 1);
+		} else {
+			return path;
+		}
+
+Comments?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139836</commentid>
+    <comment_count>1</comment_count>
+    <who name="Daniel Felix Ferber">dfferber</who>
+    <bug_when>2008-01-28 14:55:15 -0500</bug_when>
+    <thetext>I agree with the proposed fix.
+
+But here are my thoughts about this issue:
+
+According to the the most recent documentation that I found available for sftp (http://tools.ietf.org/wg/secsh/draft-ietf-secsh-filexfer/), paths are strings with directories separated with backslashes. It is quite similar to paths on Unix, but not identical. Therefore, some additional care should be taken.
+
+The documentation states that an empty path is to interpreted as the user&apos;s default directory (in most cases, the home directory). As removeTrailingSlash(&quot;/&quot;) returns &quot;&quot;, this is clearly a bug.
+
+However, im my oppinion, the sftp documentation does not clearly state how to represent the path for the root directory, although it is very reasonable to suppose to be &quot;/&quot;. And practice has shown that sftp servers understood &quot;/&quot; as the root directory.
+
+Some further consideration that were taken in the design of RemoteTools:
+
+Paths may be absolute (first character is a backslash) or relative. Since servers may vary how they handle relative paths, it was decided that RemoteTools will always call a sftp command with an absolute path.
+
+The sftp documentation does not state how to handle paths with a trailing backslash, as it is used often on Linux for a directory path. Therefore, to avoid potential compatibility issues with implementation of ssh servers, it was decided to never call a sftp command with a path that ends with backslash. This is the reason why removeTrailingSlash() is called in org.eclipse.ptp.remotetools.internal.ssh.FileTools.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144437</commentid>
+    <comment_count>2</comment_count>
+      <attachid>88148</attachid>
+    <who name="Daniel Felix Ferber">dfferber</who>
+    <bug_when>2008-01-29 11:18:05 -0500</bug_when>
+    <thetext>Created attachment 88148
+A patch that fixes the bug as proposed by Greg Watson</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144696</commentid>
+    <comment_count>3</comment_count>
+    <who name="Greg Watson">g.watson</who>
+    <bug_when>2008-01-29 15:06:13 -0500</bug_when>
+    <thetext>Thanks. I&apos;ll apply the patch. I don&apos;t see any immediate issues that might be caused by absolute paths and removing trailing slashes.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144699</commentid>
+    <comment_count>4</comment_count>
+    <who name="Greg Watson">g.watson</who>
+    <bug_when>2008-01-29 15:10:55 -0500</bug_when>
+    <thetext>Committed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1351468</commentid>
+    <comment_count>5</comment_count>
+    <who name="Daniel Felix Ferber">dfferber</who>
+    <bug_when>2008-10-16 16:36:29 -0400</bug_when>
+    <thetext>Closed, since bug is fixed.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>88148</attachid>
+            <date>2008-01-29 11:18:00 -0500</date>
+            <delta_ts>2011-01-31 07:51:24 -0500</delta_ts>
+            <desc>A patch that fixes the bug as proposed by Greg Watson</desc>
+            <filename>patch.214169.txt</filename>
+            <type>text/plain</type>
+            <size>853</size>
+            <attacher name="Daniel Felix Ferber">dfferber</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5wdHAucmVtb3Rl
+dG9vbHMuY29yZQpJbmRleDogc3JjL29yZy9lY2xpcHNlL3B0cC9yZW1vdGV0b29scy9pbnRlcm5h
+bC9zc2gvRmlsZVRvb2xzLmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2c3Jvb3QvdG9vbHMv
+b3JnLmVjbGlwc2UucHRwL3Rvb2xzL29yZy5lY2xpcHNlLnB0cC5yZW1vdGV0b29scy5jb3JlL3Ny
+Yy9vcmcvZWNsaXBzZS9wdHAvcmVtb3RldG9vbHMvaW50ZXJuYWwvc3NoL0ZpbGVUb29scy5qYXZh
+LHYKcmV0cmlldmluZyByZXZpc2lvbiAxLjIKZGlmZiAtdSAtcjEuMiBGaWxlVG9vbHMuamF2YQot
+LS0gc3JjL29yZy9lY2xpcHNlL3B0cC9yZW1vdGV0b29scy9pbnRlcm5hbC9zc2gvRmlsZVRvb2xz
+LmphdmEJMjEgRGVjIDIwMDcgMTc6MzY6MDAgLTAwMDAJMS4yCisrKyBzcmMvb3JnL2VjbGlwc2Uv
+cHRwL3JlbW90ZXRvb2xzL2ludGVybmFsL3NzaC9GaWxlVG9vbHMuamF2YQkyOSBKYW4gMjAwOCAx
+NjoxNDo1NCAtMDAwMApAQCAtMjQwLDcgKzI0MCw3IEBACiAJfQogCiAJU3RyaW5nIHJlbW92ZVRy
+YWlsaW5nU2xhc2goU3RyaW5nIHBhdGgpIHsKLQkJaWYgKHBhdGguZW5kc1dpdGgoIi8iKSkgeyAv
+LyROT04tTkxTLTEkCisJCWlmICghcGF0aC5lcXVhbHMoIi8iKSAmJiBwYXRoLmVuZHNXaXRoKCIv
+IikpIHsgLy8kTk9OLU5MUy0xJCAvLyROT04tTkxTLTIkCiAJCQlyZXR1cm4gcGF0aC5zdWJzdHJp
+bmcoMCwgcGF0aC5sZW5ndGgoKSAtIDEpOwogCQl9IGVsc2UgewogCQkJcmV0dXJuIHBhdGg7Cg==
+</data>
+<flag name="iplog"
+          id="38838"
+          type_id="7"
+          status="+"
+          setter="g.watson"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

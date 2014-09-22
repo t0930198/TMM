@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214129</bug_id>
+          
+          <creation_ts>2008-01-02 11:55:00 -0500</creation_ts>
+          <short_desc>make use of ConnectionProfile.connectWithoutJob() in order to handle Connection Errors</short_desc>
+          <delta_ts>2011-07-01 16:24:28 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Dali JPA Tools</product>
+          <component>JPA</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Tom Mutdosch">mutdosch</reporter>
+          <assigned_to name="Neil Hauge">neil.hauge</assigned_to>
+          <cc>neil.hauge</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124235</commentid>
+    <comment_count>0</comment_count>
+    <who name="Tom Mutdosch">mutdosch</who>
+    <bug_when>2008-01-02 11:55:24 -0500</bug_when>
+    <thetext>When attempting to connect to an existing Connection from the Dali tools (such as in the Generate Entities wizard), if the connection can not be established (due to an invalid password for example), a DTP error dialog is opened with a Runtime exception.  To fix the password, you have to completely cancel out of the Dali wizards and then go an update the Connection Properties from the Datasource Explorer.
+
+DTP added new API - ConnectionProfile.connectWithoutJob(), which allows clients to handle these errors instead, so you could display the Connection properties dialog to collect the appropriate values. (see https://bugs.eclipse.org/bugs/show_bug.cgi?id=205726#c4 )
+
+This might provide a better user experience.  Here&apos;s the error that you get in the dialog currently:
+
+java.lang.RuntimeException: Error creating SQL Model Connection connection to DB2_CON. (Error: [ibm][db2][jcc][t4][10205][11235] Null password is not supported.)
+	at org.eclipse.jpt.db.internal.DTPConnectionProfileWrapper.connect(DTPConnectionProfileWrapper.java:111)
+	at org.eclipse.jpt.ui.internal.wizards.DatabaseReconnectWizardPage$DatabaseGroup.openConnectionProfileNamed(DatabaseReconnectWizardPage.java:237)
+	at org.eclipse.jpt.ui.internal.wizards.DatabaseReconnectWizardPage$DatabaseGroup.access$4(DatabaseReconnectWizardPage.java:233)
+	at org.eclipse.jpt.ui.internal.wizards.DatabaseReconnectWizardPage$DatabaseGroup$4.widgetSelected(DatabaseReconnectWizardPage.java:209)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:227)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:971)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:956)
+	at org.eclipse.swt.widgets.Link.wmNotifyChild(Link.java:940)
+	at org.eclipse.swt.widgets.Control.wmNotify(Control.java:4703)
+	at org.eclipse.swt.widgets.Composite.wmNotify(Composite.java:1730)
+	at org.eclipse.swt.widgets.Control.WM_NOTIFY(Control.java:4333)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:3826)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4436)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProcW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.CallWindowProc(OS.java:2234)
+	at org.eclipse.swt.widgets.Link.callWindowProc(Link.java:124)
+	at org.eclipse.swt.widgets.Widget.wmLButtonUp(Widget.java:1827)
+	at org.eclipse.swt.widgets.Control.WM_LBUTTONUP(Control.java:4127)
+	at org.eclipse.swt.widgets.Link.WM_LBUTTONUP(Link.java:792)
+	at org.eclipse.swt.widgets.Control.windowProc(Control.java:3808)
+	at org.eclipse.swt.widgets.Display.windowProc(Display.java:4423)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+	at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2320)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3353)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+	at org.eclipse.jface.window.Window.open(Window.java:801)
+	at org.eclipse.jpt.ui.internal.generic.EntitiesGenerator.generate(EntitiesGenerator.java:76)
+	at org.eclipse.jpt.ui.internal.generic.EntitiesGenerator.generate(EntitiesGenerator.java:56)
+	at org.eclipse.jpt.ui.internal.BaseJpaPlatformUi.generateEntities(BaseJpaPlatformUi.java:192)
+	at org.eclipse.jpt.ui.internal.actions.GenerateEntitiesAction.execute(GenerateEntitiesAction.java:23)
+	at com.ibm.etools.webtools.jpa.dali.GenerateEntitiesActionExt.launchWizard(GenerateEntitiesActionExt.java:28)
+	at com.ibm.etools.webtools.jpa.wizard.ui.pages.EntitySelectionPage.handleNewEntityButton(EntitySelectionPage.java:145)
+	at com.ibm.etools.webtools.jpa.wizard.ui.pages.EntitySelectionPage.access$0(EntitySelectionPage.java:143)
+	at com.ibm.etools.webtools.jpa.wizard.ui.pages.EntitySelectionPage$2.widgetSelected(EntitySelectionPage.java:110)
+	at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:227)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3744)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3355)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:825)
+	at org.eclipse.jface.window.Window.open(Window.java:801)
+	at com.ibm.etools.webtools.jpa.actions.JpaManagerBeanProjectAction.run(JpaManagerBeanProjectAction.java:41)
+	at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:251)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:582)
+	at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:499)
+	at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:410)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3744)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3355)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2395)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2359)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2225)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:468)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:463)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:515)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:455)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1193)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1169)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125328</commentid>
+    <comment_count>1</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2008-01-03 16:57:15 -0500</bug_when>
+    <thetext>This certainly sounds like something to investigate.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1288982</commentid>
+    <comment_count>2</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2008-07-10 13:16:40 -0400</bug_when>
+    <thetext>Moving to Future bucket, which contains higher priority candidates for the next release.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1959174</commentid>
+    <comment_count>3</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2011-07-01 16:24:28 -0400</bug_when>
+    <thetext>Moving JPA specific bugs to new JPA component in bugzilla.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

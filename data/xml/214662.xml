@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214662</bug_id>
+          
+          <creation_ts>2008-01-08 14:55:00 -0500</creation_ts>
+          <short_desc>Escape sequence displayed in progress message</short_desc>
+          <delta_ts>2008-04-25 16:00:09 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Search</component>
+          <version>3.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc>http://bp3.blogger.com/_3JXkrsXn5KY/R4I84oZNVMI/AAAAAAAAEP8/eITVGYEZSrI/s1600-h/eclipse-behaviour.jpg</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Venkatesh Varalu">varalu</reporter>
+          <assigned_to name="Platform-Search-Inbox">platform-search-inbox</assigned_to>
+          <cc>aeschli</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127649</commentid>
+    <comment_count>0</comment_count>
+    <who name="Venkatesh Varalu">varalu</who>
+    <bug_when>2008-01-08 14:55:00 -0500</bug_when>
+    <thetext>The shortcut (ctrl+h) in eclipse which is used to find the resources in the entire project, i found a search of mine a bit different...
+
+When the search pattern contains a period(.) in it, the search dialog displays the search string along with the escape sequence &quot;\&quot;. But this is not the case for other special characters.
+
+Definitely a trivial bug. Because i thought i did a typo and cancelled the search for the first time and later realized that it was a bug.
+
+
+-- Steps to reproduce --
+1. Select a project and do a Ctrl+h for finding resource
+2. In the search dialog include text that has a period (.) -- example: 200.txt
+
+-- Actual result -- 
+Search dialog with text &quot;Searching for pattern &apos;200\.jsp&apos;&quot;
+
+-- Expected Results -- 
+Search dialog with text &quot;Searching for pattern &apos;200.jsp&apos;&quot;
+
+-- Additional Information -- 
+The search dialog should display the actual text entered for searching and not the one that is used internally in the code to search.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128048</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-09 08:42:26 -0500</bug_when>
+    <thetext>This happens because we don&apos;t show the search string from the dialog but the pattern from the java.util.regex.Matcher.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1214995</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-04-25 16:00:09 -0400</bug_when>
+    <thetext>I see the bug, but there&apos;s no easy fix here as the search engine only gets the compiled pattern. That&apos;s how we defined the API which is public API and can&apos;t be changed anyore.
+I can fix it by not showing the pattern at all, but I think we leave things as they are.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

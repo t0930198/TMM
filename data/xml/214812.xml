@@ -1,0 +1,754 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214812</bug_id>
+          
+          <creation_ts>2008-01-09 16:05:00 -0500</creation_ts>
+          <short_desc>If a MessageDialog opens in an asyncExec block while a FileDialog is open, Eclipse hangs</short_desc>
+          <delta_ts>2012-07-06 18:58:15 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3.1</version>
+          <rep_platform>Macintosh</rep_platform>
+          <op_sys>Mac OS X</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mike Morearty">mike</reporter>
+          <assigned_to name="Project Inbox">swt-triaged</assigned_to>
+          <cc>cocoakevin</cc>
+    
+    <cc>namole</cc>
+    
+    <cc>Silenio_Quarti</cc>
+    
+    <cc>skovatch</cc>
+    
+    <cc>swingler</cc>
+    
+    <cc>Tod_Creasey</cc>
+          <qa_contact name="Silenio Quarti">Silenio_Quarti</qa_contact>
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128458</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86507</attachid>
+    <who name="Mike Morearty">mike</who>
+    <bug_when>2008-01-09 16:05:29 -0500</bug_when>
+    <thetext>Created attachment 86507
+Sample plugin to demonstrate the problem
+
+Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. OS X Leopard only -- I have not been able to reproduce this problem on OS X TIger or on Windows.
+2. Download the sample plugin source.  This is the key bit of source code, from SampleAction.java (and this is the only part of the plugin which is modified from the standard Hello World plugin):
+
+		Display.getCurrent().asyncExec(new Runnable() {
+			public void run() {
+				MessageDialog.openInformation(
+						null,
+						&quot;DialogHang Plug-in&quot;,
+						&quot;Hello, Eclipse world&quot;);
+			}
+		});
+
+		FileDialog fileDialog = new FileDialog(window.getShell());
+		fileDialog.open();
+
+Notice that that code does as asyncExec() which is going to display a MessageDialog, and then it opens a FileDialog.  So the result is that the FileDialog will appear, and then when its message pump runs, the MessageDialog will appear.
+
+3. With this plugin installed, launch a child instanc of Eclipse.  In the child instance, click Sample Menu &gt; Sample Action on the top-level menu.
+
+Result:
+Both the FileDialog and the MessageDialog appear (with the FileDialog at the top of the z-order), and you can drag the FileDialog around and click within it, but you cannot dismiss it.  Niether OK nor Cancel causes the FileDialog to go away.  If you try to click on the MessageDialog, you just get a small beep sound.  You are hung at this point -- you have to forcibly kill Eclipse.
+
+Note that in the call to MessageDialog.openInformation(), I passed null for the Shell.  When you pass null, there is code in Window.defaultModalParent.getShell() that will get invoked, and it does explicitly attempt to deal with the case of other modal windows being present -- as the comment says, &quot;Make sure we don&apos;t pick a parent that has a modal child (this can lock the app).&quot;  But in this case, it doesn&apos;t seem to work.  I also tried changing my code to pass window.getShell() instead of null; that didn&apos;t help.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128553</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mike Morearty">mike</who>
+    <bug_when>2008-01-09 17:52:04 -0500</bug_when>
+    <thetext>I should clarify that this may be a Leopard bug, not an Eclipse bug.  But if it&apos;s a Leopard bug, then the question still remains whether Eclipse should try to work around it or not.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128992</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-10 11:51:16 -0500</bug_when>
+    <thetext>MessageDialog runs its own event loop when it&apos;s opened. The second event loop combined with the FileDialog seems to be causing this.
+
+Simplified test case:
+
+	public static void main(String[] args) {
+		final Display display = new Display();
+		final Shell shell = new Shell(display);
+
+		display.asyncExec(new Runnable() {
+			public void run() {
+				Shell shell2 = new Shell(display);
+				shell2.setBounds(25, 25, 100, 45);
+				shell2.open();
+				while (shell2 != null &amp;&amp; !shell2.isDisposed()) {
+					if (!display.readAndDispatch()) {
+						display.sleep();
+					}
+				}
+			}
+		});
+		
+		FileDialog fileDialog = new FileDialog(shell);
+		fileDialog.open();
+		shell.setBounds(100, 100, 640, 480);
+		shell.open();		
+
+		while (!shell.isDisposed()) {
+			if (!display.readAndDispatch())
+				display.sleep();
+		}
+		display.dispose();
+	}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129130</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-10 14:12:30 -0500</bug_when>
+    <thetext>This case also fails on GTK.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129918</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-11 15:32:44 -0500</bug_when>
+    <thetext>This is difficult to fix in SWT. 
+Tod, you guys are running the event loop. Maybe there&apos;s a work around in your world?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129922</commentid>
+    <comment_count>5</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-11 15:34:45 -0500</bug_when>
+    <thetext>When you say &quot;fix&quot; what are you suggesting?
+
+The main issue we have is keeping painting while something else is going on in the UI Thread.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131596</commentid>
+    <comment_count>6</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-15 11:59:29 -0500</bug_when>
+    <thetext>The test case in comment 2 should include SWT.APPLICATION_MODAL when constructing the shell.
+
+I can confirm that this bug happens on Leopard, but not on Tiger. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1216422</commentid>
+    <comment_count>7</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-04-28 16:13:24 -0400</bug_when>
+    <thetext>The only workaround I&apos;ve found for this so far is to prevent the async messages from running when there&apos;s a file dialog open on Leopard. Something like:
+
+parent.getDisplay().runAsyncMessages = false;
+OS.NavDialogRun (outDialog [0]);
+parent.getDisplay().runAsyncMessages = true;
+
+This would avoid the problem, but it would make the behavior of FileDialog different on Leopard from every other platform.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1216575</commentid>
+    <comment_count>8</comment_count>
+    <who name="Mike Morearty">mike</who>
+    <bug_when>2008-04-28 17:30:35 -0400</bug_when>
+    <thetext>I don&apos;t know the Mac well enough to answer this question, but I wonder, should this be considered a bug in Leopard?  And if so, is the proper resolution to simply file a bug with Apple, and not change Eclipse?  Or, file a bug with Apple and still put in a workaround into Eclipse?
+
+Although I filed this Eclipse bug, I don&apos;t think I should be the person to file an Apple bug, because I don&apos;t know Mac coding well enough to give any example other than the Eclipse one.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1217375</commentid>
+    <comment_count>9</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-04-29 10:28:25 -0400</bug_when>
+    <thetext>We try to find work around in SWT if we can. I&apos;m not sure if this is a bug in Carbon or not. I haven&apos;t yet had time to try writing an example in xcode.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1753041</commentid>
+    <comment_count>10</comment_count>
+    <who name="Scott Kovatch">skovatch</who>
+    <bug_when>2010-06-02 14:03:31 -0400</bug_when>
+    <thetext>Mass move of Kevin&apos;s open Mac Carbon &amp; Cocoa bugs to Scott K.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1880578</commentid>
+    <comment_count>11</comment_count>
+      <attachid>188606</attachid>
+    <who name="Scott Kovatch">skovatch</who>
+    <bug_when>2011-02-09 12:31:39 -0500</bug_when>
+    <thetext>Created attachment 188606
+Potential fix
+
+This needs more testing, but basically we block sync/async execs from running when a modal dialog is up. I thought I could block them just in NSModalPanelRunLoopMode, but clicks and other events also arrive in normal mode or event tracking mode, so they still execute.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2131849</commentid>
+    <comment_count>12</comment_count>
+    <who name="Nam Le">namole</who>
+    <bug_when>2012-07-02 17:10:07 -0400</bug_when>
+    <thetext>Aptana Studio and Appcelerator Titanium Studio is also running into this issue. Are there any work-arounds to the mechanism used to display the MessageDialog (we do it in an async)?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2131850</commentid>
+    <comment_count>13</comment_count>
+    <who name="Nam Le">namole</who>
+    <bug_when>2012-07-02 17:11:30 -0400</bug_when>
+    <thetext>I forgot to mention my environment. Tested on OSX 10.7.4 using Eclipse 3.7.1, 4.2. Issue occurs on both versions</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2133909</commentid>
+    <comment_count>14</comment_count>
+      <attachid>218405</attachid>
+    <who name="Mike Morearty">mike</who>
+    <bug_when>2012-07-06 18:58:15 -0400</bug_when>
+    <thetext>Created attachment 218405
+Native Objective-C Cocoa project reproducing the bug
+
+I was able to reproduce this with a native Objective-C Cocoa app in Xcode; if you care, see the attached Xcode project.
+
+In this project, I tried to copy the things that SWT&apos;s Cocoa implementation does.  SWT hooks into the run loop in order to run async messages more often; see Display.init() in Display.java near line 2188; specifically, the call to OS.CFRunLoopAddObserver() near line 2194.
+
+In that call, the value OS.kCFRunLoopCommonModes is passed for the &quot;modes&quot; argument.  This means that the callback will be called whenever any of the &quot;common&quot; modes are in effect.  This includes the default mode, the modal mode (CFModalPanelRunLoopMode), and the mode for tracking scrollbar-drag events (NSEventTrackingRunLoopMode), and possibly others.
+
+So the result of all that is that even when a modal dialog is running its own message loop, async messages are processed, and they can do whatever they want, including UI activities such as the one that causes these hangs.
+
+In my sample app, if you specify kCFRunLoopDefaultMode instead of kCFRunLoopCommonModes, the problem goes away (because the window doesn&apos;t open while the File dialog is up).
+
+I can&apos;t think of anything better than what Kevin and Scott have already suggested -- just various ways of preventing async messages from being processed while in a modal dialog.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86507</attachid>
+            <date>2008-01-09 16:05:00 -0500</date>
+            <delta_ts>2008-01-09 16:05:29 -0500</delta_ts>
+            <desc>Sample plugin to demonstrate the problem</desc>
+            <filename>DialogHangPlugin.zip</filename>
+            <type>application/zip</type>
+            <size>6456</size>
+            <attacher name="Mike Morearty">mike</attacher>
+            
+              <data encoding="base64">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
+JVvagawOLocW9UoXhFeykGgT06wBSSB1bJnl0f3Png5fWx2PYOfj0TvbLiuSuRYd9ut+D26Gm79Q
+SwcIVx5I1gMDAADzBwAAUEsBAhQAFAAIAAgAk2gpOD8cV6ijAAAALAEAABUAAAAAAAAAAAAAAAAA
+AAAAAERpYWxvZ0hhbmcvLmNsYXNzcGF0aFBLAQIUABQACAAIAJNoKThshvPB5wAAAIMCAAATAAAA
+AAAAAAAAAAAAAOYAAABEaWFsb2dIYW5nLy5wcm9qZWN0UEsBAhQAFAAIAAgAk2gpON3TNzqlAAAA
+EAEAAB8AAAAAAAAAAAAAAAAADgIAAERpYWxvZ0hhbmcvTUVUQS1JTkYvTUFOSUZFU1QuTUZQSwEC
+FAAUAAgACACTaCk4G4TxJ0kCAABnBAAAKQAAAAAAAAAAAAAAAAAAAwAARGlhbG9nSGFuZy9iaW4v
+ZGlhbG9naGFuZy9BY3RpdmF0b3IuY2xhc3NQSwECFAAUAAgACACTaCk4hdeF9MsBAAAEAwAANgAA
+AAAAAAAAAAAAAACgBQAARGlhbG9nSGFuZy9iaW4vZGlhbG9naGFuZy9hY3Rpb25zL1NhbXBsZUFj
+dGlvbiQxLmNsYXNzUEsBAhQAFAAIAAgAk2gpOIbm0FLbAgAANgYAADQAAAAAAAAAAAAAAAAAzwcA
+AERpYWxvZ0hhbmcvYmluL2RpYWxvZ2hhbmcvYWN0aW9ucy9TYW1wbGVBY3Rpb24uY2xhc3NQSwEC
+FAAUAAgACACTaCk4AiDIo04AAACAAAAAGwAAAAAAAAAAAAAAAAAMCwAARGlhbG9nSGFuZy9idWls
+ZC5wcm9wZXJ0aWVzUEsBAhQAFAAIAAgAk2gpOJDb86B4AgAA1wMAABsAAAAAAAAAAAAAAAAAowsA
+AERpYWxvZ0hhbmcvaWNvbnMvc2FtcGxlLmdpZlBLAQIUABQACAAIAJNoKTiIrW7lRwEAAFYDAAAV
+AAAAAAAAAAAAAAAAAGQOAABEaWFsb2dIYW5nL3BsdWdpbi54bWxQSwECFAAUAAgACACTaCk4ZW3F
+pwACAAAwBQAAKAAAAAAAAAAAAAAAAADuDwAARGlhbG9nSGFuZy9zcmMvZGlhbG9naGFuZy9BY3Rp
+dmF0b3IuamF2YVBLAQIUABQACAAIAJNoKThXHkjWAwMAAPMHAAAzAAAAAAAAAAAAAAAAAEQSAABE
+aWFsb2dIYW5nL3NyYy9kaWFsb2doYW5nL2FjdGlvbnMvU2FtcGxlQWN0aW9uLmphdmFQSwUGAAAA
+AAsACwB6AwAAqBUAAAAA
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>188606</attachid>
+            <date>2011-02-09 12:31:00 -0500</date>
+            <delta_ts>2011-02-09 12:31:39 -0500</delta_ts>
+            <desc>Potential fix</desc>
+            <filename>214812_patch.txt</filename>
+            <type>text/plain</type>
+            <size>771</size>
+            <attacher name="Scott Kovatch">skovatch</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5zd3QKSW5kZXg6
+IEVjbGlwc2UgU1dUL2NvY29hL29yZy9lY2xpcHNlL3N3dC93aWRnZXRzL0Rpc3BsYXkuamF2YQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnN3dC9FY2xp
+cHNlIFNXVC9jb2NvYS9vcmcvZWNsaXBzZS9zd3Qvd2lkZ2V0cy9EaXNwbGF5LmphdmEsdgpyZXRy
+aWV2aW5nIHJldmlzaW9uIDEuMzczCmRpZmYgLXUgLXIxLjM3MyBEaXNwbGF5LmphdmEKLS0tIEVj
+bGlwc2UgU1dUL2NvY29hL29yZy9lY2xpcHNlL3N3dC93aWRnZXRzL0Rpc3BsYXkuamF2YQk4IEZl
+YiAyMDExIDIyOjMzOjI4IC0wMDAwCTEuMzczCisrKyBFY2xpcHNlIFNXVC9jb2NvYS9vcmcvZWNs
+aXBzZS9zd3Qvd2lkZ2V0cy9EaXNwbGF5LmphdmEJOSBGZWIgMjAxMSAxNzoyOTozMyAtMDAwMApA
+QCAtMzQ0Nyw2ICszNDQ3LDggQEAKIH0KIAogaW50IC8qbG9uZyovIG9ic2VydmVyUHJvYyAoaW50
+IC8qbG9uZyovIG9ic2VydmVyLCBpbnQgLypsb25nKi8gYWN0aXZpdHksIGludCAvKmxvbmcqLyBp
+bmZvKSB7CisJaWYgKG1vZGFsRGlhbG9nICE9IG51bGwpIHJldHVybiAwOworCQogCXN3aXRjaCAo
+KGludCkvKjY0Ki9hY3Rpdml0eSkgewogCQljYXNlIE9TLmtDRlJ1bkxvb3BCZWZvcmVXYWl0aW5n
+OgogCQkJaWYgKHJ1bkFzeW5jTWVzc2FnZXMpIHsK
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>218405</attachid>
+            <date>2012-07-06 18:58:00 -0400</date>
+            <delta_ts>2012-07-06 18:58:15 -0400</delta_ts>
+            <desc>Native Objective-C Cocoa project reproducing the bug</desc>
+            <filename>EclipseBug214812.zip</filename>
+            <type>application/zip</type>
+            <size>18496</size>
+            <attacher name="Mike Morearty">mike</attacher>
+            
+              <data encoding="base64">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
+vc2rPnjeO+/xMGJ5Y6Y4koHVEHPGprslAkumDcooM6EeUpZ1o26f2uZ0btoaJdpEBbL8A6vpk1L5
+jpyrhEdihHDvbn0I7lDJa1UruPSaNPpfj/PVVbSMwu4DUEsDBAoAAAAAAJ1u5kAAAAAAAAAAAAAA
+AAAaAAAARWNsaXBzZUJ1ZzIxNDgxMi9lbi5scHJvai9QSwMECgAAAAgAnW7mQF9SwlMRAQAAtAEA
+ACUAAABFY2xpcHNlQnVnMjE0ODEyL2VuLmxwcm9qL0NyZWRpdHMucnRmXY7LbsIwEEXX9Vf4E0xI
+UihbKqWLrlqJzWycMEksHE+wJ1CE+Pc6ruhrYZ+r0bmjuYLnVoF2wVyhJcdcW4iDNpxNCLJCe0I2
+jd7cxBUasuSjsAGP+6wooPOIbg61nTAyWjDqEf15vcrVV+xjUvPY74E/ilLFf7HIEsrVjCzLE1Zq
+xnKZlOU6KXmelEIlJbZnlIuklI9ROVo4Os2T11aI+fI63p7lEppWyWfXGYfojeueBNRKgnh4owHl
+iDRaBAGxU8tqGrSTL47Rt7pBucVgOve3Qdyj/9d7x8C/V1c0YjtZe5GOOL6a9pe7u6VmGtCxZkM/
+q3c94Qn9XdoZ7mUYsTHaSu61OwTJ9G2/0gDiJj4BUEsDBAoAAAAAAJ1u5kCkSb8iLQAAAC0AAAAr
+AAAARWNsaXBzZUJ1ZzIxNDgxMi9lbi5scHJvai9JbmZvUGxpc3Quc3RyaW5ncy8qIExvY2FsaXpl
+ZCB2ZXJzaW9ucyBvZiBJbmZvLnBsaXN0IGtleXMgKi8KClBLAwQKAAAACACdbuZAzI1OzqUuAABH
+XAIAJgAAAEVjbGlwc2VCdWcyMTQ4MTIvZW4ubHByb2ovTWFpbk1lbnUueGli7X3bduM2suhz5iu0
+/HIeTmITd2BOx7PcdjrjSd/SdpIz87IXLaFtTlOiNkV1t5OTtfbX7A/bX3IAydaFgCgVTZjstjJr
+3LYEgoW6V6FQePa3z8O091HnkyQbfX+ADqODnh71s0Eyuv7+4JfLF9/Jg78d/+VZnPdvko+6V9yO
+9fcH/Wx4GI/HqT48HxU6fx/39fNpkg50Tg5Ps34WH/7f8+cHy2nlYRQdHP/lm2eDuIjNv988S0ZF
+74O+/f7g/PlZ1p8O9ag4vLidFHp4GefXujg4RpGInh2ZcbPxkyI3EG145Nf5e8wz6AdGnh3NB1c9
+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
+1qjvW43D0OeOfTQhH42nYWjwMM9YrAWFFpILnbYc4Nb5yJLwuWPLRpXbTC8ALqTyZrWBkdHeoZ2M
+4G7ly8dnDT9wI5TOEvD4fohxdtYkx6HfmqtfWQ5L+s929RbWT/ALf1BLAQIAAAoAAAAIAJ1u5kAm
+TU+UPQAAAFcAAAAKAAAAAAAAAAAAAAAAAAAAAAAuZ2l0aWdub3JlUEsBAgAACgAAAAAAnW7mQAAA
+AAAAAAAAAAAAABsAAAAAAAAAAAAQAAAAZQAAAEVjbGlwc2VCdWcyMTQ4MTIueGNvZGVwcm9qL1BL
+AQIAAAoAAAAIAJ1u5kDW6QdGYQgAAEotAAAqAAAAAAAAAAAAAAAAAJ4AAABFY2xpcHNlQnVnMjE0
+ODEyLnhjb2RlcHJvai9wcm9qZWN0LnBieHByb2pQSwECAAAKAAAAAACdbuZAAAAAAAAAAAAAAAAA
+EQAAAAAAAAAAABAAAABHCQAARWNsaXBzZUJ1ZzIxNDgxMi9QSwECAAAKAAAACACdbuZA79sJ6SkB
+AACxAQAAHgAAAAAAAAAAAAAAAAB2CQAARWNsaXBzZUJ1ZzIxNDgxMi9BcHBEZWxlZ2F0ZS5oUEsB
+AgAACgAAAAgAnW7mQIwTtXwZBAAAXAkAAB4AAAAAAAAAAAAAAAAA2woAAEVjbGlwc2VCdWcyMTQ4
+MTIvQXBwRGVsZWdhdGUubVBLAQIAAAoAAAAIAJ1u5kAk1sj95gEAAFMEAAAsAAAAAAAAAAAAAAAA
+ADAPAABFY2xpcHNlQnVnMjE0ODEyL0VjbGlwc2VCdWcyMTQ4MTItSW5mby5wbGlzdFBLAQIAAAoA
+AAAIAJ1u5kCguagAgAAAAKAAAAAsAAAAAAAAAAAAAAAAAGARAABFY2xpcHNlQnVnMjE0ODEyL0Vj
+bGlwc2VCdWcyMTQ4MTItUHJlZml4LnBjaFBLAQIAAAoAAAAAAJ1u5kAAAAAAAAAAAAAAAAAaAAAA
+AAAAAAAAEAAAACoSAABFY2xpcHNlQnVnMjE0ODEyL2VuLmxwcm9qL1BLAQIAAAoAAAAIAJ1u5kBf
+UsJTEQEAALQBAAAlAAAAAAAAAAAAAAAAAGISAABFY2xpcHNlQnVnMjE0ODEyL2VuLmxwcm9qL0Ny
+ZWRpdHMucnRmUEsBAgAACgAAAAAAnW7mQKRJvyItAAAALQAAACsAAAAAAAAAAAAAAAAAthMAAEVj
+bGlwc2VCdWcyMTQ4MTIvZW4ubHByb2ovSW5mb1BsaXN0LnN0cmluZ3NQSwECAAAKAAAACACdbuZA
+zI1OzqUuAABHXAIAJgAAAAAAAAAAAAAAAAAsFAAARWNsaXBzZUJ1ZzIxNDgxMi9lbi5scHJvai9N
+YWluTWVudS54aWJQSwECAAAKAAAACACdbuZAZ33VnscAAAAFAQAAFwAAAAAAAAAAAAAAAAAVQwAA
+RWNsaXBzZUJ1ZzIxNDgxMi9tYWluLm1QSwUGAAAAAA0ADQDxAwAAEUQAACgAYzJlY2ZhYjc2MDMz
+NTBhZjdkNmNhMGY4OWE5OWU5NWEzYTc1MTRlNA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,283 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214401</bug_id>
+          
+          <creation_ts>2008-01-04 16:26:00 -0500</creation_ts>
+          <short_desc>[launch] NPEs when shutting down workbench while a debug session is running.</short_desc>
+          <delta_ts>2014-01-29 20:46:51 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-debug-dsf-gdb</component>
+          <version>0 DD 1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>DD 1.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Pawel Piech">pawel.1.piech</reporter>
+          <assigned_to name="Marc Khouzam">marc.khouzam</assigned_to>
+          <cc>dd.general-inbox</cc>
+    
+    <cc>dschaefer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126064</commentid>
+    <comment_count>0</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-01-04 16:26:14 -0500</bug_when>
+    <thetext>The following errors are listed below.  The source of the problem is that after when OSGi shuts down the GDB plugin, the bundle context used to access the DSF services is no longer valid.  If user shuts down workbench while a debug session is active, OSGi shuts down the GDB plugin, but leaves the debug session running.  The debug session is not terminated until the org.eclipse.debug.core plugin is shut down.  At this point, the GDB plugin bundle is invalid and exceptions are thrown.  The solution should be for the GDB plugin to terminate any running debug sessions itself, before its plugin is shut down.
+
+java.lang.NullPointerException
+at org.eclipse.dd.dsf.service.DsfServicesTracker.getServiceReference(DsfServicesTracker.java:107)
+at org.eclipse.dd.dsf.service.DsfServicesTracker.getService(DsfServicesTracker.java:144)
+at org.eclipse.dd.dsf.service.DsfServicesTracker.getService(DsfServicesTracker.java:129)
+at org.eclipse.dd.dsf.gdb.launching.ShutdownSequence.shutdownService(ShutdownSequence.java:151)
+at org.eclipse.dd.dsf.gdb.launching.ShutdownSequence.access$0(ShutdownSequence.java:150)
+at org.eclipse.dd.dsf.gdb.launching.ShutdownSequence$2.execute(ShutdownSequence.java:69)
+at org.eclipse.dd.dsf.concurrent.Sequence.executeStep(Sequence.java:270)
+at org.eclipse.dd.dsf.concurrent.Sequence.access$2(Sequence.java:237)
+at org.eclipse.dd.dsf.concurrent.Sequence$1.handleCompleted(Sequence.java:280)
+at org.eclipse.dd.dsf.concurrent.RequestMonitor$1.run(RequestMonitor.java:148)
+at org.eclipse.dd.dsf.concurrent.DefaultDsfExecutor$TracingWrapperRunnable.run(DefaultDsfExecutor.java:272)
+at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:417)
+at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:269)
+at java.util.concurrent.FutureTask.run(FutureTask.java:123)
+at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:65)
+at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:168)
+at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:650)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:675)
+at java.lang.Thread.run(Thread.java:595)
+
+and 
+
+java.lang.NullPointerException
+at org.eclipse.dd.dsf.gdb.launching.GdbLaunch$2.handleCompleted(GdbLaunch.java:139)
+at org.eclipse.dd.dsf.concurrent.RequestMonitor$1.run(RequestMonitor.java:148)
+at org.eclipse.dd.dsf.concurrent.DefaultDsfExecutor$TracingWrapperRunnable.run(DefaultDsfExecutor.java:272)
+at java.util.concurrent.Executors$RunnableAdapter.call(Executors.java:417)
+at java.util.concurrent.FutureTask$Sync.innerRun(FutureTask.java:269)
+at java.util.concurrent.FutureTask.run(FutureTask.java:123)
+at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.access$301(ScheduledThreadPoolExecutor.java:65)
+at java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(ScheduledThreadPoolExecutor.java:168)
+at java.util.concurrent.ThreadPoolExecutor$Worker.runTask(ThreadPoolExecutor.java:650)
+at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:675)
+at java.lang.Thread.run(Thread.java:595)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146789</commentid>
+    <comment_count>1</comment_count>
+      <attachid>88464</attachid>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-01-31 16:21:02 -0500</bug_when>
+    <thetext>Created attachment 88464
+Patch with fix.
+
+I developed a fix for this bug while working on the PDA example.  Attaching the patch which causes any running GDB sessions to be termianted when the GDB plugin is stopped.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146792</commentid>
+    <comment_count>2</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-01-31 16:22:25 -0500</bug_when>
+    <thetext>I&apos;m checking in the change.  Marc, since you have some experience with the GDB launch framework, could you review the patch?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146798</commentid>
+    <comment_count>3</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-01-31 16:25:38 -0500</bug_when>
+    <thetext>BTW, I also removed the statement which caused the debugger to shut down if the process ran to completion during the initialization cycle.  This was inconsistent with the behavior of the debugger otherwise, which normally keeps running after the inferior process completes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149136</commentid>
+    <comment_count>4</comment_count>
+    <who name="Marc Khouzam">marc.khouzam</who>
+    <bug_when>2008-02-04 14:49:17 -0500</bug_when>
+    <thetext>Looks good</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1310115</commentid>
+    <comment_count>5</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-08-13 13:05:51 -0400</bug_when>
+    <thetext>Closing out 1.0 bugs.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>88464</attachid>
+            <date>2008-01-31 16:21:00 -0500</date>
+            <delta_ts>2014-01-29 20:46:51 -0500</delta_ts>
+            <desc>Patch with fix.</desc>
+            <filename>2008-01-31_plugin_shutdown.patch</filename>
+            <type>text/plain</type>
+            <size>7156</size>
+            <attacher name="Pawel Piech">pawel.1.piech</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5kZC5kc2YuZ2Ri
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvZGQvZHNmL2dkYi9sYXVuY2hpbmcvR2RiTGF1bmNoLmph
+dmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2c3Jvb3QvZHNkcC9vcmcuZWNsaXBzZS5kZC5kc2Yv
+cGx1Z2lucy9vcmcuZWNsaXBzZS5kZC5kc2YuZ2RiL3NyYy9vcmcvZWNsaXBzZS9kZC9kc2YvZ2Ri
+L2xhdW5jaGluZy9HZGJMYXVuY2guamF2YSx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS4zCmRpZmYg
+LXUgLXIxLjMgR2RiTGF1bmNoLmphdmEKLS0tIHNyYy9vcmcvZWNsaXBzZS9kZC9kc2YvZ2RiL2xh
+dW5jaGluZy9HZGJMYXVuY2guamF2YQkyMCBEZWMgMjAwNyAxOToxODowMSAtMDAwMAkxLjMKKysr
+IHNyYy9vcmcvZWNsaXBzZS9kZC9kc2YvZ2RiL2xhdW5jaGluZy9HZGJMYXVuY2guamF2YQkzMSBK
+YW4gMjAwOCAyMDoyNDo0OCAtMDAwMApAQCAtMjEsMTEgKzIxLDExIEBACiBpbXBvcnQgb3JnLmVj
+bGlwc2UuZGQuZHNmLmNvbmN1cnJlbnQuRGVmYXVsdERzZkV4ZWN1dG9yOwogaW1wb3J0IG9yZy5l
+Y2xpcHNlLmRkLmRzZi5jb25jdXJyZW50LkRzZkV4ZWN1dG9yOwogaW1wb3J0IG9yZy5lY2xpcHNl
+LmRkLmRzZi5jb25jdXJyZW50LkRzZlJ1bm5hYmxlOworaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRz
+Zi5jb25jdXJyZW50LkltbWVkaWF0ZUV4ZWN1dG9yOwogaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRz
+Zi5jb25jdXJyZW50LlJlcXVlc3RNb25pdG9yOwogaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRzZi5j
+b25jdXJyZW50LlNlcXVlbmNlOwogaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRzZi5jb25jdXJyZW50
+LlRocmVhZFNhZmU7CiBpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLmdkYi5zZXJ2aWNlLmNvbnRy
+b2wuR0RCQ29udHJvbDsKLWltcG9ydCBvcmcuZWNsaXBzZS5kZC5kc2YubWkuc2VydmljZS5jb250
+cm9sLk1JSW5mZXJpb3JQcm9jZXNzOwogaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRzZi5zZXJ2aWNl
+LkRzZlNlcnZpY2VFdmVudEhhbmRsZXI7CiBpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLnNlcnZp
+Y2UuRHNmU2VydmljZXNUcmFja2VyOwogaW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRzZi5zZXJ2aWNl
+LkRzZlNlc3Npb247CkBAIC03NCwxMiArNzQsNiBAQAogICAgICAgICAgICAgICAgIGZUcmFja2Vy
+ID0gbmV3IERzZlNlcnZpY2VzVHJhY2tlcihEc2ZHZGJQbHVnaW4uZ2V0QnVuZGxlQ29udGV4dCgp
+LCBmU2Vzc2lvbi5nZXRJZCgpKTsKICAgICAgICAgICAgICAgICBmU2Vzc2lvbi5hZGRTZXJ2aWNl
+RXZlbnRMaXN0ZW5lcihHZGJMYXVuY2gudGhpcywgbnVsbCk7CiAgICAgCi0gICAgICAgICAgICAg
+ICAgR0RCQ29udHJvbCBnZGIgPSBmVHJhY2tlci5nZXRTZXJ2aWNlKEdEQkNvbnRyb2wuY2xhc3Mp
+OwotICAgICAgICAgICAgICAgIGlmIChnZGIuZ2V0SW5mZXJpb3JQcm9jZXNzKCkuZ2V0U3RhdGUo
+KSA9PSBNSUluZmVyaW9yUHJvY2Vzcy5TdGF0ZS5URVJNSU5BVEVEKSB7Ci0gICAgICAgICAgICAg
+ICAgICAgIHNodXRkb3duKCk7Ci0gICAgICAgICAgICAgICAgICAgIHJldHVybjsKLSAgICAgICAg
+ICAgICAgICB9Ci0gICAgICAgICAgICAgICAgCiAgICAgICAgICAgICAgICAgZkluaXRpYWxpemVk
+ID0gdHJ1ZTsKICAgICAgICAgICAgICAgICBmaXJlQ2hhbmdlZCgpOwogICAgICAgICAgICAgfQpA
+QCAtMTAwLDcgKzk0LDcgQEAKICAgICAvLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
+Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8KICAgICAvLyBJU2Vydmlj
+ZUV2ZW50TGlzdGVuZXIKICAgICBARHNmU2VydmljZUV2ZW50SGFuZGxlciBwdWJsaWMgdm9pZCBl
+dmVudERpc3BhdGNoZWQoR0RCQ29udHJvbC5FeGl0ZWRFdmVudCBldmVudCkgewotICAgICAgICBz
+aHV0ZG93bigpOworICAgICAgICBzaHV0ZG93blNlc3Npb24obmV3IFJlcXVlc3RNb25pdG9yKElt
+bWVkaWF0ZUV4ZWN1dG9yLmdldEluc3RhbmNlKCksIG51bGwpKTsKICAgICB9CiAKICAgICAvLy8v
+Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
+Ly8vLy8vLy8vLy8vLy8KQEAgLTEyNCwxNCArMTE4LDI5IEBACiAgICAgLy8gSVRlcm1pbmF0ZQog
+ICAgIC8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8vLy8v
+Ly8vLy8vLy8vLy8vLy8vLy8vLy8vLwogCi0gICAgQENvbmZpbmVkVG9Ec2ZFeGVjdXRvcigiZlNl
+c3Npb24uZ2V0RXhlY3V0b3IiKQotICAgIHByaXZhdGUgdm9pZCBzaHV0ZG93bigpIHsKLSAgICAg
+ICAgaWYgKGZTaHV0RG93bikgcmV0dXJuOworICAgIC8qKgorICAgICAqIFNodXRzIGRvd24gdGhl
+IHNlcnZpY2VzLCB0aGUgc2Vzc2lvbiBhbmQgdGhlIGV4ZWN1dG9yIGFzc29jaWF0ZWQgd2l0aCAK
+KyAgICAgKiB0aGlzIGxhdW5jaC4gIAorICAgICAqIDxwPgorICAgICAqIE5vdGU6IFRoZSBhcmd1
+bWVudCByZXF1ZXN0IG1vbml0b3IgdG8gdGhpcyBtZXRob2Qgc2hvdWxkIE5PVCB1c2UgdGhlCisg
+ICAgICogZXhlY3V0b3IgdGhhdCBiZWxvbmdzIHRvIHRoaXMgbGF1bmNoLiAgQnkgdGhlIHRpbWUg
+dGhlIHNodXRkb3duIGlzIAorICAgICAqIGNvbXBsZXRlLCB0aGlzIGV4ZWN1dG9yIHdpbGwgbm90
+IGJlIGRpc3BhdGNoaW5nIGFueW1vcmUgYW5kIHRoZSAKKyAgICAgKiByZXF1ZXN0IG1vbml0b3Ig
+d2lsbCBuZXZlciBiZSBpbnZva2VkLiAgSW5zdGVhZCBjYWxsZXJzIHNob3VsZCB1c2UKKyAgICAg
+KiB0aGUge0BsaW5rIEltbWVkaWF0ZUV4ZWN1dG9yfS4KKyAgICAgKiA8L3A+CisgICAgICogQHBh
+cmFtIHJtIFRoZSByZXF1ZXN0IG1vbml0b3IgaW52b2tlZCB3aGVuIHRoZSBzaHV0ZG93biBpcyBj
+b21wbGV0ZS4gICAgCisgICAgICovCisgICAgQENvbmZpbmVkVG9Ec2ZFeGVjdXRvcigiZ2V0U2Vz
+c2lvbigpLmdldEV4ZWN1dG9yKCkiKQorICAgIHB1YmxpYyB2b2lkIHNodXRkb3duU2Vzc2lvbihm
+aW5hbCBSZXF1ZXN0TW9uaXRvciBybSkgeworICAgICAgICBpZiAoZlNodXREb3duKSB7CisgICAg
+ICAgICAgICBybS5kb25lKCk7CisgICAgICAgICAgICByZXR1cm47CisgICAgICAgIH0KICAgICAg
+ICAgZlNodXREb3duID0gdHJ1ZTsKICAgICAgICAgICAgIAogICAgICAgICBTZXF1ZW5jZSBzaHV0
+ZG93blNlcSA9IG5ldyBTaHV0ZG93blNlcXVlbmNlKAogICAgICAgICAgICAgZ2V0RHNmRXhlY3V0
+b3IoKSwgZlNlc3Npb24uZ2V0SWQoKSwKLSAgICAgICAgICAgIG5ldyBSZXF1ZXN0TW9uaXRvcihm
+U2Vzc2lvbi5nZXRFeGVjdXRvcigpLCBudWxsKSB7IAorICAgICAgICAgICAgbmV3IFJlcXVlc3RN
+b25pdG9yKGZTZXNzaW9uLmdldEV4ZWN1dG9yKCksIHJtKSB7IAogICAgICAgICAgICAgICAgIEBP
+dmVycmlkZQogICAgICAgICAgICAgICAgIHB1YmxpYyB2b2lkIGhhbmRsZUNvbXBsZXRlZCgpIHsK
+ICAgICAgICAgICAgICAgICAgICAgZlNlc3Npb24ucmVtb3ZlU2VydmljZUV2ZW50TGlzdGVuZXIo
+R2RiTGF1bmNoLnRoaXMpOwpAQCAtMTQ4LDYgKzE1Nyw5IEBACiAgICAgICAgICAgICAgICAgICAg
+IGZFeGVjdXRvci5zaHV0ZG93bigpOwogICAgICAgICAgICAgICAgICAgICBmRXhlY3V0b3IgPSBu
+dWxsOwogICAgICAgICAgICAgICAgICAgICBmaXJlVGVybWluYXRlKCk7CisgICAgICAgICAgICAg
+ICAgICAgIAorICAgICAgICAgICAgICAgICAgICBybS5zZXRTdGF0dXMoZ2V0U3RhdHVzKCkpOwor
+ICAgICAgICAgICAgICAgICAgICBybS5kb25lKCk7CiAgICAgICAgICAgICAgICAgfQogICAgICAg
+ICAgICAgfSk7CiAgICAgICAgIGZFeGVjdXRvci5leGVjdXRlKHNodXRkb3duU2VxKTsKSW5kZXg6
+IHNyYy9vcmcvZWNsaXBzZS9kZC9nZGIvRHNmR2RiUGx1Z2luLmphdmEKPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpSQ1Mg
+ZmlsZTogL2N2c3Jvb3QvZHNkcC9vcmcuZWNsaXBzZS5kZC5kc2YvcGx1Z2lucy9vcmcuZWNsaXBz
+ZS5kZC5kc2YuZ2RiL3NyYy9vcmcvZWNsaXBzZS9kZC9nZGIvRHNmR2RiUGx1Z2luLmphdmEsdgpy
+ZXRyaWV2aW5nIHJldmlzaW9uIDEuMgpkaWZmIC11IC1yMS4yIERzZkdkYlBsdWdpbi5qYXZhCi0t
+LSBzcmMvb3JnL2VjbGlwc2UvZGQvZ2RiL0RzZkdkYlBsdWdpbi5qYXZhCTE4IE1heSAyMDA3IDE3
+OjUzOjAyIC0wMDAwCTEuMgorKysgc3JjL29yZy9lY2xpcHNlL2RkL2dkYi9Ec2ZHZGJQbHVnaW4u
+amF2YQkzMSBKYW4gMjAwOCAyMDoyNDo0OCAtMDAwMApAQCAtMSw2ICsxLDE2IEBACiBwYWNrYWdl
+IG9yZy5lY2xpcHNlLmRkLmdkYjsKIAoraW1wb3J0IGphdmEudXRpbC5jb25jdXJyZW50LkV4ZWN1
+dGlvbkV4Y2VwdGlvbjsKK2ltcG9ydCBqYXZhLnV0aWwuY29uY3VycmVudC5SZWplY3RlZEV4ZWN1
+dGlvbkV4Y2VwdGlvbjsKKworaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5JU3RhdHVz
+OwogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5QbHVnaW47CitpbXBvcnQgb3JnLmVj
+bGlwc2UuY29yZS5ydW50aW1lLlN0YXR1czsKK2ltcG9ydCBvcmcuZWNsaXBzZS5kZC5kc2YuY29u
+Y3VycmVudC5EYXRhUmVxdWVzdE1vbml0b3I7CitpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLmNv
+bmN1cnJlbnQuUXVlcnk7CitpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLmdkYi5sYXVuY2hpbmcu
+R2RiTGF1bmNoOworaW1wb3J0IG9yZy5lY2xpcHNlLmRlYnVnLmNvcmUuRGVidWdQbHVnaW47Citp
+bXBvcnQgb3JnLmVjbGlwc2UuZGVidWcuY29yZS5JTGF1bmNoOwogaW1wb3J0IG9yZy5vc2dpLmZy
+YW1ld29yay5CdW5kbGVDb250ZXh0OwogCiAvKioKQEAgLTM5LDYgKzQ5LDcgQEAKIAkgKi8KIAlA
+T3ZlcnJpZGUKICAgICBwdWJsaWMgdm9pZCBzdG9wKEJ1bmRsZUNvbnRleHQgY29udGV4dCkgdGhy
+b3dzIEV4Y2VwdGlvbiB7CisJICAgIHNodXRkb3duQWN0aXZlTGF1bmNoZXMoKTsKIAkJcGx1Z2lu
+ID0gbnVsbDsKIAkJc3VwZXIuc3RvcChjb250ZXh0KTsKICAgICAgICAgZmdCdW5kbGVDb250ZXh0
+ID0gbnVsbDsKQEAgLTU3LDUgKzY4LDQzIEBACiAgICAgICAgIHJldHVybiBmZ0J1bmRsZUNvbnRl
+eHQ7CiAgICAgfQogICAgIAorICAgIC8qKiAKKyAgICAgKiBTaHV0cyBkb3duIGFueSBhY3RpdmUg
+bGF1bmNoZXMuICBXZSBtdXN0IHNodXRkb3duIGFueSBhY3RpdmUgc2Vzc2lvbnMgCisgICAgICog
+YW5kIHNlcnZpY2VzIGFzc29jaWF0ZWQgd2l0aCB0aGlzIHBsdWdpbiBiZWZvcmUgdGhpcyBwbHVn
+aW4gaXMgc3RvcHBlZC4KKyAgICAgKiBBbnkgYXR0ZW1wdHMgdG8gdXNlIHRoZSBwbHVnaW5zIHtA
+bGluayBCdW5kbGVDb250ZXh0fSBhZnRlciB0aGUgcGx1Z2luCisgICAgICogaXMgc2h1dCBkb3du
+IHdpbGwgcmVzdWx0IGluIGV4Y2VwdGlvbnMuIAorICAgICAqLworICAgIHByaXZhdGUgdm9pZCBz
+aHV0ZG93bkFjdGl2ZUxhdW5jaGVzKCkgeworICAgICAgICBmb3IgKElMYXVuY2ggbGF1bmNoIDog
+RGVidWdQbHVnaW4uZ2V0RGVmYXVsdCgpLmdldExhdW5jaE1hbmFnZXIoKS5nZXRMYXVuY2hlcygp
+KSB7CisgICAgICAgICAgICBpZiAobGF1bmNoIGluc3RhbmNlb2YgR2RiTGF1bmNoICYmICgoR2Ri
+TGF1bmNoKWxhdW5jaCkuZ2V0U2Vzc2lvbigpLmlzQWN0aXZlKCkpIHsKKyAgICAgICAgICAgICAg
+ICBmaW5hbCBHZGJMYXVuY2ggZ2RiTGF1bmNoID0gKEdkYkxhdW5jaClsYXVuY2g7CisgICAgICAg
+ICAgICAgICAgCisgICAgICAgICAgICAgICAgUXVlcnk8T2JqZWN0PiBsYXVuY2hTaHV0ZG93blF1
+ZXJ5ID0gbmV3IFF1ZXJ5PE9iamVjdD4oKSB7CisgICAgICAgICAgICAgICAgICAgIEBPdmVycmlk
+ZQorICAgICAgICAgICAgICAgICAgICBwcm90ZWN0ZWQgdm9pZCBleGVjdXRlKERhdGFSZXF1ZXN0
+TW9uaXRvcjxPYmplY3Q+IHJtKSB7CisgICAgICAgICAgICAgICAgICAgICAgICBnZGJMYXVuY2gu
+c2h1dGRvd25TZXNzaW9uKHJtKTsKKyAgICAgICAgICAgICAgICAgICAgfQorICAgICAgICAgICAg
+ICAgIH07CisgICAgICAgICAgICAgICAgCisgICAgICAgICAgICAgICAgdHJ5IHsKKyAgICAgICAg
+ICAgICAgICAgICAgZ2RiTGF1bmNoLmdldFNlc3Npb24oKS5nZXRFeGVjdXRvcigpLmV4ZWN1dGUo
+bGF1bmNoU2h1dGRvd25RdWVyeSk7CisgICAgICAgICAgICAgICAgfSBjYXRjaCAoUmVqZWN0ZWRF
+eGVjdXRpb25FeGNlcHRpb24gZSkgeworICAgICAgICAgICAgICAgICAgICAvLyBXZSBjYW4gZ2V0
+IHRoaXMgZXhjZXB0aW9uIGlmIHRoZSBzZXNzaW9uIGlzIHNodXRkb3duIGNvbmN1cnJlbnRseQor
+ICAgICAgICAgICAgICAgICAgICAvLyB0byB0aGlzIG1ldGhvZCBydW5uaW5nLgorICAgICAgICAg
+ICAgICAgICAgICBicmVhazsKKyAgICAgICAgICAgICAgICB9CisKKyAgICAgICAgICAgICAgICAv
+LyBUaGUgUXVlcnkuZ2V0KCkgbWV0aG9kIGlzIGEgc3luY2hyb25vdXMgY2FsbCB3aGljaCBibG9j
+a3MgdW50aWwgdGhlIAorICAgICAgICAgICAgICAgIC8vIHF1ZXJ5IGNvbXBsZXRlcy4gIAorICAg
+ICAgICAgICAgICAgIHRyeSB7CisgICAgICAgICAgICAgICAgICAgIGxhdW5jaFNodXRkb3duUXVl
+cnkuZ2V0KCk7CisgICAgICAgICAgICAgICAgfSBjYXRjaCAoSW50ZXJydXB0ZWRFeGNlcHRpb24g
+ZSkgeyAKKyAgICAgICAgICAgICAgICAgICAgZ2V0TG9nKCkubG9nKG5ldyBTdGF0dXMoSVN0YXR1
+cy5FUlJPUiwgUExVR0lOX0lELCAiSW50ZXJydXB0ZWRFeGNlcHRpb24gd2hpbGUgc2h1dHRpbmcg
+ZG93biBQREEgZGVidWdnZXIgbGF1bmNoICIgKyBnZGJMYXVuY2gsIGUuZ2V0Q2F1c2UoKSkpOwor
+ICAgICAgICAgICAgICAgIH0gY2F0Y2ggKEV4ZWN1dGlvbkV4Y2VwdGlvbiBlKSB7CisgICAgICAg
+ICAgICAgICAgICAgIGdldExvZygpLmxvZyhuZXcgU3RhdHVzKElTdGF0dXMuRVJST1IsIFBMVUdJ
+Tl9JRCwgIkV4Y2VwdGlvbiB3aGlsZSBzaHV0dGluZyBkb3duIFBEQSBkZWJ1Z2dlciBsYXVuY2gg
+IiArIGdkYkxhdW5jaCwgZS5nZXRDYXVzZSgpKSk7CisgICAgICAgICAgICAgICAgfQorICAgICAg
+ICAgICAgfQorICAgICAgICB9CisgICAgfQogCiB9Cg==
+</data>
+<flag name="iplog"
+          id="60960"
+          type_id="7"
+          status="-"
+          setter="dschaefer"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215007</bug_id>
+          
+          <creation_ts>2008-01-11 07:10:00 -0500</creation_ts>
+          <short_desc>Widget.notifyListeners(int, Event) should catch runtime Exceptions when looping through the listeners</short_desc>
+          <delta_ts>2008-02-27 09:00:53 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>REOPENED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Richard Birenheide">richard.birenheide</reporter>
+          <assigned_to name="Steve Northover">steve_northover</assigned_to>
+          <cc>Silenio_Quarti</cc>
+    
+    <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129557</commentid>
+    <comment_count>0</comment_count>
+    <who name="Richard Birenheide">richard.birenheide</who>
+    <bug_when>2008-01-11 07:10:40 -0500</bug_when>
+    <thetext>Build ID:  M20070921-1145
+
+Steps To Reproduce:
+1. Put a couple of listeners (any kind) on a widget
+2. One of the listeners throws an arbitrary RuntimeException (eg. NPE)
+3. listeners subsequently called in the loop (EventTable) are not called. 
+
+
+More information:
+The listener calls not being safeguarded has also severe consequences for any caller of Display.readAndDispatch() since the listeners RuntimeException travels outside without being wrapped in a SWTException. If a runtime exception is happening in a runnable running a Display.syncExec or Display.asyncExec it comes wrapped in a SWTException. Therefore callers of Display.readAndDispatch() might not expect that they must catch RuntimeExceptions as well which leads to undesired and hard-to-track problems, as Display.readAndDispatch() is mainly used when multi-threading is involved.
+
+We had this problem when setting up for UI tests. Since the PDE-JUnit tests are run in the UI thread we have to fork out to a separate tests with an own test suite in order to not block the test run with modal dialogs being opened. Our test suite forks the test run into a separate test (from the UI thread) and issues then a Display.readAndDispatch() loop until a flag indicates the test run being finished. The (expected) SWTException had been caught in the waiting loop but not a RuntimeExcpetion which might easily be propagated through from a listener. This lead to a premature death of the WorkbenchTestable thread and the IDE subsequently not being shut down, which caused severe problems in test run nightly. Also the bug was very hard to find since (as the RuntimeException was not caught and/or logged in the loop) it was not apparent that the Exception led to premature end of the waiting loop.
+
+I think the following behaviour would be desired:
+
+1. Catching any RuntimeException from listeners for each individually while looping through the listeners.
+
+2. Wrap the caught exception into a SWTException (like it is done for Runnables in a Display.syncExec) and throw after ALL listeners are being notified. This also prevents the UI from undesired behaviour if one of the players in the game is playing false.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129561</commentid>
+    <comment_count>1</comment_count>
+    <who name="Richard Birenheide">richard.birenheide</who>
+    <bug_when>2008-01-11 07:22:41 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; We had this problem when setting up for UI tests. Since the PDE-JUnit tests are
+&gt; run in the UI thread we have to fork out to a separate tests with an own test
+&gt; suite in order to not block the test run with modal dialogs being opened. Our
+&gt; test suite forks the test run into a separate test (from the UI thread) and
+&gt; issues then a Display.readAndDispatch() loop until a flag indicates the test
+&gt; run being finished. The (expected) SWTException had been caught in the waiting
+&gt; loop but not a RuntimeExcpetion which might easily be propagated through from a
+&gt; listener. 
+
+Must read:
+
+We had this problem when setting up for UI tests. Since the PDE-JUnit tests are
+run in the UI thread we have to fork out to a separate &lt;em&gt;thread&lt;/em&gt; with an own test suite in order to not block the test run with modal dialogs being opened. Our test suite forks the test run into a separate &lt;em&gt;thread&lt;/em&gt; (from the UI thread) and issues then a Display.readAndDispatch() loop until a flag indicates the test run being finished. The (expected) SWTException had been caught in the waiting loop but not a RuntimeExcpetion which might easily be propagated through from a listener.
+
+Sorry
+Richard</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165437</commentid>
+    <comment_count>2</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-02-27 08:47:51 -0500</bug_when>
+    <thetext>I can&apos;t see us changing this.  When an exception happens in a listener, processing stops.  If you want processing to continue, then catch (and swallow) the exception in your listener.  Even if we wanted to change it, code has been written that relies on the current behavior.
+
+I wonder, is there anything else we can do in this area to help?
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165450</commentid>
+    <comment_count>3</comment_count>
+    <who name="Richard Birenheide">richard.birenheide</who>
+    <bug_when>2008-02-27 09:00:53 -0500</bug_when>
+    <thetext>The problem is not that MY listener plays false (where I easily could swallow the exceptions under question).
+
+The problem is, that Eclipse is an open platform. Anyone can register stupid listeners and this has ocurred in the past, even from Eclipse projects. 
+
+When a RuntimeException occurs, subsequent listeners on the widget will not being called. Even worse, as order is not guaranteed, behaviour might differ from run to run. 
+
+I cannot see any compatibility issue here. If you run the event loop completely and throw an SWTException (which is a RuntimeException) there is no issue, as anyone involved has to precaution for these anyway (as Display.readAndDispatch() throws it).</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214236</bug_id>
+          
+          <creation_ts>2008-01-03 09:44:00 -0500</creation_ts>
+          <short_desc>[xslt][debug] Add Result View</short_desc>
+          <delta_ts>2009-04-30 14:30:56 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.xsl</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>noteworthy</keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>3.1 M1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Carver">d_a_carver</reporter>
+          <assigned_to name="Doug">doug.satchwell</assigned_to>
+          <cc>mike.auty</cc>
+    
+    <cc>nitind</cc>
+          <qa_contact name="David Williams">david_williams</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124942</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-03 09:44:05 -0500</bug_when>
+    <thetext>When debugging an XSLT it is helpful to have a view of the result document as it is being debugged.   It would be nice if this had both a preview and source views with it.  This way when debugging XHTML/HTML transformations the results code be seen in both web mode as well as source.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130180</commentid>
+    <comment_count>1</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-12 12:29:49 -0500</bug_when>
+    <thetext>Doug adding you to this and putting plan in the keywords.
+
+The idea here, is to have a view that is updated as it is stepped through, not just at the end of the transformation.   This is very useful for seeing exactly what the output from the transformation is as you step through the code.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1261953</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-06-05 21:41:45 -0400</bug_when>
+    <thetext>Mass Migration to wtp.inc.xsl</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1281046</commentid>
+    <comment_count>3</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-06-30 18:36:18 -0400</bug_when>
+    <thetext>*** Bug 239055 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1298954</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-07-25 19:10:41 -0400</bug_when>
+    <thetext>
+Doug how difficult would this be to implement.  I know that this is the one big item for me in trying to use the debugger that we have now.  A lot of times I can see what the issue is as I step through and the output is generated.  It doesn&apos;t have to open in the xml editor, just a standard view that outputs a formatted (if xsl:output indent=&quot;yes&quot; is set).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1299533</commentid>
+    <comment_count>5</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-07-28 12:07:00 -0400</bug_when>
+    <thetext>It just needs a bit of thought as to the best approach w.r.t possible large output files.
+
+Basically, there are 2 ways to approach it:
+
+1) Listen to all &apos;generate&apos; events, and build them into one large in-memory StringBuffer. When a breakpoint is hit, send this String to Eclipse through the port that communicates with the debug process. Then clear the StringBuffer, and build it up until we hit the next breakpoint.
+
+2) Listen to all &apos;generate&apos; events, and write them to a FileBuffer. When a breakpoint is hit, flush the buffer and then tell Eclipse the location of the file. Eclipse can then read the file and render it.
+
+3) Open another port and stream all &apos;generate&apos; events directly to Eclipse (perhaps buffering a little, and maybe blocking on each send to ensure Eclipse doesn&apos;t get too far behind?).
+
+I haven&apos;t done any investigation on either one, but I&apos;m assuming that Approach 1 will be faster than 2, but that 2 will obviously be more robust since it won&apos;t fall over if the output is very large. 3 may be both fast and low-memory, but is probably the trickiest to implement.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1321866</commentid>
+    <comment_count>6</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-08-29 15:18:54 -0400</bug_when>
+    <thetext>This has now been added.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1330702</commentid>
+    <comment_count>7</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-09-12 22:59:30 -0400</bug_when>
+    <thetext>Marking as Noteworthy.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214867</bug_id>
+          
+          <creation_ts>2008-01-10 04:30:00 -0500</creation_ts>
+          <short_desc>Use Import-Package instead of Require-Bundle</short_desc>
+          <delta_ts>2013-04-23 13:35:30 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Nebula</product>
+          <component>FormattedText</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Benedikt Arnold">benedikt.arnold</reporter>
+          <assigned_to name="Eric Wuillai">eric</assigned_to>
+          <cc>caniszczyk</cc>
+    
+    <cc>Michal.Tkacz</cc>
+    
+    <cc>tom.schindl</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128766</commentid>
+    <comment_count>0</comment_count>
+    <who name="Benedikt Arnold">benedikt.arnold</who>
+    <bug_when>2008-01-10 04:30:26 -0500</bug_when>
+    <thetext>Hi,
+It would be great if the nebula bundles would use Import-Package instead of Require-Bundle. So the widgets could be also used in RAP applications as well.
+
+OK there are some limitations of RAP, for example missing key listeners, that will cause errors, but the RAP team is working hard on solving this issues.
+
+I encountered this issue while trying to use FormattedText in RAP, but in my opinion Import-Package is the better solution for all nebula bundles because Import-Package is more loose coupling.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128903</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-10 10:22:23 -0500</bug_when>
+    <thetext>+1</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131008</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Wuillai">eric</who>
+    <bug_when>2008-01-14 16:44:47 -0500</bug_when>
+    <thetext>Changed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1841841</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michal Tkacz">Michal.Tkacz</who>
+    <bug_when>2010-11-13 07:06:09 -0500</bug_when>
+    <thetext>While Require-Bundle entries are marked as optional, some packages are missing from Import-Bundle and as a result the code doesn&apos;t compile with RAP.
+
+I believe this issue should be reopened.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1841842</commentid>
+    <comment_count>4</comment_count>
+      <attachid>183078</attachid>
+    <who name="Michal Tkacz">Michal.Tkacz</who>
+    <bug_when>2010-11-13 07:10:28 -0500</bug_when>
+    <thetext>Created attachment 183078
+Patch for org.eclipse.nebula.widgets.formattedtext
+
+Note that in the attached patch I removed the Require-Bundle part completely. The bundle now compiles in RAP.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1841844</commentid>
+    <comment_count>5</comment_count>
+      <attachid>183079</attachid>
+    <who name="Michal Tkacz">Michal.Tkacz</who>
+    <bug_when>2010-11-13 07:14:16 -0500</bug_when>
+    <thetext>Created attachment 183079
+Patch for org.eclipse.nebula.widgets.datechooser
+
+Unfortunately the patch for datechooser bundle isn&apos;t enough for it to compile with RAP. That&apos;s because there&apos;re references to methods and fields that are not implemented in RAP. Using Import-Package instead of Require-Bundle might be a step forward anyway.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1841846</commentid>
+    <comment_count>6</comment_count>
+      <attachid>183080</attachid>
+    <who name="Michal Tkacz">Michal.Tkacz</who>
+    <bug_when>2010-11-13 07:37:45 -0500</bug_when>
+    <thetext>Created attachment 183080
+Patch for org.eclipse.nebula.widgets.calendarcombo
+
+Still doesn&apos;t compile with RAP. org.eclipse.swt.accessibility package is missing in RAP.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>183078</attachid>
+            <date>2010-11-13 07:10:00 -0500</date>
+            <delta_ts>2013-04-23 13:35:15 -0400</delta_ts>
+            <desc>Patch for org.eclipse.nebula.widgets.formattedtext</desc>
+            <filename>org.eclipse.nebula.widgets.formattedtext.patch</filename>
+            <type>text/plain</type>
+            <size>1065</size>
+            <attacher name="Michal Tkacz">Michal.Tkacz</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5uZWJ1bGEud2lk
+Z2V0cy5mb3JtYXR0ZWR0ZXh0CkluZGV4OiBNRVRBLUlORi9NQU5JRkVTVC5NRgo9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+ClJDUyBmaWxlOiAvY3Zzcm9vdC90ZWNobm9sb2d5L29yZy5lY2xpcHNlLnN3dC5uZWJ1bGEvb3Jn
+LmVjbGlwc2UubmVidWxhLndpZGdldHMuZm9ybWF0dGVkdGV4dC9NRVRBLUlORi9NQU5JRkVTVC5N
+Rix2CnJldHJpZXZpbmcgcmV2aXNpb24gMS42CmRpZmYgLXUgLXIxLjYgTUFOSUZFU1QuTUYKLS0t
+IE1FVEEtSU5GL01BTklGRVNULk1GCTEwIE1hciAyMDEwIDIwOjQ5OjIyIC0wMDAwCTEuNgorKysg
+TUVUQS1JTkYvTUFOSUZFU1QuTUYJMTMgTm92IDIwMTAgMTI6MDc6MjkgLTAwMDAKQEAgLTYsMTAg
+KzYsMTEgQEAKIEV4cG9ydC1QYWNrYWdlOiBvcmcuZWNsaXBzZS5uZWJ1bGEud2lkZ2V0cy5mb3Jt
+YXR0ZWR0ZXh0CiBCdW5kbGUtUmVxdWlyZWRFeGVjdXRpb25FbnZpcm9ubWVudDogSjJTRS0xLjQK
+IEJ1bmRsZS1WZW5kb3I6IEVjbGlwc2Uub3JnCi1JbXBvcnQtUGFja2FnZTogb3JnLmVjbGlwc2Uu
+c3d0LAorSW1wb3J0LVBhY2thZ2U6IG9yZy5lY2xpcHNlLmNvcmUuZGF0YWJpbmRpbmcub2JzZXJ2
+YWJsZSwKKyBvcmcuZWNsaXBzZS5jb3JlLmRhdGFiaW5kaW5nLm9ic2VydmFibGUudmFsdWUsCisg
+b3JnLmVjbGlwc2UuamZhY2UuZGF0YWJpbmRpbmcuc3d0LAorIG9yZy5lY2xpcHNlLmpmYWNlLnZp
+ZXdlcnMsCisgb3JnLmVjbGlwc2Uuc3d0LAogIG9yZy5lY2xpcHNlLnN3dC5ldmVudHMsCiAgb3Jn
+LmVjbGlwc2Uuc3d0LmxheW91dCwKICBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cwotUmVxdWlyZS1C
+dW5kbGU6IG9yZy5lY2xpcHNlLmpmYWNlO3Jlc29sdXRpb246PW9wdGlvbmFsLAotIG9yZy5lY2xp
+cHNlLmNvcmUuZGF0YWJpbmRpbmc7cmVzb2x1dGlvbjo9b3B0aW9uYWwsCi0gb3JnLmVjbGlwc2Uu
+amZhY2UuZGF0YWJpbmRpbmc7cmVzb2x1dGlvbjo9b3B0aW9uYWwK
+</data>
+<flag name="iplog"
+          id="56774"
+          type_id="7"
+          status="-"
+          setter="wim.jongman"
+    />
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>183079</attachid>
+            <date>2010-11-13 07:14:00 -0500</date>
+            <delta_ts>2013-04-23 13:35:23 -0400</delta_ts>
+            <desc>Patch for org.eclipse.nebula.widgets.datechooser</desc>
+            <filename>org.eclipse.nebula.widgets.datechooser.patch</filename>
+            <type>text/plain</type>
+            <size>1111</size>
+            <attacher name="Michal Tkacz">Michal.Tkacz</attacher>
+            
+              <data encoding="base64">SW5kZXg6IE1FVEEtSU5GL01BTklGRVNULk1GCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L3RlY2hub2xvZ3kvb3JnLmVjbGlwc2Uuc3d0Lm5lYnVsYS9vcmcuZWNsaXBzZS5uZWJ1bGEud2lk
+Z2V0cy5kYXRlY2hvb3Nlci9NRVRBLUlORi9NQU5JRkVTVC5NRix2CnJldHJpZXZpbmcgcmV2aXNp
+b24gMS44CmRpZmYgLXUgLXIxLjggTUFOSUZFU1QuTUYKLS0tIE1FVEEtSU5GL01BTklGRVNULk1G
+CTEwIE1hciAyMDEwIDIwOjQ4OjQzIC0wMDAwCTEuOAorKysgTUVUQS1JTkYvTUFOSUZFU1QuTUYJ
+MTMgTm92IDIwMTAgMTI6MDg6MTYgLTAwMDAKQEAgLTYsNyArNiwxMSBAQAogRXhwb3J0LVBhY2th
+Z2U6IG9yZy5lY2xpcHNlLm5lYnVsYS53aWRnZXRzLmRhdGVjaG9vc2VyCiBCdW5kbGUtUmVxdWly
+ZWRFeGVjdXRpb25FbnZpcm9ubWVudDogSjJTRS0xLjQKIEJ1bmRsZS1WZW5kb3I6IEVjbGlwc2Uu
+b3JnCi1JbXBvcnQtUGFja2FnZTogb3JnLmVjbGlwc2UuamZhY2UubGF5b3V0LAorSW1wb3J0LVBh
+Y2thZ2U6IG9yZy5lY2xpcHNlLmNvcmUuZGF0YWJpbmRpbmcub2JzZXJ2YWJsZSwKKyBvcmcuZWNs
+aXBzZS5jb3JlLmRhdGFiaW5kaW5nLm9ic2VydmFibGUudmFsdWUsCisgb3JnLmVjbGlwc2UuamZh
+Y2UuZGF0YWJpbmRpbmcuc3d0LAorIG9yZy5lY2xpcHNlLmpmYWNlLmxheW91dCwKKyBvcmcuZWNs
+aXBzZS5qZmFjZS52aWV3ZXJzLAogIG9yZy5lY2xpcHNlLm5lYnVsYS53aWRnZXRzLmZvcm1hdHRl
+ZHRleHQsCiAgb3JnLmVjbGlwc2Uuc3d0LAogIG9yZy5lY2xpcHNlLnN3dC5ldmVudHMsCkBAIC0x
+NCw2ICsxOCwzIEBACiAgb3JnLmVjbGlwc2Uuc3d0LmludGVybmFsLAogIG9yZy5lY2xpcHNlLnN3
+dC5sYXlvdXQsCiAgb3JnLmVjbGlwc2Uuc3d0LndpZGdldHMKLVJlcXVpcmUtQnVuZGxlOiBvcmcu
+ZWNsaXBzZS5qZmFjZTtyZXNvbHV0aW9uOj1vcHRpb25hbCwKLSBvcmcuZWNsaXBzZS5jb3JlLmRh
+dGFiaW5kaW5nO3Jlc29sdXRpb246PW9wdGlvbmFsLAotIG9yZy5lY2xpcHNlLmpmYWNlLmRhdGFi
+aW5kaW5nO3Jlc29sdXRpb246PW9wdGlvbmFsCg==
+</data>
+<flag name="iplog"
+          id="56775"
+          type_id="7"
+          status="-"
+          setter="wim.jongman"
+    />
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>183080</attachid>
+            <date>2010-11-13 07:37:00 -0500</date>
+            <delta_ts>2013-04-23 13:35:30 -0400</delta_ts>
+            <desc>Patch for org.eclipse.nebula.widgets.calendarcombo</desc>
+            <filename>org.eclipse.nebula.widgets.calendarcombo.patch</filename>
+            <type>text/plain</type>
+            <size>820</size>
+            <attacher name="Michal Tkacz">Michal.Tkacz</attacher>
+            
+              <data encoding="base64">SW5kZXg6IE1FVEEtSU5GL01BTklGRVNULk1GCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L3RlY2hub2xvZ3kvb3JnLmVjbGlwc2Uuc3d0Lm5lYnVsYS9vcmcuZWNsaXBzZS5uZWJ1bGEud2lk
+Z2V0cy5jYWxlbmRhcmNvbWJvL01FVEEtSU5GL01BTklGRVNULk1GLHYKcmV0cmlldmluZyByZXZp
+c2lvbiAxLjUKZGlmZiAtdSAtcjEuNSBNQU5JRkVTVC5NRgotLS0gTUVUQS1JTkYvTUFOSUZFU1Qu
+TUYJMSBKdW4gMjAwOSAxNTo1MDoyNSAtMDAwMAkxLjUKKysrIE1FVEEtSU5GL01BTklGRVNULk1G
+CTEzIE5vdiAyMDEwIDEyOjM0OjU3IC0wMDAwCkBAIC0zLDYgKzMsMTEgQEAKIEJ1bmRsZS1OYW1l
+OiBDYWxlbmRhcmNvbWJvIFBsdWctaW4KIEJ1bmRsZS1TeW1ib2xpY05hbWU6IG9yZy5lY2xpcHNl
+Lm5lYnVsYS53aWRnZXRzLmNhbGVuZGFyY29tYm8KIEJ1bmRsZS1WZXJzaW9uOiAxLjAuMAotUmVx
+dWlyZS1CdW5kbGU6IG9yZy5lY2xpcHNlLnN3dAogRXhwb3J0LVBhY2thZ2U6IG9yZy5lY2xpcHNl
+Lm5lYnVsYS53aWRnZXRzLmNhbGVuZGFyY29tYm8KIEJ1bmRsZS1SZXF1aXJlZEV4ZWN1dGlvbkVu
+dmlyb25tZW50OiBKMlNFLTEuNAorSW1wb3J0LVBhY2thZ2U6IG9yZy5lY2xpcHNlLnN3dCwKKyBv
+cmcuZWNsaXBzZS5zd3QuYWNjZXNzaWJpbGl0eSwKKyBvcmcuZWNsaXBzZS5zd3QuZXZlbnRzLAor
+IG9yZy5lY2xpcHNlLnN3dC5ncmFwaGljcywKKyBvcmcuZWNsaXBzZS5zd3QubGF5b3V0LAorIG9y
+Zy5lY2xpcHNlLnN3dC53aWRnZXRzCg==
+</data>
+<flag name="iplog"
+          id="56776"
+          type_id="7"
+          status="-"
+          setter="wim.jongman"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

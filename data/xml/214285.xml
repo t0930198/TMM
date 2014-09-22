@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214285</bug_id>
+          
+          <creation_ts>2008-01-03 18:18:00 -0500</creation_ts>
+          <short_desc>On Linux IA32, using the update site to download and use TPTP 4.4 doesn&apos;t work</short_desc>
+          <delta_ts>2009-07-01 16:43:10 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Release Engineering</product>
+          <component>Build</component>
+          <version>4.4.0.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux-GTK</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>closed460</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>blocker</bug_severity>
+          <target_milestone>4.4.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Abe Tewari">abe.tewari</reporter>
+          <assigned_to name="Joel Cayne">jcayne</assigned_to>
+          <cc>abe.tewari</cc>
+    
+    <cc>jkubasta</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125378</commentid>
+    <comment_count>0</comment_count>
+    <who name="Abe Tewari">abe.tewari</who>
+    <bug_when>2008-01-03 18:18:06 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Download Europa on Linux i386 Machine
+2. Bring up Eclipse and navigate to Help=&gt;Software Updates=&gt;Find and Install
+3. Select &apos;Search for New Features to Install&apos;, click on Next
+4. Select &apos;Test and Performance Tools Platform(TPTP) Updates
+5. Click on &apos;Finish&apos;
+6. Create a new External Java Application Profiling Launch configuration type.
+7. In the &apos;Main&apos; tab, enter the parameters for SwingSet2 (located in &lt;JDK_HOME&gt;/demo/jfc/SwingSet2 directory)
+8. In the &apos;Monitor&apos; tab, choose the Java Profiling - JRE 1.5 or newer data collector, and select the Execution Time analysis profiling option.
+9. click on &apos;Profile&apos; to start profiling using the IAC. 
+
+
+More information:
+The following log-files show the root of the problem (namely the links for the shared-libraries that ACServer depends on are broken, and so ACServer cannot start).
+
+The following error is displayed when trying to start ACServer directly:
+
+Starting Agent Controller.
+ACServer: error while loading shared libraries: ../lib/libtptpUtils.so.4: file too short
+ACServer failed to start.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132349</commentid>
+    <comment_count>1</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-01-16 10:30:15 -0500</bug_when>
+    <thetext>Following the steps provided, there is no TPTP update site as listed in Step 4.
+Are you upgrading from a previously installed version of TPTP? Did you mean &apos;Europa Discovery Site&apos;?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132603</commentid>
+    <comment_count>2</comment_count>
+    <who name="Abe Tewari">abe.tewari</who>
+    <bug_when>2008-01-16 13:55:06 -0500</bug_when>
+    <thetext>For Step 4, you are right, from a vanilla Europa install, I was using the Europa Discovery site. So step 4 should be:
+
+4. Use the Europa Discovery Site
+  a. Select any mirror to download from
+  b. Expand Europa Discovery site and select &apos;Testing and performance&apos;
+  c. click the &apos;Select required&apos; button to get all the required plugins, click on &apos;Next&apos;
+  d. Accept license, click on &apos;Next&apos;
+  e. Use defaults for the features inside TPTP to download
+  f. click on &apos;Finish&apos;
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132719</commentid>
+    <comment_count>3</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-01-16 16:15:22 -0500</bug_when>
+    <thetext>Can you confirm the version of the JVM you are using?
+I navigated to the SwingSet2 directory in the demo folder of the JDK and there is only a jar file. What did you provide for the class name and path in the main tab from step 7.
+I was able to profile another external application class file successfully using this configuration against a 1.5 JVM.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136120</commentid>
+    <comment_count>4</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-01-22 14:44:59 -0500</bug_when>
+    <thetext>Abe, we are trying to close our 4.4.1 release.  If possibe, would you please respond before Thursday, otherwise we may need to close this as not reproducible. Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139282</commentid>
+    <comment_count>5</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-01-27 19:12:16 -0500</bug_when>
+    <thetext>Resolving as not reproducible.  Will reopen if the bug reporter indicates that the problem persists.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1543026</commentid>
+    <comment_count>6</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2009-06-30 13:52:43 -0400</bug_when>
+    <thetext>As of TPTP 4.6.0, TPTP is in maintenance mode and focusing on improving quality by resolving relevant enhancements/defects and increasing test coverage through test creation, automation, Build Verification Tests (BVTs), and expanded run-time execution. As part of the TPTP Bugzilla housecleaning process (see http://wiki.eclipse.org/Bugzilla_Housecleaning_Processes), this enhancement/defect is verified/closed by the Project Lead since this enhancement/defect has been resolved and unverified for more than 1 year and considered to be fixed. If this enhancement/defect is still unresolved and reproducible in the latest TPTP release (http://www.eclipse.org/tptp/home/downloads/), please re-open.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

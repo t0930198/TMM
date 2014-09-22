@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214595</bug_id>
+          
+          <creation_ts>2008-01-08 05:18:00 -0500</creation_ts>
+          <short_desc>New automated PDE code conventions cause large and difficult to interpret patches/revisions</short_desc>
+          <delta_ts>2008-02-05 16:35:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Les Jones">lesojones</reporter>
+          <assigned_to name="Les Jones">lesojones</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>caniszczyk</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127195</commentid>
+    <comment_count>0</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-08 05:18:12 -0500</bug_when>
+    <thetext>Build ID: 3.4
+
+Whist I&apos;m totally in favour of the code conventions implemented as part of bug 211811, when you save the source file is completely reformatted.
+
+Although on the one hand it&apos;s sensible (it will over time mean that all source touched will be converted to the correct format), in the interim it&apos;s making large patch files and large changes in revisions in CVS. This means that the exact code changed as part of a fix is lost in all the other formatting changes.
+
+I&apos;d propose that the options are temporarily changed to only alter the code changed by changing the sp_cleanup.format_source_code_changes_only option in .settings/org.eclipse.jdt.ui.prefs from false to true. This will have the effect of limiting the changes to only the code that has been changed.
+
+Another option would be to leave it as it is and to proactively reformat the whole of the PDE codebase (as I think you already have for the PDE templates). This means that it&apos;ll be clear in CVS that the change is only a reformat and nothing more, as well as making available code that will produce the expected patch files.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127209</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86389</attachid>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-08 05:45:37 -0500</bug_when>
+    <thetext>Created attachment 86389
+Patch for PDE UI Conventions
+
+A patch to update the PDE UI project as I suggested (temporarily). If accepted, additional changes would be needed for those other PDE projects not completely converted.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127248</commentid>
+    <comment_count>2</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-08 08:31:33 -0500</bug_when>
+    <thetext>fair enough :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127250</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-08 08:34:02 -0500</bug_when>
+    <thetext>Thanks Les!
+
+As for the other projects, they are pretty much already formatted across the board so we shouldn&apos;t have this issue with them.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127321</commentid>
+    <comment_count>4</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-08 10:32:49 -0500</bug_when>
+    <thetext>Hopefully this can be a temporary thing - ultimately the reformatting is a really good thing, just kinda gets in the way during this transition.  
+
+Ideally we should look to undo this once the UI project has been completely reformatted.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127361</commentid>
+    <comment_count>5</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-08 11:17:49 -0500</bug_when>
+    <thetext>I think the best course of action for this is to have the PDE committers try to apply as many patches as we can, then go back and reformat PDE UI.  Otherwise, when do we declare enough files have been formatted?  Since we have files in there that we have not touched for years, it seems that it could be a year or so before we do this.  Even though PDE UI is large, we shouldn&apos;t be treating it differently.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127363</commentid>
+    <comment_count>6</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-08 11:22:03 -0500</bug_when>
+    <thetext>Do we know if there&apos;s an automated way of getting the whole of a project formatted, either via a headless call or ant task rather than someone having to go through each file?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127483</commentid>
+    <comment_count>7</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-08 11:46:59 -0500</bug_when>
+    <thetext>Yes, it is actually very easy.  The problem is we have outstanding patches so once we do that it will prevent the patches from apply correctly.  Once we get through the rest of the patches, we can format every file in pde.ui and from there on out you should be able to see only the changes you made and not the numerous reformatting changes :)
+
+Just so you know, this does not mean you should stop submitting patches.  We will just make it a priority to get through as many as we can so we can do the reformatting soon.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150466</commentid>
+    <comment_count>8</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-02-05 16:35:47 -0500</bug_when>
+    <thetext>Marking as Verified as the code template is now is full swing and we should no longer have any issues.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86389</attachid>
+            <date>2008-01-08 05:45:00 -0500</date>
+            <delta_ts>2008-01-08 05:45:37 -0500</delta_ts>
+            <desc>Patch for PDE UI Conventions</desc>
+            <filename>patch-bug214595-pdeui.txt</filename>
+            <type>text/plain</type>
+            <size>1041</size>
+            <attacher name="Les Jones">lesojones</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLnVpDQpJ
+bmRleDogLnNldHRpbmdzL29yZy5lY2xpcHNlLmpkdC51aS5wcmVmcw0KPT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNT
+IGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2UucGRlLnVpLy5zZXR0aW5ncy9vcmcu
+ZWNsaXBzZS5qZHQudWkucHJlZnMsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjINCmRpZmYgLXUg
+LXIxLjIgb3JnLmVjbGlwc2UuamR0LnVpLnByZWZzDQotLS0gLnNldHRpbmdzL29yZy5lY2xpcHNl
+LmpkdC51aS5wcmVmcwkzIEphbiAyMDA4IDAyOjI1OjEyIC0wMDAwCTEuMg0KKysrIC5zZXR0aW5n
+cy9vcmcuZWNsaXBzZS5qZHQudWkucHJlZnMJOCBKYW4gMjAwOCAxMDo0NDowMSAtMDAwMA0KQEAg
+LTEsNCArMSw0IEBADQotI1N1biBEZWMgMjMgMjE6NDk6MzUgQ1NUIDIwMDcNCisjVHVlIEphbiAw
+OCAxMDozOToyNSBHTVQgMjAwOA0KIGVjbGlwc2UucHJlZmVyZW5jZXMudmVyc2lvbj0xDQogZWRp
+dG9yX3NhdmVfcGFydGljaXBhbnRfb3JnLmVjbGlwc2UuamR0LnVpLnBvc3RzYXZlbGlzdGVuZXIu
+Y2xlYW51cD10cnVlDQogZm9ybWF0dGVyX3Byb2ZpbGU9X2NvcmUNCkBAIC0yMiw3ICsyMiw3IEBA
+DQogc3BfY2xlYW51cC5jb252ZXJ0X3RvX2VuaGFuY2VkX2Zvcl9sb29wPWZhbHNlDQogc3BfY2xl
+YW51cC5jb3JyZWN0X2luZGVudGF0aW9uPWZhbHNlDQogc3BfY2xlYW51cC5mb3JtYXRfc291cmNl
+X2NvZGU9dHJ1ZQ0KLXNwX2NsZWFudXAuZm9ybWF0X3NvdXJjZV9jb2RlX2NoYW5nZXNfb25seT1m
+YWxzZQ0KK3NwX2NsZWFudXAuZm9ybWF0X3NvdXJjZV9jb2RlX2NoYW5nZXNfb25seT10cnVlDQog
+c3BfY2xlYW51cC5tYWtlX2xvY2FsX3ZhcmlhYmxlX2ZpbmFsPWZhbHNlDQogc3BfY2xlYW51cC5t
+YWtlX3BhcmFtZXRlcnNfZmluYWw9ZmFsc2UNCiBzcF9jbGVhbnVwLm1ha2VfcHJpdmF0ZV9maWVs
+ZHNfZmluYWw9dHJ1ZQ0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

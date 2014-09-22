@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214243</bug_id>
+          
+          <creation_ts>2008-01-03 11:26:00 -0500</creation_ts>
+          <short_desc>CVS Plug-in ignores tag checkouting from cvs</short_desc>
+          <delta_ts>2008-06-18 17:56:08 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Buckminster</product>
+          <component>providers</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3.0-M1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Vaidas Nargėlas">vaidasn</reporter>
+          <assigned_to name="buckminster.core-inbox">buckminster.core-inbox</assigned_to>
+          <cc>thomas</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125023</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86108</attachid>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-03 11:26:08 -0500</bug_when>
+    <thetext>Created attachment 86108
+org.eclipse.buckminster.cvs plug-in patch
+
+Build ID: r7034
+
+Steps To Reproduce:
+CVS Plug-in ignores tag name checkouting projects from cvs even if versionConverter is specified for provider in rmap. Head revision is always checked out regardless version tag.
+
+More information:
+
+The following patch fixed this problem for me.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125563</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-04 04:30:21 -0500</bug_when>
+    <thetext>The bug stems from a shortcoming in the Eclipse CVS implementation. It is not possible to use both a timestamp and a branch although that is sometimes desired in order to reflect a fixed point on that branch.
+
+The patch sets the priority of a tag or branch higher then the priority of a timestmap and this is probably the best solution since use of timestamps is less common.
+
+Patch applied. Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1273824</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86108</attachid>
+    <who name="Bjorn Freeman-Benson">bjorn.freeman-benson</who>
+    <bug_when>2008-06-18 17:56:08 -0400</bug_when>
+    <thetext>Comment on attachment 86108
+org.eclipse.buckminster.cvs plug-in patch
+
+per Ganymede IP log</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86108</attachid>
+            <date>2008-01-03 11:26:00 -0500</date>
+            <delta_ts>2008-06-18 17:56:08 -0400</delta_ts>
+            <desc>org.eclipse.buckminster.cvs plug-in patch</desc>
+            <filename>CVSReaderType.patch</filename>
+            <type>text/plain</type>
+            <size>858</size>
+            <attacher name="Vaidas Nargėlas">vaidasn</attacher>
+            
+              <data encoding="base64">SW5kZXg6IG9yZy5lY2xpcHNlLmJ1Y2ttaW5zdGVyLmN2cy9zcmMvamF2YS9vcmcvZWNsaXBzZS9i
+dWNrbWluc3Rlci9jdnNwa2cvaW50ZXJuYWwvQ1ZTUmVhZGVyVHlwZS5qYXZhCj09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+LS0tIG9yZy5lY2xpcHNlLmJ1Y2ttaW5zdGVyLmN2cy9zcmMvamF2YS9vcmcvZWNsaXBzZS9idWNr
+bWluc3Rlci9jdnNwa2cvaW50ZXJuYWwvQ1ZTUmVhZGVyVHlwZS5qYXZhCShyZXZpc2lvbiAzNDg0
+KQorKysgb3JnLmVjbGlwc2UuYnVja21pbnN0ZXIuY3ZzL3NyYy9qYXZhL29yZy9lY2xpcHNlL2J1
+Y2ttaW5zdGVyL2N2c3BrZy9pbnRlcm5hbC9DVlNSZWFkZXJUeXBlLmphdmEJKHdvcmtpbmcgY29w
+eSkKQEAgLTQ5MiwxMSArNDkyLDEyIEBACiAJc3RhdGljIENWU1RhZyBnZXRDVlNUYWcoVmVyc2lv
+bk1hdGNoIG1hdGNoKSB0aHJvd3MgQ29yZUV4Y2VwdGlvbgogCXsKIAkJQ1ZTVGFnIHRhZzsKLQkJ
+RGF0ZSB0aW1lc3RhbXAgPSBtYXRjaC5nZXRUaW1lc3RhbXAoKTsKLQkJaWYodGltZXN0YW1wICE9
+IG51bGwpCisJCVZlcnNpb25TZWxlY3RvciBzZWxlY3RvciA9IG1hdGNoLmdldEJyYW5jaE9yVGFn
+KCk7CisJCURhdGUgdGltZXN0YW1wOworCQlpZihzZWxlY3RvciA9PSBudWxsICYmICh0aW1lc3Rh
+bXAgPSBtYXRjaC5nZXRUaW1lc3RhbXAoKSkgIT0gbnVsbCkKIAkJCXRhZyA9IG5ldyBDVlNUYWco
+dGltZXN0YW1wKTsKIAkJZWxzZQotCQkJdGFnID0gZ2V0Q1ZTVGFnKG1hdGNoLmdldEJyYW5jaE9y
+VGFnKCkpOworCQkJdGFnID0gZ2V0Q1ZTVGFnKHNlbGVjdG9yKTsKIAkJcmV0dXJuIHRhZzsKIAl9
+CiAK
+</data>
+<flag name="iplog"
+          id="9699"
+          type_id="7"
+          status="+"
+          setter="bjorn.freeman-benson"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

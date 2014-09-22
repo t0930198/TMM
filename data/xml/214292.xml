@@ -1,0 +1,514 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214292</bug_id>
+          
+          <creation_ts>2008-01-03 23:53:00 -0500</creation_ts>
+          <short_desc>[api] provide utility methods for creating new tasks using standard task editors</short_desc>
+          <delta_ts>2008-01-14 21:46:13 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>UI</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eugene Kuleshov">ekuleshov</reporter>
+          <assigned_to name="Steffen Pingel">steffen.pingel</assigned_to>
+          <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125439</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 23:53:54 -0500</bug_when>
+    <thetext>A public API for creating new tasks using standard Task Editors would allow 3rd party integrators using interactive task creation features outside of Mylyn.
+
+Possible solution is to move NewTaskAction.showWizard() method into TasksUiUtil class. Alternatively NewTaskAction can be made public (moved out of the internal package).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125449</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-04 00:40:58 -0500</bug_when>
+    <thetext>+1 I have recently refactored the NewTaskAction class which should now be used for all task creation but it would be good to refactor that into a utility class such as TasksUiUtil.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127520</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-08 12:23:31 -0500</bug_when>
+    <thetext>Steffen: I assume you intended to take this on for 2.3.  I have some concerns about bloating TasksUiUtil too much so we should explore making API around NewTaskAction.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127704</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-08 15:54:42 -0500</bug_when>
+    <thetext>I think that TasksUiUtil would be the right place for the API to go since it already provides other methods to open editors and wizards. Do you have naming suggestions for a new utility class?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127714</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 16:05:24 -0500</bug_when>
+    <thetext>+1 for using TasksUiUtil. Possible method name could be showNewTaskWizard() or openNewTaskWizard()</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128596</commentid>
+    <comment_count>5</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-09 19:02:24 -0500</bug_when>
+    <thetext>Access via TasksUiUtil is definitely better than making the action public.  However, it will make for limited customization of the invocation, and we do have to watch bloat on TasksUiUtil.  I&apos;m fine with tryint it out as long as we review before committing to it for 3.0.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128646</commentid>
+    <comment_count>6</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-09 20:09:11 -0500</bug_when>
+    <thetext>Added two methods TasksUiUtil.openNewLocalTaskWizard() and TasksUiUtil.openNewTaskWizard(). Added comment to review for 3.0.
+
+Mik, what are your thoughts on using integer flags (similar to SWT) instead of passing boolean configuration flags, e.g:
+ 
+ openNewTaskWizard(TaskSelection taskSelection, boolean skipRepositoryPage);
+
+ vs. 
+ 
+ public static final int SKIP_REPOSITORY_PAGE = 1;
+ openNewTaskWizard(TaskSelection taskSelection, int flags);
+
+I would prefer the latter approach as it offers extensibility and better readability (if dealing with more than one flag).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128647</commentid>
+    <comment_count>7</comment_count>
+      <attachid>86524</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-09 20:09:18 -0500</bug_when>
+    <thetext>Created attachment 86524
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128651</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-09 20:20:24 -0500</bug_when>
+    <thetext>Thanks Steffen</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129169</commentid>
+    <comment_count>9</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-10 14:32:48 -0500</bug_when>
+    <thetext>re comment#6, bit masks/flags would be my preference too</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129993</commentid>
+    <comment_count>10</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-11 17:09:34 -0500</bug_when>
+    <thetext>(In reply to comment #6)
+&gt; public static final int SKIP_REPOSITORY_PAGE = 1;
+&gt; openNewTaskWizard(TaskSelection taskSelection, int flags);
+&gt; 
+&gt; I would prefer the latter approach as it offers extensibility and better
+&gt; readability (if dealing with more than one flag).
+
+I think that bit map flags should be avoided because they make it harder to understand what the code is doing.  I understand that SWT needs to use them in part for performance and in part for extensibility and conciseness, but I am thankful that this is not a common idiom in Eclipse. 
+
+The need to pass flags is exactly my concern with this API.  Instead of using the facilities in the Wizard API for things like composing pages, we&apos;ll need to continue bloating the interfaces of these methods or encoding what&apos;s happening into a single configuration parameter (e.g. flags).  In addition, I have concerns that the TasksUiUtil.open.. methods are encapsulating things that should be left to clients (e.g. shell used) and that we are providing an API facade to something that we still needs to change (i.e. the fact that creating a task might not require a wizard to open).  I suggest making this an internal utility until we can address these problems, or making it easier for clients to work directly with task creation via the wizards themselves.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130036</commentid>
+    <comment_count>11</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-11 18:26:43 -0500</bug_when>
+    <thetext>Those are excellent points. The flags are a symptom that the underlying API design needs to be improved (e.g. encapsulating opening the task editor in the performFinish() method of the new task editor might not be the best way to make that functionality available to clients).
+
+To improve the API for 2.3 I would suggest to change the method names and signatures as such:
+
+	public static boolean openNewLocalTaskEditor(Shell shell, TaskSelection taskSelection);
+	
+	public static boolean openNewTaskEditor(Shell shell, TaskSelection taskSelection, TaskRepository taskRepository) {
+
+If taskRepository != null the repository selection page will be skipped.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130073</commentid>
+    <comment_count>12</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-11 20:21:53 -0500</bug_when>
+    <thetext>That sounds much better.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130101</commentid>
+    <comment_count>13</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-11 22:38:36 -0500</bug_when>
+    <thetext>(In reply to comment #10)
+&gt; ...I suggest making this an internal utility until we can address 
+&gt; these problems, or making it easier for clients to work directly 
+&gt; with task creation via the wizards themselves.
+
+I am surprised to see such suggestion in the enhancement request for public API. More over the use case that request came from is in fact require reusing functionality of the existing wizards.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130124</commentid>
+    <comment_count>14</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-12 00:49:19 -0500</bug_when>
+    <thetext>Refactored methods as proposed in comment 11.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130125</commentid>
+    <comment_count>15</comment_count>
+      <attachid>86753</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-12 00:49:24 -0500</bug_when>
+    <thetext>Created attachment 86753
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131142</commentid>
+    <comment_count>16</comment_count>
+      <attachid>86902</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-14 21:46:13 -0500</bug_when>
+    <thetext>Created attachment 86902
+mylyn/context/zip</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86524</attachid>
+            <date>2008-01-09 20:09:00 -0500</date>
+            <delta_ts>2008-01-09 20:09:18 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>3481</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">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
+awKoB2XlSUJOL7abjqhht0rsJgkxzY5vGkwqHCfzu1cOkN+nNH7FPcLZNIlHTLWS4ncSGrEqd4gr
+A7rebfNrRsr0v28KWaXP9TKjk8PCKPo5HBtf6PEmfCtoqs6euzey0T0r6Z4yYdNLAS36bufst7Ny
+dejpvoe5e/g/QRyMafqBL6spXdOBu+Y/K6VrdhJf1WVm2SGUZOPQHObHH+aScSwvueccqZRYlVHI
+vc87XbzhRtJPzbKjpDhfdraVsJqTJ462gl20Loxc7zyMqjPk5lO+TqMgjmlqrLNK1plM2PT1mDbj
+LRUP8dPylppM6JpTHR7myk2QDm8arshXPw7VTYTNdI2lgv8qSmLaaEyVSy8IbFuAmk8RdWyFxLA7
+IAQg4mpFncXUCnHgSRdmaUgcISYBaneAfeCKMqedEq75apBGsqa08y/2FWpneSTStTvDsAN8S1RG
+PMbNSBHpjS3G8gA68kSKUVhqn5m77o/8ecbE3HuazaKi40KjI3cQsJFgRlqA2HC9TW7Hd8DWi+hJ
+LF1Gg6mH/Ob47PVtgmyv+XbSz54PJnXIt3xKlA1jb2dEmP6Al7hjC5eYou7YhgKHn3Z/18CMZr/o
+UoEEkeRJnhjGXSA2sN2TpMOyS7zoYmhlVDanBQEYV+gcoxUtlI5VPjebx0QtOwxgaR6Ur9JhudA9
+ZKlvBBN1TM0DtT4j7faOBAhTkzNfcYqCJMhKHc+wYDTtouKVRqXun5L6+FfNO97hw3l3zKyzZSv9
+GHOt18XtDqmVizwEyBfDBKSVGcF4YBHgOu1OaT4I/vM1/N+GGXvP++//D1BLBwjj7SwDxwwAAEMX
+AQBQSwECFAAUAAgACAAoiSk44+0sA8cMAABDFwEAMAAAAAAAAAAAAAAAAAAAAAAAaHR0cHMlM0El
+MkYlMkZidWdzLmVjbGlwc2Uub3JnJTJGYnVncy0yMTQyOTIueG1sUEsFBgAAAAABAAEAXgAAACUN
+AAAAAA==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86753</attachid>
+            <date>2008-01-12 00:49:00 -0500</date>
+            <delta_ts>2008-01-12 00:49:24 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>4910</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">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
+AAC6EgAAAAA=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86902</attachid>
+            <date>2008-01-14 21:46:00 -0500</date>
+            <delta_ts>2008-01-14 21:46:13 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>6490</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">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
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

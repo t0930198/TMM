@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214729</bug_id>
+          
+          <creation_ts>2008-01-09 05:25:00 -0500</creation_ts>
+          <short_desc>Combo VerifyEvent is not always fired</short_desc>
+          <delta_ts>2009-09-15 09:43:03 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc>http://www.eclipse.org/newsportal/article.php?id=38631&amp;group=eclipse.platform.swt#38631</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Meng Qinghai">mqhnow1</reporter>
+          <assigned_to name="Ahmed Moharram">moharram</assigned_to>
+          <cc>eclipse.felipe</cc>
+    
+    <cc>grant_gayed</cc>
+    
+    <cc>khouly</cc>
+    
+    <cc>mfadl</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127973</commentid>
+    <comment_count>0</comment_count>
+    <who name="Meng Qinghai">mqhnow1</who>
+    <bug_when>2008-01-09 05:25:05 -0500</bug_when>
+    <thetext>I have a Combo, and added a VerifyListener which verifies any text input by the user in the textfield of the Combo.  It works fine when the user types text as long as he does not click the down-arrow button of the Combo.  But when he keep clicking the down-arrow button very quickly and simultaneously press keyboard to type in the text, the verifyEvent is always not fired and in this way any text can be input without being verified.
+
+Here is the code to reproduce the bug.  Remember to click the down-arrow button on the left of the textfield with a high speed and press the keyboard at the same time.
+
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.events.VerifyEvent;
+import org.eclipse.swt.events.VerifyListener;
+import org.eclipse.swt.widgets.Combo;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Shell;
+
+public class ComboProblem {
+public static void main(String[] args) {
+Display display = new Display();
+Shell shell = new Shell(display);
+Combo comb = new Combo(shell, SWT.NONE);
+
+// we add a VerifyListener here to prevent the user entering any text in
+// the textfield of the Combo
+comb.addVerifyListener(new VerifyListener() {
+
+public void verifyText(VerifyEvent e) {
+e.doit = false;
+System.out.println(&quot;Text verified.&quot;);
+}
+
+});
+comb.pack();
+
+shell.pack();
+shell.open();
+
+while (!shell.isDisposed()) {
+if (!display.readAndDispatch())
+display.sleep();
+}
+
+}
+}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128952</commentid>
+    <comment_count>1</comment_count>
+    <who name="Grant Gayed">grant_gayed</who>
+    <bug_when>2008-01-10 11:15:19 -0500</bug_when>
+    <thetext>I see this, moving to SN.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1591099</commentid>
+    <comment_count>2</comment_count>
+      <attachid>146572</attachid>
+    <who name="Ahmed Moharram">moharram</who>
+    <bug_when>2009-09-06 10:32:40 -0400</bug_when>
+    <thetext>Created attachment 146572
+Proposed patch
+
+Hi Grant,
+
+Attached is a proposed patch. A check on the mouse left button was skipping the text verification handling. Please review.
+Also I found that Spinner has the same problem with text verification due to the same left button check. Should I open it as a new bug?
+
+Thanks!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1591602</commentid>
+    <comment_count>3</comment_count>
+    <who name="Felipe Heidrich">eclipse.felipe</who>
+    <bug_when>2009-09-08 09:34:30 -0400</bug_when>
+    <thetext>The code is there for a reason, if you just remove it you will likely introduce a bug. In this case, on windows, when the button is down on the text control, no input should be processed. Removing the code that you did breaks that.
+
+
+See that Text had the same problem bug 132979. When 132979 was fixed combo should have being fixed too.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1591603</commentid>
+    <comment_count>4</comment_count>
+      <attachid>146657</attachid>
+    <who name="Felipe Heidrich">eclipse.felipe</who>
+    <bug_when>2009-09-08 09:38:08 -0400</bug_when>
+    <thetext>Created attachment 146657
+patch
+
+This patch is based on the fix for 132979
+
+Note, to reproduce the bug, instead of clicking fast just hold the button down on the shell or on the combo&apos;s button.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1591605</commentid>
+    <comment_count>5</comment_count>
+    <who name="Felipe Heidrich">eclipse.felipe</who>
+    <bug_when>2009-09-08 09:40:48 -0400</bug_when>
+    <thetext>I released the fix for combo.
+Ahmed, you said Spinner has the same problem ? can you post the fix for it ?
+Note: Spinner does not support verify listener, but the same code is used internally to filter away letters.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1594674</commentid>
+    <comment_count>6</comment_count>
+    <who name="Ahmed Moharram">moharram</who>
+    <bug_when>2009-09-14 16:12:09 -0400</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; I released the fix for combo.
+&gt; Ahmed, you said Spinner has the same problem ? can you post the fix for it ?
+&gt; Note: Spinner does not support verify listener, but the same code is used
+&gt; internally to filter away letters.
+
+Hi Felipe,
+I noticed a strange behavior after applying your patch, the user is still able to enter text in the Text widget if the shell has more widgets on it  (Button for example) when he/she starts by and keeps mouse LButton down in the middle of the  Edit widget when typing though the Verify event is not fired as expected (Please see the sample below).
+
+I will try to post a fix for Spinner after we finalize this one. Thanks!
+------------------------------------------------------------------------
+public class ComboProblem {
+public static void main(String[] args) {
+Display display = new Display();
+Shell shell = new Shell(display);
+shell.setLayout(new GridLayout());
+
+
+Button button = new Button(shell, SWT.PUSH);
+button.setText(&quot;Push...&quot;);
+
+Combo comb = new Combo(shell, SWT.NONE);
+comb.add(&quot;Ahmed&quot;);
+comb.add(&quot;Said&quot;);
+comb.add(&quot;Moharram&quot;);
+
+// we add a VerifyListener here to prevent the user entering any text in
+// the textfield of the Combo
+comb.addVerifyListener(new VerifyListener() {
+
+public void verifyText(VerifyEvent e) {
+e.doit = false;
+System.out.println(&quot;Text verified.&quot; + e.text);
+}
+});
+
+shell.pack();
+shell.open();
+
+while (!shell.isDisposed()) {
+if (!display.readAndDispatch())
+display.sleep();
+}
+
+}
+}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1595063</commentid>
+    <comment_count>7</comment_count>
+    <who name="Felipe Heidrich">eclipse.felipe</who>
+    <bug_when>2009-09-15 09:43:03 -0400</bug_when>
+    <thetext>(In reply to comment #6)
+&gt; Hi Felipe,
+&gt; I noticed a strange behavior after applying your patch, the user is still able
+&gt; to enter text in the Text widget if the shell has more widgets on it  (Button
+&gt; for example) when he/she starts by and keeps mouse LButton down in the middle
+&gt; of the  Edit widget when typing though the Verify event is not fired as
+&gt; expected (Please see the sample below).
+
+Works for me. Not sure I understood the above.
+
+When the mouse is down in the text the Verify events are not send. That is right behaviour.
+
+You don&apos;t need to apply any patch, the code is released in HEAD. You just need to download swt from cvs. see: http://www.eclipse.org/swt/cvs.php</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>146572</attachid>
+            <date>2009-09-06 10:32:00 -0400</date>
+            <delta_ts>2009-09-08 09:38:08 -0400</delta_ts>
+            <desc>Proposed patch</desc>
+            <filename>patch_214729.txt</filename>
+            <type>text/plain</type>
+            <size>847</size>
+            <attacher name="Ahmed Moharram">moharram</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uuc3d0DQpJbmRl
+eDogRWNsaXBzZSBTV1Qvd2luMzIvb3JnL2VjbGlwc2Uvc3d0L3dpZGdldHMvQ29tYm8uamF2YQ0K
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2Uuc3d0L0Vj
+bGlwc2UgU1dUL3dpbjMyL29yZy9lY2xpcHNlL3N3dC93aWRnZXRzL0NvbWJvLmphdmEsdg0KcmV0
+cmlldmluZyByZXZpc2lvbiAxLjE2Ng0KZGlmZiAtdSAtcjEuMTY2IENvbWJvLmphdmENCi0tLSBF
+Y2xpcHNlIFNXVC93aW4zMi9vcmcvZWNsaXBzZS9zd3Qvd2lkZ2V0cy9Db21iby5qYXZhCTEgSnVs
+IDIwMDkgMTQ6NDk6NDAgLTAwMDAJMS4xNjYNCisrKyBFY2xpcHNlIFNXVC93aW4zMi9vcmcvZWNs
+aXBzZS9zd3Qvd2lkZ2V0cy9Db21iby5qYXZhCTYgU2VwIDIwMDkgMTQ6Mjg6MjEgLTAwMDANCkBA
+IC0xMzE3LDkgKzEzMTcsMTEgQEANCiAJLyoNCiAJKiBJZiB0aGUgbGVmdCBidXR0b24gaXMgZG93
+biwgdGhlIHRleHQgd2lkZ2V0IHJlZnVzZXMgdGhlIGNoYXJhY3Rlci4NCiAJKi8NCi0JaWYgKE9T
+LkdldEtleVN0YXRlIChPUy5WS19MQlVUVE9OKSA8IDApIHsNCisJLypDb21tZW50ZWQgb3V0IGFz
+IGEgZml4IGZvciBidWcgMjE0NzI5ICovDQorCQ0KKwkvKmlmIChPUy5HZXRLZXlTdGF0ZSAoT1Mu
+VktfTEJVVFRPTikgPCAwKSB7DQogCQlyZXR1cm4gdHJ1ZTsNCi0JfQ0KKwl9Ki8NCiANCiAJLyog
+VmVyaWZ5IHRoZSBjaGFyYWN0ZXIgKi8NCiAJU3RyaW5nIG9sZFRleHQgPSAiIjsNCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>146657</attachid>
+            <date>2009-09-08 09:38:00 -0400</date>
+            <delta_ts>2009-09-08 09:38:08 -0400</delta_ts>
+            <desc>patch</desc>
+            <filename>214729.patch</filename>
+            <type>text/plain</type>
+            <size>983</size>
+            <attacher name="Felipe Heidrich">eclipse.felipe</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2Uuc3d0DQpJbmRl
+eDogRWNsaXBzZSBTV1Qvd2luMzIvb3JnL2VjbGlwc2Uvc3d0L3dpZGdldHMvQ29tYm8uamF2YQ0K
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2Uuc3d0L0Vj
+bGlwc2UgU1dUL3dpbjMyL29yZy9lY2xpcHNlL3N3dC93aWRnZXRzL0NvbWJvLmphdmEsdg0KcmV0
+cmlldmluZyByZXZpc2lvbiAxLjE2Ng0KZGlmZiAtdSAtcjEuMTY2IENvbWJvLmphdmENCi0tLSBF
+Y2xpcHNlIFNXVC93aW4zMi9vcmcvZWNsaXBzZS9zd3Qvd2lkZ2V0cy9Db21iby5qYXZhCTEgSnVs
+IDIwMDkgMTQ6NDk6NDAgLTAwMDAJMS4xNjYNCisrKyBFY2xpcHNlIFNXVC93aW4zMi9vcmcvZWNs
+aXBzZS9zd3Qvd2lkZ2V0cy9Db21iby5qYXZhCTggU2VwIDIwMDkgMTM6Mzg6NDIgLTAwMDANCkBA
+IC0xMzE1LDEwICsxMzE1LDEzIEBADQogCX0NCiANCiAJLyoNCi0JKiBJZiB0aGUgbGVmdCBidXR0
+b24gaXMgZG93biwgdGhlIHRleHQgd2lkZ2V0IHJlZnVzZXMgdGhlIGNoYXJhY3Rlci4NCisJKiBG
+ZWF0dXJlIGluIFdpbmRvd3MuICBJZiB0aGUgbGVmdCBidXR0b24gaXMgZG93biBpbg0KKwkqIHRo
+ZSB0ZXh0IHdpZGdldCwgaXQgcmVmdXNlcyB0aGUgY2hhcmFjdGVyLiAgVGhlIGZpeA0KKwkqIGlz
+IHRvIGRldGVjdCB0aGlzIGNhc2UgYW5kIGF2b2lkIHNlbmRpbmcgYSB2ZXJpZnkNCisJKiBldmVu
+dC4NCiAJKi8NCiAJaWYgKE9TLkdldEtleVN0YXRlIChPUy5WS19MQlVUVE9OKSA8IDApIHsNCi0J
+CXJldHVybiB0cnVlOw0KKwkJaWYgKE9TLkdldERsZ0l0ZW0gKGhhbmRsZSwgQ0JJRF9FRElUKSA9
+PSBPUy5HZXRDYXB0dXJlKCkpIHJldHVybiB0cnVlOw0KIAl9DQogDQogCS8qIFZlcmlmeSB0aGUg
+Y2hhcmFjdGVyICovDQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

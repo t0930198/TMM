@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214701</bug_id>
+          
+          <creation_ts>2008-01-08 21:08:00 -0500</creation_ts>
+          <short_desc>the IDE will colsed every five minute</short_desc>
+          <delta_ts>2008-01-15 20:16:33 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Tasks</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="yixingjia">yixingjia</reporter>
+          <assigned_to name="Mik Kersten">mik.kersten</assigned_to>
+          <cc>john_arthorne</cc>
+    
+    <cc>pwebster</cc>
+    
+    <cc>remysuen</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127855</commentid>
+    <comment_count>0</comment_count>
+    <who name="yixingjia">yixingjia</who>
+    <bug_when>2008-01-08 21:08:46 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1.my environment are as follow
+!SESSION 2008-01-02 18:01:20.657 -----------------------------------------------
+eclipse.buildId=M20071023-1652
+java.version=1.5.0_13
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+2.user import to import a new project ,any project is ok, then open another project ,usually in about five minute 
+
+3. then open the eclipse again, the problem will repeat 
+
+
+More information:
+the hole log files as follow:
+
+!SESSION 2008-01-02 18:01:20.657 -----------------------------------------------
+eclipse.buildId=M20071023-1652
+java.version=1.5.0_13
+java.vendor=Sun Microsystems Inc.
+BootLoader constants: OS=linux, ARCH=x86_64, WS=gtk, NL=en_US
+Command-line arguments:  -os linux -ws gtk -arch x86_64
+
+!ENTRY org.eclipse.osgi 2 0 2008-01-02 18:01:42.358
+!MESSAGE While loading class &quot;org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter&quot;, thread &quot;Thread[Worker-2,5,main]&quot; timed out waiting (5000ms) for thread &quot;Thread[Worker-1,5,main]&quot; to finish starting bundle &quot;update@plugins/org.eclipse.mylyn.tasks.ui_2.1.0.v20070927-0900.jar [434]&quot;. To avoid deadlock, thread &quot;Thread[Worker-2,5,main]&quot; is proceeding but &quot;org.eclipse.mylyn.internal.tasks.ui.ITaskHighlighter&quot; may not be fully initialized.
+!STACK 0
+org.osgi.framework.BundleException: State change in progress for bundle &quot;update@plugins/org.eclipse.mylyn.tasks.ui_2.1.0.v20070927-0900.jar&quot; by thread &quot;Worker-1&quot;.
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+	at org.eclipse.osgi.framework.internal.core.SingleSourcePackage.loadClass(SingleSourcePackage.java:37)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:405)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+	at java.lang.Class.getDeclaredConstructors0(Native Method)
+	at java.lang.Class.privateGetDeclaredConstructors(Class.java:2357)
+	at java.lang.Class.getConstructor0(Class.java:2671)
+	at java.lang.Class.newInstance0(Class.java:321)
+	at java.lang.Class.newInstance(Class.java:303)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:136)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:970)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:346)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:260)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:408)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:289)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1269)
+	at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:160)
+	at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:788)
+	at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+	at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+	at org.eclipse.ui.internal.WorkbenchPlugin$1.run(WorkbenchPlugin.java:252)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:49)
+	at org.eclipse.ui.internal.WorkbenchPlugin.createExtension(WorkbenchPlugin.java:248)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition$1.run(LightweightDecoratorDefinition.java:117)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.internalGetDecorator(LightweightDecoratorDefinition.java:113)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.decorate(LightweightDecoratorDefinition.java:241)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager$LightweightRunnable.run(LightweightDecoratorManager.java:71)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.decorate(LightweightDecoratorManager.java:336)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.getDecorations(LightweightDecoratorManager.java:322)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.ensureResultCached(DecorationScheduler.java:369)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:329)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+Caused by: org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	... 56 more
+Root exception:
+org.eclipse.osgi.framework.internal.core.AbstractBundle$BundleStatusException
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.beginStateChange(AbstractBundle.java:1141)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:258)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+	at org.eclipse.osgi.framework.internal.core.SingleSourcePackage.loadClass(SingleSourcePackage.java:37)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:405)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+	at java.lang.ClassLoader.loadClassInternal(ClassLoader.java:319)
+	at java.lang.Class.getDeclaredConstructors0(Native Method)
+	at java.lang.Class.privateGetDeclaredConstructors(Class.java:2357)
+	at java.lang.Class.getConstructor0(Class.java:2671)
+	at java.lang.Class.newInstance0(Class.java:321)
+	at java.lang.Class.newInstance(Class.java:303)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadBundleActivator(AbstractBundle.java:136)
+	at org.eclipse.osgi.framework.internal.core.BundleContextImpl.start(BundleContextImpl.java:970)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.startWorker(BundleHost.java:346)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.start(AbstractBundle.java:260)
+	at org.eclipse.osgi.framework.util.SecureAction.start(SecureAction.java:400)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseLazyStarter.postFindLocalClass(EclipseLazyStarter.java:111)
+	at org.eclipse.osgi.baseadaptor.loader.ClasspathManager.findLocalClass(ClasspathManager.java:417)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.findLocalClass(DefaultClassLoader.java:189)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findLocalClass(BundleLoader.java:340)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClassInternal(BundleLoader.java:408)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:369)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:357)
+	at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+	at java.lang.ClassLoader.loadClass(ClassLoader.java:251)
+	at org.eclipse.osgi.framework.internal.core.BundleLoader.loadClass(BundleLoader.java:289)
+	at org.eclipse.osgi.framework.internal.core.BundleHost.loadClass(BundleHost.java:227)
+	at org.eclipse.osgi.framework.internal.core.AbstractBundle.loadClass(AbstractBundle.java:1269)
+	at org.eclipse.core.internal.registry.osgi.RegistryStrategyOSGI.createExecutableExtension(RegistryStrategyOSGI.java:160)
+	at org.eclipse.core.internal.registry.ExtensionRegistry.createExecutableExtension(ExtensionRegistry.java:788)
+	at org.eclipse.core.internal.registry.ConfigurationElement.createExecutableExtension(ConfigurationElement.java:243)
+	at org.eclipse.core.internal.registry.ConfigurationElementHandle.createExecutableExtension(ConfigurationElementHandle.java:51)
+	at org.eclipse.ui.internal.WorkbenchPlugin$1.run(WorkbenchPlugin.java:252)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:49)
+	at org.eclipse.ui.internal.WorkbenchPlugin.createExtension(WorkbenchPlugin.java:248)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition$1.run(LightweightDecoratorDefinition.java:117)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.internalGetDecorator(LightweightDecoratorDefinition.java:113)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorDefinition.decorate(LightweightDecoratorDefinition.java:241)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager$LightweightRunnable.run(LightweightDecoratorManager.java:71)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.decorate(LightweightDecoratorManager.java:336)
+	at org.eclipse.ui.internal.decorators.LightweightDecoratorManager.getDecorations(LightweightDecoratorManager.java:322)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.ensureResultCached(DecorationScheduler.java:369)
+	at org.eclipse.ui.internal.decorators.DecorationScheduler$1.run(DecorationScheduler.java:329)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128033</commentid>
+    <comment_count>1</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-01-09 07:55:24 -0500</bug_when>
+    <thetext>John, this pattern looks familiar.  Does it ring any bells?
+
+PW
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128188</commentid>
+    <comment_count>2</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-09 10:53:51 -0500</bug_when>
+    <thetext>The stack trace indicates that another thread is trying to reference a class from plugin org.eclipse.mylyn.tasks.ui while that plugin is being started. That should probably be forwarded to Mylyn because it may represent a problem in their bundle activation code... the other thread will be using the plugin in a state where it is not fully initialized.  However, this is just a warning in the log file.  It doesn&apos;t directly indicate a problem, and it certainly doesn&apos;t cause the the platform to shutdown. The stack trace may be a red herring and have nothing to do with the shutdown.
+
+Yixingjia, what Eclipse package do you have installed? Is it one of the packages such as Eclipse IDE for Java Developers? The source of the problem may be outside the platform.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129076</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-10 13:21:24 -0500</bug_when>
+    <thetext>Yixingjia, these startup warnings are most likely unrelated to the problem you are experiencing (see bug 188524) and have been fixed in the latest version of Mylyn which is available here:
+
+ http://www.eclipse.org/mylyn/downloads/
+
+Please try to updating to the latest version of Mylyn and report back if the warnings still appear or the crashes persist.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131946</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-15 20:16:33 -0500</bug_when>
+    <thetext>Yixingjia: in addition to Steffen&apos;s pointer, pelase note that if you are seeing your IDE close every five minutes the problem is not likely to be related to this stack trace, but to out of memory errors.  For settings that avoid it please see: 
+
+   http://wiki.eclipse.org/index.php/Mylyn_FAQ#Why_am_seeing_java.lang.OutOfMemoryError:_PermGen_space_errors.3F
+   
+Let us know if you cannot resolve this with the instructions provided above.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

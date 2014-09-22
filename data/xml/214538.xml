@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214538</bug_id>
+          
+          <creation_ts>2008-01-07 15:35:00 -0500</creation_ts>
+          <short_desc>FilePropertyTester logs an error when the file is out-of-sync</short_desc>
+          <delta_ts>2009-10-05 10:08:33 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Resources</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Min Idzelis">idzelis</reporter>
+          <assigned_to name="Pawel Pogorzelski">pawel.pogorzelski1</assigned_to>
+          <cc>Szymon.Brandys</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126892</commentid>
+    <comment_count>0</comment_count>
+    <who name="Min Idzelis">idzelis</who>
+    <bug_when>2008-01-07 15:35:33 -0500</bug_when>
+    <thetext>Build ID: 3.4M4
+
+Steps To Reproduce:
+I am using an extension point that has an enablement expression. The enablement expression makes use of the contentType property of an IFile. If the IResource is out of sync of the file system, the FilePropertyTester logs the error to the error log. This clutters up the error log with extraneous and misleading error messages. 
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127229</commentid>
+    <comment_count>1</comment_count>
+    <who name="Szymon Brandys">Szymon.Brandys</who>
+    <bug_when>2008-01-08 06:44:55 -0500</bug_when>
+    <thetext>I&apos;m changing the summary to more descriptive one.
+
+The bug 206142 is a special case of this one for me. In both cases we have out-of-sync files and we can try to call findContentTypesFor(...).
+
+You could always add your own property tester in your plug-in that does what you expect. Changing the current behavior could affect people who rely on it. 
+
+Another idea is an extra argument that can be used in the enablement expression. For instance &apos;implicit&apos; argument which would handle out-of-sync files in the way that you suggested.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1605817</commentid>
+    <comment_count>2</comment_count>
+    <who name="Pawel Pogorzelski">pawel.pogorzelski1</who>
+    <bug_when>2009-10-05 10:08:33 -0400</bug_when>
+    <thetext>This area have changed along with the fix for bug 206142.
+
+First of all, it&apos;s possible to pass a &quot;useFilenameOnly&quot; argument for the tester so it determines the content type using filename only. In such case nothing is logged in case the file is out of sync.
+
+Also, in case &quot;useFilenameOnly&quot; is not specified and file doesn&apos;t exist the tester returns false and doesn&apos;t log an exception.
+
+In case resource is out of sync and &quot;useFilenameOnly&quot; is not specified then we log the exception. This increases serviceability and will not be changed. Clients can make sure nothing is logged using &quot;useFilenameOnly&quot; flag (scarifying accuracy).
+
+For the reasons above I&apos;m marking this bug as WONTFIX.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

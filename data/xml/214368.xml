@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214368</bug_id>
+          
+          <creation_ts>2008-01-04 12:11:00 -0500</creation_ts>
+          <short_desc>Race when adding/removing breakpoints in remote ant debugger</short_desc>
+          <delta_ts>2012-10-19 13:10:41 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Ant</component>
+          <version>3.3.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>4.3 M3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Markus Persson">mtpersson</reporter>
+          <assigned_to name="Michael Rennie">Michael_Rennie</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>Darin_Swanson</cc>
+    
+    <cc>d_a_carver</cc>
+    
+    <cc>klara.ward</cc>
+    
+    <cc>Michael_Rennie</cc>
+    
+    <cc>Mike_Wilson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125877</commentid>
+    <comment_count>0</comment_count>
+    <who name="Markus Persson">mtpersson</who>
+    <bug_when>2008-01-04 12:11:54 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+In a clean workspace on a multi-CPU (preferably 4-way or better) machine:
+1. Checkout org.eclipse.ant.tests.ui, org.eclipse.test, and org.eclipse.test.performance (HEAD or tags v20070427, v20071108, and v20071116 respectively).
+2. Open org.eclipse.ant.tests.ui.testplugin.AntUITests.
+3. Run as &quot;JUnit Plug-in Test&quot;.
+
+
+More information:
+If run in the above way (or scripted) several times, some tests in org.eclipse.ant.tests.ui.debug.BreakpointTests will fail due to race conditions.
+
+These tests fail with (Failure) &quot;Program did not suspend.&quot;:
+testDeferredBreakpointsSepVM, testBreakpointSepVM,
+testTaskOutOfTargetBreakpointSepVm, testTargetBreakpointSepVM.
+
+And the test testEnableDisableBreakpointSepVM fails with (Failure) &quot;Program did not terminate.&quot;.
+
+All these failures are likely caused by lack of synchronization when adding and removing breakpoints in
+org.eclipse.ant.internal.ui.antsupport.logger.debug.RemoteAntDebugBuildLogger.ReaderThread.run(). 
+In this method, only the processing of the first 4 request types are synchronized. Why? Most, if not all, remaining request types access state shared between threads.
+
+Note that this bug may be easier to reproduce using a high performance JVM such as BEA JRockit R27.4. This bug not only affects testing, but real usage. (IMHO introducing random delays in the tests such as in bug 121207 does more harm than good.)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1257738</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Swanson">Darin_Swanson</who>
+    <bug_when>2008-06-03 12:30:51 -0400</bug_when>
+    <thetext>We should review the synchronization to ensure correct and safe manipulation of the state by multiple threads.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1257834</commentid>
+    <comment_count>2</comment_count>
+    <who name="Darin Swanson">Darin_Swanson</who>
+    <bug_when>2008-06-03 13:09:32 -0400</bug_when>
+    <thetext>I will attach a patch which synchronizes the processing of the debug requests and the manipulation of the debug state and breakpoint collection of the debug logger.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1257841</commentid>
+    <comment_count>3</comment_count>
+      <attachid>103369</attachid>
+    <who name="Darin Swanson">Darin_Swanson</who>
+    <bug_when>2008-06-03 13:12:05 -0400</bug_when>
+    <thetext>Created attachment 103369
+synchronization in the debug logger</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1257855</commentid>
+    <comment_count>4</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-06-03 13:21:02 -0400</bug_when>
+    <thetext>Comment: Since add/removeBreakpoint are now synchronized methods, you don&apos;t need to synch calls in the run() method to these methods. However, it won&apos;t do any harm.
+
+If the bug reporter could verify this fixes the problem in their test suite, I think we can +1 this for 3.4 RC4.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1257958</commentid>
+    <comment_count>5</comment_count>
+    <who name="Mike Wilson">Mike_Wilson</who>
+    <bug_when>2008-06-03 14:01:35 -0400</bug_when>
+    <thetext>Patch seems reasonable, although I&apos;m somewhat anxious about adding synchronization this late in the cycle. Are we sure that this doesn&apos;t introduce potential for deadlock?
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1258639</commentid>
+    <comment_count>6</comment_count>
+    <who name="Darin Swanson">Darin_Swanson</who>
+    <bug_when>2008-06-03 17:37:45 -0400</bug_when>
+    <thetext>Propose we consider this for 3.4.1 to allow for complete testing</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1260953</commentid>
+    <comment_count>7</comment_count>
+    <who name="Markus Persson">mtpersson</who>
+    <bug_when>2008-06-05 10:45:01 -0400</bug_when>
+    <thetext>We&apos;ve tried to verify the patch by applying it to 3.4M7, since we had that set up already. The patch seems to fix some of the tests (this being a race we cannot be sure), but not all of them. The tests testDeferredBreakpointsSepVM and testEnableDisableBreakpointSepVM still fails as before. (This is with both a Sun 6.0 and a BEA JRockit 5.0 R27.5.0 JVM.)
+
+By the way, although I no longer remember if it could be related, 3 other tests (testRunToLineSepVM, testRunToLineSkipBreakpointSepVM, testRunToLineHitBreakpointSepVM) either fails with &quot;Editor did not open&quot; (RunToLineTests.java:176) or gets an NPE (RunToLineTests.java:206). Whether the tests get failures or errors seems random, but they never pass. This happened in 3.3.1 as well as in 3.4M7 (patched and unpatched).
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1260994</commentid>
+    <comment_count>8</comment_count>
+    <who name="Darin Swanson">Darin_Swanson</who>
+    <bug_when>2008-06-05 10:57:07 -0400</bug_when>
+    <thetext>Thank you for reporting back Markus.
+
+We will need to do a review of the tests and corresponding code in the 3.4.1 timespan AND/OR get my hands a sweet &quot;multi-CPU (preferably 4-way or better) machine&quot; :-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1319476</commentid>
+    <comment_count>9</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-08-26 15:02:04 -0400</bug_when>
+    <thetext>Moving to 3.5</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1358889</commentid>
+    <comment_count>10</comment_count>
+    <who name="Klara Ward">klara.ward</who>
+    <bug_when>2008-10-28 06:59:50 -0400</bug_when>
+    <thetext>I&apos;m keeping track of this bug for JRockit Mission Control QA</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1492935</commentid>
+    <comment_count>11</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2009-05-06 11:45:27 -0400</bug_when>
+    <thetext>no time left for 3.5</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2174268</commentid>
+    <comment_count>12</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2012-10-19 13:10:41 -0400</bug_when>
+    <thetext>Pushed an updated version of the patch to: http://git.eclipse.org/c/platform/eclipse.platform.git/commit/?id=31140908a2931e31060535c59c4c4de750561e0e</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>103369</attachid>
+            <date>2008-06-03 13:12:00 -0400</date>
+            <delta_ts>2008-06-03 13:12:05 -0400</delta_ts>
+            <desc>synchronization in the debug logger</desc>
+            <filename>debugLogger.txt</filename>
+            <type>text/plain</type>
+            <size>4116</size>
+            <attacher name="Darin Swanson">Darin_Swanson</attacher>
+            
+              <data encoding="base64">SW5kZXg6IFJlbW90ZSBBbnQgU3VwcG9ydC9vcmcvZWNsaXBzZS9hbnQvaW50ZXJuYWwvdWkvYW50
+c3VwcG9ydC9sb2dnZXIvZGVidWcvUmVtb3RlQW50RGVidWdCdWlsZExvZ2dlci5qYXZhDQo9PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5hbnQudWkvUmVt
+b3RlIEFudCBTdXBwb3J0L29yZy9lY2xpcHNlL2FudC9pbnRlcm5hbC91aS9hbnRzdXBwb3J0L2xv
+Z2dlci9kZWJ1Zy9SZW1vdGVBbnREZWJ1Z0J1aWxkTG9nZ2VyLmphdmEsdg0KcmV0cmlldmluZyBy
+ZXZpc2lvbiAxLjMxDQpkaWZmIC11IC1yMS4zMSBSZW1vdGVBbnREZWJ1Z0J1aWxkTG9nZ2VyLmph
+dmENCi0tLSBSZW1vdGUgQW50IFN1cHBvcnQvb3JnL2VjbGlwc2UvYW50L2ludGVybmFsL3VpL2Fu
+dHN1cHBvcnQvbG9nZ2VyL2RlYnVnL1JlbW90ZUFudERlYnVnQnVpbGRMb2dnZXIuamF2YQkxOSBN
+YXkgMjAwNSAyMjoxNDozNSAtMDAwMAkxLjMxDQorKysgUmVtb3RlIEFudCBTdXBwb3J0L29yZy9l
+Y2xpcHNlL2FudC9pbnRlcm5hbC91aS9hbnRzdXBwb3J0L2xvZ2dlci9kZWJ1Zy9SZW1vdGVBbnRE
+ZWJ1Z0J1aWxkTG9nZ2VyLmphdmEJMyBKdW4gMjAwOCAxNzowODozOSAtMDAwMA0KQEAgLTcyLDcg
+KzcyLDYgQEANCiAJCQkJU3RyaW5nIG1lc3NhZ2U9IG51bGw7IA0KIAkJCQl3aGlsZSAoZlJlcXVl
+c3RSZWFkZXIgIT0gbnVsbCkgeyANCiAJCQkJCWlmICgobWVzc2FnZT0gZlJlcXVlc3RSZWFkZXIu
+cmVhZExpbmUoKSkgIT0gbnVsbCkgew0KLQkJCQkJCQ0KIAkJCQkJCWlmIChtZXNzYWdlLnN0YXJ0
+c1dpdGgoRGVidWdNZXNzYWdlSWRzLlNURVBfSU5UTykpew0KIAkJCQkJCQlzeW5jaHJvbml6ZWQo
+UmVtb3RlQW50RGVidWdCdWlsZExvZ2dlci50aGlzKSB7DQogCQkJCQkJCQlmRGVidWdTdGF0ZS5z
+ZXRTdGVwSW50b1N1c3BlbmQodHJ1ZSk7DQpAQCAtOTgsMTYgKzk3LDI2IEBADQogCQkJCQkJCQlS
+ZW1vdGVBbnREZWJ1Z0J1aWxkTG9nZ2VyLnRoaXMubm90aWZ5QWxsKCk7DQogCQkJCQkJCX0NCiAJ
+CQkJCQl9IGVsc2UgaWYgKG1lc3NhZ2Uuc3RhcnRzV2l0aChEZWJ1Z01lc3NhZ2VJZHMuVEVSTUlO
+QVRFKSkgew0KLQkJCQkJCSAgICBzZW5kUmVxdWVzdFJlc3BvbnNlKERlYnVnTWVzc2FnZUlkcy5U
+RVJNSU5BVEVEKTsNCi0JCQkJCQkJc2h1dERvd24oKTsNCisJCQkJCQkJc3luY2hyb25pemVkKFJl
+bW90ZUFudERlYnVnQnVpbGRMb2dnZXIudGhpcykgew0KKwkJCQkJCQkJc2VuZFJlcXVlc3RSZXNw
+b25zZShEZWJ1Z01lc3NhZ2VJZHMuVEVSTUlOQVRFRCk7DQorCQkJCQkJCQlzaHV0RG93bigpOw0K
+KwkJCQkJCQl9DQogCQkJCQkJfSBlbHNlIGlmIChtZXNzYWdlLnN0YXJ0c1dpdGgoRGVidWdNZXNz
+YWdlSWRzLlNUQUNLKSkgew0KLQkJCQkJCQltYXJzaGFsbFN0YWNrKCk7DQorCQkJCQkJCXN5bmNo
+cm9uaXplZChSZW1vdGVBbnREZWJ1Z0J1aWxkTG9nZ2VyLnRoaXMpIHsNCisJCQkJCQkJCW1hcnNo
+YWxsU3RhY2soKTsNCisJCQkJCQkJfQ0KIAkJCQkJCX0gZWxzZSBpZiAobWVzc2FnZS5zdGFydHNX
+aXRoKERlYnVnTWVzc2FnZUlkcy5BRERfQlJFQUtQT0lOVCkpIHsNCi0JCQkJCQkJYWRkQnJlYWtw
+b2ludChtZXNzYWdlKTsNCisJCQkJCQkJc3luY2hyb25pemVkKFJlbW90ZUFudERlYnVnQnVpbGRM
+b2dnZXIudGhpcykgew0KKwkJCQkJCQkJYWRkQnJlYWtwb2ludChtZXNzYWdlKTsNCisJCQkJCQkJ
+fQ0KIAkJCQkJCX0gZWxzZSBpZiAobWVzc2FnZS5zdGFydHNXaXRoKERlYnVnTWVzc2FnZUlkcy5S
+RU1PVkVfQlJFQUtQT0lOVCkpIHsNCi0JCQkJCQkJcmVtb3ZlQnJlYWtwb2ludChtZXNzYWdlKTsN
+CisJCQkJCQkJc3luY2hyb25pemVkKFJlbW90ZUFudERlYnVnQnVpbGRMb2dnZXIudGhpcykgew0K
+KwkJCQkJCQkJcmVtb3ZlQnJlYWtwb2ludChtZXNzYWdlKTsNCisJCQkJCQkJfQ0KIAkJCQkJCX0g
+IGVsc2UgaWYgKG1lc3NhZ2Uuc3RhcnRzV2l0aChEZWJ1Z01lc3NhZ2VJZHMuUFJPUEVSVElFUykp
+IHsNCi0JCQkJCQkJbWFyc2hhbGxQcm9wZXJ0aWVzKCk7DQorCQkJCQkJCXN5bmNocm9uaXplZChS
+ZW1vdGVBbnREZWJ1Z0J1aWxkTG9nZ2VyLnRoaXMpIHsNCisJCQkJCQkJCW1hcnNoYWxsUHJvcGVy
+dGllcygpOw0KKwkJCQkJCQl9DQogCQkJCQkJfQ0KIAkJCQkJfQ0KIAkJCQl9IA0KQEAgLTE5MSw3
+ICsyMDAsNyBAQA0KIAkvKiAobm9uLUphdmFkb2MpDQogCSAqIEBzZWUgb3JnLmFwYWNoZS50b29s
+cy5hbnQuQnVpbGRMaXN0ZW5lciN0YXNrU3RhcnRlZChvcmcuYXBhY2hlLnRvb2xzLmFudC5CdWls
+ZEV2ZW50KQ0KIAkgKi8NCi0JcHVibGljIHZvaWQgdGFza1N0YXJ0ZWQoQnVpbGRFdmVudCBldmVu
+dCkgew0KKwlwdWJsaWMgc3luY2hyb25pemVkIHZvaWQgdGFza1N0YXJ0ZWQoQnVpbGRFdmVudCBl
+dmVudCkgew0KICAgICAgICAgc3VwZXIudGFza1N0YXJ0ZWQoZXZlbnQpOw0KIAkJZkRlYnVnU3Rh
+dGUudGFza1N0YXJ0ZWQoZXZlbnQpOw0KIAl9DQpAQCAtMjYyLDcgKzI3MSw3IEBADQogCQl9DQog
+CX0NCiANCi0JcHJpdmF0ZSBSZW1vdGVBbnRCcmVha3BvaW50IGJyZWFrcG9pbnRBdExpbmVOdW1i
+ZXIoTG9jYXRpb24gbG9jYXRpb24pIHsNCisJcHJpdmF0ZSBzeW5jaHJvbml6ZWQgUmVtb3RlQW50
+QnJlYWtwb2ludCBicmVha3BvaW50QXRMaW5lTnVtYmVyKExvY2F0aW9uIGxvY2F0aW9uKSB7DQog
+CQlpZiAoZkJyZWFrcG9pbnRzID09IG51bGwgfHwgbG9jYXRpb24gPT0gbnVsbCB8fCBsb2NhdGlv
+biA9PSBMb2NhdGlvbi5VTktOT1dOX0xPQ0FUSU9OKSB7DQogCQkJcmV0dXJuIG51bGw7DQogCQl9
+DQpAQCAtMjk3LDcgKzMwNiw3IEBADQogCSAgICBzZW5kUmVxdWVzdFJlc3BvbnNlKHByb3BlcnRp
+ZXNSZXByZXNlbnRhdGlvbi50b1N0cmluZygpKTsNCiAJfQ0KIAkNCi0JcHJvdGVjdGVkIHZvaWQg
+YWRkQnJlYWtwb2ludChTdHJpbmcgYnJlYWtwb2ludFJlcHJlc2VudGF0aW9uKSB7DQorCXByb3Rl
+Y3RlZCBzeW5jaHJvbml6ZWQgdm9pZCBhZGRCcmVha3BvaW50KFN0cmluZyBicmVha3BvaW50UmVw
+cmVzZW50YXRpb24pIHsNCiAJCWlmIChmQnJlYWtwb2ludHMgPT0gbnVsbCkgew0KIAkJCWZCcmVh
+a3BvaW50cz0gbmV3IEFycmF5TGlzdCgpOw0KIAkJfQ0KQEAgLTMwNyw3ICszMTYsNyBAQA0KIAkJ
+fQ0KIAl9DQogCQ0KLQlwcm90ZWN0ZWQgdm9pZCByZW1vdmVCcmVha3BvaW50KFN0cmluZyBicmVh
+a3BvaW50UmVwcmVzZW50YXRpb24pIHsNCisJcHJvdGVjdGVkIHN5bmNocm9uaXplZCB2b2lkIHJl
+bW92ZUJyZWFrcG9pbnQoU3RyaW5nIGJyZWFrcG9pbnRSZXByZXNlbnRhdGlvbikgew0KIAkJaWYg
+KGZCcmVha3BvaW50cyA9PSBudWxsKSB7DQogCQkJcmV0dXJuOw0KIAkJfSANCkBAIC0zMjQsNyAr
+MzMzLDcgQEANCiAJLyogKG5vbi1KYXZhZG9jKQ0KIAkgKiBAc2VlIG9yZy5hcGFjaGUudG9vbHMu
+YW50LkJ1aWxkTGlzdGVuZXIjdGFyZ2V0U3RhcnRlZChvcmcuYXBhY2hlLnRvb2xzLmFudC5CdWls
+ZEV2ZW50KQ0KIAkgKi8NCi0JcHVibGljIHZvaWQgdGFyZ2V0U3RhcnRlZChCdWlsZEV2ZW50IGV2
+ZW50KSB7DQorCXB1YmxpYyBzeW5jaHJvbml6ZWQgdm9pZCB0YXJnZXRTdGFydGVkKEJ1aWxkRXZl
+bnQgZXZlbnQpIHsNCiAJCWZEZWJ1Z1N0YXRlLnRhcmdldFN0YXJ0ZWQoZXZlbnQpOw0KIAkJaWYg
+KCFmU2VudFByb2Nlc3NJZCkgew0KIAkJCWVzdGFibGlzaENvbm5lY3Rpb24oKTsNCkBAIC0zMzYs
+NyArMzQ1LDcgQEANCiAgICAgLyogKG5vbi1KYXZhZG9jKQ0KICAgICAgKiBAc2VlIG9yZy5hcGFj
+aGUudG9vbHMuYW50LkJ1aWxkTGlzdGVuZXIjdGFyZ2V0RmluaXNoZWQob3JnLmFwYWNoZS50b29s
+cy5hbnQuQnVpbGRFdmVudCkNCiAgICAgICovDQotICAgIHB1YmxpYyB2b2lkIHRhcmdldEZpbmlz
+aGVkKEJ1aWxkRXZlbnQgZXZlbnQpIHsNCisgICAgcHVibGljIHN5bmNocm9uaXplZCB2b2lkIHRh
+cmdldEZpbmlzaGVkKEJ1aWxkRXZlbnQgZXZlbnQpIHsNCiAgICAgICAgIHN1cGVyLnRhcmdldEZp
+bmlzaGVkKGV2ZW50KTsNCiAJCWZEZWJ1Z1N0YXRlLnNldFRhcmdldEV4ZWN1dGluZyhudWxsKTsN
+CiAgICAgfSAgIA0K
+</data>
+<flag name="review"
+          id="9005"
+          type_id="6"
+          status="+"
+          setter="Darin_Swanson"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

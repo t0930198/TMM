@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214238</bug_id>
+          
+          <creation_ts>2008-01-03 10:52:00 -0500</creation_ts>
+          <short_desc>[Viewers] [Viewers] ComboBoxViewerCellEditor should expose its CCombo directly</short_desc>
+          <delta_ts>2008-01-04 10:37:17 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eric Rizzo">eclipse-bugs</reporter>
+          <assigned_to name="Boris Bokowski">bokowski</assigned_to>
+          <cc>tom.schindl</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124994</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eric Rizzo">eclipse-bugs</who>
+    <bug_when>2008-01-03 10:52:16 -0500</bug_when>
+    <thetext>Currently ComboBoxViewerCellEditor exposes its ComboViewer via getViewer() and ComboViewer exposes its CCombo via getCCombo(). It would be convenient for the cell editor to expose the CCombo directly. This would make code that currently looks like this:
+comboViewerCellEditor.getViewer().getCCombo().setVisibleItemCount(count);
+more direct, like this:
+comboViewerCellEditor.getCombo().setVisibleItemCount(count);
+
+Better yet would be this:
+
+comboViewerCellEditor.setVisibleItemCount(count);
+
+I imagine there might be some resistance to exposing the entire set of public setter methods from CCombo, though. 
+
+Any thoughts?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124997</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eric Rizzo">eclipse-bugs</who>
+    <bug_when>2008-01-03 10:53:35 -0500</bug_when>
+    <thetext>Tom, I apologize for you getting CCed on this without consent. I cloned this off another bug and didn&apos;t realize that also cloned the CC list. My apologies.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125794</commentid>
+    <comment_count>2</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-04 10:37:17 -0500</bug_when>
+    <thetext>I am reluctant to do this - convenience API is still API, i.e. comes at a cost. I would only add convenience API if there is a clear benefit; for example, if this was something that affected every client all the time.
+
+I would recommend using a local variable if you are making more than one call to the underlying CCombo.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

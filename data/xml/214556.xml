@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214556</bug_id>
+          
+          <creation_ts>2008-01-07 18:20:00 -0500</creation_ts>
+          <short_desc>When opening Eclipse I get an error message in the Welcome pane.</short_desc>
+          <delta_ts>2009-10-01 09:36:04 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>IDE</component>
+          <version>3.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>needinfo</keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Larry Diamond">larry</reporter>
+          <assigned_to name="Platform-UI-Inbox">Platform-UI-Inbox</assigned_to>
+          <cc>remysuen</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127031</commentid>
+    <comment_count>0</comment_count>
+    <who name="Larry Diamond">larry</who>
+    <bug_when>2008-01-07 18:20:00 -0500</bug_when>
+    <thetext>Build ID: M20070212-1330 (Ubuntu 3.2.2-3ubuntu3)
+
+Steps To Reproduce:
+1.Open Eclipse
+2.
+3.
+
+
+More information:
+The error is: Unable to create view: org.eclipse.core.runtime.Plugin
+
+The details are: java.lang.ClassNotFoundException: org.eclipse.core.runtime.Plugin
+   at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:402)
+   at org.eclipse.osgi.framework.internal.core.BundleLoader.findClass(BundleLoader.java:347)
+   at org.eclipse.osgi.internal.baseadaptor.DefaultClassLoader.loadClass(DefaultClassLoader.java:83)
+   at java.lang.ClassLoader.loadClass(libgcj.so.81)
+   at org.eclipse.core.runtime.Platform.getPlugin(Platform.java:737)
+   at org.eclipse.core.internal.preferences.legacy.InitLegacyPreferences.init(InitLegacyPreferences.java:43)
+   at org.eclipse.core.internal.preferences.PreferenceServiceRegistryHelper.applyRuntimeDefaults(PreferenceServiceRegistryHelper.java:146)
+   at org.eclipse.core.internal.preferences.PreferencesService.applyRuntimeDefaults(PreferencesService.java:337)
+   at org.eclipse.core.internal.preferences.DefaultPreferences.applyRuntimeDefaults(DefaultPreferences.java:162)
+   at org.eclipse.core.internal.preferences.DefaultPreferences.loadDefaults(DefaultPreferences.java:231)
+   at org.eclipse.core.internal.preferences.DefaultPreferences.load(DefaultPreferences.java:227)
+   at org.eclipse.core.internal.preferences.EclipsePreferences.create(EclipsePreferences.java:307)
+   at org.eclipse.core.internal.preferences.EclipsePreferences.internalNode(EclipsePreferences.java:543)
+   at org.eclipse.core.internal.preferences.DefaultPreferences.node(DefaultPreferences.java:149)
+   at org.eclipse.core.internal.preferences.legacy.PreferenceForwarder.getDefaultPreferences(PreferenceForwarder.java:138)
+   at org.eclipse.core.internal.preferences.legacy.PreferenceForwarder.getString(PreferenceForwarder.java:644)
+   at org.eclipse.ui.internal.intro.impl.model.IntroModelRoot.loadTheme(IntroModelRoot.java:255)
+   at org.eclipse.ui.internal.intro.impl.model.IntroModelRoot.loadChildren(IntroModelRoot.java:172)
+   at org.eclipse.ui.internal.intro.impl.model.AbstractIntroContainer.getChildren(AbstractIntroContainer.java:76)
+   at org.eclipse.ui.internal.intro.impl.model.IntroModelRoot.loadModel(IntroModelRoot.java:145)
+   at org.eclipse.ui.internal.intro.impl.model.loader.BaseExtensionPointManager.loadModel(BaseExtensionPointManager.java:93)
+   at org.eclipse.ui.internal.intro.impl.model.loader.ExtensionPointManager.loadCurrentModel(ExtensionPointManager.java:60)
+   at org.eclipse.ui.internal.intro.impl.model.loader.ExtensionPointManager.getCurrentModel(ExtensionPointManager.java:72)
+   at org.eclipse.ui.intro.config.CustomizableIntroPart.init(CustomizableIntroPart.java:151)
+   at org.eclipse.ui.internal.ViewIntroAdapterPart.init(ViewIntroAdapterPart.java:156)
+   at org.eclipse.ui.internal.ViewReference.createPartHelper(ViewReference.java:305)
+   at org.eclipse.ui.internal.ViewReference.createPart(ViewReference.java:197)
+   at org.eclipse.ui.internal.WorkbenchPartReference.getPart(WorkbenchPartReference.java:566)
+   at org.eclipse.ui.internal.Perspective.showView(Perspective.java:1675)
+   at org.eclipse.ui.internal.WorkbenchPage.busyShowView(WorkbenchPage.java:987)
+   at org.eclipse.ui.internal.WorkbenchPage.access$13(WorkbenchPage.java:968)
+   at org.eclipse.ui.internal.WorkbenchPage$13.run(WorkbenchPage.java:3514)
+   at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+   at org.eclipse.ui.internal.WorkbenchPage.showView(WorkbenchPage.java:3511)
+   at org.eclipse.ui.internal.WorkbenchPage.showView(WorkbenchPage.java:3487)
+   at org.eclipse.ui.internal.WorkbenchIntroManager.createIntro(WorkbenchIntroManager.java:172)
+   at org.eclipse.ui.internal.WorkbenchIntroManager.showIntro(WorkbenchIntroManager.java:119)
+   at org.eclipse.ui.internal.WorkbenchWindow.restoreState(WorkbenchWindow.java:1988)
+   at org.eclipse.ui.internal.Workbench.doRestoreState(Workbench.java:2873)
+   at org.eclipse.ui.internal.Workbench.access$14(Workbench.java:2821)
+   at org.eclipse.ui.internal.Workbench$19.run(Workbench.java:1697)
+   at org.eclipse.ui.internal.Workbench.runStartupWithProgress(Workbench.java:1437)
+   at org.eclipse.ui.internal.Workbench.restoreState(Workbench.java:1695)
+   at org.eclipse.ui.internal.Workbench.access$12(Workbench.java:1666)
+   at org.eclipse.ui.internal.Workbench$17.run(Workbench.java:1545)
+   at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+   at org.eclipse.ui.internal.Workbench.restoreState(Workbench.java:1489)
+   at org.eclipse.ui.internal.WorkbenchConfigurer.restoreState(WorkbenchConfigurer.java:183)
+   at org.eclipse.ui.application.WorkbenchAdvisor.openWindows(WorkbenchAdvisor.java:702)
+   at org.eclipse.ui.internal.Workbench.init(Workbench.java:1101)
+   at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:1863)
+   at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:422)
+   at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+   at org.eclipse.ui.internal.ide.IDEApplication.run(IDEApplication.java:95)
+   at org.eclipse.core.internal.runtime.PlatformActivator$1.run(PlatformActivator.java:78)
+   at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:92)
+   at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:68)
+   at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:400)
+   at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:177)
+   at java.lang.reflect.Method.invoke(libgcj.so.81)
+   at org.eclipse.core.launcher.Main.invokeFramework(Main.java:336)
+   at org.eclipse.core.launcher.Main.basicRun(Main.java:280)
+   at org.eclipse.core.launcher.Main.run(Main.java:977)
+   at org.eclipse.core.launcher.Main.main(Main.java:952)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127083</commentid>
+    <comment_count>1</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-01-07 22:14:35 -0500</bug_when>
+    <thetext>&gt; Build ID: M20070212-1330 (Ubuntu 3.2.2-3ubuntu3)
+&gt; ...
+&gt;    at java.lang.ClassLoader.loadClass(libgcj.so.81)
+&gt; ...
+&gt;    at java.lang.reflect.Method.invoke(libgcj.so.81)
+
+Please either a) get Eclipse from eclipse.org or b) try to run Eclipse with a supported Java runtime environment [1], or preferably, do both.
+
+You are using GCJ to run Eclipse and GCJ is not a supported Java runtime environment.
+
+If you have problems with the Eclipse package from Ubuntu, please file a bug report to the Ubuntu package maintainers.
+
+[1] - http://www.eclipse.org/eclipse/development/readme_eclipse_3.3.1.1.html#TargetOperatingEnvironments(In reply to comment #0)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127253</commentid>
+    <comment_count>2</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-01-08 08:40:15 -0500</bug_when>
+    <thetext>Please download eclipse from http://www.eclipse.org and re-open if it still doesn&apos;t work, or open a bug against the ubuntu maintainers.
+
+PW
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

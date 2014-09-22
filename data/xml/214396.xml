@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214396</bug_id>
+          
+          <creation_ts>2008-01-04 15:28:00 -0500</creation_ts>
+          <short_desc>[Markers] NPE in ExtendedMarkersView</short_desc>
+          <delta_ts>2008-02-06 10:25:29 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>IDE</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kim Horne">eclipse</reporter>
+          <assigned_to name="Tod Creasey">Tod_Creasey</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126026</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-01-04 15:28:48 -0500</bug_when>
+    <thetext>N20080104
+
+testResourceMappings failed in this build with the following stack:
+
+Failed to execute runnable (java.lang.NullPointerException)
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.NullPointerException)
+at org.eclipse.swt.SWT.error(SWT.java:3716)
+at org.eclipse.swt.SWT.error(SWT.java:3634)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:133)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3265)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3003)
+at org.eclipse.ui.tests.markers.ResourceMappingMarkersTest.testResourceMappings(ResourceMappingMarkersTest.java:80)
+at org.eclipse.test.EclipseTestRunner.run(EclipseTestRunner.java:354)
+at org.eclipse.test.EclipseTestRunner.run(EclipseTestRunner.java:206)
+at org.eclipse.test.UITestApplication$3.run(UITestApplication.java:195)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:130)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3265)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3003)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2392)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2356)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2222)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:474)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:469)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.test.UITestApplication.runApplication(UITestApplication.java:138)
+at org.eclipse.test.UITestApplication.run(UITestApplication.java:60)
+at org.eclipse.test.UITestApplication.start(UITestApplication.java:210)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1239)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1215)
+at org.eclipse.core.launcher.Main.main(Main.java:30)
+Caused by: java.lang.NullPointerException
+at org.eclipse.ui.internal.views.markers.ExtendedMarkersView.updateTitle(ExtendedMarkersView.java:1421)
+at org.eclipse.ui.internal.views.markers.ExtendedMarkersView$11.runInUIThread(ExtendedMarkersView.java:1047)
+at org.eclipse.ui.progress.UIJob$1.run(UIJob.java:94)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:130)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126655</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-07 11:09:15 -0500</bug_when>
+    <thetext>Fixed in build &gt;20080108</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150902</commentid>
+    <comment_count>2</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-02-06 10:25:29 -0500</bug_when>
+    <thetext>Verified in I20080205-0010</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

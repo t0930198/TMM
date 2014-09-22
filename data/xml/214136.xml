@@ -1,0 +1,527 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214136</bug_id>
+          
+          <creation_ts>2008-01-02 12:49:00 -0500</creation_ts>
+          <short_desc>ModelProviderManager::registerProvider does not initialize the providers</short_desc>
+          <delta_ts>2008-10-01 06:49:55 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Java EE Tools</product>
+          <component>jst.j2ee</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="kiril mitov">thebravoman</reporter>
+          <assigned_to name="kiril mitov">thebravoman</assigned_to>
+          <cc>david_williams</cc>
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="11516"
+          type_id="1"
+          status="+"
+          setter="cbridgha"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124282</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86001</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-01-02 12:49:27 -0500</bug_when>
+    <thetext>Created attachment 86001
+A test case for the registerProvider
+
+Build ID: I20071101-2000
+
+Steps To Reproduce:
+The class ModelProviderManager has five public methods:
+getModelProvider(IProject, IProjectFacetVersion)
+getModelProvider(IVirtualComponent, IProjectFacetVersion)
+registerProvider(IModelProviderFactory, IProjectFacetVersion, String)
+getModelProvider(IProject)
+getModelProvider(IVirtualComponent)
+
+It also has a static field called &quot;providers&quot;
+
+If one calles any of the getModelProvider() methods then the providers field is initialized.
+But if the first method that is called is registerProvider (before calling any of the other method of ModelProviderManager) then a NPE is thrown since providers is not initialized.
+
+I think it would be more appropriate to throw an IllegalStateException or to initialize the providers field.
+
+I have prepared a test case and a patch. The test case trie tries to register a new model provider. A NPE is thrown.
+
+If the patch is applied that the registerProvider method first loads the providers and then returns the correct provider.
+
+
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124288</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86002</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-01-02 12:51:26 -0500</bug_when>
+    <thetext>Created attachment 86002
+Patch for the ModelProvider
+
+The change is actually in the getProviderPriority() method.
+It uses the getProviders() method instead of directly using the providers field.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124290</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86003</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-01-02 12:53:16 -0500</bug_when>
+    <thetext>Created attachment 86003
+Utility class for the test</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136910</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-01-23 11:31:39 -0500</bug_when>
+    <thetext>Chuck, please move component/owner, as appropriate. 
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150822</commentid>
+    <comment_count>4</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-02-06 09:18:53 -0500</bug_when>
+    <thetext>I have committed the code change.  I will soon add the JUnit.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1157215</commentid>
+    <comment_count>5</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-02-14 16:54:29 -0500</bug_when>
+    <thetext>I didn&apos;t get the JUnit in for M5, retargetting.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1253085</commentid>
+    <comment_count>6</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-05-29 13:53:55 -0400</bug_when>
+    <thetext>Too late to get the JUnit into 3.0</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1298031</commentid>
+    <comment_count>7</comment_count>
+    <who name="Carl Anderson">ccc</who>
+    <bug_when>2008-07-24 11:29:13 -0400</bug_when>
+    <thetext>Kiril, can you get this JUnit in during 3.0.2?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1309353</commentid>
+    <comment_count>8</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-08-13 02:21:31 -0400</bug_when>
+    <thetext>Ok, I will add the JUnit. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1309450</commentid>
+    <comment_count>9</comment_count>
+      <attachid>109884</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-08-13 06:20:41 -0400</bug_when>
+    <thetext>Created attachment 109884
+Patch for the test case
+
+I have prepared a patch for the org.eclipse.jst.j2ee.tests project. 
+
+Carl -I can submit the patch now, or should I wait for the 3.0.2?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1309633</commentid>
+    <comment_count>10</comment_count>
+      <attachid>109899</attachid>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-08-13 11:29:43 -0400</bug_when>
+    <thetext>Created attachment 109899
+Second patch for the test case
+
+This second patch for the tests case adds the test case to the org.eclipse.jst.j2ee.tests project. It also fixes a problem in the test method. Since the ModelProviderManager is a singleton it can be accessed from every tests. 
+
+The testCallRegisterMethodFirst() test method is registering a dummy model provider for ejb objects. Test cases that run after this method will fail. The current patch is registering the real Ejb3MergedModelProvider at the end of the method. All tests pass.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1318880</commentid>
+    <comment_count>11</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-08-26 03:44:22 -0400</bug_when>
+    <thetext>Chuck, could you please review the bug for 3.0.2?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1323353</commentid>
+    <comment_count>12</comment_count>
+    <who name="Chuck Bridgham">cbridgha</who>
+    <bug_when>2008-09-02 13:43:18 -0400</bug_when>
+    <thetext>approve</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1323670</commentid>
+    <comment_count>13</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-09-03 03:24:25 -0400</bug_when>
+    <thetext>Submit in R3_0_maintenance and released.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1323696</commentid>
+    <comment_count>14</comment_count>
+    <who name="kiril mitov">thebravoman</who>
+    <bug_when>2008-09-03 03:57:59 -0400</bug_when>
+    <thetext>Commit and released to HEAD</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86001</attachid>
+            <date>2008-01-02 12:49:00 -0500</date>
+            <delta_ts>2008-08-13 06:20:41 -0400</delta_ts>
+            <desc>A test case for the registerProvider</desc>
+            <filename>TestRegisterMergedModelProvider.java</filename>
+            <type>application/octet-stream</type>
+            <size>1756</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">LyoqDQogKiANCiAqLw0KcGFja2FnZSBvcmcuZWNsaXBzZS5zYXBFamI7DQoNCmltcG9ydCBzdGF0
+aWMgb3JnLmp1bml0LkFzc2VydC5hc3NlcnROb3ROdWxsOw0KaW1wb3J0IHN0YXRpYyBvcmcuanVu
+aXQuQXNzZXJ0LmFzc2VydE51bGw7DQoNCmltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNl
+cy5JUHJvamVjdDsNCmltcG9ydCBvcmcuZWNsaXBzZS5qc3QuajJlZS5tb2RlbC5JTW9kZWxQcm92
+aWRlcjsNCmltcG9ydCBvcmcuZWNsaXBzZS5qc3QuajJlZS5tb2RlbC5JTW9kZWxQcm92aWRlckZh
+Y3Rvcnk7DQppbXBvcnQgb3JnLmVjbGlwc2UuanN0LmoyZWUubW9kZWwuTW9kZWxQcm92aWRlck1h
+bmFnZXI7DQppbXBvcnQgb3JnLmVjbGlwc2Uud3N0LmNvbW1vbi5jb21wb25lbnRjb3JlLnJlc291
+cmNlcy5JVmlydHVhbENvbXBvbmVudDsNCmltcG9ydCBvcmcuZWNsaXBzZS53c3QuY29tbW9uLnBy
+b2plY3QuZmFjZXQuY29yZS5JUHJvamVjdEZhY2V0VmVyc2lvbjsNCmltcG9ydCBvcmcuZWNsaXBz
+ZS53c3QuY29tbW9uLnByb2plY3QuZmFjZXQuY29yZS5Qcm9qZWN0RmFjZXRzTWFuYWdlcjsNCmlt
+cG9ydCBvcmcuanVuaXQuQWZ0ZXI7DQppbXBvcnQgb3JnLmp1bml0LkJlZm9yZTsNCmltcG9ydCBv
+cmcuanVuaXQuVGVzdDsNCg0KLyoqDQogKiBAYXV0aG9yIEtpcmlsIE1pdG92IGsubWl0b3ZAc2Fw
+LmNvbQ0KICogDQogKi8NCnB1YmxpYyBjbGFzcyBUZXN0UmVnaXN0ZXJNZXJnZWRNb2RlbFByb3Zp
+ZGVyIHsNCg0KCXByaXZhdGUgSVByb2plY3QgZml4dHVyZTsNCg0KCUBCZWZvcmUNCglwdWJsaWMg
+dm9pZCBzZXRVcCgpIHRocm93cyBFeGNlcHRpb24gew0KCQlmaXh0dXJlID0gQWJzdHJhY3RUZXN0
+LmNyZWF0ZVByb2plY3QoVGVzdFJlZ2lzdGVyTWVyZ2VkTW9kZWxQcm92aWRlci5jbGFzcy5nZXRO
+YW1lKCkpLmdldFByb2plY3QoKTsNCgl9DQoNCglAQWZ0ZXINCglwdWJsaWMgdm9pZCB0ZWFyRG93
+bigpIHRocm93cyBFeGNlcHRpb24gew0KCQlBYnN0cmFjdFRlc3QuZGVsZXRlUHJvamVjdChUZXN0
+UmVnaXN0ZXJNZXJnZWRNb2RlbFByb3ZpZGVyLmNsYXNzLmdldE5hbWUoKSk7DQoJfQ0KDQoJcHJp
+dmF0ZSBzdGF0aWMgY2xhc3MgTXlNb2RlbFByb3ZpZGVyRmFjdG9yeSBpbXBsZW1lbnRzIElNb2Rl
+bFByb3ZpZGVyRmFjdG9yeSB7DQoNCgkJQE92ZXJyaWRlDQoJCXB1YmxpYyBJTW9kZWxQcm92aWRl
+ciBjcmVhdGUoSVByb2plY3QgcHJvamVjdCkgew0KCQkJcmV0dXJuIG51bGw7DQoJCX0NCg0KCQlA
+T3ZlcnJpZGUNCgkJcHVibGljIElNb2RlbFByb3ZpZGVyIGNyZWF0ZShJVmlydHVhbENvbXBvbmVu
+dCBjb21wb25lbnQpIHsNCgkJCXJldHVybiBudWxsOw0KCQl9DQoNCgl9DQoNCglAVGVzdA0KCXB1
+YmxpYyB2b2lkIHRlc3RSZWdpc3RlcigpIHsNCgkJSVByb2plY3RGYWNldFZlcnNpb24gdmVyc2lv
+biA9IFByb2plY3RGYWNldHNNYW5hZ2VyLmdldFByb2plY3RGYWNldCgianN0LmVqYiIpLmdldFZl
+cnNpb24oIjMuMCIpOw0KCQlNb2RlbFByb3ZpZGVyTWFuYWdlci5yZWdpc3RlclByb3ZpZGVyKG5l
+dyBNeU1vZGVsUHJvdmlkZXJGYWN0b3J5KCksIHZlcnNpb24sICIzIik7DQoJCUlNb2RlbFByb3Zp
+ZGVyIHByb3ZpZGVyID0gTW9kZWxQcm92aWRlck1hbmFnZXIuZ2V0TW9kZWxQcm92aWRlcihnZXRG
+aXh0dXJlKCkpOw0KCQlhc3NlcnROdWxsKHByb3ZpZGVyKTsNCgl9DQoNCglwcml2YXRlIElQcm9q
+ZWN0IGdldEZpeHR1cmUoKSB7DQoJCXJldHVybiBmaXh0dXJlOw0KCX0NCn0NCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86002</attachid>
+            <date>2008-01-02 12:51:00 -0500</date>
+            <delta_ts>2008-08-13 06:20:41 -0400</delta_ts>
+            <desc>Patch for the ModelProvider</desc>
+            <filename>modelProvider.patch</filename>
+            <type>text/plain</type>
+            <size>1242</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUN
+CkluZGV4OiBjb21tb24vb3JnL2VjbGlwc2UvanN0L2oyZWUvbW9kZWwvTW9kZWxQcm92aWRlck1h
+bmFnZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3dlYnRvb2xzL2plZXRv
+b2xzL3BsdWdpbnMvb3JnLmVjbGlwc2UuanN0LmoyZWUvY29tbW9uL29yZy9lY2xpcHNlL2pzdC9q
+MmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lv
+biAxLjgNCmRpZmYgLXUgLXIxLjggTW9kZWxQcm92aWRlck1hbmFnZXIuamF2YQ0KLS0tIGNvbW1v
+bi9vcmcvZWNsaXBzZS9qc3QvajJlZS9tb2RlbC9Nb2RlbFByb3ZpZGVyTWFuYWdlci5qYXZhCTgg
+Tm92IDIwMDcgMDA6MzI6NDggLTAwMDAJMS44DQorKysgY29tbW9uL29yZy9lY2xpcHNlL2pzdC9q
+MmVlL21vZGVsL01vZGVsUHJvdmlkZXJNYW5hZ2VyLmphdmEJMiBKYW4gMjAwOCAxNzozNjo1NyAt
+MDAwMA0KQEAgLTIwNSw3ICsyMDUsNyBAQA0KIAkJaW50IGN1cnJlbnRQcmlvcml0eSA9IGdldFBy
+b3ZpZGVyUHJpb3JpdHkodik7DQogCQlpZiAobmV3UHJpb3JpdHkgPD0gY3VycmVudFByaW9yaXR5
+KSB7DQogCQkJTW9kZWxQcm92aWRlcktleSBrZXkgPSBjcmVhdGVQcm92aWRlcktleSh2LCBuZXdQ
+cmlvcml0eSk7DQotCQkJcHJvdmlkZXJzLnB1dChrZXksIHByb3ZpZGVyRmFjdG9yeSk7DQorCQkJ
+Z2V0UHJvdmlkZXJzKCkucHV0KGtleSwgcHJvdmlkZXJGYWN0b3J5KTsNCiAJCX0NCiAJfQ0KIA0K
+QEAgLTIxOSw3ICsyMTksNyBAQA0KIAkJcmV0dXJuIG51bGw7DQogCX0NCiAJcHJpdmF0ZSBzdGF0
+aWMgaW50IGdldFByb3ZpZGVyUHJpb3JpdHkoSVByb2plY3RGYWNldFZlcnNpb24gdikgew0KLQkJ
+U2V0PE1vZGVsUHJvdmlkZXJLZXk+IGtleXMgPSBwcm92aWRlcnMua2V5U2V0KCk7DQorCQlTZXQ8
+TW9kZWxQcm92aWRlcktleT4ga2V5cyA9IGdldFByb3ZpZGVycygpLmtleVNldCgpOw0KIAkJZm9y
+IChJdGVyYXRvciBpdGVyYXRvciA9IGtleXMuaXRlcmF0b3IoKTsgaXRlcmF0b3IuaGFzTmV4dCgp
+Oykgew0KIAkJCU1vZGVsUHJvdmlkZXJLZXkga2V5ID0gKE1vZGVsUHJvdmlkZXJLZXkpIGl0ZXJh
+dG9yLm5leHQoKTsNCiAJCQlpZiAoa2V5LnZlcnNpb24uZXF1YWxzKHYpKQ0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86003</attachid>
+            <date>2008-01-02 12:53:00 -0500</date>
+            <delta_ts>2008-08-13 06:20:41 -0400</delta_ts>
+            <desc>Utility class for the test</desc>
+            <filename>AbstractTest.java</filename>
+            <type>text/plain</type>
+            <size>4805</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">cGFja2FnZSBvcmcuZWNsaXBzZS5zYXBFamI7DQoNCmltcG9ydCBqYXZhLnV0aWwuSGFzaFNldDsN
+CmltcG9ydCBqYXZhLnV0aWwuU2V0Ow0KDQppbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJj
+ZXMuSVByb2plY3Q7DQppbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVByb2plY3RE
+ZXNjcmlwdGlvbjsNCmltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNlcy5JV29ya3NwYWNl
+UnVubmFibGU7DQppbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuUmVzb3VyY2VzUGx1
+Z2luOw0KaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLldvcmtzcGFjZUpvYjsNCmlt
+cG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuQ29yZUV4Y2VwdGlvbjsNCmltcG9ydCBvcmcu
+ZWNsaXBzZS5jb3JlLnJ1bnRpbWUuSVByb2dyZXNzTW9uaXRvcjsNCmltcG9ydCBvcmcuZWNsaXBz
+ZS5jb3JlLnJ1bnRpbWUuSVN0YXR1czsNCmltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUu
+TnVsbFByb2dyZXNzTW9uaXRvcjsNCmltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuU3Rh
+dHVzOw0KaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5qb2JzLkpvYjsNCmltcG9ydCBv
+cmcuZWNsaXBzZS5qc3QuY29tbW9uLnByb2plY3QuZmFjZXQuSUphdmFGYWNldEluc3RhbGxEYXRh
+TW9kZWxQcm9wZXJ0aWVzOw0KaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5jb21tb24ucHJvamVjdC5m
+YWNldC5KYXZhRmFjZXRJbnN0YWxsRGF0YU1vZGVsUHJvdmlkZXI7DQppbXBvcnQgb3JnLmVjbGlw
+c2UuanN0LmoyZWUuZWpiLnByb2plY3Qub3BlcmF0aW9ucy5JRWpiRmFjZXRJbnN0YWxsRGF0YU1v
+ZGVsUHJvcGVydGllczsNCmltcG9ydCBvcmcuZWNsaXBzZS5qc3QuajJlZS5pbnRlcm5hbC5lamIu
+cHJvamVjdC5vcGVyYXRpb25zLkVqYkZhY2V0SW5zdGFsbERhdGFNb2RlbFByb3ZpZGVyOw0KaW1w
+b3J0IG9yZy5lY2xpcHNlLndzdC5jb21tb24uZnJhbWV3b3Jrcy5kYXRhbW9kZWwuRGF0YU1vZGVs
+RmFjdG9yeTsNCmltcG9ydCBvcmcuZWNsaXBzZS53c3QuY29tbW9uLmZyYW1ld29ya3MuZGF0YW1v
+ZGVsLklEYXRhTW9kZWw7DQppbXBvcnQgb3JnLmVjbGlwc2Uud3N0LmNvbW1vbi5wcm9qZWN0LmZh
+Y2V0LmNvcmUuSUZhY2V0ZWRQcm9qZWN0Ow0KaW1wb3J0IG9yZy5lY2xpcHNlLndzdC5jb21tb24u
+cHJvamVjdC5mYWNldC5jb3JlLklQcm9qZWN0RmFjZXRWZXJzaW9uOw0KaW1wb3J0IG9yZy5lY2xp
+cHNlLndzdC5jb21tb24ucHJvamVjdC5mYWNldC5jb3JlLlByb2plY3RGYWNldHNNYW5hZ2VyOw0K
+aW1wb3J0IG9yZy5lY2xpcHNlLndzdC5jb21tb24ucHJvamVjdC5mYWNldC5jb3JlLklGYWNldGVk
+UHJvamVjdC5BY3Rpb247DQppbXBvcnQgb3JnLmVjbGlwc2Uud3N0LmNvbW1vbi5wcm9qZWN0LmZh
+Y2V0LmNvcmUuaW50ZXJuYWwuRmFjZXRlZFByb2plY3ROYXR1cmU7DQoNCi8qKg0KICogQGF1dGhv
+ciBLaXJpbCBNaXRvdiBrLm1pdG92QHNhcC5jb20NCiAqIA0KICovDQpwdWJsaWMgY2xhc3MgQWJz
+dHJhY3RUZXN0IHsNCg0KCXByb3RlY3RlZCBzdGF0aWMgSUZhY2V0ZWRQcm9qZWN0IGNyZWF0ZVBy
+b2plY3QoU3RyaW5nIHByb2plY3ROYW1lKSB0aHJvd3MgQ29yZUV4Y2VwdGlvbiwgSW50ZXJydXB0
+ZWRFeGNlcHRpb24gew0KCQlmaW5hbCBJUHJvamVjdCBwcm9qZWN0ID0gUmVzb3VyY2VzUGx1Z2lu
+LmdldFdvcmtzcGFjZSgpLmdldFJvb3QoKS5nZXRQcm9qZWN0KHByb2plY3ROYW1lKTsNCgkJUmVz
+b3VyY2VzUGx1Z2luLmdldFdvcmtzcGFjZSgpLnJ1bihuZXcgSVdvcmtzcGFjZVJ1bm5hYmxlKCkg
+ew0KCQkJcHVibGljIHZvaWQgcnVuKElQcm9ncmVzc01vbml0b3IgbW9uaXRvcikgdGhyb3dzIENv
+cmVFeGNlcHRpb24gew0KCQkJCXByb2plY3QuY3JlYXRlKG1vbml0b3IpOw0KCQkJCXByb2plY3Qu
+b3Blbihtb25pdG9yKTsNCgkJCQlJUHJvamVjdERlc2NyaXB0aW9uIGRlc2NyaXB0aW9uID0gcHJv
+amVjdC5nZXREZXNjcmlwdGlvbigpOw0KCQkJCVN0cmluZ1tdIG5hdHVyZXMgPSBkZXNjcmlwdGlv
+bi5nZXROYXR1cmVJZHMoKTsNCgkJCQlTdHJpbmdbXSBuZXdOYXR1cmVzID0gbmV3IFN0cmluZ1tu
+YXR1cmVzLmxlbmd0aCArIDFdOw0KCQkJCVN5c3RlbS5hcnJheWNvcHkobmF0dXJlcywgMCwgbmV3
+TmF0dXJlcywgMCwgbmF0dXJlcy5sZW5ndGgpOw0KCQkJCW5ld05hdHVyZXNbbmV3TmF0dXJlcy5s
+ZW5ndGggLSAxXSA9IEZhY2V0ZWRQcm9qZWN0TmF0dXJlLk5BVFVSRV9JRDsNCgkJCQlkZXNjcmlw
+dGlvbi5zZXROYXR1cmVJZHMobmV3TmF0dXJlcyk7DQoJCQkJcHJvamVjdC5zZXREZXNjcmlwdGlv
+bihkZXNjcmlwdGlvbiwgbW9uaXRvcik7DQoJCQl9DQoJCX0sIG5ldyBOdWxsUHJvZ3Jlc3NNb25p
+dG9yKCkpOw0KDQoJCUpvYiB3b3Jrc3BhY2VKb2IgPSBuZXcgV29ya3NwYWNlSm9iKCJDcmVhdGUg
+RmFjZXRzLi4uIikgew0KDQoJCQlAT3ZlcnJpZGUNCgkJCXB1YmxpYyBJU3RhdHVzIHJ1bkluV29y
+a3NwYWNlKElQcm9ncmVzc01vbml0b3IgbW9uaXRvcikgdGhyb3dzIENvcmVFeGNlcHRpb24gew0K
+CQkJCUlGYWNldGVkUHJvamVjdCBmUHJvamVjdCA9IFByb2plY3RGYWNldHNNYW5hZ2VyLmNyZWF0
+ZShwcm9qZWN0KTsNCgkJCQlTZXQ8QWN0aW9uPiBhY3Rpb25zID0gbmV3IEhhc2hTZXQ8QWN0aW9u
+PigpOw0KCQkJCWFjdGlvbnMuYWRkKHNldHVwSmF2YUluc3RhbGxBY3Rpb24oKSk7DQoJCQkJYWN0
+aW9ucy5hZGQoc2V0dXBFamJJbnN0YWxsQWN0aW9uKCkpOw0KCQkJCWZQcm9qZWN0Lm1vZGlmeShh
+Y3Rpb25zLCBtb25pdG9yKTsNCgkJCQlyZXR1cm4gU3RhdHVzLk9LX1NUQVRVUzsNCgkJCX0NCgkJ
+fTsNCgkJSm9iLmdldEpvYk1hbmFnZXIoKS5qb2luKFJlc291cmNlc1BsdWdpbi5GQU1JTFlfQVVU
+T19CVUlMRCwgbmV3IE51bGxQcm9ncmVzc01vbml0b3IoKSk7DQoJCXdvcmtzcGFjZUpvYi5zY2hl
+ZHVsZSgpOw0KCQl3b3Jrc3BhY2VKb2Iuam9pbigpOw0KCQlyZXR1cm4gUHJvamVjdEZhY2V0c01h
+bmFnZXIuY3JlYXRlKHByb2plY3QpOw0KCX0NCg0KCXByb3RlY3RlZCBzdGF0aWMgdm9pZCBkZWxl
+dGVQcm9qZWN0KGZpbmFsIFN0cmluZyBwcm9qZWN0TmFtZSkgdGhyb3dzIEludGVycnVwdGVkRXhj
+ZXB0aW9uIHsNCgkJSm9iIGRlbGV0ZUpvYiA9IG5ldyBXb3Jrc3BhY2VKb2IoIkRlbGV0ZSBwcm9q
+ZWN0IGpvYi4uLiIpIHsNCgkJCUBPdmVycmlkZQ0KCQkJcHVibGljIElTdGF0dXMgcnVuSW5Xb3Jr
+c3BhY2UoSVByb2dyZXNzTW9uaXRvciBtb25pdG9yKSB0aHJvd3MgQ29yZUV4Y2VwdGlvbiB7DQoJ
+CQkJUmVzb3VyY2VzUGx1Z2luLmdldFdvcmtzcGFjZSgpLmdldFJvb3QoKS5nZXRQcm9qZWN0KHBy
+b2plY3ROYW1lKS5kZWxldGUodHJ1ZSwgbW9uaXRvcik7DQoJCQkJcmV0dXJuIFN0YXR1cy5PS19T
+VEFUVVM7DQoJCQl9DQoJCX07DQoJCWRlbGV0ZUpvYi5zZXRSdWxlKFJlc291cmNlc1BsdWdpbi5n
+ZXRXb3Jrc3BhY2UoKS5nZXRSb290KCkpOw0KCQlkZWxldGVKb2Iuc2NoZWR1bGUoKTsNCgkJZGVs
+ZXRlSm9iLmpvaW4oKTsNCgl9DQoNCglwdWJsaWMgc3RhdGljIElGYWNldGVkUHJvamVjdC5BY3Rp
+b24gc2V0dXBFamJJbnN0YWxsQWN0aW9uKCkgew0KCQlJRGF0YU1vZGVsIGVqYkZhY2V0SW5zdGFs
+bERhdGFNb2RlbCA9IERhdGFNb2RlbEZhY3RvcnkuY3JlYXRlRGF0YU1vZGVsKG5ldyBFamJGYWNl
+dEluc3RhbGxEYXRhTW9kZWxQcm92aWRlcigpKTsNCgkJZWpiRmFjZXRJbnN0YWxsRGF0YU1vZGVs
+LnNldFByb3BlcnR5KElFamJGYWNldEluc3RhbGxEYXRhTW9kZWxQcm9wZXJ0aWVzLkNPTkZJR19G
+T0xERVIsICJlamJNb2R1bGUiKTsNCgkJZWpiRmFjZXRJbnN0YWxsRGF0YU1vZGVsLnNldFByb3Bl
+cnR5KElFamJGYWNldEluc3RhbGxEYXRhTW9kZWxQcm9wZXJ0aWVzLkdFTkVSQVRFX0RELCB0cnVl
+KTsNCgkJSVByb2plY3RGYWNldFZlcnNpb24gd2ViZmFjZXR2ZXJzaW9uID0gUHJvamVjdEZhY2V0
+c01hbmFnZXIuZ2V0UHJvamVjdEZhY2V0KCJqc3QuZWpiIikuZ2V0VmVyc2lvbigiMy4wIik7DQoJ
+CUlGYWNldGVkUHJvamVjdC5BY3Rpb24gYWN0aW9uID0gbmV3IElGYWNldGVkUHJvamVjdC5BY3Rp
+b24oSUZhY2V0ZWRQcm9qZWN0LkFjdGlvbi5UeXBlLklOU1RBTEwsDQoJCQkJd2ViZmFjZXR2ZXJz
+aW9uLCBlamJGYWNldEluc3RhbGxEYXRhTW9kZWwpOw0KCQlyZXR1cm4gYWN0aW9uOw0KCX0NCg0K
+CXB1YmxpYyBzdGF0aWMgSUZhY2V0ZWRQcm9qZWN0LkFjdGlvbiBzZXR1cEphdmFJbnN0YWxsQWN0
+aW9uKCkgew0KCQlJUHJvamVjdEZhY2V0VmVyc2lvbiBqYXZhZmFjZXR2ZXJzaW9uID0gUHJvamVj
+dEZhY2V0c01hbmFnZXIuZ2V0UHJvamVjdEZhY2V0KCJqc3QuamF2YSIpLmdldFZlcnNpb24oIjUu
+MCIpOw0KCQlJRGF0YU1vZGVsIGphdmFGYWNldEluc3RhbGxEYXRhTW9kZWwgPSBEYXRhTW9kZWxG
+YWN0b3J5DQoJCQkJLmNyZWF0ZURhdGFNb2RlbChuZXcgSmF2YUZhY2V0SW5zdGFsbERhdGFNb2Rl
+bFByb3ZpZGVyKCkpOw0KCQlqYXZhRmFjZXRJbnN0YWxsRGF0YU1vZGVsLnNldFByb3BlcnR5KElK
+YXZhRmFjZXRJbnN0YWxsRGF0YU1vZGVsUHJvcGVydGllcy5TT1VSQ0VfRk9MREVSX05BTUUsICJl
+amJNb2R1bGUiKTsNCgkJSUZhY2V0ZWRQcm9qZWN0LkFjdGlvbiBhY3Rpb24gPSBuZXcgSUZhY2V0
+ZWRQcm9qZWN0LkFjdGlvbihJRmFjZXRlZFByb2plY3QuQWN0aW9uLlR5cGUuSU5TVEFMTCwNCgkJ
+CQlqYXZhZmFjZXR2ZXJzaW9uLCBqYXZhRmFjZXRJbnN0YWxsRGF0YU1vZGVsKTsNCgkJcmV0dXJu
+IGFjdGlvbjsNCgl9DQoNCn0=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>109884</attachid>
+            <date>2008-08-13 06:20:00 -0400</date>
+            <delta_ts>2008-08-13 11:29:43 -0400</delta_ts>
+            <desc>Patch for the test case</desc>
+            <filename>RegisterMergedModelProviderTest.patch</filename>
+            <type>text/plain</type>
+            <size>2831</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUu
+dGVzdHMNCkluZGV4OiBqMmVlLXRlc3RzL29yZy9lY2xpcHNlL2pzdC9qZWUvbW9kZWwvdGVzdHMv
+UmVnaXN0ZXJNZXJnZWRNb2RlbFByb3ZpZGVyVGVzdC5qYXZhDQo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmls
+ZTogL2N2c3Jvb3Qvd2VidG9vbHMvamVldG9vbHMvdGVzdHMvb3JnLmVjbGlwc2UuanN0LmoyZWUu
+dGVzdHMvajJlZS10ZXN0cy9vcmcvZWNsaXBzZS9qc3QvamVlL21vZGVsL3Rlc3RzL1JlZ2lzdGVy
+TWVyZ2VkTW9kZWxQcm92aWRlclRlc3QuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMw0K
+ZGlmZiAtdSAtcjEuMyBSZWdpc3Rlck1lcmdlZE1vZGVsUHJvdmlkZXJUZXN0LmphdmENCi0tLSBq
+MmVlLXRlc3RzL29yZy9lY2xpcHNlL2pzdC9qZWUvbW9kZWwvdGVzdHMvUmVnaXN0ZXJNZXJnZWRN
+b2RlbFByb3ZpZGVyVGVzdC5qYXZhCTI1IE1hciAyMDA4IDExOjU0OjI3IC0wMDAwCTEuMw0KKysr
+IGoyZWUtdGVzdHMvb3JnL2VjbGlwc2UvanN0L2plZS9tb2RlbC90ZXN0cy9SZWdpc3Rlck1lcmdl
+ZE1vZGVsUHJvdmlkZXJUZXN0LmphdmEJMTMgQXVnIDIwMDggMTA6MTg6MTIgLTAwMDANCkBAIC0x
+NSwxMCArMTUsMTIgQEANCiANCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVBy
+b2plY3Q7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qMmVlLm1vZGVsLklNb2RlbFByb3ZpZGVy
+Ow0KK2ltcG9ydCBvcmcuZWNsaXBzZS5qc3QuajJlZS5tb2RlbC5JTW9kZWxQcm92aWRlckZhY3Rv
+cnk7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qMmVlLm1vZGVsLk1vZGVsUHJvdmlkZXJNYW5h
+Z2VyOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5qc3QuamF2YWVlLmVqYi5FSkJKYXI7DQogaW1wb3J0
+IG9yZy5lY2xpcHNlLmpzdC5qZWUubW9kZWwuaW50ZXJuYWwuRUpCM01lcmdlZE1vZGVsUHJvdmlk
+ZXI7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qZWUubW9kZWwuaW50ZXJuYWwuRWpiM01lcmdl
+ZE1vZGVsUHJvdmlkZXJGYWN0b3J5Ow0KK2ltcG9ydCBvcmcuZWNsaXBzZS53c3QuY29tbW9uLmNv
+bXBvbmVudGNvcmUucmVzb3VyY2VzLklWaXJ0dWFsQ29tcG9uZW50Ow0KIGltcG9ydCBvcmcuZWNs
+aXBzZS53c3QuY29tbW9uLnByb2plY3QuZmFjZXQuY29yZS5JUHJvamVjdEZhY2V0VmVyc2lvbjsN
+CiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LmNvbW1vbi5wcm9qZWN0LmZhY2V0LmNvcmUuUHJvamVj
+dEZhY2V0c01hbmFnZXI7DQogDQpAQCAtMzUsMTcgKzM3LDE0IEBADQogCQlyZXR1cm4gc3VpdGU7
+DQogCX0NCiANCi0JLy8gQEJlZm9yZQ0KIAlwdWJsaWMgdm9pZCBzZXRVcCgpIHRocm93cyBFeGNl
+cHRpb24gew0KIAkJZml4dHVyZSA9IEFic3RyYWN0VGVzdC5jcmVhdGVFamJQcm9qZWN0KFJlZ2lz
+dGVyTWVyZ2VkTW9kZWxQcm92aWRlclRlc3QuY2xhc3MuZ2V0TmFtZSgpKS5nZXRQcm9qZWN0KCk7
+DQogCX0NCiANCi0JLy8gQEFmdGVyDQogCXB1YmxpYyB2b2lkIHRlYXJEb3duKCkgdGhyb3dzIEV4
+Y2VwdGlvbiB7DQogCQlBYnN0cmFjdFRlc3QuZGVsZXRlUHJvamVjdChSZWdpc3Rlck1lcmdlZE1v
+ZGVsUHJvdmlkZXJUZXN0LmNsYXNzLmdldE5hbWUoKSk7DQogCX0NCiANCi0JLy8gQFRlc3QNCiAJ
+cHVibGljIHZvaWQgdGVzdFJlZ2lzdGVyKCkgew0KIAkJSVByb2plY3RGYWNldFZlcnNpb24gdmVy
+c2lvbiA9IFByb2plY3RGYWNldHNNYW5hZ2VyLmdldFByb2plY3RGYWNldCgianN0LmVqYiIpLmdl
+dFZlcnNpb24oIjMuMCIpOw0KIAkJSU1vZGVsUHJvdmlkZXIgb2xkUHJvdmlkZXIgPSBNb2RlbFBy
+b3ZpZGVyTWFuYWdlci5nZXRNb2RlbFByb3ZpZGVyKGdldEZpeHR1cmUoKSk7DQpAQCAtNTgsNiAr
+NTcsMjggQEANCiAJCWFzc2VydFRydWUoRUpCSmFyLmNsYXNzLmlzSW5zdGFuY2UocHJvdmlkZXIu
+Z2V0TW9kZWxPYmplY3QoKSkpOw0KIAl9DQogDQorCS8qKg0KKwkgKiBDYWxsIHJlZ2lzdGVyIG1l
+dGhvZCBmaXJzdCB3aXRob3V0IGNhbGxpbmcgZ2V0TW9kZWxQcm92aWRlciBtZXRob2QgYmVmb3Jl
+DQorCSAqIHRoYXQuIFRlc3QgY2FzZSBmb3IgYnVnIFsyMTQxMzZdDQorCSAqLw0KKwlwdWJsaWMg
+dm9pZCB0ZXN0Q2FsbFJlZ2lzdGVyTWV0aG9kRmlyc3QoKSB7DQorCQlJUHJvamVjdEZhY2V0VmVy
+c2lvbiB2ZXJzaW9uID0gUHJvamVjdEZhY2V0c01hbmFnZXIuZ2V0UHJvamVjdEZhY2V0KCJqc3Qu
+ZWpiIikuZ2V0VmVyc2lvbigiMy4wIik7DQorCQlNb2RlbFByb3ZpZGVyTWFuYWdlci5yZWdpc3Rl
+clByb3ZpZGVyKG5ldyBNeU1vZGVsUHJvdmlkZXJGYWN0b3J5KCksIHZlcnNpb24sICIzIik7DQor
+CQlJTW9kZWxQcm92aWRlciBwcm92aWRlciA9IE1vZGVsUHJvdmlkZXJNYW5hZ2VyLmdldE1vZGVs
+UHJvdmlkZXIoZ2V0Rml4dHVyZSgpKTsNCisJCWFzc2VydE51bGwocHJvdmlkZXIpOw0KKwl9DQor
+DQorCXByaXZhdGUgc3RhdGljIGNsYXNzIE15TW9kZWxQcm92aWRlckZhY3RvcnkgaW1wbGVtZW50
+cyBJTW9kZWxQcm92aWRlckZhY3Rvcnkgew0KKw0KKwkJcHVibGljIElNb2RlbFByb3ZpZGVyIGNy
+ZWF0ZShJUHJvamVjdCBwcm9qZWN0KSB7DQorCQkJcmV0dXJuIG51bGw7DQorCQl9DQorDQorCQlw
+dWJsaWMgSU1vZGVsUHJvdmlkZXIgY3JlYXRlKElWaXJ0dWFsQ29tcG9uZW50IGNvbXBvbmVudCkg
+ew0KKwkJCXJldHVybiBudWxsOw0KKwkJfQ0KKwl9DQorDQogCXByaXZhdGUgSVByb2plY3QgZ2V0
+Rml4dHVyZSgpIHsNCiAJCXJldHVybiBmaXh0dXJlOw0KIAl9DQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>109899</attachid>
+            <date>2008-08-13 11:29:00 -0400</date>
+            <delta_ts>2008-08-13 11:29:43 -0400</delta_ts>
+            <desc>Second patch for the test case</desc>
+            <filename>RegisterProviderPatch2.patch</filename>
+            <type>text/plain</type>
+            <size>3029</size>
+            <attacher name="kiril mitov">thebravoman</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmoyZWUu
+dGVzdHMNCkluZGV4OiBqMmVlLXRlc3RzL29yZy9lY2xpcHNlL2pzdC9qZWUvbW9kZWwvdGVzdHMv
+UmVnaXN0ZXJNZXJnZWRNb2RlbFByb3ZpZGVyVGVzdC5qYXZhDQo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmls
+ZTogL2N2c3Jvb3Qvd2VidG9vbHMvamVldG9vbHMvdGVzdHMvb3JnLmVjbGlwc2UuanN0LmoyZWUu
+dGVzdHMvajJlZS10ZXN0cy9vcmcvZWNsaXBzZS9qc3QvamVlL21vZGVsL3Rlc3RzL1JlZ2lzdGVy
+TWVyZ2VkTW9kZWxQcm92aWRlclRlc3QuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMw0K
+ZGlmZiAtdSAtcjEuMyBSZWdpc3Rlck1lcmdlZE1vZGVsUHJvdmlkZXJUZXN0LmphdmENCi0tLSBq
+MmVlLXRlc3RzL29yZy9lY2xpcHNlL2pzdC9qZWUvbW9kZWwvdGVzdHMvUmVnaXN0ZXJNZXJnZWRN
+b2RlbFByb3ZpZGVyVGVzdC5qYXZhCTI1IE1hciAyMDA4IDExOjU0OjI3IC0wMDAwCTEuMw0KKysr
+IGoyZWUtdGVzdHMvb3JnL2VjbGlwc2UvanN0L2plZS9tb2RlbC90ZXN0cy9SZWdpc3Rlck1lcmdl
+ZE1vZGVsUHJvdmlkZXJUZXN0LmphdmEJMTMgQXVnIDIwMDggMTU6MjY6MzcgLTAwMDANCkBAIC0x
+NSwxMCArMTUsMTIgQEANCiANCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuSVBy
+b2plY3Q7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qMmVlLm1vZGVsLklNb2RlbFByb3ZpZGVy
+Ow0KK2ltcG9ydCBvcmcuZWNsaXBzZS5qc3QuajJlZS5tb2RlbC5JTW9kZWxQcm92aWRlckZhY3Rv
+cnk7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qMmVlLm1vZGVsLk1vZGVsUHJvdmlkZXJNYW5h
+Z2VyOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5qc3QuamF2YWVlLmVqYi5FSkJKYXI7DQogaW1wb3J0
+IG9yZy5lY2xpcHNlLmpzdC5qZWUubW9kZWwuaW50ZXJuYWwuRUpCM01lcmdlZE1vZGVsUHJvdmlk
+ZXI7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmpzdC5qZWUubW9kZWwuaW50ZXJuYWwuRWpiM01lcmdl
+ZE1vZGVsUHJvdmlkZXJGYWN0b3J5Ow0KK2ltcG9ydCBvcmcuZWNsaXBzZS53c3QuY29tbW9uLmNv
+bXBvbmVudGNvcmUucmVzb3VyY2VzLklWaXJ0dWFsQ29tcG9uZW50Ow0KIGltcG9ydCBvcmcuZWNs
+aXBzZS53c3QuY29tbW9uLnByb2plY3QuZmFjZXQuY29yZS5JUHJvamVjdEZhY2V0VmVyc2lvbjsN
+CiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LmNvbW1vbi5wcm9qZWN0LmZhY2V0LmNvcmUuUHJvamVj
+dEZhY2V0c01hbmFnZXI7DQogDQpAQCAtMzUsMTcgKzM3LDE0IEBADQogCQlyZXR1cm4gc3VpdGU7
+DQogCX0NCiANCi0JLy8gQEJlZm9yZQ0KIAlwdWJsaWMgdm9pZCBzZXRVcCgpIHRocm93cyBFeGNl
+cHRpb24gew0KIAkJZml4dHVyZSA9IEFic3RyYWN0VGVzdC5jcmVhdGVFamJQcm9qZWN0KFJlZ2lz
+dGVyTWVyZ2VkTW9kZWxQcm92aWRlclRlc3QuY2xhc3MuZ2V0TmFtZSgpKS5nZXRQcm9qZWN0KCk7
+DQogCX0NCiANCi0JLy8gQEFmdGVyDQogCXB1YmxpYyB2b2lkIHRlYXJEb3duKCkgdGhyb3dzIEV4
+Y2VwdGlvbiB7DQogCQlBYnN0cmFjdFRlc3QuZGVsZXRlUHJvamVjdChSZWdpc3Rlck1lcmdlZE1v
+ZGVsUHJvdmlkZXJUZXN0LmNsYXNzLmdldE5hbWUoKSk7DQogCX0NCiANCi0JLy8gQFRlc3QNCiAJ
+cHVibGljIHZvaWQgdGVzdFJlZ2lzdGVyKCkgew0KIAkJSVByb2plY3RGYWNldFZlcnNpb24gdmVy
+c2lvbiA9IFByb2plY3RGYWNldHNNYW5hZ2VyLmdldFByb2plY3RGYWNldCgianN0LmVqYiIpLmdl
+dFZlcnNpb24oIjMuMCIpOw0KIAkJSU1vZGVsUHJvdmlkZXIgb2xkUHJvdmlkZXIgPSBNb2RlbFBy
+b3ZpZGVyTWFuYWdlci5nZXRNb2RlbFByb3ZpZGVyKGdldEZpeHR1cmUoKSk7DQpAQCAtNTgsNiAr
+NTcsMzIgQEANCiAJCWFzc2VydFRydWUoRUpCSmFyLmNsYXNzLmlzSW5zdGFuY2UocHJvdmlkZXIu
+Z2V0TW9kZWxPYmplY3QoKSkpOw0KIAl9DQogDQorCS8qKg0KKwkgKiBDYWxsIHJlZ2lzdGVyIG1l
+dGhvZCBmaXJzdCB3aXRob3V0IGNhbGxpbmcgZ2V0TW9kZWxQcm92aWRlciBtZXRob2QgYmVmb3Jl
+DQorCSAqIHRoYXQuIFRlc3QgY2FzZSBmb3IgYnVnIFsyMTQxMzZdDQorCSAqLw0KKwlwdWJsaWMg
+dm9pZCB0ZXN0Q2FsbFJlZ2lzdGVyTWV0aG9kRmlyc3QoKSB7DQorCQlJUHJvamVjdEZhY2V0VmVy
+c2lvbiB2ZXJzaW9uID0gUHJvamVjdEZhY2V0c01hbmFnZXIuZ2V0UHJvamVjdEZhY2V0KCJqc3Qu
+ZWpiIikuZ2V0VmVyc2lvbigiMy4wIik7DQorCQlNb2RlbFByb3ZpZGVyTWFuYWdlci5yZWdpc3Rl
+clByb3ZpZGVyKG5ldyBNeU1vZGVsUHJvdmlkZXJGYWN0b3J5KCksIHZlcnNpb24sICIzIik7DQor
+CQlJTW9kZWxQcm92aWRlciBwcm92aWRlciA9IE1vZGVsUHJvdmlkZXJNYW5hZ2VyLmdldE1vZGVs
+UHJvdmlkZXIoZ2V0Rml4dHVyZSgpKTsNCisJCWFzc2VydE51bGwocHJvdmlkZXIpOw0KKwkJDQor
+CQkvLyByZWdpc3RlciB0aGUgcmVhbCBtb2RlbCBwcm92aWRlciBzbyB0aGF0IHRoaXMgdGVzdCBk
+b2VzIG5vdCBhZmZlY3QNCisJCS8vIHRoZSBhdGhlciB0ZXN0cy4NCisJCU1vZGVsUHJvdmlkZXJN
+YW5hZ2VyLnJlZ2lzdGVyUHJvdmlkZXIobmV3IEVqYjNNZXJnZWRNb2RlbFByb3ZpZGVyRmFjdG9y
+eSgpLCB2ZXJzaW9uLCAiMyIpOw0KKwl9DQorDQorCXByaXZhdGUgc3RhdGljIGNsYXNzIE15TW9k
+ZWxQcm92aWRlckZhY3RvcnkgaW1wbGVtZW50cyBJTW9kZWxQcm92aWRlckZhY3Rvcnkgew0KKw0K
+KwkJcHVibGljIElNb2RlbFByb3ZpZGVyIGNyZWF0ZShJUHJvamVjdCBwcm9qZWN0KSB7DQorCQkJ
+cmV0dXJuIG51bGw7DQorCQl9DQorDQorCQlwdWJsaWMgSU1vZGVsUHJvdmlkZXIgY3JlYXRlKElW
+aXJ0dWFsQ29tcG9uZW50IGNvbXBvbmVudCkgew0KKwkJCXJldHVybiBudWxsOw0KKwkJfQ0KKwl9
+DQorDQogCXByaXZhdGUgSVByb2plY3QgZ2V0Rml4dHVyZSgpIHsNCiAJCXJldHVybiBmaXh0dXJl
+Ow0KIAl9DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

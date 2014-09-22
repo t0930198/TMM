@@ -1,0 +1,306 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214340</bug_id>
+          
+          <creation_ts>2008-01-04 06:51:00 -0500</creation_ts>
+          <short_desc>[clean up] Bad enhanced for-loop for arrays which are fields</short_desc>
+          <delta_ts>2008-01-24 05:55:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>Sun</rep_platform>
+          <op_sys>Solaris</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>3.3.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alfred Nathaniel">alfred.nathaniel</reporter>
+          <assigned_to name="Benno Baumgartner">benno.baumgartner</assigned_to>
+          <cc>benno.baumgartner</cc>
+    
+    <cc>daniel_megert</cc>
+    
+    <cc>philippe_mulet</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="pmc_approved"
+          id="5091"
+          type_id="2"
+          status="+"
+          setter="philippe_mulet"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125645</commentid>
+    <comment_count>0</comment_count>
+    <who name="Alfred Nathaniel">alfred.nathaniel</who>
+    <bug_when>2008-01-04 06:51:29 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Create new class Foo as:
+
+class Foo
+{
+    int[] array = new int[3];
+
+    boolean same(Foo that) {
+        for ( int i = 0; i &lt; array.length; i++ ) {
+            if ( this.array[i] != that.array[i] )
+                return false;
+        }
+        return true;
+    }
+
+    static boolean same(Foo one, Foo two) {
+        for ( int i = 0; i &lt; one.array.length; i++ ) {
+            if ( one.array[i] != two.array[i] )
+                return false;
+        }
+        return true;
+    }
+}
+
+2. Applying Clean Up action &quot;Convert for loops to enhanced&quot; produces the following code:
+
+class Foo
+{
+    int[] array = new int[3];
+
+    boolean same(Foo that) {
+        for ( int element : array ) {
+            if ( element != element )
+                return false;
+        }
+        return true;
+    }
+
+    static boolean same(Foo one, Foo two) {
+        for ( int element : one.array ) {
+            if ( element != element )
+                return false;
+        }
+        return true;
+    }
+}
+
+3. This is clearly wrong as the comparison between different objects turns into self-comparison.
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126414</commentid>
+    <comment_count>1</comment_count>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-01-07 04:41:25 -0500</bug_when>
+    <thetext>reproduced in I20071213-1700</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127163</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86382</attachid>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-01-08 04:22:11 -0500</bug_when>
+    <thetext>Created attachment 86382
+fix</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127169</commentid>
+    <comment_count>3</comment_count>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-01-08 04:27:32 -0500</bug_when>
+    <thetext>fixed &gt; I20071213-1700</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127170</commentid>
+    <comment_count>4</comment_count>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-01-08 04:29:53 -0500</bug_when>
+    <thetext>Philippe? Ok for 3.3.2?
+
+Silent semantic change of a quite common code pattern. Low risk fix.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131309</commentid>
+    <comment_count>5</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-01-15 05:33:47 -0500</bug_when>
+    <thetext>+1 for 3.3.2</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131354</commentid>
+    <comment_count>6</comment_count>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-01-15 06:26:50 -0500</bug_when>
+    <thetext>released fix into 3.3 maintenance stream
+
+Thanks for the bugreport Alfred</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137583</commentid>
+    <comment_count>7</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-24 05:43:51 -0500</bug_when>
+    <thetext>Starting verification...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137589</commentid>
+    <comment_count>8</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-24 05:55:36 -0500</bug_when>
+    <thetext>Verified in M20080123-0800.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86382</attachid>
+            <date>2008-01-08 04:22:00 -0500</date>
+            <delta_ts>2008-01-08 04:22:11 -0500</delta_ts>
+            <desc>fix</desc>
+            <filename>fix_214340.txt</filename>
+            <type>text/plain</type>
+            <size>6297</size>
+            <attacher name="Benno Baumgartner">benno.baumgartner</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LnVpLnRl
+c3RzDQpJbmRleDogdWkvb3JnL2VjbGlwc2UvamR0L3VpL3Rlc3RzL3F1aWNrZml4L0NvbnZlcnRG
+b3JMb29wUXVpY2tGaXhUZXN0LmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9l
+Y2xpcHNlL29yZy5lY2xpcHNlLmpkdC51aS50ZXN0cy91aS9vcmcvZWNsaXBzZS9qZHQvdWkvdGVz
+dHMvcXVpY2tmaXgvQ29udmVydEZvckxvb3BRdWlja0ZpeFRlc3QuamF2YSx2DQpyZXRyaWV2aW5n
+IHJldmlzaW9uIDEuMjkNCmRpZmYgLXUgLXIxLjI5IENvbnZlcnRGb3JMb29wUXVpY2tGaXhUZXN0
+LmphdmENCi0tLSB1aS9vcmcvZWNsaXBzZS9qZHQvdWkvdGVzdHMvcXVpY2tmaXgvQ29udmVydEZv
+ckxvb3BRdWlja0ZpeFRlc3QuamF2YQk5IE9jdCAyMDA3IDE0OjU5OjQ4IC0wMDAwCTEuMjkNCisr
+KyB1aS9vcmcvZWNsaXBzZS9qZHQvdWkvdGVzdHMvcXVpY2tmaXgvQ29udmVydEZvckxvb3BRdWlj
+a0ZpeFRlc3QuamF2YQk4IEphbiAyMDA4IDA5OjE4OjAyIC0wMDAwDQpAQCAtMSw1ICsxLDUgQEAN
+CiAvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKg0KLSAqIENvcHlyaWdodCAoYykgMjAwMCwgMjAwNyBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCisgKiBDb3B5cmlnaHQgKGMpIDIwMDAsIDIwMDgg
+SUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQogICogQWxsIHJpZ2h0cyByZXNlcnZlZC4gVGhp
+cyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscw0KICAqIGFyZSBtYWRlIGF2
+YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVibGljIExpY2Vuc2UgdjEu
+MA0KICAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9uLCBhbmQgaXMgYXZhaWxh
+YmxlIGF0DQpAQCAtMTg3Nyw2ICsxODc3LDg2IEBADQogCQlhc3NlcnRFcXVhbFN0cmluZyhwcmV2
+aWV3MSwgZXhwZWN0ZWQpOw0KIAl9DQogCQ0KKwlwdWJsaWMgdm9pZCB0ZXN0QnVnMjE0MzQwXzEo
+KSB0aHJvd3MgRXhjZXB0aW9uIHsNCisJCUlQYWNrYWdlRnJhZ21lbnQgcGFjazE9IGZTb3VyY2VG
+b2xkZXIuY3JlYXRlUGFja2FnZUZyYWdtZW50KCJ0ZXN0MSIsIGZhbHNlLCBudWxsKTsNCisJCVN0
+cmluZ0J1ZmZlciBidWY9IG5ldyBTdHJpbmdCdWZmZXIoKTsNCisJCWJ1Zi5hcHBlbmQoInBhY2th
+Z2UgdGVzdDE7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoInB1YmxpYyBjbGFzcyBFMSB7XG4iKTsNCisJ
+CWJ1Zi5hcHBlbmQoIiAgICBpbnRbXSBhcnJheSA9IG5ldyBpbnRbM107XG4iKTsNCisJCWJ1Zi5h
+cHBlbmQoIlxuIik7DQorCQlidWYuYXBwZW5kKCIgICAgYm9vbGVhbiBzYW1lKEUxIHRoYXQpIHtc
+biIpOw0KKwkJYnVmLmFwcGVuZCgiICAgICAgICBmb3IgKGludCBpID0gMDsgaSA8IGFycmF5Lmxl
+bmd0aDsgaSsrKSB7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICAgICAgICAgIGlmICh0aGlzLmFy
+cmF5W2ldICE9IHRoYXQuYXJyYXlbaV0pXG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICAgICAgICAg
+ICAgICByZXR1cm4gZmFsc2U7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICAgICAgfVxuIik7DQor
+CQlidWYuYXBwZW5kKCIgICAgICAgIHJldHVybiB0cnVlO1xuIik7DQorCQlidWYuYXBwZW5kKCIg
+ICAgfVxuIik7DQorCQlidWYuYXBwZW5kKCJcbiIpOw0KKwkJSUNvbXBpbGF0aW9uVW5pdCBjdT0g
+cGFjazEuY3JlYXRlQ29tcGlsYXRpb25Vbml0KCJFMS5qYXZhIiwgYnVmLnRvU3RyaW5nKCksIGZh
+bHNlLCBudWxsKTsNCisNCisJCWFzc2VydEZhbHNlKHNhdGlzZmllc1ByZWNvbmRpdGlvbihjdSkp
+Ow0KKwl9DQorDQorCXB1YmxpYyB2b2lkIHRlc3RCdWcyMTQzNDBfMigpIHRocm93cyBFeGNlcHRp
+b24gew0KKwkJSVBhY2thZ2VGcmFnbWVudCBwYWNrMT0gZlNvdXJjZUZvbGRlci5jcmVhdGVQYWNr
+YWdlRnJhZ21lbnQoInRlc3QxIiwgZmFsc2UsIG51bGwpOw0KKwkJU3RyaW5nQnVmZmVyIGJ1Zj0g
+bmV3IFN0cmluZ0J1ZmZlcigpOw0KKwkJYnVmLmFwcGVuZCgicGFja2FnZSB0ZXN0MTtcbiIpOw0K
+KwkJYnVmLmFwcGVuZCgicHVibGljIGNsYXNzIEUxIHtcbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAg
+IGludFtdIGFycmF5ID0gbmV3IGludFszXTtcbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAgIHN0YXRp
+YyBib29sZWFuIHNhbWUoRTEgb25lLCBFMSB0d28pIHtcbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAg
+ICAgICBmb3IgKGludCBpID0gMDsgaSA8IG9uZS5hcnJheS5sZW5ndGg7IGkrKykge1xuIik7DQor
+CQlidWYuYXBwZW5kKCIgICAgICAgICAgICBpZiAob25lLmFycmF5W2ldICE9IHR3by5hcnJheVtp
+XSlcbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAgICAgICAgICAgICAgIHJldHVybiBmYWxzZTtcbiIp
+Ow0KKwkJYnVmLmFwcGVuZCgiICAgICAgICB9XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICAgICAg
+cmV0dXJuIHRydWU7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICB9XG4iKTsNCisJCWJ1Zi5hcHBl
+bmQoIn1cbiIpOw0KKwkJYnVmLmFwcGVuZCgiXG4iKTsNCisJCUlDb21waWxhdGlvblVuaXQgY3U9
+IHBhY2sxLmNyZWF0ZUNvbXBpbGF0aW9uVW5pdCgiRTEuamF2YSIsIGJ1Zi50b1N0cmluZygpLCBm
+YWxzZSwgbnVsbCk7DQorDQorCQlhc3NlcnRGYWxzZShzYXRpc2ZpZXNQcmVjb25kaXRpb24oY3Up
+KTsNCisJfQ0KKw0KKwlwdWJsaWMgdm9pZCB0ZXN0QnVnMjE0MzQwXzMoKSB0aHJvd3MgRXhjZXB0
+aW9uIHsNCisJCUlQYWNrYWdlRnJhZ21lbnQgcGFjazE9IGZTb3VyY2VGb2xkZXIuY3JlYXRlUGFj
+a2FnZUZyYWdtZW50KCJ0ZXN0MSIsIGZhbHNlLCBudWxsKTsNCisJCVN0cmluZ0J1ZmZlciBidWY9
+IG5ldyBTdHJpbmdCdWZmZXIoKTsNCisJCWJ1Zi5hcHBlbmQoInBhY2thZ2UgdGVzdDE7XG4iKTsN
+CisJCWJ1Zi5hcHBlbmQoInB1YmxpYyBjbGFzcyBFMSB7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAg
+ICBpbnRbXSBhcnJheSA9IG5ldyBpbnRbM107XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICBzdGF0
+aWMgYm9vbGVhbiBzYW1lKEUxIG9uZSwgRTEgdHdvKSB7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAg
+ICAgICAgZm9yIChpbnQgaSA9IDA7IGkgPCBvbmUuYXJyYXkubGVuZ3RoOyBpKyspIHtcbiIpOw0K
+KwkJYnVmLmFwcGVuZCgiICAgICAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKG9uZS5hcnJheVtp
+XSk7XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIiAgICAgICAgfVxuIik7DQorCQlidWYuYXBwZW5kKCIg
+ICAgICAgIHJldHVybiB0cnVlO1xuIik7DQorCQlidWYuYXBwZW5kKCIgICAgfVxuIik7DQorCQli
+dWYuYXBwZW5kKCJ9XG4iKTsNCisJCWJ1Zi5hcHBlbmQoIlxuIik7DQorCQlJQ29tcGlsYXRpb25V
+bml0IGN1PSBwYWNrMS5jcmVhdGVDb21waWxhdGlvblVuaXQoIkUxLmphdmEiLCBidWYudG9TdHJp
+bmcoKSwgZmFsc2UsIG51bGwpOw0KKw0KKwkJTGlzdCBwcm9wb3NhbHM9IGZldGNoQ29udmVydGlu
+Z1Byb3Bvc2FsKGJ1ZiwgY3UpOw0KKwkJDQorCQlhc3NlcnROb3ROdWxsKGZDb252ZXJ0TG9vcFBy
+b3Bvc2FsKTsNCisNCisJCWFzc2VydENvcnJlY3RMYWJlbHMocHJvcG9zYWxzKTsNCisNCisJCVN0
+cmluZyBwcmV2aWV3MT0gZ2V0UHJldmlld0NvbnRlbnQoZkNvbnZlcnRMb29wUHJvcG9zYWwpOw0K
+Kw0KKwkJYnVmPSBuZXcgU3RyaW5nQnVmZmVyKCk7DQorCQlidWYuYXBwZW5kKCJwYWNrYWdlIHRl
+c3QxO1xuIik7DQorCQlidWYuYXBwZW5kKCJwdWJsaWMgY2xhc3MgRTEge1xuIik7DQorCQlidWYu
+YXBwZW5kKCIgICAgaW50W10gYXJyYXkgPSBuZXcgaW50WzNdO1xuIik7DQorCQlidWYuYXBwZW5k
+KCIgICAgc3RhdGljIGJvb2xlYW4gc2FtZShFMSBvbmUsIEUxIHR3bykge1xuIik7DQorCQlidWYu
+YXBwZW5kKCIgICAgICAgIGZvciAoaW50IGVsZW1lbnQgOiBvbmUuYXJyYXkpIHtcbiIpOw0KKwkJ
+YnVmLmFwcGVuZCgiICAgICAgICAgICAgU3lzdGVtLm91dC5wcmludGxuKGVsZW1lbnQpO1xuIik7
+DQorCQlidWYuYXBwZW5kKCIgICAgICAgIH1cbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAgICAgICBy
+ZXR1cm4gdHJ1ZTtcbiIpOw0KKwkJYnVmLmFwcGVuZCgiICAgIH1cbiIpOw0KKwkJYnVmLmFwcGVu
+ZCgifVxuIik7DQorCQlidWYuYXBwZW5kKCJcbiIpOw0KKwkJU3RyaW5nIGV4cGVjdGVkPSBidWYu
+dG9TdHJpbmcoKTsNCisJCWFzc2VydEVxdWFsU3RyaW5nKHByZXZpZXcxLCBleHBlY3RlZCk7DQor
+CX0NCisJDQogCXByaXZhdGUgYm9vbGVhbiBzYXRpc2ZpZXNQcmVjb25kaXRpb24oSUNvbXBpbGF0
+aW9uVW5pdCBjdSkgew0KIAkJRm9yU3RhdGVtZW50IHN0YXRlbWVudD0gZ2V0Rm9yU3RhdGVtZW50
+KGN1KTsNCiAJCUNvbnZlcnRMb29wT3BlcmF0aW9uIG9wPSBuZXcgQ29udmVydEZvckxvb3BPcGVy
+YXRpb24oc3RhdGVtZW50KTsNCiNQIG9yZy5lY2xpcHNlLmpkdC51aQ0KSW5kZXg6IGNvcmUgZXh0
+ZW5zaW9uL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb3JleHQvZml4L0NvbnZlcnRGb3JMb29w
+T3BlcmF0aW9uLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29y
+Zy5lY2xpcHNlLmpkdC51aS9jb3JlIGV4dGVuc2lvbi9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwv
+Y29yZXh0L2ZpeC9Db252ZXJ0Rm9yTG9vcE9wZXJhdGlvbi5qYXZhLHYNCnJldHJpZXZpbmcgcmV2
+aXNpb24gMS4yOQ0KZGlmZiAtdSAtcjEuMjkgQ29udmVydEZvckxvb3BPcGVyYXRpb24uamF2YQ0K
+LS0tIGNvcmUgZXh0ZW5zaW9uL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb3JleHQvZml4L0Nv
+bnZlcnRGb3JMb29wT3BlcmF0aW9uLmphdmEJOSBPY3QgMjAwNyAxNDo1OTo0MyAtMDAwMAkxLjI5
+DQorKysgY29yZSBleHRlbnNpb24vb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL2NvcmV4dC9maXgv
+Q29udmVydEZvckxvb3BPcGVyYXRpb24uamF2YQk4IEphbiAyMDA4IDA5OjE4OjAzIC0wMDAwDQpA
+QCAtMSw1ICsxLDUgQEANCiAvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KLSAqIENvcHlyaWdodCAo
+YykgMjAwMCwgMjAwNyBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCisgKiBDb3B5cmlnaHQg
+KGMpIDIwMDAsIDIwMDggSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQogICogQWxsIHJpZ2h0
+cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscw0K
+ICAqIGFyZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVi
+bGljIExpY2Vuc2UgdjEuMA0KICAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9u
+LCBhbmQgaXMgYXZhaWxhYmxlIGF0DQpAQCAtNDE1LDYgKzQxNSwxOCBAQA0KIAkJCQkJCQkNCiAJ
+CQkJCQkJQXJyYXlBY2Nlc3MgYXJyYXlBY2Nlc3M9IChBcnJheUFjY2Vzcylub2RlLmdldFBhcmVu
+dCgpOw0KIAkJCQkJCQlFeHByZXNzaW9uIGFycmF5PSBhcnJheUFjY2Vzcy5nZXRBcnJheSgpOw0K
+KwkJCQkJCQlpZiAoYXJyYXkgaW5zdGFuY2VvZiBRdWFsaWZpZWROYW1lKSB7DQorCQkJCQkJCQlp
+ZiAoIShmQXJyYXlBY2Nlc3MgaW5zdGFuY2VvZiBRdWFsaWZpZWROYW1lKSkNCisJCQkJCQkJCQl0
+aHJvdyBuZXcgSW52YWxpZEJvZHlFcnJvcigpOw0KKw0KKwkJCQkJCQkJSUJpbmRpbmcgdmFyQmlu
+ZGluZzE9ICgoUXVhbGlmaWVkTmFtZSkgYXJyYXkpLmdldFF1YWxpZmllcigpLnJlc29sdmVCaW5k
+aW5nKCk7DQorCQkJCQkJCQlpZiAodmFyQmluZGluZzEgPT0gbnVsbCkNCisJCQkJCQkJCQl0aHJv
+dyBuZXcgSW52YWxpZEJvZHlFcnJvcigpOw0KKw0KKwkJCQkJCQkJSUJpbmRpbmcgdmFyQmluZGlu
+ZzI9ICgoUXVhbGlmaWVkTmFtZSkgZkFycmF5QWNjZXNzKS5nZXRRdWFsaWZpZXIoKS5yZXNvbHZl
+QmluZGluZygpOw0KKwkJCQkJCQkJaWYgKCF2YXJCaW5kaW5nMS5lcXVhbHModmFyQmluZGluZzIp
+KQ0KKwkJCQkJCQkJCXRocm93IG5ldyBJbnZhbGlkQm9keUVycm9yKCk7DQorCQkJCQkJCX0NCiAJ
+CQkJCQkJDQogCQkJCQkJCUlCaW5kaW5nIGJpbmRpbmc9IGdldEJpbmRpbmcoYXJyYXkpOw0KIAkJ
+CQkJCQlpZiAoYmluZGluZyA9PSBudWxsKQ0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

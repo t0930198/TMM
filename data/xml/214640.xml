@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214640</bug_id>
+          
+          <creation_ts>2008-01-08 12:22:00 -0500</creation_ts>
+          <short_desc>[prov] [ui] ProvUI exception/status methods should take log hints</short_desc>
+          <delta_ts>2008-02-13 14:07:08 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="Susan McCourt ">susan</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127517</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 12:22:45 -0500</bug_when>
+    <thetext>ProvUI provides methods for handleException, reportStatus.
+These are good for encapsulating workarounds for the platform status handlers and such, but currently the methods automatically decide when a dialog vs. logging is appropriate based on the severity.  Clients should be able to override this.  For example, when a viewer element encounters certain kinds of errors, it should just log the problem vs. interrupt the user, depending on the nature of the exception.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127536</commentid>
+    <comment_count>1</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 12:34:24 -0500</bug_when>
+    <thetext>An alternate way to view this issue is:
+should errors always interrupt?  And things that don&apos;t warrant interrupting should instead be warnings? 
+
+For an example, see bug #212708, where the UI interrupts the user on an error during phase collect because the user was disconnected.  Should the engine have reported a warning or info status rather than error?  Or is it indeed contextual, where a failure in the update checker wouldn&apos;t be as bad as a disconnected failure on a user-initiated operation?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127675</commentid>
+    <comment_count>2</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-08 15:22:38 -0500</bug_when>
+    <thetext>My general experience is that it comes down to context. I typically think of three levels of interaction/intrusiveness:
+
+ - Daemon-type processes that generally operate outside user awareness. I.e., things that happen automatically or &quot;for free&quot;. Examples would be auto-refresh, auto-build, auto CVS sync, automatic update checks, etc.  With these processes you almost never want to intrude on the user, at most logging or even swallowing certain well understood exceptions.
+
+- Things initiated by the user, but then punted into the background (user jobs). These things want to have a way to get the user&apos;s attention when there are interesting results or problems, but you generally don&apos;t want a modal dialog in your face
+
+- Entirely user-driven processes, such as wizards, refactorings, long-running foreground operations that require user interaction. 
+
+At your level in the UI, you may know which of these groups you fall into and know how to report problems.  Any API that can be called programmatically can&apos;t determine the context and therefore doesn&apos;t know the appropriate status handling behaviour. At best they can clearly specify via severities and status codes what happened, and leave it up to the client to react accordingly.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1155463</commentid>
+    <comment_count>3</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-02-12 18:13:42 -0500</bug_when>
+    <thetext>For M6 I&apos;m going to change the ProvUI.reportStatus and handleException methods to take a parameter along the lines of StatusManager.LOG, etc...
+While doing this I&apos;m also going to provide more specific error text where it makes sense rather than always relying on the exception message as the top level message.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156206</commentid>
+    <comment_count>4</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-02-13 14:07:08 -0500</bug_when>
+    <thetext>Fixed in HEAD.  
+All errors are logged at a minimum.  Depending on the context, I may do more.
+
+- StatusManager.BLOCK (blocking dialog) is for serious errors that directly result from a user action.  Cases where the user has pushed a button or menu item expecting to see a dialog, and the dialog can&apos;t be shown for whatever reason.
+
+- StatusManager.SHOW (non-blocking dialog) is used for most errors that result from user operations, including those that allowed the user to continue working while the operation occurs in the background.
+
+- StatusManager.LOG is used when a non-user background operation has an error.  Meaning, the user didn&apos;t directly request the operation to occur.  This includes background updating, any background process failures in trying to populate viewers, etc.
+
+Also, in cases where it would be appropriate to use StatusManager.SHOW, but there is a local mechanism for reporting an error (in the status area of a wizard, or in the viewer content itself), the error is shown locally and only logged.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

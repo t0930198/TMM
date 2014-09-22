@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214604</bug_id>
+          
+          <creation_ts>2008-01-08 06:43:00 -0500</creation_ts>
+          <short_desc>[open type] Open Type dialog ignores changes to packages after the last . (full stop) was typed.</short_desc>
+          <delta_ts>2008-01-24 05:42:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.3.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Adam Bryzak">abryzak</reporter>
+          <assigned_to name="Markus Keller">markus_keller</assigned_to>
+          <cc>daniel_megert</cc>
+    
+    <cc>philippe_mulet</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="pmc_approved"
+          id="5125"
+          type_id="2"
+          status="+"
+          setter="philippe_mulet"
+    />
+    <flag name="review"
+          id="5132"
+          type_id="1"
+          status="+"
+          setter="daniel_megert"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127227</commentid>
+    <comment_count>0</comment_count>
+    <who name="Adam Bryzak">abryzak</who>
+    <bug_when>2008-01-08 06:43:51 -0500</bug_when>
+    <thetext>Build ID: M20071121-0800
+
+Steps To Reproduce:
+In the Java perspective:
+1. Open the Open Type dialog (Navigate -&gt; Open Type...)
+2. Type java.lang.String
+3. Replace any text before the last full stop
+
+Notice that the matching items list doesn&apos;t update with an text typed. 
+
+More information:
+This was tested on Eclipse 3.3.2 Stream Build running under OS X 10.5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127247</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-08 08:23:49 -0500</bug_when>
+    <thetext>This works for me. Note that each &apos;.&apos; has an implicit &apos;*&apos; in front of it i.e. if you have:
+    java.lang.String
+and then e.g. delete &apos;ng&apos; before the last &apos;.&apos; you&apos;ll still see the same stuff as before (or eventually more).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127741</commentid>
+    <comment_count>2</comment_count>
+    <who name="Adam Bryzak">abryzak</who>
+    <bug_when>2008-01-08 16:28:53 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; This works for me. Note that each &apos;.&apos; has an implicit &apos;*&apos; in front of it i.e.
+&gt; if you have:
+&gt;     java.lang.String
+&gt; and then e.g. delete &apos;ng&apos; before the last &apos;.&apos; you&apos;ll still see the same stuff
+&gt; as before (or eventually more).
+&gt; 
+
+It doesn&apos;t change for me if I add letters or completely change the stuff before the last &apos;.&apos;. After I type java.lang.String it shows that class in the matches, but if I then select all the text before the last &apos;.&apos; I can type some random stuff (like skjdhfjkd, making the full string skjdhfjkd.String) and the matches won&apos;t change.
+
+I just tested this on windows and it still happens.
+Version: 3.3.1.1
+Build id: M20071023-1652</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127934</commentid>
+    <comment_count>3</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-09 03:21:11 -0500</bug_when>
+    <thetext>I was testing with a 3.4 build where it works but can now reproduce using 3.3.x build. Most likely this got fixed in the 3.4 stream as a side-effect of fixing bug 176017 (see bug 202914 comment 1).
+
+Markus, please investigate whether there&apos;s a low-risk fix for 3.3.2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128045</commentid>
+    <comment_count>4</comment_count>
+      <attachid>86462</attachid>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-09 08:30:18 -0500</bug_when>
+    <thetext>Created attachment 86462
+Fix for R3_3_maintenance
+
+&gt; Most likely this got fixed in the 3.4 stream as a side-effect of fixing
+&gt; bug 176017 (see bug 202914 comment 1).
+Correct.
+
+Here&apos;s a fix. When reviewing the patch, please keep in mind that FilteredItemsSelectionDialog.ItemsFilter.isSubFilter(ItemsFilter) is *not* defined in reading order, i.e. a.isSubFilter(b) is true iff b is a sub-filter of a, and not vice-versa (see bug 205332).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131344</commentid>
+    <comment_count>5</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-15 06:16:58 -0500</bug_when>
+    <thetext>The Open type dialog stopps updating in some cases which is bad.
+Philippe, do you approve?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132156</commentid>
+    <comment_count>6</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-01-16 05:44:59 -0500</bug_when>
+    <thetext>+1 for 3.3.2 assuming the fix is low risk. OpenType behavior is quite important.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132207</commentid>
+    <comment_count>7</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-16 07:33:58 -0500</bug_when>
+    <thetext>Fixed in R3_3_maintenance.
+Available in M20080116-0800.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137579</commentid>
+    <comment_count>8</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-24 05:39:35 -0500</bug_when>
+    <thetext>Starting verification...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137580</commentid>
+    <comment_count>9</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-24 05:42:36 -0500</bug_when>
+    <thetext>Verified in M20080123-0800.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86462</attachid>
+            <date>2008-01-09 08:30:00 -0500</date>
+            <delta_ts>2008-01-09 08:30:18 -0500</delta_ts>
+            <desc>Fix for R3_3_maintenance</desc>
+            <filename>214604_3_3_maintenance_patch.txt</filename>
+            <type>text/plain</type>
+            <size>1771</size>
+            <attacher name="Markus Keller">markus_keller</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LnVpDQpJ
+bmRleDogdWkvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL3VpL2RpYWxvZ3MvRmlsdGVyZWRUeXBl
+c1NlbGVjdGlvbkRpYWxvZy5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNs
+aXBzZS9vcmcuZWNsaXBzZS5qZHQudWkvdWkvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL3VpL2Rp
+YWxvZ3MvRmlsdGVyZWRUeXBlc1NlbGVjdGlvbkRpYWxvZy5qYXZhLHYNCnJldHJpZXZpbmcgcmV2
+aXNpb24gMS4yNi4yLjINCmRpZmYgLXUgLXIxLjI2LjIuMiBGaWx0ZXJlZFR5cGVzU2VsZWN0aW9u
+RGlhbG9nLmphdmENCi0tLSB1aS9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvdWkvZGlhbG9ncy9G
+aWx0ZXJlZFR5cGVzU2VsZWN0aW9uRGlhbG9nLmphdmEJNyBKYW4gMjAwOCAxMzoyNDo1NiAtMDAw
+MAkxLjI2LjIuMg0KKysrIHVpL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC91aS9kaWFsb2dzL0Zp
+bHRlcmVkVHlwZXNTZWxlY3Rpb25EaWFsb2cuamF2YQk5IEphbiAyMDA4IDEzOjIyOjI2IC0wMDAw
+DQpAQCAtMTE3Myw3ICsxMTczLDE1IEBADQogCQkJCXJldHVybiBmYWxzZTsNCiAJCQlpZiAoZk15
+VHlwZUZpbHRlclZlcnNpb24gIT0gdHlwZUl0ZW1zRmlsdGVyLmdldE15VHlwZUZpbHRlclZlcnNp
+b24oKSkNCiAJCQkJcmV0dXJuIGZhbHNlOw0KLQkJCXJldHVybiBnZXRQYXR0ZXJuKCkuaW5kZXhP
+ZignLicsIGZpbHRlci5nZXRQYXR0ZXJuKCkubGVuZ3RoKCkpID09IC0xOw0KKwkJCVN0cmluZyBw
+YWNrYWdlUGF0dGVybj0gZ2V0UGFja2FnZVBhdHRlcm4oKTsNCisJCQlTdHJpbmcgZmlsdGVyUGFj
+a2FnZVBhdHRlcm49IHR5cGVJdGVtc0ZpbHRlci5nZXRQYWNrYWdlUGF0dGVybigpOw0KKwkJCWlm
+IChmaWx0ZXJQYWNrYWdlUGF0dGVybiA9PSBudWxsKQ0KKwkJCQlyZXR1cm4gcGFja2FnZVBhdHRl
+cm4gPT0gbnVsbDsNCisJCQllbHNlIGlmIChwYWNrYWdlUGF0dGVybiA9PSBudWxsKQ0KKwkJCQly
+ZXR1cm4gdHJ1ZTsNCisJCQllbHNlDQorCQkJCXJldHVybiBmaWx0ZXJQYWNrYWdlUGF0dGVybi5z
+dGFydHNXaXRoKHBhY2thZ2VQYXR0ZXJuKQ0KKwkJCQkJJiYgZmlsdGVyUGFja2FnZVBhdHRlcm4u
+aW5kZXhPZignLicsIHBhY2thZ2VQYXR0ZXJuLmxlbmd0aCgpKSA9PSAtMTsNCiAJCX0NCiANCiAJ
+CXB1YmxpYyBib29sZWFuIGVxdWFsc0ZpbHRlcihJdGVtc0ZpbHRlciBpRmlsdGVyKSB7DQpAQCAt
+MTE4Niw3ICsxMTk0LDEyIEBADQogCQkJCXJldHVybiBmYWxzZTsNCiAJCQlpZiAoZk15VHlwZUZp
+bHRlclZlcnNpb24gIT0gdHlwZUl0ZW1zRmlsdGVyLmdldE15VHlwZUZpbHRlclZlcnNpb24oKSkN
+CiAJCQkJcmV0dXJuIGZhbHNlOw0KLQkJCXJldHVybiB0cnVlOw0KKwkJCVN0cmluZyBwYWNrYWdl
+UGF0dGVybj0gZ2V0UGFja2FnZVBhdHRlcm4oKTsNCisJCQlTdHJpbmcgZmlsdGVyUGFja2FnZVBh
+dHRlcm49IHR5cGVJdGVtc0ZpbHRlci5nZXRQYWNrYWdlUGF0dGVybigpOw0KKwkJCWlmIChwYWNr
+YWdlUGF0dGVybiA9PSBudWxsKQ0KKwkJCQlyZXR1cm4gZmlsdGVyUGFja2FnZVBhdHRlcm4gPT0g
+bnVsbDsNCisJCQllbHNlDQorCQkJCXJldHVybiBwYWNrYWdlUGF0dGVybi5lcXVhbHMoZmlsdGVy
+UGFja2FnZVBhdHRlcm4pOw0KIAkJfQ0KIA0KIAkJcHVibGljIGludCBnZXRFbGVtZW50S2luZCgp
+IHsNCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

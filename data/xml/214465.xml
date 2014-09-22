@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214465</bug_id>
+          
+          <creation_ts>2008-01-07 05:09:00 -0500</creation_ts>
+          <short_desc>[Feature][Templates] AbstractTemplateSection#getTargetVersion gives unexpected results</short_desc>
+          <delta_ts>2009-03-16 12:34:03 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Les Jones">lesojones</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>cwindatt</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126430</commentid>
+    <comment_count>0</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-07 05:09:52 -0500</bug_when>
+    <thetext>Build ID: 3.4 I20071213-1700
+
+I would expect AbstractTemplateSection#getTargetVersion() to return the target version of the plugin, if the model is available. I appreciate that if the model isn&apos;t available it reverts to TargetPlatformHelper#getTargetVersion, which for 3.4 will return 3.3 (or 3.4 once bug 214457 is accepted and delivered).
+
+What I find strange is that, in almost every circumstance it returns 3.3 (the version of the underlying target platform). However, if you create a new plugin project targeted to run against 3.2, during the updateModel() method, calls to getTargetVersion() return 3.2.  Note, that if you then go back to the same project and add an extension to it, getTargetVersion() always returns 3.3 again. This is inconsistent behaviour. 
+
+It should always return either the version of the underlying target platform, OR it should always return the version that the plugin itself is targeted at.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126434</commentid>
+    <comment_count>1</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-07 05:16:17 -0500</bug_when>
+    <thetext>Perhaps another easy way of seeing this inconsistency is by putting a breakpoint in PDETemplateSection#getDirectoryCandidates(), just after the call to getTargetVersion() - so you can see the value returned.
+
+Use the default target plugins from the 3.4M4 install. Create a plugin targetted at 3.2 and execute a template during the creation. The target version will be 3.2. Once created, add another extension using a wizard, the target version is now 3.3!
+
+Set your Target plugins to be those from an Eclipse 3.0 install. Create a plugin targetted at 3.3 and execute a template during the creation. The target version will be 3.3. Once created, add another extension using a wizard, the target version is now 3.0!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127815</commentid>
+    <comment_count>2</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-08 18:24:22 -0500</bug_when>
+    <thetext>Hmmm... That is interesting.  One easy solution would be to add the target version into a project property some how, but that would introduce more questions.
+
+The difference comes down to the fact that you can specify a target version in the New Plug-in Project wizard and that option does not exist with the template wizard you get when adding an extension through the Manifest Editor.
+
+We are going to have to think about this one for a bit...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1453297</commentid>
+    <comment_count>3</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2009-03-16 12:34:03 -0400</bug_when>
+    <thetext>*** Bug 247719 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

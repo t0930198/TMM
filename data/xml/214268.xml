@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214268</bug_id>
+          
+          <creation_ts>2008-01-03 15:34:00 -0500</creation_ts>
+          <short_desc>fix JiraTaskDataHandler.initializeTaskData()</short_desc>
+          <delta_ts>2008-01-23 14:30:13 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Jira</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eugene Kuleshov">ekuleshov</reporter>
+          <assigned_to name="Eugene Kuleshov">ekuleshov</assigned_to>
+          <cc>robert.elves</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125255</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 15:34:06 -0500</bug_when>
+    <thetext>To allow connector neutral task creation, JIRA task data handler should provide proper implementation if JiraTaskDataHandler.initializeTaskData(). 
+I&apos;ll attach suggested patch.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125286</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86125</attachid>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 16:13:03 -0500</bug_when>
+    <thetext>Created attachment 86125
+proposed implementation
+
+I noticed the weird part that connector is storing project name in the task data instead of projectKey or projectId. It would be a good idea to fix that to improve connector-neutral task creation.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125287</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86126</attachid>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 16:13:08 -0500</bug_when>
+    <thetext>Created attachment 86126
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125400</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-03 20:38:45 -0500</bug_when>
+    <thetext>Patch looks great. Could you please provide a test case as well?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125487</commentid>
+    <comment_count>4</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-04 02:00:55 -0500</bug_when>
+    <thetext>While the approach proposed in the patch will work with the current API it is likely to break in the future. I would like to propose a slightly different approach to handling task data attributes: 
+
+Creating and managing values and meta information of attributes should be entirely in the domain of the connector. The stored data model is connector specific and only accessed through a facade (e.g. AbstractAttributeMapper) that maps to the connector model. 
+
+The framework only provide means to serialize attributes and editing support for the most common attribute types (e.g. strings, dates, single-selections...)
+
+This means that for 3.0 the task data will need to be initialized, i.e. all attributes created by the connector, before any value can be set. Therefore we might need a similar but different approach for passing the initialization data in a generic way, e.g. a key-value map or simply an Object.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125497</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-04 02:13:00 -0500</bug_when>
+    <thetext>Steffen, there is one important part that need to be supported and it is unclear to me how it will be handled in the API you are suggesting (which probably should go into a new bug report). So, the use case is that 3rd party tools should be able to specify common attributes, such as repository kind, repository url, project, component, etc, without using API specific to particular connector. The current task data API only partially supports that.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125507</commentid>
+    <comment_count>6</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-04 02:31:58 -0500</bug_when>
+    <thetext>Yes, that type of model mapping will become more explicit in the API in the future. My thinking is that the connector should have more control over the mapping to allow it store the project key instead of the name for instance (which is currently required due the way attributes are handled by the editor). I&apos;ll file reports as that API is evolved to discuss more details.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125518</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-04 02:36:26 -0500</bug_when>
+    <thetext>(In reply to comment #6)
+&gt; (which is currently required due the way attributes are handled by the editor).
+
+I don&apos;t think it is really required. There should have been a hidden attribute used to store project id and/or project key for JIRA.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125523</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-04 02:47:12 -0500</bug_when>
+    <thetext>Anyways, would it be possible to fix JIRA connector in the current API? Other connectors do provide working implementation of this API, and only JIRA connector doesn&apos;t allow to create new tasks using 2.x API. Delaying this until 3.0 also won&apos;t allow integrations to use 3rd party connectors because they won&apos;t be immediately updated to 3.0 API.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125527</commentid>
+    <comment_count>9</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-04 03:05:31 -0500</bug_when>
+    <thetext>+1 for merging this patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130089</commentid>
+    <comment_count>10</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-11 21:00:45 -0500</bug_when>
+    <thetext>Eugene, you have commit rights on JIRA. Could you just commit this change and add a test case?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136464</commentid>
+    <comment_count>11</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-23 00:07:19 -0500</bug_when>
+    <thetext>Committed fix with the test case to CVS. Steffen, please review if you&apos;ll have cahnce.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137091</commentid>
+    <comment_count>12</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-23 14:30:13 -0500</bug_when>
+    <thetext>Great!</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86125</attachid>
+            <date>2008-01-03 16:13:00 -0500</date>
+            <delta_ts>2008-01-03 16:13:03 -0500</delta_ts>
+            <desc>proposed implementation</desc>
+            <filename>clipboard.txt</filename>
+            <type>text/plain</type>
+            <size>2237</size>
+            <attacher name="Eugene Kuleshov">ekuleshov</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UubXlseW4uamly
+YS51aQ0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9teWx5bi9pbnRlcm5hbC9qaXJhL3VpL0ppcmFU
+YXNrRGF0YUhhbmRsZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3Rvb2xz
+L29yZy5lY2xpcHNlLm15bHluL29yZy5lY2xpcHNlLm15bHluLmppcmEudWkvc3JjL29yZy9lY2xp
+cHNlL215bHluL2ludGVybmFsL2ppcmEvdWkvSmlyYVRhc2tEYXRhSGFuZGxlci5qYXZhLHYNCnJl
+dHJpZXZpbmcgcmV2aXNpb24gMS44OA0KZGlmZiAtdSAtcjEuODggSmlyYVRhc2tEYXRhSGFuZGxl
+ci5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL215bHluL2ludGVybmFsL2ppcmEvdWkvSmlyYVRh
+c2tEYXRhSGFuZGxlci5qYXZhCTE0IERlYyAyMDA3IDAzOjU5OjEyIC0wMDAwCTEuODgNCisrKyBz
+cmMvb3JnL2VjbGlwc2UvbXlseW4vaW50ZXJuYWwvamlyYS91aS9KaXJhVGFza0RhdGFIYW5kbGVy
+LmphdmEJMyBKYW4gMjAwOCAyMToxMDoyNSAtMDAwMA0KQEAgLTY0Nyw4ICs2NDcsMzUgQEANCiAJ
+QE92ZXJyaWRlDQogCXB1YmxpYyBib29sZWFuIGluaXRpYWxpemVUYXNrRGF0YShUYXNrUmVwb3Np
+dG9yeSByZXBvc2l0b3J5LCBSZXBvc2l0b3J5VGFza0RhdGEgZGF0YSwgSVByb2dyZXNzTW9uaXRv
+ciBtb25pdG9yKQ0KIAkJCXRocm93cyBDb3JlRXhjZXB0aW9uIHsNCi0JCS8vIEpJUkEgbmVlZHMg
+YSBwcm9qZWN0IHRvIGNyZWF0ZSB0YXNrIGRhdGENCi0JCXJldHVybiBmYWxzZTsNCisJCVN0cmlu
+ZyBwcm9qZWN0TmFtZSA9IGRhdGEuZ2V0QXR0cmlidXRlVmFsdWUoUmVwb3NpdG9yeVRhc2tBdHRy
+aWJ1dGUuUFJPRFVDVCk7DQorCQlpZiAocHJvamVjdE5hbWUgPT0gbnVsbCkgew0KKwkJCXJldHVy
+biBmYWxzZTsNCisJCX0NCisJCQ0KKwkJSmlyYUNsaWVudCBjbGllbnQgPSBjbGllbnRGYWN0b3J5
+LmdldEppcmFDbGllbnQocmVwb3NpdG9yeSk7DQorCQlpZighY2xpZW50Lmhhc0RldGFpbHMoKSkg
+ew0KKwkJCXRyeSB7DQorCQkJCWNsaWVudC5yZWZyZXNoRGV0YWlscyhtb25pdG9yKTsNCisJCQl9
+IGNhdGNoIChKaXJhRXhjZXB0aW9uIGV4KSB7DQorCQkJCUlTdGF0dXMgc3RhdHVzID0gSmlyYUNv
+cmVQbHVnaW4udG9TdGF0dXMocmVwb3NpdG9yeSwgZXgpOw0KKwkJCQl0cmFjZShzdGF0dXMpOw0K
+KwkJCQl0aHJvdyBuZXcgQ29yZUV4Y2VwdGlvbihzdGF0dXMpOw0KKwkJCX0NCisJCX0NCisJCQ0K
+KwkJUHJvamVjdCBwcm9qZWN0ID0gZ2V0UHJvamVjdChjbGllbnQsIHByb2plY3ROYW1lKTsNCisJ
+CWlmKHByb2plY3Q9PW51bGwpIHsNCisJCQlwcm9qZWN0ID0gY2xpZW50LmdldFByb2plY3RCeUtl
+eShwcm9qZWN0TmFtZSk7DQorCQl9DQorCQlpZiAocHJvamVjdCA9PSBudWxsKSB7DQorCQkJcmV0
+dXJuIGZhbHNlOw0KKwkJfQ0KKw0KKwkJaW5pdGlhbGl6ZVRhc2tEYXRhKGRhdGEsIGNsaWVudCwg
+cHJvamVjdCk7DQorDQorCQlkYXRhLnNldEF0dHJpYnV0ZVZhbHVlKFJlcG9zaXRvcnlUYXNrQXR0
+cmlidXRlLlBST0RVQ1QsIHByb2plY3QuZ2V0TmFtZSgpKTsNCisNCisJCXJldHVybiB0cnVlOw0K
+IAl9DQogDQogCUBPdmVycmlkZQ0KQEAgLTc2OSwxMSArNzk2LDkgQEANCiAJCQl9DQogCQl9DQog
+DQotCQlmb3IgKG9yZy5lY2xpcHNlLm15bHluLmludGVybmFsLmppcmEuY29yZS5tb2RlbC5Qcm9q
+ZWN0IHByb2plY3QgOiBjbGllbnQuZ2V0UHJvamVjdHMoKSkgew0KLQkJCWlmIChwcm9qZWN0Lmdl
+dE5hbWUoKS5lcXVhbHModGFza0RhdGEuZ2V0QXR0cmlidXRlVmFsdWUoUmVwb3NpdG9yeVRhc2tB
+dHRyaWJ1dGUuUFJPRFVDVCkpKSB7DQotCQkJCWlzc3VlLnNldFByb2plY3QocHJvamVjdCk7DQot
+CQkJCWJyZWFrOw0KLQkJCX0NCisJCVByb2plY3QgcHJvamVjdCA9IGdldFByb2plY3QoY2xpZW50
+LCB0YXNrRGF0YS5nZXRBdHRyaWJ1dGVWYWx1ZShSZXBvc2l0b3J5VGFza0F0dHJpYnV0ZS5QUk9E
+VUNUKSk7DQorCQlpZiAocHJvamVjdCAhPSBudWxsKSB7DQorCQkJaXNzdWUuc2V0UHJvamVjdChw
+cm9qZWN0KTsNCiAJCX0NCiANCiAJCS8vIGlzc3VlLnNldEVzdGltYXRlKExvbmcucGFyc2VMb25n
+KHRhc2tEYXRhLmdldEF0dHJpYnV0ZVZhbHVlKEppcmFBdHRyaWJ1dGVGYWN0b3J5LkFUVFJJQlVU
+RV9FU1RJTUFURSkpKTs=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86126</attachid>
+            <date>2008-01-03 16:13:00 -0500</date>
+            <delta_ts>2008-01-03 16:13:08 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>2524</size>
+            <attacher name="Eugene Kuleshov">ekuleshov</attacher>
+            
+              <data encoding="base64">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
+AAABAAEAXgAAAGgJAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,233 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215119</bug_id>
+          
+          <creation_ts>2008-01-12 12:37:00 -0500</creation_ts>
+          <short_desc>[xslt][debug] Ability to set break points on Input XML</short_desc>
+          <delta_ts>2009-09-02 15:24:18 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.xsl</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>helpwanted</keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Carver">d_a_carver</reporter>
+          <assigned_to name="wst.xsl-triaged">wst.xsl-triaged</assigned_to>
+          <cc>doug.satchwell</cc>
+    
+    <cc>mike.auty</cc>
+    
+    <cc>nitind</cc>
+          <qa_contact name="David Carver">d_a_carver</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130182</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-01-12 12:37:36 -0500</bug_when>
+    <thetext>Ability to set the break points on a particular node within the XML document used as input to the transformation process.  This would allow finer control over large transformations when a particular node is not transforming as expected.
+
+Request from the Requirements Page.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169616</commentid>
+    <comment_count>1</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-03-03 15:05:33 -0500</bug_when>
+    <thetext>The ability is there now, but I&apos;m still not sure how to go about making this work. It is entirely possible to put a breakpoint on a source file that will never get hit, even though the entire contents of the source file were cut and paste into the result document! I don&apos;t see any obvious way of getting this to work in Xalan at least.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169690</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-03-03 16:10:50 -0500</bug_when>
+    <thetext>well, I know it works in some other eclipse based XSLT editors.   Is there a way to calculate an XPath break point on the input source, and have Xalan break based on that XPath expression?
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1181799</commentid>
+    <comment_count>3</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-03-22 13:36:33 -0400</bug_when>
+    <thetext>I&apos;m not sure how the other debuggers do this. So I&apos;ve removed the ability to set breakpoints for now (because they don&apos;t do anything anyway). Will have another look at this later, unless someone else wants to take a look of course.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1181816</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-03-22 15:03:53 -0400</bug_when>
+    <thetext>Doug, I&apos;ll take a look after 0.5M6 is out the door.  I think for Xalan, it has to be a specific type of TraceListener value we need to watch for.  Possibly something with the input document.   I&apos;d also like to look at the DLTK debugger extensions they have, as it might help us with our implementation.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1181817</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-03-22 15:04:38 -0400</bug_when>
+    <thetext>Marking as helpwanted.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1184026</commentid>
+    <comment_count>6</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-03-25 18:04:21 -0400</bug_when>
+    <thetext>Doug, while looking at some of the Xalan code, I ran across a couple of interesting classes that might be of use to you.  They are currently marked as being deprecated but were setup for some XSL Tooling use.   They are located in the org.apache.xalan.transformer package and are:
+
+TransformSnapshotImpl
+TransformState
+
+These two classes seem to give you a lot more information than just the events and node list that were passed.  I haven&apos;t gone into detail on your debugging code, so you may already know about these classes.  In particular what is of interest is the State contains what input node matched the template.  So this could be useful in determing the appropriate break point for the XML input file.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1192870</commentid>
+    <comment_count>7</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-04-03 06:02:41 -0400</bug_when>
+    <thetext>Setting as enhancement</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1261955</commentid>
+    <comment_count>8</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-06-05 21:41:47 -0400</bug_when>
+    <thetext>Mass Migration to wtp.inc.xsl</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1376621</commentid>
+    <comment_count>9</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-11-21 22:26:13 -0500</bug_when>
+    <thetext>*** Bug 221532 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1376622</commentid>
+    <comment_count>10</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-11-21 22:27:56 -0500</bug_when>
+    <thetext>I&apos;ll investigate for 1.0M4.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1376664</commentid>
+    <comment_count>11</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-11-22 12:13:42 -0500</bug_when>
+    <thetext>Doug, I had another look at this, and for both the XPath and the XML input, I think this particular functionality could be handled by implementing the selected(SelectionEvent event) method in the XalanPrintTraceListener.   The SelectionEvent  is triggered by a selection of a Node in the StyleTree.
+
+http://xml.apache.org/xalan-j/apidocs/org/apache/xalan/trace/SelectionEvent.html
+
+It carries with it the result of the selection, the current context node, and the XPath that executed the selection.  It seems that it would possibly allow for setting the breakpoints, and just making sure that we stopped at the right node.  If I can get some time, I&apos;ll look into this some more, but your thoughts would be appreciated since you are more familiar with the way the Xalan debugger works.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1378436</commentid>
+    <comment_count>12</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-11-25 18:22:56 -0500</bug_when>
+    <thetext>TraceEvent passes in the context Node.  What could be done is to load the Source file into the WTP DOM, and then run the CalculateXPathtoNode function (which has been migrated to XPathHelper class in org.eclipse.wst.xml.xpath.core plugin), a comparison could be done on the two returned strings.  If they are contained in or equal, then and the line number from the source file has a break point, we could then have the break point stop and step through the source code.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1378872</commentid>
+    <comment_count>13</comment_count>
+    <who name="Doug">doug.satchwell</who>
+    <bug_when>2008-11-26 09:57:06 -0500</bug_when>
+    <thetext>(In reply to comment #12)
+&gt; What could be done is to load the
+&gt; Source file into the WTP DOM, and then run the CalculateXPathtoNode function
+
+The process should be the other way round; we tell the debug process what the break point line numbers and corresponding xpaths are, using the same mechanism we currently use for break points in the XSL file. The debug process itself can then use CalculateXPathtoNode (or rather a copy of that function that is available to the debug process) to determine whether it has hit a breakpoint. That way you don&apos;t need to send whole documents over the socket while stepping.
+
+I must say though that it all seems a bit awkward compared to setting breakpoints on the XSL file. Not very pretty at all in fact. Surely there is a better way?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1378995</commentid>
+    <comment_count>14</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-11-26 11:38:36 -0500</bug_when>
+    <thetext>(In reply to comment #13)
+&gt; (In reply to comment #12)
+&gt; &gt; What could be done is to load the
+&gt; &gt; Source file into the WTP DOM, and then run the CalculateXPathtoNode function
+
+&gt; The process should be the other way round; we tell the debug process what the
+&gt; break point line numbers and corresponding xpaths are, using the same mechanism
+&gt; we currently use for break points in the XSL file. The debug process itself can
+&gt; then use CalculateXPathtoNode (or rather a copy of that function that is
+&gt; available to the debug process) to determine whether it has hit a breakpoint.
+&gt; That way you don&apos;t need to send whole documents over the socket while stepping.
+
+Well, if Xalan is using it&apos;s own internal DOM, and just returns a NodeList, you don&apos;t necesarrily have a line number.  If we can make the Xalan use an WTP DOM and then cast back to an IDOMNode we can get the line number of the Nodes or even the Context Node with out having to do the CalculateXPath.
+
+&gt; 
+&gt; I must say though that it all seems a bit awkward compared to setting
+&gt; breakpoints on the XSL file. Not very pretty at all in fact. Surely there is a
+&gt; better way?
+
+Yeah it&apos;s ugly.  I&apos;m open to other solutions that might work, but Xalan does pass in the current Context node which comes from the XML file that the template or selection is running against.  We just have to figure out a way to match that up with the XML Input file for break point selection.
+
+Also the context node can be used to enable Watch Expressions as well based on XPath statements.
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1399391</commentid>
+    <comment_count>15</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2008-12-29 09:19:05 -0500</bug_when>
+    <thetext>not sure if I&apos;m going to have time to fully investigate this so re-assigning back to project in box so that others may pick it up.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1439028</commentid>
+    <comment_count>16</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2009-02-26 11:12:21 -0500</bug_when>
+    <thetext>*** Bug 266315 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1487766</commentid>
+    <comment_count>17</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2009-04-30 14:24:26 -0400</bug_when>
+    <thetext>mass update to 3.1 target due to movement from wtp incubator to wtp source editing lost the original milestones.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1497474</commentid>
+    <comment_count>18</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2009-05-11 22:58:51 -0400</bug_when>
+    <thetext>migrating prior 3.1 enhancements for future for further triage and planning.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1589398</commentid>
+    <comment_count>19</comment_count>
+    <who name="David Carver">d_a_carver</who>
+    <bug_when>2009-09-02 15:24:18 -0400</bug_when>
+    <thetext>Assigning inbox items to triaged since these have all be triaged.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

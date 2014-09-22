@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214315</bug_id>
+          
+          <creation_ts>2008-01-04 03:57:00 -0500</creation_ts>
+          <short_desc>&quot;create an OSGi bundle manifest&quot; leaves the plugin.xml version as 3.0</short_desc>
+          <delta_ts>2008-01-04 12:31:39 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Les Jones">lesojones</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>baumanbr</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125549</commentid>
+    <comment_count>0</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-04 03:57:11 -0500</bug_when>
+    <thetext>Build ID: 3.4  I20071213-1700
+
+Steps To Reproduce:
+1. Create a 3.0 plugin
+2. From the overview tab of plugin.xml editor select &quot;create an OSGi bundle manifest&quot;.
+3. Select the &quot;plugin.xml&quot; tab and the eclipse version is still 3.0.
+
+Wouldn&apos;t it be correct expect this to have been updated to eclipse version=3.2 ?
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125742</commentid>
+    <comment_count>1</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-04 09:36:07 -0500</bug_when>
+    <thetext>Actually, it is working as designed.  Let me explain more after I get into the office :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125814</commentid>
+    <comment_count>2</comment_count>
+    <who name="Les Jones">lesojones</who>
+    <bug_when>2008-01-04 10:54:55 -0500</bug_when>
+    <thetext>As I was raising the bug I had a funny feeling you&apos;d say something like that ;-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125916</commentid>
+    <comment_count>3</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-04 12:31:39 -0500</bug_when>
+    <thetext>When converting a plugin.xml to a Mainfest.MF, we look at the Eclipse version
+you currently have in your target platform.  We do this, because different
+headers (like Eclipse-AutoStart, Eclipse-LazyStart, etc) have been deprecated
+in different versions of Eclipse.  Therefore, we look at the target platform to
+figure out which headers are valid based on the assumption you wish to run the
+project against your current target platform.
+
+One could make the case we should upgrade the eclipse version in the plugin.xml
+accordingly.  I just checked with the man in charge of the specifications
+(Oleg) and he told me we currently support both specifications and at this
+point does not foresee dropping support for the 3.0 version.  Therefore, if we
+leave it as 3.0 then we can continue to run it in Eclipse 3.0 and future
+releases without problems.  This just gives the user the most flexibility while
+maintaining a supported specification version.
+
+I do have to admit I had a much quicker reply until I started thinking about
+this version and had to ask around to see if we should be updating it to 3.2. 
+Good question, it was definitely something I had not thought about.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

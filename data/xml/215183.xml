@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215183</bug_id>
+          
+          <creation_ts>2008-01-14 04:33:00 -0500</creation_ts>
+          <short_desc>Shell with ON_TOP style stay behind of Shell with APPLICATION_MODAL style.</short_desc>
+          <delta_ts>2008-02-27 18:05:38 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.4</version>
+          <rep_platform>Macintosh</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Zhang Yao">yaozhang</reporter>
+          <assigned_to name="Kevin Barnes">cocoakevin</assigned_to>
+          <cc>cocoakevin</cc>
+    
+    <cc>jiayingl</cc>
+    
+    <cc>Silenio_Quarti</cc>
+    
+    <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130452</commentid>
+    <comment_count>0</comment_count>
+    <who name="Zhang Yao">yaozhang</who>
+    <bug_when>2008-01-14 04:33:39 -0500</bug_when>
+    <thetext>Shell with ON_TOP style is often used as tooltip window which should always stay on top of window. But if you create a Shell with ON_TOP style while there is an active Shell with APPLICATION_MODAL style, the Shell with ON_TOP will be behind the Shell with APPLICATION_MODAL.
+
+A demo java file is attached.
+
+I think the root cause is: Shell with SWT.ON_TOP is a sheet window in floating window group which z-order is below the window in modal window group.
+
+In SWT.java, the description of SWT.ON_TOP is : &quot;Style constant for always on top behavior&quot;. So Shell with ON_TOP style should has higher z-order than Shell with APPLICATION_MODAL style.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130454</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86806</attachid>
+    <who name="Zhang Yao">yaozhang</who>
+    <bug_when>2008-01-14 04:39:09 -0500</bug_when>
+    <thetext>Created attachment 86806
+example</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130905</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-14 14:28:08 -0500</bug_when>
+    <thetext>I&apos;m not seeing this behavior when I run your test case. My ON_TOP shells are always on top. What version of OS X are you running?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131123</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86895</attachid>
+    <who name="Zhang Yao">yaozhang</who>
+    <bug_when>2008-01-14 20:53:50 -0500</bug_when>
+    <thetext>Created attachment 86895
+new example.
+
+I found that it depended on SWT.CLOSE.
+If you create the modal window without SWT.CLOSE. Then ON_TOP window will be behind modal window.
+Please try this new file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131125</commentid>
+    <comment_count>4</comment_count>
+    <who name="Zhang Yao">yaozhang</who>
+    <bug_when>2008-01-14 20:58:21 -0500</bug_when>
+    <thetext>I am using 10.5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131558</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-15 11:20:36 -0500</bug_when>
+    <thetext>Confirmed that this happens on Tiger and Leopard.
+If the shell is created with SWT.CLOSE the windowClass is kDocumentWindowClass instead of kMovableModalWindowClass, or kModalWindowClass.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165443</commentid>
+    <comment_count>6</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-02-27 08:53:55 -0500</bug_when>
+    <thetext>Kevin, want to have a go at fixing this?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1166140</commentid>
+    <comment_count>7</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-02-27 18:05:18 -0500</bug_when>
+    <thetext>Should be using kDocumentWindowClass Group when creating non ON_TOP shells.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1166141</commentid>
+    <comment_count>8</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-02-27 18:05:38 -0500</bug_when>
+    <thetext>fixed &gt; 20080227</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86806</attachid>
+            <date>2008-01-14 04:39:00 -0500</date>
+            <delta_ts>2008-01-14 04:39:09 -0500</delta_ts>
+            <desc>example</desc>
+            <filename>testrun.java</filename>
+            <type>text/plain</type>
+            <size>1070</size>
+            <attacher name="Zhang Yao">yaozhang</attacher>
+            
+              <data encoding="base64">cGFja2FnZSBjb20uaWJtLmpuaS50ZXN0OwoKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5TV1Q7Cmlt
+cG9ydCBvcmcuZWNsaXBzZS5zd3QuZXZlbnRzLlNlbGVjdGlvbkV2ZW50OwppbXBvcnQgb3JnLmVj
+bGlwc2Uuc3d0LmV2ZW50cy5TZWxlY3Rpb25MaXN0ZW5lcjsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3
+dC53aWRnZXRzLkJ1dHRvbjsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC53aWRnZXRzLkRpc3BsYXk7
+CmltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5TaGVsbDsKCnB1YmxpYyBjbGFzcyB0ZXN0
+cnVuIHsKCXB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsKCQlEaXNwbGF5
+IGRpc3BsYXkgPSBEaXNwbGF5LmdldERlZmF1bHQoKTsKCQlTaGVsbCBzaGVsbCA9IG5ldyBTaGVs
+bChkaXNwbGF5LFNXVC5BUFBMSUNBVElPTl9NT0RBTHxTV1QuQ0xPU0V8U1dULlRJVExFKTsKCQlz
+aGVsbC5zZXRTaXplKDIwMCwgMjAwKTsKCQlzaGVsbC5zZXRCb3VuZHMoMTAwLCAxMDAsIDMwMCwg
+MzAwKTsKCQlCdXR0b24gYnV0dG9uMSA9IG5ldyBCdXR0b24oc2hlbGwsU1dULlBVU0h8U1dULkNF
+TlRFUik7CgkJYnV0dG9uMS5zZXRTaXplKDgwLCA0MCk7CgkJYnV0dG9uMS5zZXRUZXh0KCJzaG93
+IHBvcCIpOwoJCWJ1dHRvbjEuYWRkU2VsZWN0aW9uTGlzdGVuZXIobmV3IFNlbGVjdGlvbkxpc3Rl
+bmVyKCl7CgoJCQlwdWJsaWMgdm9pZCB3aWRnZXREZWZhdWx0U2VsZWN0ZWQoU2VsZWN0aW9uRXZl
+bnQgYXJnMCkgewoJCQkJLy8gVE9ETyBBdXRvLWdlbmVyYXRlZCBtZXRob2Qgc3R1YgoJCQkJCgkJ
+CX0KCgkJCXB1YmxpYyB2b2lkIHdpZGdldFNlbGVjdGVkKFNlbGVjdGlvbkV2ZW50IGFyZzApIHsK
+CQkJCVNoZWxsIHNoZWxsMSA9IG5ldyBTaGVsbChTV1QuT05fVE9QKTsKCQkJCXNoZWxsMS5vcGVu
+KCk7CgkJCX0KCQl9KTsKCQlidXR0b24xLnNldFZpc2libGUodHJ1ZSk7CgkJc2hlbGwub3Blbigp
+OwoJCXdoaWxlICggIXNoZWxsLmlzRGlzcG9zZWQoKSl7CgkJCWlmICggIWRpc3BsYXkucmVhZEFu
+ZERpc3BhdGNoKCkgKQoJCQkJZGlzcGxheS5zbGVlcCgpOwoJCX0KCX0KfQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86895</attachid>
+            <date>2008-01-14 20:53:00 -0500</date>
+            <delta_ts>2008-01-14 20:53:50 -0500</delta_ts>
+            <desc>new example.</desc>
+            <filename>testrun.java</filename>
+            <type>text/plain</type>
+            <size>1060</size>
+            <attacher name="Zhang Yao">yaozhang</attacher>
+            
+              <data encoding="base64">cGFja2FnZSBjb20uaWJtLmpuaS50ZXN0OwoKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5TV1Q7Cmlt
+cG9ydCBvcmcuZWNsaXBzZS5zd3QuZXZlbnRzLlNlbGVjdGlvbkV2ZW50OwppbXBvcnQgb3JnLmVj
+bGlwc2Uuc3d0LmV2ZW50cy5TZWxlY3Rpb25MaXN0ZW5lcjsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3
+dC53aWRnZXRzLkJ1dHRvbjsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC53aWRnZXRzLkRpc3BsYXk7
+CmltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5TaGVsbDsKCnB1YmxpYyBjbGFzcyB0ZXN0
+cnVuIHsKCXB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsKCQlEaXNwbGF5
+IGRpc3BsYXkgPSBEaXNwbGF5LmdldERlZmF1bHQoKTsKCQlTaGVsbCBzaGVsbCA9IG5ldyBTaGVs
+bChkaXNwbGF5LFNXVC5BUFBMSUNBVElPTl9NT0RBTHxTV1QuVElUTEUpOwoJCXNoZWxsLnNldFNp
+emUoMjAwLCAyMDApOwoJCXNoZWxsLnNldEJvdW5kcygxMDAsIDEwMCwgMzAwLCAzMDApOwoJCUJ1
+dHRvbiBidXR0b24xID0gbmV3IEJ1dHRvbihzaGVsbCxTV1QuUFVTSHxTV1QuQ0VOVEVSKTsKCQli
+dXR0b24xLnNldFNpemUoODAsIDQwKTsKCQlidXR0b24xLnNldFRleHQoInNob3cgcG9wIik7CgkJ
+YnV0dG9uMS5hZGRTZWxlY3Rpb25MaXN0ZW5lcihuZXcgU2VsZWN0aW9uTGlzdGVuZXIoKXsKCgkJ
+CXB1YmxpYyB2b2lkIHdpZGdldERlZmF1bHRTZWxlY3RlZChTZWxlY3Rpb25FdmVudCBhcmcwKSB7
+CgkJCQkvLyBUT0RPIEF1dG8tZ2VuZXJhdGVkIG1ldGhvZCBzdHViCgkJCQkKCQkJfQoKCQkJcHVi
+bGljIHZvaWQgd2lkZ2V0U2VsZWN0ZWQoU2VsZWN0aW9uRXZlbnQgYXJnMCkgewoJCQkJU2hlbGwg
+c2hlbGwxID0gbmV3IFNoZWxsKFNXVC5PTl9UT1ApOwoJCQkJc2hlbGwxLm9wZW4oKTsKCQkJfQoJ
+CX0pOwoJCWJ1dHRvbjEuc2V0VmlzaWJsZSh0cnVlKTsKCQlzaGVsbC5vcGVuKCk7CgkJd2hpbGUg
+KCAhc2hlbGwuaXNEaXNwb3NlZCgpKXsKCQkJaWYgKCAhZGlzcGxheS5yZWFkQW5kRGlzcGF0Y2go
+KSApCgkJCQlkaXNwbGF5LnNsZWVwKCk7CgkJfQoJfQp9Cg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

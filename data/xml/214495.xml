@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214495</bug_id>
+          
+          <creation_ts>2008-01-07 11:02:00 -0500</creation_ts>
+          <short_desc>Compilation errors in Resource modeling code when compiled in Eclipse 3.4</short_desc>
+          <delta_ts>2012-01-03 13:47:52 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Cosmos</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Hubert Leung">hkyleung</reporter>
+          <assigned_to name="Valentina Popescu">popescu</assigned_to>
+          <cc>dlwhiteman</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126649</commentid>
+    <comment_count>0</comment_count>
+    <who name="Hubert Leung">hkyleung</who>
+    <bug_when>2008-01-07 11:02:12 -0500</bug_when>
+    <thetext>There 11 compilation errors in org.eclipse.cosmos.rm.repository and org.eclipse.cosmos.rm.validation plugins.  
+
+They all have to do with type casting.  
+
+For example:
+Cannot cast from Map&lt;String,List&lt;int[]&gt;&gt; to Map&lt;String,List&gt;
+Cannot cast from Map&lt;String,Map&lt;String,List&lt;ElementEdge&gt;&gt;&gt; to Map&lt;String,Map&gt;
+
+
+The code compiles with eclispe 3.3.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126671</commentid>
+    <comment_count>1</comment_count>
+    <who name="">amehrega</who>
+    <bug_when>2008-01-07 11:24:17 -0500</bug_when>
+    <thetext>As discussed, I&apos;ll target this for i9. 
+i8 is expected to run on Eclipse 3.3 and so there is no immediate need for this fix.  It&apos;s odd that the compilation behavior between 3.3 and 3.4 has changed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151054</commentid>
+    <comment_count>2</comment_count>
+    <who name="Hubert Leung">hkyleung</who>
+    <bug_when>2008-02-06 12:00:26 -0500</bug_when>
+    <thetext>Ali, we decided to build with eclipse 3.4 in the arch call on Feb 6.  We hope that the integration build for Feb 12 will be using eclipse 3.4.  Can you fix the problems before Feb 12?  If not, we will need to make the move after eclipsecon.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154494</commentid>
+    <comment_count>3</comment_count>
+    <who name="Valentina Popescu">popescu</who>
+    <bug_when>2008-02-11 15:18:41 -0500</bug_when>
+    <thetext>fixed by defining retrieveNestedMap as a generic method
+
+	public static &lt;T&gt; Map&lt;?,?&gt; retrieveNestedMap(Map&lt;String, Map&lt;String, T&gt;&gt; map, String key, boolean create) 
+	{
+		Map nestedMap = map.get(key);
+		if (create &amp;&amp; nestedMap == null)
+		{
+			nestedMap = new Hashtable&lt;Object, Object&gt;();
+			map.put(key, nestedMap);
+		}
+		return nestedMap;
+	}
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154525</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-02-11 15:39:39 -0500</bug_when>
+    <thetext>I just caught up to all the changes, and it looks like you almost got them all.  I still see 4 compilation errors in TestUtilities.java in the org.eclipse.cosmos.rm.validation.tests project.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154607</commentid>
+    <comment_count>5</comment_count>
+    <who name="Valentina Popescu">popescu</who>
+    <bug_when>2008-02-11 17:07:50 -0500</bug_when>
+    <thetext>What errors do you get? I don&apos;t see any</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154619</commentid>
+    <comment_count>6</comment_count>
+    <who name="Valentina Popescu">popescu</who>
+    <bug_when>2008-02-11 17:21:08 -0500</bug_when>
+    <thetext>nevermind; the errors where in the test plugin which I just fixed
+Good catch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1219913</commentid>
+    <comment_count>7</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-04-30 18:20:18 -0400</bug_when>
+    <thetext>closing verified bugs</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

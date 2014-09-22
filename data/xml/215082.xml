@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215082</bug_id>
+          
+          <creation_ts>2008-01-11 15:27:00 -0500</creation_ts>
+          <short_desc>publication task problems</short_desc>
+          <delta_ts>2008-02-11 09:19:11 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP ASF</product>
+          <component>ASF.Runtime</component>
+          <version>4.5</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>4.5i5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Joel Cayne">jcayne</reporter>
+          <assigned_to name="Paul Slauenwhite">paules</assigned_to>
+          <cc>paules</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129910</commentid>
+    <comment_count>0</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-01-11 15:27:04 -0500</bug_when>
+    <thetext>Running the task similar to that provided in the documentation, null is returned.
+Example:
+&lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot;&gt;
+    &lt;filelist refid=&quot;tptp.test.results&quot;/&gt;
+&lt;/tptp:publication&gt;
+
+Running with a report template returns an error:
+&lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot;
+reportTemplateLocation=&quot;org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement&quot;&gt;
+    &lt;filelist refid=&quot;tptp.test.results&quot;/&gt;
+&lt;/tptp:publication&gt;
+
+[tptp:publication] java.lang.ClassCastException: org.eclipse.hyades.models.common.testprofile.impl.TPFExecutionResultImpl incompatible with org.eclipse.hyades.models.common                         .testprofile.TPFTestSuite
+[tptp:publication]      at org.eclipse.tptp.test.report.birt.internal.elements.util.ResolveTestExecutions.getReferencedTestSuites(ResolveTestExecutions.java:74)
+[tptp:publication]      at org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.generate(TabularTPFTestSuiteReportElement.java:158)
+[tptp:publication]      at org.eclipse.tptp.test.report.birt.services.TestSuitesTabularPublicationService.publish(TestSuitesTabularPublicationService.java:82)
+[tptp:publication]      at org.eclipse.hyades.test.core.services.AbstractTestResultsPublicationService.execute(AbstractTestResultsPublicationService.java:105)
+[tptp:publication]      at org.eclipse.hyades.automation.server.AbstractService.execute(AbstractService.java:43)
+[tptp:publication]      at org.eclipse.hyades.automation.server.ServiceProxy$1.run(ServiceProxy.java:141)
+[tptp:publication]      at org.eclipse.hyades.automation.core.utils.ReusableThread.run(ReusableThread.java:131)
+[tptp:publication]      at java.lang.Thread.run(Thread.java:810)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130531</commentid>
+    <comment_count>1</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-14 07:30:52 -0500</bug_when>
+    <thetext>This defect is specific to the task provided by Joel.  
+
+Work-around:
+
+&lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot; reportTemplateLocation=&quot;org.eclipse.tptp.test.report.birt.internal.TabularTPFTestSuiteReportElement&quot; 
+    startDateTime=&quot;${startDateTime}&quot; endDateTime=&quot;${endDateTime}&quot; &gt; 
+    &lt;fileset dir=&quot;${project.dir}&quot;&gt; 
+        &lt;include name=&quot;**/*.testsuite&quot; /&gt; 
+    &lt;/fileset&gt; 
+&lt;/tptp:publication&gt; 
+
+[Source: http://help.eclipse.org/help33/topic/org.eclipse.hyades.test.doc.user/tasks/texecuting-the-test-execution-service.htm &gt;&gt; Customizing test reports from Ant scripts]
+
+Duwayne, please provide a sizing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146277</commentid>
+    <comment_count>2</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-31 07:17:35 -0500</bug_when>
+    <thetext>Note: Required for the TPTP BVTs.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146278</commentid>
+    <comment_count>3</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-31 07:20:07 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; This defect is specific to the task provided by Joel.  
+&gt; 
+&gt; Work-around:
+&gt; 
+&gt; &lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot;
+&gt; reportTemplateLocation=&quot;org.eclipse.tptp.test.report.birt.internal.TabularTPFTestSuiteReportElement&quot; 
+&gt;     startDateTime=&quot;${startDateTime}&quot; endDateTime=&quot;${endDateTime}&quot; &gt; 
+&gt;     &lt;fileset dir=&quot;${project.dir}&quot;&gt; 
+&gt;         &lt;include name=&quot;**/*.testsuite&quot; /&gt; 
+&gt;     &lt;/fileset&gt; 
+&gt; &lt;/tptp:publication&gt; 
+&gt; 
+&gt; [Source:
+&gt; http://help.eclipse.org/help33/topic/org.eclipse.hyades.test.doc.user/tasks/texecuting-the-test-execution-service.htm
+&gt; &gt;&gt; Customizing test reports from Ant scripts]
+
+This work-around is insufficient when there is sufficient clock skew between the local and remote hosts since the start date/time for the test suite (on the remote host) is used to determine if it is to be included in the reporting window.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146282</commentid>
+    <comment_count>4</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-31 07:30:01 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; Running the task similar to that provided in the documentation, null is
+&gt; returned.
+&gt; Example:
+&gt; &lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot;&gt;
+&gt;     &lt;filelist refid=&quot;tptp.test.results&quot;/&gt;
+&gt; &lt;/tptp:publication&gt;
+
+This is working as designed since Joel is using the org.eclipse.tptp.test.report.birt.publish-tabular-testsuites tptp.publication.service which expects the reportTemplateLocation attribute on the tptp:publication task.  Using the org.eclipse.tptp.test.report.birt.publish or org.eclipse.tptp.test.report.birt.publish-testsuites tptp.publication.services resolves this problem.  We will update the documentation to be clearer.
+
+&gt; Running with a report template returns an error:
+&gt; &lt;tptp:publication report=&quot;${report.publication.location}/report.html&quot;
+&gt; reportTemplateLocation=&quot;org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement&quot;&gt;
+&gt;     &lt;filelist refid=&quot;tptp.test.results&quot;/&gt;
+&gt; &lt;/tptp:publication&gt;
+&gt; 
+&gt; [tptp:publication] java.lang.ClassCastException:
+&gt; org.eclipse.hyades.models.common.testprofile.impl.TPFExecutionResultImpl
+&gt; incompatible with org.eclipse.hyades.models.common                        
+&gt; .testprofile.TPFTestSuite
+&gt; [tptp:publication]      at
+&gt; org.eclipse.tptp.test.report.birt.internal.elements.util.ResolveTestExecutions.getReferencedTestSuites(ResolveTestExecutions.java:74)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.generate(TabularTPFTestSuiteReportElement.java:158)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.tptp.test.report.birt.services.TestSuitesTabularPublicationService.publish(TestSuitesTabularPublicationService.java:82)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.hyades.test.core.services.AbstractTestResultsPublicationService.execute(AbstractTestResultsPublicationService.java:105)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.hyades.automation.server.AbstractService.execute(AbstractService.java:43)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.hyades.automation.server.ServiceProxy$1.run(ServiceProxy.java:141)
+&gt; [tptp:publication]      at
+&gt; org.eclipse.hyades.automation.core.utils.ReusableThread.run(ReusableThread.java:131)
+&gt; [tptp:publication]      at java.lang.Thread.run(Thread.java:810)
+
+This is working as designed also since the org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElemen reportTemplateLocation expects a list of test suites and not a list of test results.  To use a list of test results, you would have to use the org.eclipse.tptp.test.report.birt.publish tptp.publication.service, which uses the TestExecutionReportElement reportTemplateLocation.  
+
+The real symptom is that even with using the org.eclipse.tptp.test.report.birt.publish tptp.publication.service, which uses the TestExecutionReportElement reportTemplateLocation, the java.lang.ClassCastException is being thrown.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146611</commentid>
+    <comment_count>5</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-31 13:12:44 -0500</bug_when>
+    <thetext>Fixed the existing publication services and created the &apos;publish-tabular&apos; publication service to circumvent the clock skew issue with remote test execution (see comment #3).  Also, moved the documentation for the publication services to the TPTP BIRT Test Reports as-is component and updated the documentation to be more clear with regards to the publication services.
+
+The following files checked into CVS (HEAD):
+
+org.eclipse.tptp.test.report.birt.internal.resources.Messages.java
+/org.eclipse.tptp.test.report.birt/src/org/eclipse/tptp/test/report/birt/internal/resources/messages.properties
+org.eclipse.tptp.test.report.birt.services.TestResultsPublicationService.java
+org.eclipse.tptp.test.report.birt.services.TestResultsTabularPublicationService.java
+org.eclipse.tptp.test.report.birt.services.TestSuitesPublicationService.java
+org.eclipse.tptp.test.report.birt.services.TestSuitesTabularPublicationService.java
+/org.eclipse.tptp.test.report.birt/plugin.xml
+org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestResultReportElement.java
+org.eclipse.tptp.test.report.birt.internal.elements.TabularTPFTestSuiteReportElement.java
+org.eclipse.tptp.test.report.birt.internal.elements.TestPassTPFTestResultReportElement.java
+org.eclipse.tptp.test.report.birt.internal.elements.TestPassTPFTestSuiteReportElement.java
+org.eclipse.tptp.test.report.birt.internal.elements.util.TestModelUtilities.java
+/org.eclipse.hyades.test.doc.user/tasks/texecuting-the-test-execution-service.htm
+/org.eclipse.hyades.test.doc.user/toc/common_toc.xml
+/org.eclipse.tptp.test.report.birt.doc.user/tasks/texecuting-the-test-reporting-service.htm
+/org.eclipse.tptp.test.report.birt.doc.user/tasks/treporttest.xhtml
+/org.eclipse.tptp.test.report.birt.doc.user/toc/birt_test_reporting_services_toc.xml
+/org.eclipse.tptp.test.report.birt.doc.user/plugin.xml</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154082</commentid>
+    <comment_count>6</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-02-11 09:19:11 -0500</bug_when>
+    <thetext>Verified on TPTP-4.5.0-200802100400.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

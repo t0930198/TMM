@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214377</bug_id>
+          
+          <creation_ts>2008-01-04 13:21:00 -0500</creation_ts>
+          <short_desc>[context] NPE when trying to remove an element from context</short_desc>
+          <delta_ts>2008-02-25 21:38:58 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Shawn Minto">shawn.minto</reporter>
+          <assigned_to name="Mik Kersten">mik.kersten</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125951</commentid>
+    <comment_count>0</comment_count>
+    <who name="Shawn Minto">shawn.minto</who>
+    <bug_when>2008-01-04 13:21:55 -0500</bug_when>
+    <thetext>I am unsure how this can happen, but the element seems to have a null handle.
+
+-- Error Log --
+Date: Fri Jan 04 09:56:09 PST 2008
+Message: Unhandled event loop exception
+Severity: Error
+Plugin ID: org.eclipse.ui
+Stack Trace:
+java.lang.NullPointerException
+	at org.eclipse.mylyn.internal.context.core.CompositeContextElement.equals(CompositeContextElement.java:137)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.manipulateInterestForElementHelper(InteractionContextManager.java:1071)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.manipulateInterestForElement(InteractionContextManager.java:1035)
+	at org.eclipse.mylyn.internal.context.ui.actions.AbstractInterestManipulationAction.run(AbstractInterestManipulationAction.java:96)
+	at org.eclipse.ui.internal.PluginAction.runWithEvent(PluginAction.java:256)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:546)
+	at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:490)
+	at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:402)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3682)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3293)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+	at java.lang.reflect.Method.invoke(Method.java:597)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)
+	at org.eclipse.equinox.launcher.Main.main(Main.java:1148)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127549</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-08 12:42:40 -0500</bug_when>
+    <thetext>Shawn: the problem here seems to be that a CompositeContextElement is created with a null handle.  We have to figure out the right contract there, enforce it, and cover it with tests.  So before I make it illegal to create those elements with null handles and make the contract explicit via throwing an exception or an assertion, can you think of a scenario where you would be creating one with a null handle?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127588</commentid>
+    <comment_count>2</comment_count>
+    <who name="Shawn Minto">shawn.minto</who>
+    <bug_when>2008-01-08 13:30:16 -0500</bug_when>
+    <thetext> (In reply to comment #1)
+&gt; Shawn: the problem here seems to be that a CompositeContextElement is created
+&gt; with a null handle.  We have to figure out the right contract there, enforce it,
+&gt; and cover it with tests.  So before I make it illegal to create those elements
+&gt; with null handles and make the contract explicit via throwing an exception or an
+&gt; assertion, can you think of a scenario where you would be creating one with a
+&gt; null handle?
+
+No I can&apos;t.  This might be a legacy context migration problem, but it would be good to have it safeguarded in the api.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1164198</commentid>
+    <comment_count>3</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-02-25 21:38:58 -0500</bug_when>
+    <thetext>Please reopen if you see this again.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215142</bug_id>
+          
+          <creation_ts>2008-01-13 08:54:00 -0500</creation_ts>
+          <short_desc>Code completion doesn&apos;t work in the display view</short_desc>
+          <delta_ts>2013-02-19 10:22:59 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Debug</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>400636</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Genady Beryozkin">eclipse</reporter>
+          <assigned_to name="JDT-Debug-Inbox">jdt-debug-inbox</assigned_to>
+          <cc>dominik.stadler</cc>
+    
+    <cc>evan_hughes</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>Michael_Rennie</cc>
+    
+    <cc>remysuen</cc>
+    
+    <cc>sunnapu</cc>
+    
+    <cc>ulidder</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130277</commentid>
+    <comment_count>0</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-01-13 08:54:32 -0500</bug_when>
+    <thetext>Build ID: 3.4M4
+
+Steps To Reproduce:
+I&apos;m debugging a remote java application (jboss 4.2 running on the local machine) and sometimes I find that the code completion in the display view stops working.
+
+(The correct method is selected in the debug view.)
+
+I don&apos;t have any additional info and there is nothing in the error log.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130278</commentid>
+    <comment_count>1</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-01-13 09:10:18 -0500</bug_when>
+    <thetext>Additional debugging revealed the following error message:
+
+&quot;com.sun.jdi.ClassNotLoadedException: Type has not been loaded occurred while retrieving type of local variable.&quot;
+
+com.sun.jdi.ClassNotLoadedException: Type has not been loaded
+at org.eclipse.jdi.internal.ReferenceTypeImpl.create(ReferenceTypeImpl.java:1285)
+at org.eclipse.jdi.internal.TypeImpl.create(TypeImpl.java:64)
+at org.eclipse.jdi.internal.LocalVariableImpl.type(LocalVariableImpl.java:166)
+at org.eclipse.jdt.internal.debug.core.model.JDILocalVariable.getUnderlyingType(JDILocalVariable.java:184)
+at org.eclipse.jdt.internal.debug.core.model.JDIVariable.getJavaType(JDIVariable.java:202)
+at org.eclipse.jdt.internal.debug.ui.contentassist.CurrentFrameContext.getLocalVariables(CurrentFrameContext.java:67)
+at org.eclipse.jdt.internal.debug.ui.contentassist.JavaDebugContentAssistProcessor.computeCompletionProposals(JavaDebugContentAssistProcessor.java:116)
+at org.eclipse.jface.text.contentassist.ContentAssistant.computeCompletionProposals(ContentAssistant.java:1808)
+at org.eclipse.jface.text.contentassist.CompletionProposalPopup.computeProposals(CompletionProposalPopup.java:538)
+at org.eclipse.jface.text.contentassist.CompletionProposalPopup.access$16(CompletionProposalPopup.java:535)
+at org.eclipse.jface.text.contentassist.CompletionProposalPopup$2.run(CompletionProposalPopup.java:470)
+at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+at org.eclipse.jface.text.contentassist.CompletionProposalPopup.showProposals(CompletionProposalPopup.java:464)
+at org.eclipse.jface.text.contentassist.ContentAssistant.showPossibleCompletions(ContentAssistant.java:1637)
+at org.eclipse.jface.text.source.SourceViewer.doOperation(SourceViewer.java:791)
+at org.eclipse.jdt.internal.debug.ui.display.DisplayViewAction.run(DisplayViewAction.java:51)
+at org.eclipse.jdt.internal.debug.ui.display.DisplayView$3.execute(DisplayView.java:286)
+at org.eclipse.core.commands.Command.executeWithChecks(Command.java:475)
+at org.eclipse.core.commands.ParameterizedCommand.executeWithChecks(ParameterizedCommand.java:470)
+at org.eclipse.ui.internal.handlers.HandlerService.executeCommand(HandlerService.java:165)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard.executeCommand(WorkbenchKeyboard.java:470)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard.press(WorkbenchKeyboard.java:821)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard.processKeyEvent(WorkbenchKeyboard.java:879)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard.filterKeySequenceBindings(WorkbenchKeyboard.java:568)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard.access$3(WorkbenchKeyboard.java:510)
+at org.eclipse.ui.internal.keys.WorkbenchKeyboard$KeyDownFilter.handleEvent(WorkbenchKeyboard.java:126)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Display.filterEvent(Display.java:1160)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:951)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:976)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:961)
+at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:989)
+at org.eclipse.swt.widgets.Widget.sendKeyEvent(Widget.java:985)
+at org.eclipse.swt.widgets.Widget.wmChar(Widget.java:1301)
+at org.eclipse.swt.widgets.Control.WM_CHAR(Control.java:3883)
+at org.eclipse.swt.widgets.Control.windowProc(Control.java:3776)
+at org.eclipse.swt.widgets.Canvas.windowProc(Canvas.java:334)
+at org.eclipse.swt.widgets.Display.windowProc(Display.java:4450)
+at org.eclipse.swt.internal.win32.OS.CallWindowProcW(Native Method)
+at org.eclipse.swt.internal.win32.OS.CallWindowProc(OS.java:2243)
+at org.eclipse.swt.internal.BidiUtil.windowProc(BidiUtil.java:657)
+at org.eclipse.swt.internal.win32.OS.DispatchMessageW(Native Method)
+at org.eclipse.swt.internal.win32.OS.DispatchMessage(OS.java:2329)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3359)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2381)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2345)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2211)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:473)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:468)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1239)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1215)
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130282</commentid>
+    <comment_count>2</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-01-13 09:31:21 -0500</bug_when>
+    <thetext>Some more info:
+
+It seems that the LocalVariableImpl.type() method forces the use of the &quot;current&quot; classloader (that was used to load the &quot;current&quot; class) to load the parameter types.
+
+But for some reason this classloader cannot load the class of the local variable and the following check fails:
+
+classLoader.equals(type.classLoader()) 
+Because classLoader is &quot;org.jboss.mx.loading.UnifiedClassLoader3&quot;
+and type.classLoader is &quot;org.jboss.system.server.NoAnnotationURLClassLoader&quot;
+
+(ReferenceTypeImpl.create(VirtualMachineImpl, String, ClassLoaderReference) line: 1260)
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130285</commentid>
+    <comment_count>3</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-01-13 09:40:24 -0500</bug_when>
+    <thetext>And last note:
+
+While the &quot;current&quot; classloader is not the classloader of the variable type, but it can load it, so when I run
+
+&quot;this.getClass().getClassLoader().loadClass(&quot;org.jboss.mx.server.Invocation&quot;).getClassLoader()&quot; I get the correct class loader for &quot;org.jboss.mx.server.Invocation&quot;.
+
+Probably a check in the ReferenceTypeImpl could not just test for classloader equality, but rather check whether the method&apos;s classloader can load the class of the local variable.
+
+In any case, even if such check fails, it should not fail the entire content assist operation.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130286</commentid>
+    <comment_count>4</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-01-13 10:19:09 -0500</bug_when>
+    <thetext>Very final note that I omitted:
+The class also does not appear in the classloader&apos;s visible classes - and the list seems to be too short (only ~300 user+system classes). The jdwp doc says that the visible classes command &quot;Returns a list of all classes which this class loader has been requested to load&quot;. Probably the &quot;current&quot; classloader was never requested to load this class (it was loaded by its parent before it was created)...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147703</commentid>
+    <comment_count>5</comment_count>
+    <who name="Genady Beryozkin">eclipse</who>
+    <bug_when>2008-02-01 13:44:19 -0500</bug_when>
+    <thetext>Any chance for this bug to be fixed for 3.4?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1985897</commentid>
+    <comment_count>6</comment_count>
+    <who name="Evan Hughes">evan_hughes</who>
+    <bug_when>2011-08-29 14:24:30 -0400</bug_when>
+    <thetext>I see this in 3.7 as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1985993</commentid>
+    <comment_count>7</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2011-08-29 16:58:37 -0400</bug_when>
+    <thetext>*** Bug 343304 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1985994</commentid>
+    <comment_count>8</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2011-08-29 16:59:29 -0400</bug_when>
+    <thetext>Copied from bug 343304, the following snippet reproduces the issue:
+
+public class ShowProblem {
+    public static void main(String[] args) {
+        ShowProblem testProblem = new ShowProblem();
+        testProblem.replicateProblem();
+    }
+
+    private void replicateProblem() {
+        getClass()    //Set the first breakpoint at this line
+        .getClassLoader()
+        .getResourceAsStream(
+        &quot;report/jasperReport.jasper&quot;);
+
+        ForTest print=null;
+
+        getClass() //Set the second breakpoint at this line
+        .getClassLoader()
+        .getResourceAsStream(
+        &quot;report/jasperReport.jasper&quot;);
+    }
+}
+
+class ForTest {
+
+}</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2218654</commentid>
+    <comment_count>9</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2013-02-19 10:22:59 -0500</bug_when>
+    <thetext>This was fixed with bug 400636
+
+*** This bug has been marked as a duplicate of bug 400636 ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

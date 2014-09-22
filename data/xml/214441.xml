@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214441</bug_id>
+          
+          <creation_ts>2008-01-06 18:21:00 -0500</creation_ts>
+          <short_desc>jsp validator only reports errors on 1 jsp file</short_desc>
+          <delta_ts>2008-01-14 12:42:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>jst.jsp</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Amy Wu">for.work.things</reporter>
+          <assigned_to name="Amy Wu">for.work.things</assigned_to>
+          
+          <qa_contact name="Nitin Dahyabhai">nitind</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126322</commentid>
+    <comment_count>0</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-01-06 18:21:50 -0500</bug_when>
+    <thetext>using wtp3.0M4 20080105091323
+but I also verified that this has been a problem since as early as wtp 2.0
+
+1. create a web project
+2. create 2 jsp files with errors in them
+3. jsp validator will only report errors on the one jsp file you are working on (like if you save the file and trigger autobuild) and it will clear out all errors reported on other jsp files
+4. if you use invoke the Validate context menu item in the project explorer on 1 jsp file, same thing happens. only errors in the file you are validating will show up and all other errors will be cleared out
+5. if you validate the entire project, all errors will be reported though
+
+and when i say errors are reported, i mean in the problems view and the error decorator icon on files in the project explorer.
+
+It seems like every time the JSP validator is called, it clears out all JSP errors for the project regardless of whether it&apos;s validating one file or all files.
+
+Other validators do not seem to have this problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126329</commentid>
+    <comment_count>1</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-06 19:50:01 -0500</bug_when>
+    <thetext>Strangely, cleaning the project and triggering validation through the build report the correct number of problems across multiple JSP files.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126354</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86281</attachid>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-06 23:23:32 -0500</bug_when>
+    <thetext>Created attachment 86281
+proposed patch
+
+Proposed patch removing calls to IReporter.removeAllMessages().  Although our validators have not been changed in this milestone, changes to the framework appear to have surfaced some bugs in our usage.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126355</commentid>
+    <comment_count>3</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-06 23:24:28 -0500</bug_when>
+    <thetext>Amy, please review the changes and if it looks alright to you, release them for the first M5 build.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128344</commentid>
+    <comment_count>4</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-01-09 14:01:24 -0500</bug_when>
+    <thetext>patch looked good. released for this week&apos;s 3.0 m5 build. thanks nitin!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130811</commentid>
+    <comment_count>5</comment_count>
+    <who name="Amy Wu">for.work.things</who>
+    <bug_when>2008-01-14 12:42:36 -0500</bug_when>
+    <thetext>verified in wtp 3.0 m5 20080112010507</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86281</attachid>
+            <date>2008-01-06 23:23:00 -0500</date>
+            <delta_ts>2008-01-06 23:23:32 -0500</delta_ts>
+            <desc>proposed patch</desc>
+            <filename>214441-a.patch</filename>
+            <type>text/plain</type>
+            <size>7512</size>
+            <attacher name="Nitin Dahyabhai">nitind</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LmpzcC5j
+b3JlDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9pbnRlcm5hbC92YWxpZGF0
+aW9uL0pTUEFjdGlvblZhbGlkYXRvci5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jv
+b3Qvd2VidG9vbHMvc291cmNlZWRpdGluZy9wbHVnaW5zL29yZy5lY2xpcHNlLmpzdC5qc3AuY29y
+ZS9zcmMvb3JnL2VjbGlwc2UvanN0L2pzcC9jb3JlL2ludGVybmFsL3ZhbGlkYXRpb24vSlNQQWN0
+aW9uVmFsaWRhdG9yLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjINCmRpZmYgLXUgLXIx
+LjIgSlNQQWN0aW9uVmFsaWRhdG9yLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvanN0L2pzcC9j
+b3JlL2ludGVybmFsL3ZhbGlkYXRpb24vSlNQQWN0aW9uVmFsaWRhdG9yLmphdmEJMTUgT2N0IDIw
+MDcgMjE6MzI6NTYgLTAwMDAJMS4yDQorKysgc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9p
+bnRlcm5hbC92YWxpZGF0aW9uL0pTUEFjdGlvblZhbGlkYXRvci5qYXZhCTcgSmFuIDIwMDggMDQ6
+MjA6MjYgLTAwMDANCkBAIC0zMiwxMCArMzIsOCBAQA0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3Qu
+c3NlLmNvcmUuaW50ZXJuYWwucHJvdmlzaW9uYWwudGV4dC5JVGV4dFJlZ2lvbjsNCiBpbXBvcnQg
+b3JnLmVjbGlwc2Uud3N0LnNzZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFsLnRleHQuSVRleHRS
+ZWdpb25Db250YWluZXI7DQogaW1wb3J0IG9yZy5lY2xpcHNlLndzdC5zc2UuY29yZS5pbnRlcm5h
+bC5wcm92aXNpb25hbC50ZXh0LklUZXh0UmVnaW9uTGlzdDsNCi1pbXBvcnQgb3JnLmVjbGlwc2Uu
+d3N0LnZhbGlkYXRpb24uaW50ZXJuYWwuY29yZS5WYWxpZGF0aW9uRXhjZXB0aW9uOw0KIGltcG9y
+dCBvcmcuZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5hbC5wcm92aXNpb25hbC5jb3JlLklN
+ZXNzYWdlOw0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5hbC5wcm92
+aXNpb25hbC5jb3JlLklSZXBvcnRlcjsNCi1pbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRp
+b24uaW50ZXJuYWwucHJvdmlzaW9uYWwuY29yZS5JVmFsaWRhdGlvbkNvbnRleHQ7DQogaW1wb3J0
+IG9yZy5lY2xpcHNlLndzdC52YWxpZGF0aW9uLmludGVybmFsLnByb3Zpc2lvbmFsLmNvcmUuSVZh
+bGlkYXRvcjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnhtbC5jb3JlLmludGVybmFsLmNvbnRl
+bnRtb2RlbC5DTUF0dHJpYnV0ZURlY2xhcmF0aW9uOw0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3Qu
+eG1sLmNvcmUuaW50ZXJuYWwuY29udGVudG1vZGVsLkNNRWxlbWVudERlY2xhcmF0aW9uOw0KQEAg
+LTI2MCwxMSArMjU4LDYgQEANCiAJCX0NCiAJfQ0KIA0KLQlwdWJsaWMgdm9pZCB2YWxpZGF0ZShJ
+VmFsaWRhdGlvbkNvbnRleHQgaGVscGVyLCBJUmVwb3J0ZXIgcmVwb3J0ZXIpIHRocm93cyBWYWxp
+ZGF0aW9uRXhjZXB0aW9uIHsNCi0JCXJlcG9ydGVyLnJlbW92ZUFsbE1lc3NhZ2VzKHRoaXMpOw0K
+LQkJc3VwZXIudmFsaWRhdGUoaGVscGVyLCByZXBvcnRlcik7DQotCX0NCi0NCiAJcHJvdGVjdGVk
+IHZvaWQgdmFsaWRhdGVGaWxlKElGaWxlIGYsIElSZXBvcnRlciByZXBvcnRlcikgew0KIAkJaWYg
+KERFQlVHKSB7DQogCQkJTG9nZ2VyLmxvZyhMb2dnZXIuSU5GTywgZ2V0Q2xhc3MoKS5nZXROYW1l
+KCkgKyAiIHZhbGlkYXRpbmc6ICIgKyBmKTsgLy8kTk9OLU5MUy0xJA0KSW5kZXg6IHNyYy9vcmcv
+ZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRhdGlvbi9KU1BEaXJlY3RpdmVWYWxp
+ZGF0b3IuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3dlYnRvb2xzL3NvdXJj
+ZWVkaXRpbmcvcGx1Z2lucy9vcmcuZWNsaXBzZS5qc3QuanNwLmNvcmUvc3JjL29yZy9lY2xpcHNl
+L2pzdC9qc3AvY29yZS9pbnRlcm5hbC92YWxpZGF0aW9uL0pTUERpcmVjdGl2ZVZhbGlkYXRvci5q
+YXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4yMA0KZGlmZiAtdSAtcjEuMjAgSlNQRGlyZWN0
+aXZlVmFsaWRhdG9yLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvanN0L2pzcC9jb3JlL2ludGVy
+bmFsL3ZhbGlkYXRpb24vSlNQRGlyZWN0aXZlVmFsaWRhdG9yLmphdmEJMzAgT2N0IDIwMDcgMjE6
+NTY6MzcgLTAwMDAJMS4yMA0KKysrIHNyYy9vcmcvZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJu
+YWwvdmFsaWRhdGlvbi9KU1BEaXJlY3RpdmVWYWxpZGF0b3IuamF2YQk3IEphbiAyMDA4IDA0OjIw
+OjI2IC0wMDAwDQpAQCAtMzUsMTAgKzM1LDggQEANCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnNz
+ZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFsLnRleHQuSVN0cnVjdHVyZWREb2N1bWVudFJlZ2lv
+bjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnNzZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFs
+LnRleHQuSVRleHRSZWdpb247DQogaW1wb3J0IG9yZy5lY2xpcHNlLndzdC5zc2UuY29yZS51dGls
+cy5TdHJpbmdVdGlsczsNCi1pbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRpb24uaW50ZXJu
+YWwuY29yZS5WYWxpZGF0aW9uRXhjZXB0aW9uOw0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3QudmFs
+aWRhdGlvbi5pbnRlcm5hbC5wcm92aXNpb25hbC5jb3JlLklNZXNzYWdlOw0KIGltcG9ydCBvcmcu
+ZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5hbC5wcm92aXNpb25hbC5jb3JlLklSZXBvcnRl
+cjsNCi1pbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRpb24uaW50ZXJuYWwucHJvdmlzaW9u
+YWwuY29yZS5JVmFsaWRhdGlvbkNvbnRleHQ7DQogaW1wb3J0IG9yZy5lY2xpcHNlLndzdC52YWxp
+ZGF0aW9uLmludGVybmFsLnByb3Zpc2lvbmFsLmNvcmUuSVZhbGlkYXRvcjsNCiANCiBpbXBvcnQg
+Y29tLmlibS5pY3UudGV4dC5Db2xsYXRvcjsNCkBAIC00MDQsMTEgKzQwMiw2IEBADQogCQl9DQog
+CX0NCiANCi0JcHVibGljIHZvaWQgdmFsaWRhdGUoSVZhbGlkYXRpb25Db250ZXh0IGhlbHBlciwg
+SVJlcG9ydGVyIHJlcG9ydGVyKSB0aHJvd3MgVmFsaWRhdGlvbkV4Y2VwdGlvbiB7DQotCQlyZXBv
+cnRlci5yZW1vdmVBbGxNZXNzYWdlcyh0aGlzKTsNCi0JCXN1cGVyLnZhbGlkYXRlKGhlbHBlciwg
+cmVwb3J0ZXIpOw0KLQl9DQotDQogCS8qKg0KIAkgKiBiYXRjaCB2YWxpZGF0aW9uIGNhbGwNCiAJ
+ICovDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9pbnRlcm5hbC92YWxpZGF0
+aW9uL0pTUEVMVmFsaWRhdG9yLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC93
+ZWJ0b29scy9zb3VyY2VlZGl0aW5nL3BsdWdpbnMvb3JnLmVjbGlwc2UuanN0LmpzcC5jb3JlL3Ny
+Yy9vcmcvZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRhdGlvbi9KU1BFTFZhbGlk
+YXRvci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xMw0KZGlmZiAtdSAtcjEuMTMgSlNQ
+RUxWYWxpZGF0b3IuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJu
+YWwvdmFsaWRhdGlvbi9KU1BFTFZhbGlkYXRvci5qYXZhCTIgTm92IDIwMDYgMDA6NTc6MzYgLTAw
+MDAJMS4xMw0KKysrIHNyYy9vcmcvZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRh
+dGlvbi9KU1BFTFZhbGlkYXRvci5qYXZhCTcgSmFuIDIwMDggMDQ6MjA6MjYgLTAwMDANCkBAIC0y
+OSwxMCArMjksOCBAQA0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3Quc3NlLmNvcmUuaW50ZXJuYWwu
+cHJvdmlzaW9uYWwudGV4dC5JVGV4dFJlZ2lvbjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnNz
+ZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFsLnRleHQuSVRleHRSZWdpb25Db2xsZWN0aW9uOw0K
+IGltcG9ydCBvcmcuZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5hbC5jb3JlLk1lc3NhZ2U7
+DQotaW1wb3J0IG9yZy5lY2xpcHNlLndzdC52YWxpZGF0aW9uLmludGVybmFsLmNvcmUuVmFsaWRh
+dGlvbkV4Y2VwdGlvbjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRpb24uaW50ZXJu
+YWwucHJvdmlzaW9uYWwuY29yZS5JTWVzc2FnZTsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZh
+bGlkYXRpb24uaW50ZXJuYWwucHJvdmlzaW9uYWwuY29yZS5JUmVwb3J0ZXI7DQotaW1wb3J0IG9y
+Zy5lY2xpcHNlLndzdC52YWxpZGF0aW9uLmludGVybmFsLnByb3Zpc2lvbmFsLmNvcmUuSVZhbGlk
+YXRpb25Db250ZXh0Ow0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5h
+bC5wcm92aXNpb25hbC5jb3JlLklWYWxpZGF0b3I7DQogaW1wb3J0IG9yZy5lY2xpcHNlLndzdC54
+bWwuY29yZS5pbnRlcm5hbC5yZWdpb25zLkRPTVJlZ2lvbkNvbnRleHQ7DQogDQpAQCAtNTAsMTEg
+KzQ4LDYgQEANCiAJCXRoaXMuZk1lc3NhZ2VPcmlnaW5hdG9yID0gdmFsaWRhdG9yOw0KIAl9DQog
+DQotCXB1YmxpYyB2b2lkIHZhbGlkYXRlKElWYWxpZGF0aW9uQ29udGV4dCBoZWxwZXIsIElSZXBv
+cnRlciByZXBvcnRlcikgdGhyb3dzIFZhbGlkYXRpb25FeGNlcHRpb24gew0KLQkJcmVwb3J0ZXIu
+cmVtb3ZlQWxsTWVzc2FnZXModGhpcyk7DQotCQlzdXBlci52YWxpZGF0ZShoZWxwZXIsIHJlcG9y
+dGVyKTsNCi0JfQ0KLQ0KIAlwcm90ZWN0ZWQgdm9pZCB2YWxpZGF0ZUZpbGUoSUZpbGUgZmlsZSwg
+SVJlcG9ydGVyIHJlcG9ydGVyKSB7DQogCQlpZiAoREVCVUcpIHsNCiAJCQlMb2dnZXIubG9nKExv
+Z2dlci5JTkZPLCBnZXRDbGFzcygpLmdldE5hbWUoKSArICIgdmFsaWRhdGluZzogIiArIGZpbGUp
+OyAvLyROT04tTkxTLTEkDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9pbnRl
+cm5hbC92YWxpZGF0aW9uL0pTUEphdmFWYWxpZGF0b3IuamF2YQ0KPT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZp
+bGU6IC9jdnNyb290L3dlYnRvb2xzL3NvdXJjZWVkaXRpbmcvcGx1Z2lucy9vcmcuZWNsaXBzZS5q
+c3QuanNwLmNvcmUvc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9pbnRlcm5hbC92YWxpZGF0
+aW9uL0pTUEphdmFWYWxpZGF0b3IuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMTENCmRp
+ZmYgLXUgLXIxLjExIEpTUEphdmFWYWxpZGF0b3IuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9q
+c3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRhdGlvbi9KU1BKYXZhVmFsaWRhdG9yLmphdmEJMyBT
+ZXAgMjAwNyAwNjozNjo1NiAtMDAwMAkxLjExDQorKysgc3JjL29yZy9lY2xpcHNlL2pzdC9qc3Av
+Y29yZS9pbnRlcm5hbC92YWxpZGF0aW9uL0pTUEphdmFWYWxpZGF0b3IuamF2YQk3IEphbiAyMDA4
+IDA0OjIwOjI2IC0wMDAwDQpAQCAtMzIsMTAgKzMyLDggQEANCiBpbXBvcnQgb3JnLmVjbGlwc2Uu
+d3N0LnNzZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFsLnRleHQuSVN0cnVjdHVyZWREb2N1bWVu
+dDsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnNzZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFs
+LnRleHQuSVN0cnVjdHVyZWREb2N1bWVudFJlZ2lvbjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0
+LnNzZS5jb3JlLmludGVybmFsLnByb3Zpc2lvbmFsLnRleHQuSVRleHRSZWdpb247DQotaW1wb3J0
+IG9yZy5lY2xpcHNlLndzdC52YWxpZGF0aW9uLmludGVybmFsLmNvcmUuVmFsaWRhdGlvbkV4Y2Vw
+dGlvbjsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRpb24uaW50ZXJuYWwucHJvdmlz
+aW9uYWwuY29yZS5JTWVzc2FnZTsNCiBpbXBvcnQgb3JnLmVjbGlwc2Uud3N0LnZhbGlkYXRpb24u
+aW50ZXJuYWwucHJvdmlzaW9uYWwuY29yZS5JUmVwb3J0ZXI7DQotaW1wb3J0IG9yZy5lY2xpcHNl
+LndzdC52YWxpZGF0aW9uLmludGVybmFsLnByb3Zpc2lvbmFsLmNvcmUuSVZhbGlkYXRpb25Db250
+ZXh0Ow0KIGltcG9ydCBvcmcuZWNsaXBzZS53c3QudmFsaWRhdGlvbi5pbnRlcm5hbC5wcm92aXNp
+b25hbC5jb3JlLklWYWxpZGF0b3I7DQogaW1wb3J0IG9yZy5lY2xpcHNlLndzdC54bWwuY29yZS5p
+bnRlcm5hbC5wcm92aXNpb25hbC5kb2N1bWVudC5JRE9NRG9jdW1lbnQ7DQogaW1wb3J0IG9yZy5l
+Y2xpcHNlLndzdC54bWwuY29yZS5pbnRlcm5hbC5wcm92aXNpb25hbC5kb2N1bWVudC5JRE9NTW9k
+ZWw7DQpAQCAtMTc1LDExICsxNzMsNiBAQA0KIAkJfQ0KIAl9DQogDQotCXB1YmxpYyB2b2lkIHZh
+bGlkYXRlKElWYWxpZGF0aW9uQ29udGV4dCBoZWxwZXIsIElSZXBvcnRlciByZXBvcnRlcikgdGhy
+b3dzIFZhbGlkYXRpb25FeGNlcHRpb24gew0KLQkJcmVwb3J0ZXIucmVtb3ZlQWxsTWVzc2FnZXMo
+dGhpcyk7DQotCQlzdXBlci52YWxpZGF0ZShoZWxwZXIsIHJlcG9ydGVyKTsNCi0JfQ0KLQ0KIAkv
+KioNCiAJICogVmFsaWRhdGUgb25lIGZpbGUuIEl0J3MgYXNzdW1lZCB0aGF0IHRoZSBmaWxlIGhh
+cyBKU1AgY29udGVudCB0eXBlLg0KIAkgKiANCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvanN0L2pz
+cC9jb3JlL2ludGVybmFsL3ZhbGlkYXRpb24vSlNQQmF0Y2hWYWxpZGF0b3IuamF2YQ0KPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3dlYnRvb2xzL3NvdXJjZWVkaXRpbmcvcGx1Z2lucy9v
+cmcuZWNsaXBzZS5qc3QuanNwLmNvcmUvc3JjL29yZy9lY2xpcHNlL2pzdC9qc3AvY29yZS9pbnRl
+cm5hbC92YWxpZGF0aW9uL0pTUEJhdGNoVmFsaWRhdG9yLmphdmEsdg0KcmV0cmlldmluZyByZXZp
+c2lvbiAxLjYNCmRpZmYgLXUgLXIxLjYgSlNQQmF0Y2hWYWxpZGF0b3IuamF2YQ0KLS0tIHNyYy9v
+cmcvZWNsaXBzZS9qc3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRhdGlvbi9KU1BCYXRjaFZhbGlk
+YXRvci5qYXZhCTMwIE9jdCAyMDA3IDIxOjU1OjU0IC0wMDAwCTEuNg0KKysrIHNyYy9vcmcvZWNs
+aXBzZS9qc3QvanNwL2NvcmUvaW50ZXJuYWwvdmFsaWRhdGlvbi9KU1BCYXRjaFZhbGlkYXRvci5q
+YXZhCTcgSmFuIDIwMDggMDQ6MjA6MjYgLTAwMDANCkBAIC0xNzUsOCArMTc1LDYgQEANCiANCiAN
+CiAJdm9pZCBkb1ZhbGlkYXRlKElWYWxpZGF0aW9uQ29udGV4dCBoZWxwZXIsIElSZXBvcnRlciBy
+ZXBvcnRlcikgdGhyb3dzIFZhbGlkYXRpb25FeGNlcHRpb24gew0KLQkJcmVwb3J0ZXIucmVtb3Zl
+QWxsTWVzc2FnZXModGhpcyk7DQotDQogCQlTdHJpbmdbXSB1cmlzID0gaGVscGVyLmdldFVSSXMo
+KTsNCiAJCWlmICh1cmlzLmxlbmd0aCA+IDApIHsNCiAJCQlJV29ya3NwYWNlUm9vdCB3c1Jvb3Qg
+PSBSZXNvdXJjZXNQbHVnaW4uZ2V0V29ya3NwYWNlKCkuZ2V0Um9vdCgpOw0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

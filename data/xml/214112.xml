@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214112</bug_id>
+          
+          <creation_ts>2008-01-02 09:20:00 -0500</creation_ts>
+          <short_desc>[update] Mylyn context manager invokes inexistent method</short_desc>
+          <delta_ts>2008-04-11 15:53:24 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Core</component>
+          <version>2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Tom Crossland">tom.crossland</reporter>
+          <assigned_to name="Mik Kersten">mik.kersten</assigned_to>
+          <cc>drbugsmn</cc>
+    
+    <cc>jose.jflores</cc>
+    
+    <cc>tom.crossland</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124111</commentid>
+    <comment_count>0</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-02 09:20:40 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Create Mylyn repository (Trac, in this case)
+2. Create ticket and query
+3. Synchronize repository
+4. Open ticket in Eclipse
+
+It seems that the exception occurs each time Mylyn attempts to update the context of the ticket.
+
+More information:
+Stack trace:
+
+!ENTRY org.eclipse.mylyn 1 0 2008-01-02 14:45:42.468
+!MESSAGE Failed to update model based on selection.
+
+!STACK 0
+
+java.lang.NoSuchMethodError: org.eclipse.mylyn.internal.context.core.InteractionContextManager.getScalingFactors()Lorg/eclipse/mylyn/internal/context/core/ScalingFactors;
+	at org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager.shouldRemove(ContextActiveChangeSetManager.java:261)
+	at org.eclipse.mylyn.internal.team.ui.ContextActiveChangeSetManager.interestChanged(ContextActiveChangeSetManager.java:229)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.notifyInterestDelta(InteractionContextManager.java:391)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:312)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:287)
+	at org.eclipse.mylyn.internal.context.core.InteractionContextManager.processInteractionEvent(InteractionContextManager.java:283)
+	at org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor.handleElementSelection(AbstractUserInteractionMonitor.java:88)
+	at org.eclipse.mylyn.internal.java.ui.JavaEditingMonitor.handleWorkbenchPartSelection(JavaEditingMonitor.java:75)
+	at org.eclipse.mylyn.monitor.ui.AbstractUserInteractionMonitor.selectionChanged(AbstractUserInteractionMonitor.java:64)
+	at org.eclipse.ui.internal.AbstractSelectionService.firePostSelection(AbstractSelectionService.java:179)
+	at org.eclipse.ui.internal.AbstractSelectionService$2.selectionChanged(AbstractSelectionService.java:71)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionProviderMediator.firePostSelectionChanged(SelectionProviderMediator.java:143)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionProviderMediator.doPostSelectionChanged(SelectionProviderMediator.java:105)
+	at org.eclipse.jdt.internal.ui.viewsupport.SelectionProviderMediator$InternalPostSelectionListener.selectionChanged(SelectionProviderMediator.java:61)
+	at org.eclipse.jface.viewers.StructuredViewer$3.run(StructuredViewer.java:842)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+	at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+	at org.eclipse.jface.viewers.StructuredViewer.firePostSelectionChanged(StructuredViewer.java:840)
+	at org.eclipse.jface.viewers.StructuredViewer.handlePostSelect(StructuredViewer.java:1153)
+	at org.eclipse.jface.viewers.StructuredViewer$5.widgetSelected(StructuredViewer.java:1178)
+	at org.eclipse.jface.util.OpenStrategy.firePostSelectionEvent(OpenStrategy.java:250)
+	at org.eclipse.jface.util.OpenStrategy.access$4(OpenStrategy.java:244)
+	at org.eclipse.jface.util.OpenStrategy$3.run(OpenStrategy.java:418)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124793</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-03 01:53:42 -0500</bug_when>
+    <thetext>I</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124794</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-03 01:54:55 -0500</bug_when>
+    <thetext>Tom: It looks like you may be in a misconfigured state with a partially updated Mylyn (i.e. some features updated, others not).  Could you update to Mylyn 2.2 and report whether this is still happening?
+
+  http://www.eclipse.org/mylyn/downloads/</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124889</commentid>
+    <comment_count>3</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-03 08:28:45 -0500</bug_when>
+    <thetext>Hi Mik,
+
+I&apos;m pretty sure I&apos;m using the latest versions from the update site, following the documented installation procedures:
+
+ * Mylyn Bridge: Eclipse IDE 2.2.0.I20071220-1700
+ * Mylyn Bridge: Java Development 2.2.0.I20071220-1700
+ * Mylyn Bridge: PDE, CVS and Ant 2.1.0.v20070927-0900
+ * Mylyn Connector: Buzilla 2.1.0.v20070927-0900
+ * Mylyn Connector: Trac 2.2.0.I20071220-1700
+ * Mylyn Focused UI (Recommended) 2.2.0.I20071220-1700
+ * Mylyn Task List (Required) 2.2.0.I20071220-1700
+
+Is there any way I can perform a &quot;clean install&quot; of Mylyn without using the update site?
+
+I&apos;m also using a couple of plugins which offer &quot;Mylyn integration&quot;, specifically the Subclipse plugin (for integration with a SVN repositories), and Spring IDE, for Spring development. I&apos;ll try disabling the &quot;Mylyn integration&quot; features to see if the problem persists, though the stack trace doesn&apos;t seem to indicate that those plugins cause the problem.
+
+Any suggestions?
+
+Many thanks,
+
+Tom.
+
+P.S. Apart from this issue, I&apos;m thoroughly enjoying Mylyn... congratulations on the good work!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125191</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 14:18:20 -0500</bug_when>
+    <thetext>Tom, one way to check what is actually installed is to dump Eclipse configuration using Help / About Eclipse SDK / Configuration Details (you can attach that to this bug repot, so we could check).
+
+You can also use Help / Software Updates / Manage Configuration to see if there are any configuration errors or oddities in your environment (make sure to enable showing install locations, nested features and disabled features in the Configuration Manager dialog.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125208</commentid>
+    <comment_count>5</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-03 14:42:08 -0500</bug_when>
+    <thetext>Hi Eugene,
+
+Thanks for the advice. I did use the Eclipse &quot;software updates&quot; utility to obtain the latest versions of Mylyn from the update site, and as I pointed out in my previous comment, there are two components which still appeared to be on 2.1.0.v20070927-0900 (the Bugzilla connector and the Mylyn Bridge for PDE, CVS and Ant). Are these components up to date on the update site?
+
+I subsequently downloaded the latest version and installed manually. Also I disabled the Mylyn integration component of the Spring IDE plugin, and so far the problem has not recurred.
+
+Will try to determine whether it was caused by the Spring IDE plugin or the 2.1.0 plugins.
+
+Thanks and best regards,
+
+Tom.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125225</commentid>
+    <comment_count>6</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-03 14:57:13 -0500</bug_when>
+    <thetext>Tom, that was &quot;Manage Configuration&quot; and NOT &quot;Find and Install...&quot; which you probably used. Also note that you need to use &quot;Search for new Features to install...&quot; to perform updates reliably. You should not have 2.1.0.v20070927-0900 plugins installed at the same time with other 2.2 versions, that is probably why you are getting the errors. You can uninstall these versions, either from &quot;Manage Configuration&quot; or manually by deleting plugin jars from disk.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125235</commentid>
+    <comment_count>7</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-03 15:12:10 -0500</bug_when>
+    <thetext>Hi Eugene,
+
+I did use the &quot;Manage Configuration&quot; after the &quot;Search for new Features to install...&quot;. It showed that the previous 2.1.0.v20070927-0900 plugins had been disabled after the installation of the 2.2 versions (the idea being that the &quot;Manage Configuration&quot; allows you to revert to previous versions should you have problems). Independently, neither the Bugzilla connector nor the Mylyn Bridge for PDE, CVS and Ant were updated by the &quot;Search for new Features to install...&quot;, hence I created a backup and installed them manually. To be certain, I&apos;ll restore my backup and check again once I have a few minutes.
+
+Thanks once again,
+
+Tom.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125257</commentid>
+    <comment_count>8</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-03 15:36:10 -0500</bug_when>
+    <thetext>Hi once again,
+
+I restored Eclipse to it&apos;s previous state and used the &quot;Search for new Features to install&quot;. I didn&apos;t see them on the update site since they were both more recent on the &quot;Weekly Build&quot; site, and I had the &quot;Show the latest version of a feature only&quot; checked. So that&apos;s the update mystery resolved. I&apos;ll install the latest weekly builds, reenable the Spring IDE Mylyn integration plugin, and see if I can reproduce the problem.
+
+Thanks once again for your help (and patience).
+
+Tom.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125591</commentid>
+    <comment_count>9</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-04 05:33:53 -0500</bug_when>
+    <thetext>I haven&apos;t been able to reproduce the problem with the latest build. Since it was a fairly frequent exception, I assume it was probably due to incompatibilities between different versions of the plugins. Many thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125973</commentid>
+    <comment_count>10</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 14:20:01 -0500</bug_when>
+    <thetext> (In reply to comment #8)
+&gt; I restored Eclipse to it&apos;s previous state and used the &quot;Search for new Features
+&gt; to install&quot;. I didn&apos;t see them on the update site since they were both more
+&gt; recent on the &quot;Weekly Build&quot; site, and I had the &quot;Show the latest version of a
+&gt; feature only&quot; checked. So that&apos;s the update mystery resolved. 
+
+Great that you got to the bottom of this Tom.  This isn&apos;t in our troubleshooting documentation, so could I ask you to add a sentence or two about this scenario to the following wiki page?  You can log in using your Bugzilla password:
+
+   http://wiki.eclipse.org/index.php/Mylyn_FAQ#Installation_Troubleshooting</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126013</commentid>
+    <comment_count>11</comment_count>
+    <who name="Tom Crossland">tom.crossland</who>
+    <bug_when>2008-01-04 15:04:16 -0500</bug_when>
+    <thetext>Sure thing... have updated the FAQ to indicate the solution to the original error as well as the &quot;update mystery&quot;.
+
+Thanks once more.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130094</commentid>
+    <comment_count>12</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-11 21:07:40 -0500</bug_when>
+    <thetext>Excellent, thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1175698</commentid>
+    <comment_count>13</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-03-12 01:07:48 -0400</bug_when>
+    <thetext>*** Bug 222302 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1200812</commentid>
+    <comment_count>14</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-04-11 14:26:26 -0400</bug_when>
+    <thetext>*** Bug 226719 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1200922</commentid>
+    <comment_count>15</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-04-11 15:53:24 -0400</bug_when>
+    <thetext>*** Bug 226719 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

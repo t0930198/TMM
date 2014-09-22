@@ -1,0 +1,339 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214570</bug_id>
+          
+          <creation_ts>2008-01-07 23:32:00 -0500</creation_ts>
+          <short_desc>[JavaWebstart] NullpointerException at org.eclipse.equinox.launcher.Main.findMax(Main.java:871)</short_desc>
+          <delta_ts>2008-02-28 16:37:40 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Framework</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc>http://gouv.nc</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Tristan Robert">tristan.robert</reporter>
+          <assigned_to name="equinox.framework-inbox">equinox.framework-inbox</assigned_to>
+          <cc>aniefer</cc>
+    
+    <cc>Mike_Wilson</cc>
+    
+    <cc>philippe_mulet</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127092</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86374</attachid>
+    <who name="Tristan Robert">tristan.robert</who>
+    <bug_when>2008-01-07 23:32:55 -0500</bug_when>
+    <thetext>Created attachment 86374
+.log
+
+1-Launch a jnlp eclipse plugin v3.3.1.1 with org.eclipse.equinox.launcher_1.0.1.R33x_v20070828.jar
+2-We encounter a this exception: java.lang.NullPointerException
+	at org.eclipse.equinox.launcher.Main.findMax(Main.java:871)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127094</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tristan Robert">tristan.robert</who>
+    <bug_when>2008-01-07 23:39:06 -0500</bug_when>
+    <thetext>See also http://saloon.javaranch.com/cgi-bin/ubb/ultimatebb.cgi?ubb=get_topic&amp;f=53&amp;t=000482</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128369</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-01-09 14:34:27 -0500</bug_when>
+    <thetext>I have fixed the immediate cause of the NPE, however, I could not reproduce the problem and by inspection I can not see how it can possibly occur in R33x_v20070828.
+
+An NPE was possible in earlier versions, but the fix for bug 198462 would have addressed that and the fix is in R33x_v20070828.
+
+In earlier versions, the way this would have occurred was if there was more than one version of the framework bundle (usually org.eclipse.osgi) and one of those versions did not have a Bundle-Version in its manifest. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151626</commentid>
+    <comment_count>3</comment_count>
+    <who name="Tristan Robert">tristan.robert</who>
+    <bug_when>2008-02-06 21:22:04 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; I have fixed the immediate cause of the NPE, however, I could not reproduce the
+&gt; problem and by inspection I can not see how it can possibly occur in
+&gt; R33x_v20070828.
+&gt; 
+&gt; An NPE was possible in earlier versions, but the fix for bug 198462 would have
+&gt; addressed that and the fix is in R33x_v20070828.
+&gt; 
+&gt; In earlier versions, the way this would have occurred was if there was more
+&gt; than one version of the framework bundle (usually org.eclipse.osgi) and one of
+&gt; those versions did not have a Bundle-Version in its manifest. 
+&gt; 
+
+I have two comments to do:
+
+First, I don&apos;t know if this bug is related to the bug 214703 that i first encountered and decided to resolve by manually erasing these lines in the built features jnlp:
+&lt;jar href=&quot;plugins/org.eclipse.swt.wpf.win32.x86_3.3.1.v3347a.jar&quot;/&gt;
+&lt;jar href=&quot;plugins/org.eclipse.swt.wpf.win32.x86_3.3.1.v3347a.jar&quot;/&gt;
+
+Second, is it possible to fix this bug in the 3.3.2 stable release instead of the unstable 3.4M5? It is very important for our project release which is planned for march.
+
+Kind regards,
+
+Tristan</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151875</commentid>
+    <comment_count>4</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-02-07 09:02:35 -0500</bug_when>
+    <thetext>Tristan, at this point our team is not able to reproduce.  Have you confirmed that the org.eclipse.equinox.launcher from the latest 3.4 builds fixes your problem?
+
+3.3.2 is pretty much done.  We need to be very confident in the fix and be sure there are no work around before forcing a respin of 3.3.2 release candidate.  Andrew, what are you thoughts on this fix, is it safe? will it fix the problem?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152252</commentid>
+    <comment_count>5</comment_count>
+      <attachid>89184</attachid>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-02-07 14:46:34 -0500</bug_when>
+    <thetext>Created attachment 89184
+patch against head
+
+I have finally found the cause, attached is a patch that fixes it.  The previous patch only stopped the NPE, it would have been sufficient, but if this goes in 3.3.2 I would much prefer this new fix.
+
+Without this patch (or the previous fix in head), there will be an NPE whenever there is more than one entry in the WebStartMain classpath for a given Bundle-SymbolicName.
+
+NOTE: If a jar is listed more than once in the jnlp files, then there will be multiple entries in the classpath for that jar which will result in this NPE.
+
+Workaround is to ensure that the jnlp files do not list jars more than once.
+If there is a legitimate need to have more than one version of a bundle, then there is no work around and we will get the NPE.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153091</commentid>
+    <comment_count>6</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-02-08 09:36:26 -0500</bug_when>
+    <thetext>Obvious questions. How really critical is this ? What is the risk of fixing it, vs. not fixing it ? Regression from what ?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153129</commentid>
+    <comment_count>7</comment_count>
+    <who name="Philipe Mulet">philippe_mulet</who>
+    <bug_when>2008-02-08 10:23:31 -0500</bug_when>
+    <thetext>(my previous question were relative to contributing to 3.3.2)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153217</commentid>
+    <comment_count>8</comment_count>
+      <attachid>89267</attachid>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-02-08 11:36:10 -0500</bug_when>
+    <thetext>Created attachment 89267
+3.3.1 patch
+
+Patch against 3.3.1
+
+The regression was from 3.2.0 -&gt; 3.3.0.
+The risk of the fix is small, the patch is simple (see attached).
+
+The risk of no fix depends on how many people will legitimately have multiple bundles with the same name (different versions) in their jnlp deployment.  I think this is small.
+
+As mentioned in comment #5, I suspect most people hitting this do so because of duplicate entries in the jnlp file which can be fixed easily be removing the duplicate entries.  (I do not know how the duplicate entries get in the JNLP file in the first place.)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153253</commentid>
+    <comment_count>9</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-02-08 12:05:05 -0500</bug_when>
+    <thetext>I think it is to late for 3.3.2 to fix this.  The current work around in most cases is to ensure that you do not have duplicate entries in the jnlp file.  IMO it is not worth the risk to respin 3.3.2 this late in the cycle.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153317</commentid>
+    <comment_count>10</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-02-08 13:26:23 -0500</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; I think it is to late for 3.3.2 to fix this.  The current work around in most
+&gt; cases is to ensure that you do not have duplicate entries in the jnlp file. 
+&gt; IMO it is not worth the risk to respin 3.3.2 this late in the cycle.
+&gt; 
+
+I talked to Mike and he agrees.
+
+The actual case where this is a real problem is small, and in the worst case of a product that actually does require multiple versions of a single bundle, it is not a large step for the product to spin its own version of the jar with the fix.  Especially since the jar must be resigned with their own certificate.
+
+I&apos;m marking this as fixed in M5 as that is where the initial NPE was fixed.  The remainder of the change is in M6.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153354</commentid>
+    <comment_count>11</comment_count>
+    <who name="Mike Wilson">Mike_Wilson</who>
+    <bug_when>2008-02-08 14:01:49 -0500</bug_when>
+    <thetext>agree with Andrew, Thomas, et al.. We should not attempt to fix for 3.3.2.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1167359</commentid>
+    <comment_count>12</comment_count>
+    <who name="Tristan Robert">tristan.robert</who>
+    <bug_when>2008-02-28 16:37:40 -0500</bug_when>
+    <thetext>We didn&apos;t found any multiple entries in the jnlp file, so we have used the patch to resolve the issue.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86374</attachid>
+            <date>2008-01-07 23:32:00 -0500</date>
+            <delta_ts>2008-01-07 23:32:55 -0500</delta_ts>
+            <desc>.log</desc>
+            <filename>1199764998296.log</filename>
+            <type>application/octet-stream</type>
+            <size>1495</size>
+            <attacher name="Tristan Robert">tristan.robert</attacher>
+            
+              <data encoding="base64">IVNFU1NJT04gVHVlIEphbiAwOCAxNTowMzoxOCBTQlQgMjAwOCAtLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCiFFTlRSWSBvcmcuZWNsaXBzZS5lcXVpbm94LmxhdW5j
+aGVyIDQgMCAyMDA4LTAxLTA4IDE1OjAzOjE4LjMxMg0KIU1FU1NBR0UgRXhjZXB0aW9uIGxhdW5j
+aGluZyB0aGUgRWNsaXBzZSBQbGF0Zm9ybToNCiFTVEFDSw0KamF2YS5sYW5nLk51bGxQb2ludGVy
+RXhjZXB0aW9uDQoJYXQgb3JnLmVjbGlwc2UuZXF1aW5veC5sYXVuY2hlci5NYWluLmZpbmRNYXgo
+TWFpbi5qYXZhOjg3MSkNCglhdCBvcmcuZWNsaXBzZS5lcXVpbm94LmxhdW5jaGVyLldlYlN0YXJ0
+TWFpbi5maW5kQnVuZGxlKFdlYlN0YXJ0TWFpbi5qYXZhOjE0NikNCglhdCBvcmcuZWNsaXBzZS5l
+cXVpbm94LmxhdW5jaGVyLldlYlN0YXJ0TWFpbi5idWlsZE9TR2lCdW5kbGVMaXN0KFdlYlN0YXJ0
+TWFpbi5qYXZhOjI2MCkNCglhdCBvcmcuZWNsaXBzZS5lcXVpbm94LmxhdW5jaGVyLldlYlN0YXJ0
+TWFpbi5iZWZvcmVGd2tJbnZvY2F0aW9uKFdlYlN0YXJ0TWFpbi5qYXZhOjg1KQ0KCWF0IG9yZy5l
+Y2xpcHNlLmVxdWlub3gubGF1bmNoZXIuTWFpbi5iYXNpY1J1bihNYWluLmphdmE6NDQ2KQ0KCWF0
+IG9yZy5lY2xpcHNlLmVxdWlub3gubGF1bmNoZXIuV2ViU3RhcnRNYWluLmJhc2ljUnVuKFdlYlN0
+YXJ0TWFpbi5qYXZhOjc4KQ0KCWF0IG9yZy5lY2xpcHNlLmVxdWlub3gubGF1bmNoZXIuTWFpbi5y
+dW4oTWFpbi5qYXZhOjExNzMpDQoJYXQgb3JnLmVjbGlwc2UuZXF1aW5veC5sYXVuY2hlci5XZWJT
+dGFydE1haW4ubWFpbihXZWJTdGFydE1haW4uamF2YTo1NikNCglhdCBzdW4ucmVmbGVjdC5OYXRp
+dmVNZXRob2RBY2Nlc3NvckltcGwuaW52b2tlMChOYXRpdmUgTWV0aG9kKQ0KCWF0IHN1bi5yZWZs
+ZWN0Lk5hdGl2ZU1ldGhvZEFjY2Vzc29ySW1wbC5pbnZva2UoVW5rbm93biBTb3VyY2UpDQoJYXQg
+c3VuLnJlZmxlY3QuRGVsZWdhdGluZ01ldGhvZEFjY2Vzc29ySW1wbC5pbnZva2UoVW5rbm93biBT
+b3VyY2UpDQoJYXQgamF2YS5sYW5nLnJlZmxlY3QuTWV0aG9kLmludm9rZShVbmtub3duIFNvdXJj
+ZSkNCglhdCBjb20uc3VuLmphdmF3cy5MYXVuY2hlci5leGVjdXRlQXBwbGljYXRpb24oVW5rbm93
+biBTb3VyY2UpDQoJYXQgY29tLnN1bi5qYXZhd3MuTGF1bmNoZXIuZXhlY3V0ZU1haW5DbGFzcyhV
+bmtub3duIFNvdXJjZSkNCglhdCBjb20uc3VuLmphdmF3cy5MYXVuY2hlci5jb250aW51ZUxhdW5j
+aChVbmtub3duIFNvdXJjZSkNCglhdCBjb20uc3VuLmphdmF3cy5MYXVuY2hlci5oYW5kbGVBcHBs
+aWNhdGlvbkRlc2MoVW5rbm93biBTb3VyY2UpDQoJYXQgY29tLnN1bi5qYXZhd3MuTGF1bmNoZXIu
+aGFuZGxlTGF1bmNoRmlsZShVbmtub3duIFNvdXJjZSkNCglhdCBjb20uc3VuLmphdmF3cy5MYXVu
+Y2hlci5ydW4oVW5rbm93biBTb3VyY2UpDQoJYXQgamF2YS5sYW5nLlRocmVhZC5ydW4oVW5rbm93
+biBTb3VyY2UpDQoNCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89184</attachid>
+            <date>2008-02-07 14:46:00 -0500</date>
+            <delta_ts>2008-02-07 14:46:34 -0500</delta_ts>
+            <desc>patch against head</desc>
+            <filename>214570.txt</filename>
+            <type>text/plain</type>
+            <size>819</size>
+            <attacher name="Andrew Niefer">aniefer</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZXF1aW5veC5s
+YXVuY2hlcg0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2xhdW5jaGVyL1dlYlN0YXJ0
+TWFpbi5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNs
+aXBzZS5lcXVpbm94LmxhdW5jaGVyL3NyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2xhdW5jaGVyL1dl
+YlN0YXJ0TWFpbi5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xMQ0KZGlmZiAtdSAtcjEu
+MTEgV2ViU3RhcnRNYWluLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvZXF1aW5veC9sYXVuY2hl
+ci9XZWJTdGFydE1haW4uamF2YQk5IEphbiAyMDA4IDE5OjQ2OjUxIC0wMDAwCTEuMTENCisrKyBz
+cmMvb3JnL2VjbGlwc2UvZXF1aW5veC9sYXVuY2hlci9XZWJTdGFydE1haW4uamF2YQk3IEZlYiAy
+MDA4IDE2OjQyOjQ3IC0wMDAwDQpAQCAtMTA1LDggKzEwNSw4IEBADQogCQlpbnQgaGlnaGVzdCA9
+IDA7DQogCQlmb3IgKGludCBpID0gMDsgaSA8IHZlcnNpb25zLmxlbmd0aDsgaSsrKSB7DQogCQkJ
+dmVyc2lvbnNbaV0gPSAoKEJ1bmRsZUluZm8pIG1hdGNoZXMuZ2V0KGkpKS52ZXJzaW9uOw0KLQkJ
+CWhpZ2hlc3QgPSBmaW5kTWF4KHZlcnNpb25zKTsNCiAJCX0NCisJCWhpZ2hlc3QgPSBmaW5kTWF4
+KHZlcnNpb25zKTsNCiAJCXJldHVybiAoKEJ1bmRsZUluZm8pIG1hdGNoZXMuZ2V0KGhpZ2hlc3Qp
+KS5sb2NhdGlvbjsNCiAJfQ0KIA0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89267</attachid>
+            <date>2008-02-08 11:36:00 -0500</date>
+            <delta_ts>2008-02-08 11:36:10 -0500</delta_ts>
+            <desc>3.3.1 patch</desc>
+            <filename>214570M.txt</filename>
+            <type>text/plain</type>
+            <size>2032</size>
+            <attacher name="Andrew Niefer">aniefer</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZXF1aW5veC5s
+YXVuY2hlcg0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2xhdW5jaGVyL01haW4uamF2
+YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2UuZXF1
+aW5veC5sYXVuY2hlci9zcmMvb3JnL2VjbGlwc2UvZXF1aW5veC9sYXVuY2hlci9NYWluLmphdmEs
+dg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjI2LjIuMg0KZGlmZiAtdSAtcjEuMjYuMi4yIE1haW4u
+amF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2xhdW5jaGVyL01haW4uamF2YQkyMyBK
+dWwgMjAwNyAxNTozMjowOCAtMDAwMAkxLjI2LjIuMg0KKysrIHNyYy9vcmcvZWNsaXBzZS9lcXVp
+bm94L2xhdW5jaGVyL01haW4uamF2YQk4IEZlYiAyMDA4IDE2OjI0OjAyIC0wMDAwDQpAQCAtODY2
+LDcgKzg2Niw3IEBADQogICAgICAgICBpbnQgcmVzdWx0ID0gLTE7DQogICAgICAgICBPYmplY3Qg
+bWF4VmVyc2lvbiA9IG51bGw7DQogICAgICAgICBmb3IgKGludCBpID0gMDsgaSA8IGNhbmRpZGF0
+ZXMubGVuZ3RoOyBpKyspIHsNCi0gICAgICAgICAgICBTdHJpbmcgbmFtZSA9IGNhbmRpZGF0ZXNb
+aV07DQorICAgICAgICAgICAgU3RyaW5nIG5hbWUgPSAoY2FuZGlkYXRlc1tpXSAhPSBudWxsKSA/
+IGNhbmRpZGF0ZXNbaV0gOiAiIjsgLy8kTk9OLU5MUy0xJA0KICAgICAgICAgICAgIFN0cmluZyB2
+ZXJzaW9uID0gIiI7IC8vJE5PTi1OTFMtMSQgLy8gTm90ZTogZGlyZWN0b3J5IHdpdGggdmVyc2lv
+biBzdWZmaXggaXMgYWx3YXlzID4gdGhhbiBkaXJlY3Rvcnkgd2l0aG91dCB2ZXJzaW9uIHN1ZmZp
+eA0KICAgICAgICAgICAgIGludCBpbmRleCA9IG5hbWUuaW5kZXhPZignXycpOw0KICAgICAgICAg
+ICAgIGlmIChpbmRleCAhPSAtMSkNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvZXF1aW5veC9sYXVu
+Y2hlci9XZWJTdGFydE1haW4uamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2Vj
+bGlwc2Uvb3JnLmVjbGlwc2UuZXF1aW5veC5sYXVuY2hlci9zcmMvb3JnL2VjbGlwc2UvZXF1aW5v
+eC9sYXVuY2hlci9XZWJTdGFydE1haW4uamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuOS4y
+LjENCmRpZmYgLXUgLXIxLjkuMi4xIFdlYlN0YXJ0TWFpbi5qYXZhDQotLS0gc3JjL29yZy9lY2xp
+cHNlL2VxdWlub3gvbGF1bmNoZXIvV2ViU3RhcnRNYWluLmphdmEJMjggQXVnIDIwMDcgMTM6NDc6
+MjMgLTAwMDAJMS45LjIuMQ0KKysrIHNyYy9vcmcvZWNsaXBzZS9lcXVpbm94L2xhdW5jaGVyL1dl
+YlN0YXJ0TWFpbi5qYXZhCTggRmViIDIwMDggMTY6MjQ6MDIgLTAwMDANCkBAIC0xMTMsOCArMTEz
+LDggQEANCiAJCWludCBoaWdoZXN0ID0gMDsNCiAJCWZvciAoaW50IGkgPSAwOyBpIDwgdmVyc2lv
+bnMubGVuZ3RoOyBpKyspIHsNCiAJCQl2ZXJzaW9uc1tpXSA9ICgoQnVuZGxlSW5mbykgbWF0Y2hl
+cy5nZXQoaSkpLnZlcnNpb247DQotCQkJaGlnaGVzdCA9IGZpbmRNYXgodmVyc2lvbnMpOw0KIAkJ
+fQ0KKwkJaGlnaGVzdCA9IGZpbmRNYXgodmVyc2lvbnMpOw0KIAkJcmV0dXJuICgoQnVuZGxlSW5m
+bykgbWF0Y2hlcy5nZXQoaGlnaGVzdCkpLmxvY2F0aW9uOw0KIAl9DQogDQpAQCAtMTQzLDggKzE0
+Myw4IEBADQogCQlpbnQgaGlnaGVzdCA9IDA7DQogCQlmb3IgKGludCBpID0gMDsgaSA8IHZlcnNp
+b25zLmxlbmd0aDsgaSsrKSB7DQogCQkJdmVyc2lvbnNbaV0gPSAoKEJ1bmRsZUluZm8pIG1hdGNo
+ZXMuZ2V0KGkpKS52ZXJzaW9uOw0KLQkJCWhpZ2hlc3QgPSBmaW5kTWF4KHZlcnNpb25zKTsNCiAJ
+CX0NCisJCWhpZ2hlc3QgPSBmaW5kTWF4KHZlcnNpb25zKTsNCiAJCXJldHVybiAoQnVuZGxlSW5m
+bykgbWF0Y2hlcy5yZW1vdmUoaGlnaGVzdCk7DQogCX0NCiANCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

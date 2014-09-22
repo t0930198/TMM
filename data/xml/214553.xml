@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214553</bug_id>
+          
+          <creation_ts>2008-01-07 17:32:00 -0500</creation_ts>
+          <short_desc>[Runtime workbench] Unable to relaunch platform... eclipse.vm</short_desc>
+          <delta_ts>2008-01-09 12:16:01 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="John J. Barton">johnjbarton</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>aniefer</cc>
+    
+    <cc>baumanbr</cc>
+    
+    <cc>eclipse</cc>
+    
+    <cc>remysuen</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127004</commentid>
+    <comment_count>0</comment_count>
+    <who name="John J. Barton">johnjbarton</who>
+    <bug_when>2008-01-07 17:32:16 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1.File-&gt;Switch Workspace &quot;Other&quot;
+2.Browse to a folder with another workspace
+3.&quot;Ok&quot;
+A dialog appears &quot;Missing System Property&quot;. Text says &quot;Unable to relaunch the platform because the eclipse.vm property has not been set.
+
+More information:
+If I search help for &quot;eclipse.vm&quot; I get two hits.  The first one has nothing about eclipse.vm. The second one says 
+-vm &lt;path to java executable&gt; (Executable, Main)
+    when passed to the Eclipse executable, this option is used to locate the Java VM to use to run Eclipse. It must be the full file system path to an appropriate Java executable. If not specified, the Eclipse executable uses a search algorithm to locate a suitable VM. In any event, the executable then passes the path to the actual VM used to Java Main using the -vm argument. Java Main then stores this value in eclipse.vm.
+
+Taken together I assume that to use &quot;switch workspace&quot; I have to launch eclipse with -vm &lt;..&gt;.  But I know that isn&apos;t true. 
+
+1. The message should explain how to set the property.
+2. It should not be required: obviously we have a vm, just use it!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127648</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-01-08 14:53:15 -0500</bug_when>
+    <thetext>I&apos;d be interested to know what VM you&apos;re using.  You&apos;re right, however - you shouldn&apos;t need to set this.  I&apos;m not sure how you&apos;re in this state... is there anything interesting in your configuration or workspace .log files?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127762</commentid>
+    <comment_count>2</comment_count>
+    <who name="John J. Barton">johnjbarton</who>
+    <bug_when>2008-01-08 17:07:37 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; I&apos;d be interested to know what VM you&apos;re using.  You&apos;re right, however - you
+&gt; shouldn&apos;t need to set this.  I&apos;m not sure how you&apos;re in this state... is there
+&gt; anything interesting in your configuration or workspace .log files?
+&gt; 
+
+Once I exited from eclipse to switch workspaces I remembered that I was running a debug PDE from another eclipse. If that is the only way to get into this state, then I think a decent fix is 1) change the message so I have more clues, 2) change the default PDE launch to include eclipse.vm.
+
+John.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128041</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-01-09 08:07:08 -0500</bug_when>
+    <thetext>Let&apos;s see what PDE has to say - hopefully option 2 will be possible.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128253</commentid>
+    <comment_count>4</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-09 12:09:53 -0500</bug_when>
+    <thetext>Kim, do you know how eclipse.vm is set in the workbench launcher and how it is computed?  When we look into option #2 I would like to use the same logic to make sure the values are the same as that from the launcher.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128262</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-01-09 12:16:01 -0500</bug_when>
+    <thetext>No, that&apos;s outside my area... but Andrew might know...</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

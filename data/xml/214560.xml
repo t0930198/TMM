@@ -1,0 +1,314 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214560</bug_id>
+          
+          <creation_ts>2008-01-07 19:50:00 -0500</creation_ts>
+          <short_desc>[MPE] MultiPageEditorPart setFocus gives error if no pages</short_desc>
+          <delta_ts>2008-05-01 09:49:47 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M7</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chris Lee Harasemchuk">eclipse</reporter>
+          <assigned_to name="Paul Webster">pwebster</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127051</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86370</attachid>
+    <who name="Chris Lee Harasemchuk">eclipse</who>
+    <bug_when>2008-01-07 19:50:40 -0500</bug_when>
+    <thetext>Created attachment 86370
+stack trace at breakpoint before exception occurs
+
+Build ID: I20071213-1700
+
+Steps To Reproduce:
+Using Eclipse 3.4 M4
+
+1. Create a subclass of MultiPageEditorPart that does nothing for createPages.
+2. Launch the editor
+3. Note that an SWT error (Index out of bounds) is generated. (see attachment)
+4. Try launching the same thing in Eclipse 3.2 or 3.3 - no error.
+
+
+More information:
+We&apos;ve created a specialized subclass of MultiPageEditorPart that doesn&apos;t do anything directly in createPages. Document loading is delegated to a background thread, adding the pages is done after the background thread completes. The goal of this is to make the main UI appear faster and display progress while loading.
+
+This functionality was recently broken in rev 1.50 of MultiPageEditorPart (see http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.ui.workbench/Eclipse%20UI/org/eclipse/ui/part/MultiPageEditorPart.java?r1=1.49&amp;r2=1.50 )
+
+setFocus (int pageIndex) used to handle -1 (the index returned when there are no pages) by doing something else instead of actually trying to call getEditor.
+
+This case should still be handled properly.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127060</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86372</attachid>
+    <who name="Chris Lee Harasemchuk">eclipse</who>
+    <bug_when>2008-01-07 20:28:17 -0500</bug_when>
+    <thetext>Created attachment 86372
+patch 
+
+update to getControl(int pageIndex) and getEditor (int pageIndex) to return null if pageIndex is invalid. 
+
+Updated Javadoc for both methods (getControl just expands on the valid call scenarios, getEditor now has &quot;fixed&quot; Javadoc (it was not quite right to begin with).
+
+Chose to make the fix in getControl and getEditor because the Javadoc for each had previously specified a null return was allowed (and should be checked for by any existing callers), rather than validate all places where it&apos;s being called to verify it&apos;s not passing in -1.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127254</commentid>
+    <comment_count>2</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-01-08 08:41:54 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; update to getControl(int pageIndex) and getEditor (int pageIndex) to return
+&gt; null if pageIndex is invalid. 
+
+I&apos;m not sure if we can go this way, since those are API methods and it is problematic to change what they can and cannot accept, but I&apos;ll look into it.
+
+PW
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127605</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Lee Harasemchuk">eclipse</who>
+    <bug_when>2008-01-08 13:56:06 -0500</bug_when>
+    <thetext>Even if the methods aren&apos;t changed, the Javadoc for them should still be updated to accurately reflect what the method does (and that it throws an exception on invalid page values).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1208311</commentid>
+    <comment_count>4</comment_count>
+      <attachid>96744</attachid>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-04-20 11:12:12 -0400</bug_when>
+    <thetext>Created attachment 96744
+Set Focus v01
+
+Code that used to protect setFocus(int) was refactored out and moved to deactivateSite(*).
+
+setFocus(*) still requires that protection.
+
+PW</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1208312</commentid>
+    <comment_count>5</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-04-20 11:12:46 -0400</bug_when>
+    <thetext>Released to HEAD &gt;20080420
+PW
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220276</commentid>
+    <comment_count>6</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-05-01 09:49:47 -0400</bug_when>
+    <thetext>In I20080501-0100
+PW
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86370</attachid>
+            <date>2008-01-07 19:50:00 -0500</date>
+            <delta_ts>2008-01-07 19:50:40 -0500</delta_ts>
+            <desc>stack trace at breakpoint before exception occurs</desc>
+            <filename>OutOfBounds_MPE.txt</filename>
+            <type>text/plain</type>
+            <size>3563</size>
+            <attacher name="Chris Lee Harasemchuk">eclipse</attacher>
+            
+              <data encoding="base64">VGhyZWFkIFttYWluXSAoU3VzcGVuZGVkIChicmVha3BvaW50IGF0IGxpbmUgNTM0IGluIE11bHRp
+UGFnZUVkaXRvclBhcnQpKQkNCglNeUVkaXRvcihNdWx0aVBhZ2VFZGl0b3JQYXJ0KS5nZXRJdGVt
+KGludCkgbGluZTogNTM0CQ0KCU15RWRpdG9yKE11bHRpUGFnZUVkaXRvclBhcnQpLmdldEVkaXRv
+cihpbnQpIGxpbmU6IDQ1OQkNCglNeUVkaXRvcihNdWx0aVBhZ2VFZGl0b3JQYXJ0KS5zZXRGb2N1
+cyhpbnQpIGxpbmU6IDk0OAkNCglNeUVkaXRvcihNdWx0aVBhZ2VFZGl0b3JQYXJ0KS5zZXRGb2N1
+cygpIGxpbmU6IDkzNgkNCglFZGl0b3JQYW5lKFBhcnRQYW5lKS5zZXRGb2N1cygpIGxpbmU6IDMx
+OQkNCglFZGl0b3JQYW5lLnNldEZvY3VzKCkgbGluZTogMTI3CQ0KCVdvcmtiZW5jaFBhZ2UkMy5y
+dW4oKSBsaW5lOiA2MTQJDQoJU2FmZVJ1bm5lci5ydW4oSVNhZmVSdW5uYWJsZSkgbGluZTogMzcJ
+DQoJUGxhdGZvcm0ucnVuKElTYWZlUnVubmFibGUpIGxpbmU6IDg1NwkNCglXb3JrYmVuY2hQYWdl
+LmFjdGl2YXRlUGFydChJV29ya2JlbmNoUGFydCkgbGluZTogNjA5CQ0KCVdvcmtiZW5jaFBhZ2Uu
+c2V0QWN0aXZlUGFydChJV29ya2JlbmNoUGFydCkgbGluZTogMzM4MAkNCglXb3JrYmVuY2hQYWdl
+LmFjdGl2YXRlKElXb3JrYmVuY2hQYXJ0KSBsaW5lOiA2MDIJDQoJV29ya2JlbmNoUGFnZS5idXN5
+T3BlbkVkaXRvckJhdGNoZWQoSUVkaXRvcklucHV0LCBTdHJpbmcsIGJvb2xlYW4sIGludCwgSU1l
+bWVudG8pIGxpbmU6IDI3MzAJDQoJV29ya2JlbmNoUGFnZS5idXN5T3BlbkVkaXRvcihJRWRpdG9y
+SW5wdXQsIFN0cmluZywgYm9vbGVhbiwgaW50LCBJTWVtZW50bykgbGluZTogMjYzMwkNCglXb3Jr
+YmVuY2hQYWdlLmFjY2VzcyQxMihXb3JrYmVuY2hQYWdlLCBJRWRpdG9ySW5wdXQsIFN0cmluZywg
+Ym9vbGVhbiwgaW50LCBJTWVtZW50bykgbGluZTogMjYyNQkNCglXb3JrYmVuY2hQYWdlJDEwLnJ1
+bigpIGxpbmU6IDI1NzcJDQoJQnVzeUluZGljYXRvci5zaG93V2hpbGUoRGlzcGxheSwgUnVubmFi
+bGUpIGxpbmU6IDY3CQ0KCVdvcmtiZW5jaFBhZ2Uub3BlbkVkaXRvcihJRWRpdG9ySW5wdXQsIFN0
+cmluZywgYm9vbGVhbiwgaW50LCBJTWVtZW50bykgbGluZTogMjU3MgkNCglXb3JrYmVuY2hQYWdl
+Lm9wZW5FZGl0b3IoSUVkaXRvcklucHV0LCBTdHJpbmcsIGJvb2xlYW4sIGludCkgbGluZTogMjU1
+NgkNCglXb3JrYmVuY2hQYWdlLm9wZW5FZGl0b3IoSUVkaXRvcklucHV0LCBTdHJpbmcsIGJvb2xl
+YW4pIGxpbmU6IDI1NDcJDQoJSURFLm9wZW5FZGl0b3IoSVdvcmtiZW5jaFBhZ2UsIElGaWxlLCBi
+b29sZWFuLCBib29sZWFuKSBsaW5lOiA2NDQJDQoJSURFLm9wZW5FZGl0b3IoSVdvcmtiZW5jaFBh
+Z2UsIElGaWxlLCBib29sZWFuKSBsaW5lOiA2MDMJDQoJT3BlbkZpbGVBY3Rpb24ub3BlbkZpbGUo
+SUZpbGUpIGxpbmU6IDk4CQ0KCU9wZW5GaWxlQWN0aW9uKE9wZW5TeXN0ZW1FZGl0b3JBY3Rpb24p
+LnJ1bigpIGxpbmU6IDk4CQ0KCU9wZW5BY3Rpb25Hcm91cC5ydW5EZWZhdWx0QWN0aW9uKElTdHJ1
+Y3R1cmVkU2VsZWN0aW9uKSBsaW5lOiAxMjUJDQoJTWFpbkFjdGlvbkdyb3VwLnJ1bkRlZmF1bHRB
+Y3Rpb24oSVN0cnVjdHVyZWRTZWxlY3Rpb24pIGxpbmU6IDMyOAkNCglSZXNvdXJjZU5hdmlnYXRv
+ci5oYW5kbGVPcGVuKE9wZW5FdmVudCkgbGluZTogNjkyCQ0KCVJlc291cmNlTmF2aWdhdG9yJDYu
+b3BlbihPcGVuRXZlbnQpIGxpbmU6IDQzNQkNCglTdHJ1Y3R1cmVkVmlld2VyJDIucnVuKCkgbGlu
+ZTogODIwCQ0KCVNhZmVSdW5uZXIucnVuKElTYWZlUnVubmFibGUpIGxpbmU6IDM3CQ0KCVBsYXRm
+b3JtLnJ1bihJU2FmZVJ1bm5hYmxlKSBsaW5lOiA4NTcJDQoJSkZhY2VVdGlsJDEucnVuKElTYWZl
+UnVubmFibGUpIGxpbmU6IDQ2CQ0KCVNhZmVSdW5uYWJsZS5ydW4oSVNhZmVSdW5uYWJsZSkgbGlu
+ZTogMTk5CQ0KCVRyZWVWaWV3ZXIoU3RydWN0dXJlZFZpZXdlcikuZmlyZU9wZW4oT3BlbkV2ZW50
+KSBsaW5lOiA4MTgJDQoJVHJlZVZpZXdlcihTdHJ1Y3R1cmVkVmlld2VyKS5oYW5kbGVPcGVuKFNl
+bGVjdGlvbkV2ZW50KSBsaW5lOiAxMDc5CQ0KCVN0cnVjdHVyZWRWaWV3ZXIkNi5oYW5kbGVPcGVu
+KFNlbGVjdGlvbkV2ZW50KSBsaW5lOiAxMTgzCQ0KCU9wZW5TdHJhdGVneS5maXJlT3BlbkV2ZW50
+KFNlbGVjdGlvbkV2ZW50KSBsaW5lOiAyNjMJDQoJT3BlblN0cmF0ZWd5LmFjY2VzcyQyKE9wZW5T
+dHJhdGVneSwgU2VsZWN0aW9uRXZlbnQpIGxpbmU6IDI1NwkNCglPcGVuU3RyYXRlZ3kkMS5oYW5k
+bGVFdmVudChFdmVudCkgbGluZTogMjk3CQ0KCUV2ZW50VGFibGUuc2VuZEV2ZW50KEV2ZW50KSBs
+aW5lOiA2NgkNCglUcmVlKFdpZGdldCkuc2VuZEV2ZW50KEV2ZW50KSBsaW5lOiA5NTIJDQoJRGlz
+cGxheS5ydW5EZWZlcnJlZEV2ZW50cygpIGxpbmU6IDM3NTAJDQoJRGlzcGxheS5yZWFkQW5kRGlz
+cGF0Y2goKSBsaW5lOiAzMzYxCQ0KCVdvcmtiZW5jaC5ydW5FdmVudExvb3AoV2luZG93JElFeGNl
+cHRpb25IYW5kbGVyLCBEaXNwbGF5KSBsaW5lOiAyMzgxCQ0KCVdvcmtiZW5jaC5ydW5VSSgpIGxp
+bmU6IDIzNDUJDQoJV29ya2JlbmNoLmFjY2VzcyQ0KFdvcmtiZW5jaCkgbGluZTogMjIxMQkNCglX
+b3JrYmVuY2gkNC5ydW4oKSBsaW5lOiA0NzMJDQoJUmVhbG0ucnVuV2l0aERlZmF1bHQoUmVhbG0s
+IFJ1bm5hYmxlKSBsaW5lOiAyODgJDQoJV29ya2JlbmNoLmNyZWF0ZUFuZFJ1bldvcmtiZW5jaChE
+aXNwbGF5LCBXb3JrYmVuY2hBZHZpc29yKSBsaW5lOiA0NjgJDQoJUGxhdGZvcm1VSS5jcmVhdGVB
+bmRSdW5Xb3JrYmVuY2goRGlzcGxheSwgV29ya2JlbmNoQWR2aXNvcikgbGluZTogMTQ5CQ0KCUlE
+RUFwcGxpY2F0aW9uLnN0YXJ0KElBcHBsaWNhdGlvbkNvbnRleHQpIGxpbmU6IDEwNgkNCglFY2xp
+cHNlQXBwSGFuZGxlLnJ1bihPYmplY3QpIGxpbmU6IDE5MwkNCglFY2xpcHNlQXBwTGF1bmNoZXIu
+cnVuQXBwbGljYXRpb24oT2JqZWN0KSBsaW5lOiAxMDYJDQoJRWNsaXBzZUFwcExhdW5jaGVyLnN0
+YXJ0KE9iamVjdCkgbGluZTogNzYJDQoJRWNsaXBzZVN0YXJ0ZXIucnVuKE9iamVjdCkgbGluZTog
+MzYyCQ0KCUVjbGlwc2VTdGFydGVyLnJ1bihTdHJpbmdbXSwgUnVubmFibGUpIGxpbmU6IDE3NQkN
+CglOYXRpdmVNZXRob2RBY2Nlc3NvckltcGwuaW52b2tlMChNZXRob2QsIE9iamVjdCwgT2JqZWN0
+W10pIGxpbmU6IG5vdCBhdmFpbGFibGUgW25hdGl2ZSBtZXRob2RdCQ0KCU5hdGl2ZU1ldGhvZEFj
+Y2Vzc29ySW1wbC5pbnZva2UoT2JqZWN0LCBPYmplY3RbXSkgbGluZTogMzkJDQoJRGVsZWdhdGlu
+Z01ldGhvZEFjY2Vzc29ySW1wbC5pbnZva2UoT2JqZWN0LCBPYmplY3RbXSkgbGluZTogMjUJDQoJ
+TWV0aG9kLmludm9rZShPYmplY3QsIE9iamVjdC4uLikgbGluZTogNTg1CQ0KCU1haW4uaW52b2tl
+RnJhbWV3b3JrKFN0cmluZ1tdLCBVUkxbXSkgbGluZTogNTYxCQ0KCU1haW4uYmFzaWNSdW4oU3Ry
+aW5nW10pIGxpbmU6IDUwMQkNCglNYWluLnJ1bihTdHJpbmdbXSkgbGluZTogMTIzOQkNCglNYWlu
+Lm1haW4oU3RyaW5nW10pIGxpbmU6IDEyMTUJDQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86372</attachid>
+            <date>2008-01-07 20:28:00 -0500</date>
+            <delta_ts>2008-01-07 20:28:17 -0500</delta_ts>
+            <desc>patch </desc>
+            <filename>MPE_patch.txt</filename>
+            <type>text/plain</type>
+            <size>2012</size>
+            <attacher name="Chris Lee Harasemchuk">eclipse</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UudWkud29ya2Jl
+bmNoDQpJbmRleDogRWNsaXBzZSBVSS9vcmcvZWNsaXBzZS91aS9wYXJ0L011bHRpUGFnZUVkaXRv
+clBhcnQuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVj
+bGlwc2UudWkud29ya2JlbmNoL0VjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkvcGFydC9NdWx0aVBh
+Z2VFZGl0b3JQYXJ0LmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjUwDQpkaWZmIC11IC1y
+MS41MCBNdWx0aVBhZ2VFZGl0b3JQYXJ0LmphdmENCi0tLSBFY2xpcHNlIFVJL29yZy9lY2xpcHNl
+L3VpL3BhcnQvTXVsdGlQYWdlRWRpdG9yUGFydC5qYXZhCTMwIE5vdiAyMDA3IDE3OjA2OjA1IC0w
+MDAwCTEuNTANCisrKyBFY2xpcHNlIFVJL29yZy9lY2xpcHNlL3VpL3BhcnQvTXVsdGlQYWdlRWRp
+dG9yUGFydC5qYXZhCTggSmFuIDIwMDggMDE6MjE6MTMgLTAwMDANCkBAIC00MzEsNyArNDMxLDcg
+QEANCiANCiAJLyoqDQogCSAqIFJldHVybnMgdGhlIGNvbnRyb2wgZm9yIHRoZSBnaXZlbiBwYWdl
+IGluZGV4LCBvciA8Y29kZT5udWxsPC9jb2RlPiBpZg0KLQkgKiBubyBjb250cm9sIGhhcyBiZWVu
+IHNldCBmb3IgdGhlIHBhZ2UuIFRoZSBwYWdlIGluZGV4IG11c3QgYmUgdmFsaWQuDQorCSAqIG5v
+IGNvbnRyb2wgaGFzIGJlZW4gc2V0IGZvciB0aGUgcGFnZSBvciB0aGUgaW5kZXggaXMgaW52YWxp
+ZC4gDQogCSAqIDxwPg0KIAkgKiBTdWJjbGFzc2VzIHNob3VsZCBub3Qgb3ZlcnJpZGUgdGhpcyBt
+ZXRob2QNCiAJICogPC9wPg0KQEAgLTQ0MiwyMCArNDQyLDI2IEBADQogCSAqICAgICAgICAgbm9u
+ZSBoYXMgYmVlbiBzZXQNCiAJICovDQogCXByb3RlY3RlZCBDb250cm9sIGdldENvbnRyb2woaW50
+IHBhZ2VJbmRleCkgew0KKyAgICAgICAgaW50IHBhZ2VzID0gZ2V0UGFnZUNvdW50ICgpOw0KKyAg
+ICAgICAgaWYgKChwYWdlSW5kZXggPj0gcGFnZXMpIHx8IChwYWdlSW5kZXggPCAwKSkNCisgICAg
+ICAgICAgICByZXR1cm4gbnVsbDsNCiAJCXJldHVybiBnZXRJdGVtKHBhZ2VJbmRleCkuZ2V0Q29u
+dHJvbCgpOw0KIAl9DQogDQogCS8qKg0KLQkgKiBSZXR1cm5zIHRoZSBlZGl0b3IgZm9yIHRoZSBn
+aXZlbiBwYWdlIGluZGV4LiBUaGUgcGFnZSBpbmRleCBtdXN0IGJlDQotCSAqIHZhbGlkLg0KKwkg
+KiBSZXR1cm5zIHRoZSBlZGl0b3IgZm9yIHRoZSBnaXZlbiBwYWdlIGluZGV4LCBvciBudWxsIGlm
+IHRoZSBwYWdlDQorCSAqIGluZGV4IGlzIG5vdCB2YWxpZC4gDQogCSAqIA0KIAkgKiBAcGFyYW0g
+cGFnZUluZGV4DQogCSAqICAgICAgICAgICAgdGhlIGluZGV4IG9mIHRoZSBwYWdlDQotCSAqIEBy
+ZXR1cm4gdGhlIGVkaXRvciBmb3IgdGhlIHNwZWNpZmllZCBwYWdlLCBvciA8Y29kZT5udWxsPC9j
+b2RlPiBpZiB0aGUNCi0JICogICAgICAgICBzcGVjaWZpZWQgcGFnZSB3YXMgbm90IGNyZWF0ZWQg
+d2l0aA0KLQkgKiAgICAgICAgIDxjb2RlPmFkZFBhZ2UoSUVkaXRvclBhcnQsSUVkaXRvcklucHV0
+KTwvY29kZT4NCisJICogQHJldHVybiB0aGUgZWRpdG9yIGZvciB0aGUgc3BlY2lmaWVkIHBhZ2Us
+IG9yIDxjb2RlPm51bGw8L2NvZGU+IGlmIA0KKwkgKiAgICAgICAgICAgIHRoZSBwYWdlIGluZGV4
+IGlzIG5vdCB2YWxpZC4NCiAJICovDQogCXByb3RlY3RlZCBJRWRpdG9yUGFydCBnZXRFZGl0b3Io
+aW50IHBhZ2VJbmRleCkgew0KKyAgICAgICAgaW50IHBhZ2VzID0gZ2V0UGFnZUNvdW50ICgpOw0K
+KyAgICAgICAgaWYgKChwYWdlSW5kZXggPj0gcGFnZXMpIHx8IChwYWdlSW5kZXggPCAwKSkNCisg
+ICAgICAgICAgICByZXR1cm4gbnVsbDsNCisgICAgICAgIA0KIAkJSXRlbSBpdGVtID0gZ2V0SXRl
+bShwYWdlSW5kZXgpOw0KIAkJaWYgKGl0ZW0gIT0gbnVsbCkgew0KIAkJCU9iamVjdCBkYXRhID0g
+aXRlbS5nZXREYXRhKCk7DQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>96744</attachid>
+            <date>2008-04-20 11:12:00 -0400</date>
+            <delta_ts>2008-04-20 11:12:12 -0400</delta_ts>
+            <desc>Set Focus v01</desc>
+            <filename>focus-v01.txt</filename>
+            <type>text/plain</type>
+            <size>873</size>
+            <attacher name="Paul Webster">pwebster</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS53b3JrYmVu
+Y2gKSW5kZXg6IEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkvcGFydC9NdWx0aVBhZ2VFZGl0b3JQ
+YXJ0LmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBz
+ZS51aS53b3JrYmVuY2gvRWNsaXBzZSBVSS9vcmcvZWNsaXBzZS91aS9wYXJ0L011bHRpUGFnZUVk
+aXRvclBhcnQuamF2YSx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS41NApkaWZmIC11IC1yMS41NCBN
+dWx0aVBhZ2VFZGl0b3JQYXJ0LmphdmEKLS0tIEVjbGlwc2UgVUkvb3JnL2VjbGlwc2UvdWkvcGFy
+dC9NdWx0aVBhZ2VFZGl0b3JQYXJ0LmphdmEJMTcgQXByIDIwMDggMTk6MTA6MTQgLTAwMDAJMS41
+NAorKysgRWNsaXBzZSBVSS9vcmcvZWNsaXBzZS91aS9wYXJ0L011bHRpUGFnZUVkaXRvclBhcnQu
+amF2YQkyMCBBcHIgMjAwOCAxNToxMDozNiAtMDAwMApAQCAtOTkyLDYgKzk5MiwxMCBAQAogCSAq
+ICAgICAgICAgICAgdGhlIGluZGV4IG9mIHRoZSBwYWdlCiAJICovCiAJcHJpdmF0ZSB2b2lkIHNl
+dEZvY3VzKGludCBwYWdlSW5kZXgpIHsKKwkJaWYgKHBhZ2VJbmRleCA8IDAgfHwgcGFnZUluZGV4
+ID49IGdldFBhZ2VDb3VudCgpKSB7CisJCQkvLyBwYWdlIGluZGV4IG91dCBvZiBib3VuZHMsIGRv
+bid0IHNldCBmb2N1cy4KKwkJCXJldHVybjsKKwkJfQogCQlmaW5hbCBJRWRpdG9yUGFydCBlZGl0
+b3IgPSBnZXRFZGl0b3IocGFnZUluZGV4KTsKIAkJaWYgKGVkaXRvciAhPSBudWxsKSB7CiAJCQll
+ZGl0b3Iuc2V0Rm9jdXMoKTsK
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

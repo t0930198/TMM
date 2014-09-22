@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214491</bug_id>
+          
+          <creation_ts>2008-01-07 10:34:00 -0500</creation_ts>
+          <short_desc>[Dialogs] FilteredItemsSelectionDialog should respect setInitialSelections()</short_desc>
+          <delta_ts>2009-08-19 21:20:53 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eric Rizzo">eclipse-bugs</reporter>
+          <assigned_to name="Platform UI Triaged">platform-ui-triaged</assigned_to>
+          <cc>hannes</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126623</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eric Rizzo">eclipse-bugs</who>
+    <bug_when>2008-01-07 10:34:21 -0500</bug_when>
+    <thetext>Using org.eclipse.ui.dialogs.FilteredItemsSelectionDialog with a requirement to pre-select items in the list. I see that I can call setInitialSelections() inherited from org.eclipse.ui.dialogs.SelectionDialog but it appears that is not used by FilteredItemsSelectionDialog.
+Even worse, because the TableViewer that FilteredItemsSelectionDialog uses is private and has no protected exposure, there doesn&apos;t appear to be any way for a client to set an initial selection even through subclassing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132657</commentid>
+    <comment_count>1</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-16 14:45:00 -0500</bug_when>
+    <thetext>I believe this goes to Tod as an IDE/Dialog bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1549382</commentid>
+    <comment_count>2</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2009-07-09 18:21:57 -0400</bug_when>
+    <thetext>As per http://wiki.eclipse.org/Platform_UI/Bug_Triage_Change_2009</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1574757</commentid>
+    <comment_count>3</comment_count>
+    <who name="Hannes Erven">hannes</who>
+    <bug_when>2009-08-19 19:43:22 -0400</bug_when>
+    <thetext>As Francis Upton states on http://www.eclipsezone.com/eclipse/forums/t105252.html , there is an ugly workaround: use setInitialPattern() and set the pattern to the text of the element-to-select.
+
+This of course won&apos;t work with more than one item to select;
+and even with a single initial selection element you need to make sure that the sorting of the items is so that it always selects the right element, e.g. with elements
+ foo
+ foobar
+ foofoobar
+the initial selection of &quot;foo&quot; only works when the elements are sorted by normal string comparison.
+
+Is there a chance this is going to be fixed/improved?
+At least some documentation (eg. &quot;throw new UnsupportedOperationException()&quot; for those unsupported operations) would be nice. Thanks!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1574776</commentid>
+    <comment_count>4</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2009-08-19 21:20:53 -0400</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; 
+&gt; Is there a chance this is going to be fixed/improved?
+&gt; At least some documentation (eg. &quot;throw new UnsupportedOperationException()&quot;
+&gt; for those unsupported operations) would be nice. Thanks!
+&gt; 
+
+If you submit a patch (with a test case) I will give it a 3.6 milestone to review it.  Otherwise it&apos;s unlikely to happen.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

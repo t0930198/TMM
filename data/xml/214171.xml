@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214171</bug_id>
+          
+          <creation_ts>2008-01-02 17:48:00 -0500</creation_ts>
+          <short_desc>Class cast exception</short_desc>
+          <delta_ts>2010-03-03 11:15:07 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>JSDT</product>
+          <component>General</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Thompson">dthompson</reporter>
+          <assigned_to name="Phil Berkland">berkland</assigned_to>
+          <cc>dthompson</cc>
+          <qa_contact name="Phil Berkland">berkland</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124605</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Thompson">dthompson</who>
+    <bug_when>2008-01-02 17:48:31 -0500</bug_when>
+    <thetext>I got an class cast exception that I was able to fix by applying the following patch. Not sure if this is the right way to fix this one.
+
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.wst.jsdt.core
+Index: src/org/eclipse/wst/jsdt/internal/compiler/lookup/BlockScope.java
+===================================================================
+RCS file: /cvsroot/webtools/sourceediting/plugins/org.eclipse.wst.jsdt.core/src/org/eclipse/wst/jsdt/internal/compiler/lookup/BlockScope.java,v
+retrieving revision 1.9
+diff -u -r1.9 BlockScope.java
+--- src/org/eclipse/wst/jsdt/internal/compiler/lookup/BlockScope.java	29 Oct 2007 16:50:40 -0000	1.9
++++ src/org/eclipse/wst/jsdt/internal/compiler/lookup/BlockScope.java	2 Jan 2008 22:47:02 -0000
+@@ -305,7 +305,8 @@
+ 	if (outerVariableScope == null)
+ 		return; // no need to further emulate as already inserted (val$this$0)
+ 	MethodScope currentMethodScope = this.methodScope();
+-	if (outerVariableScope.methodScope() != currentMethodScope) {
++	if (outerVariableScope.methodScope() != currentMethodScope &amp;&amp;
++			this.enclosingSourceType() instanceof NestedTypeBinding) {
+ 		NestedTypeBinding currentType = (NestedTypeBinding) this.enclosingSourceType();
+ 
+ 		//do nothing for member types, pre emulation was performed already</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128232</commentid>
+    <comment_count>1</comment_count>
+    <who name="Phil Berkland">berkland</who>
+    <bug_when>2008-01-09 11:45:17 -0500</bug_when>
+    <thetext>Applied the patch.  I think it is also probably possible the method could be gotten rid of altogether.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214141</bug_id>
+          
+          <creation_ts>2008-01-02 14:28:00 -0500</creation_ts>
+          <short_desc>[ftp] NPE connecting to Opencms due to missing SYST command response</short_desc>
+          <delta_ts>2009-03-20 14:59:23 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Target Management</product>
+          <component>RSE</component>
+          <version>2.0.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.1 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ramón del Rincon">south.minds</reporter>
+          <assigned_to name="Javier Montalvo Orús">javier.montalvoorus</assigned_to>
+          
+          <qa_contact name="Martin Oberhuber">martin.oberhuber</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124415</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2008-01-02 14:28:31 -0500</bug_when>
+    <thetext>NPE when connecting to OpenCms. Other clients have no problems, follow ftp session log and eceptions from opencms.log
+
+220 xxx.xx.xxx.x (OpenCMS FTPDVersion 0.4)
+
+USER Admin
+331 Password required for Admin.
+
+PASS ******
+230 User Admin logged in.
+
+SYST
+500 &apos;SYST&apos;: command not supported.
+
+
+
+!ENTRY org.eclipse.rse.ui 4 0 2008-01-02 17:05:41.128
+!MESSAGE RSEG1066U: SUB#0:Exception java.lang.NullPointerException
+!STACK 0
+java.lang.NullPointerException
+	at java.util.regex.Matcher.getTextLength(Matcher.java:1127)
+	at java.util.regex.Matcher.reset(Matcher.java:284)
+	at java.util.regex.Matcher.&lt;init&gt;(Matcher.java:205)
+	at java.util.regex.Pattern.matcher(Pattern.java:879)
+	at org.eclipse.rse.internal.subsystems.files.ftp.parser.FTPClientConfigFactory.getFTPClientConfig(FTPClientConfigFactory.java:103)
+	at org.eclipse.rse.internal.services.files.ftp.FTPService.connect(FTPService.java:395)
+	at org.eclipse.rse.internal.subsystems.files.ftp.connectorservice.FTPConnectorService.internalConnect(FTPConnectorService.java:122)
+	at org.eclipse.rse.internal.subsystems.files.ftp.connectorservice.FTPConnectorService.internalConnect(FTPConnectorService.java:98)
+	at org.eclipse.rse.core.subsystems.AbstractConnectorService.connect(AbstractConnectorService.java:412)
+	at org.eclipse.rse.ui.operations.SystemFetchOperation.execute(SystemFetchOperation.java:243)
+	at org.eclipse.rse.ui.operations.SystemFetchOperation.run(SystemFetchOperation.java:128)
+	at org.eclipse.rse.ui.view.AbstractSystemViewAdapter.fetchDeferredChildren(AbstractSystemViewAdapter.java:1970)
+	at org.eclipse.ui.progress.DeferredTreeContentManager$1.run(DeferredTreeContentManager.java:196)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.rse.ui 4 0 2008-01-02 17:05:43.788
+!MESSAGE Exception resolving filters&apos; strings 
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.rse.internal.services.files.ftp.FTPService.getRoots(FTPService.java:982)
+	at org.eclipse.rse.subsystems.files.core.servicesubsystem.FileServiceSubSystem.getRoots(FileServiceSubSystem.java:304)
+	at org.eclipse.rse.subsystems.files.core.servicesubsystem.FileServiceSubSystem.listRoots(FileServiceSubSystem.java:422)
+	at org.eclipse.rse.subsystems.files.core.subsystems.RemoteFileSubSystem.internalResolveFilterString(RemoteFileSubSystem.java:609)
+	at org.eclipse.rse.subsystems.files.core.subsystems.RemoteFileSubSystem.internalResolveFilterStrings(RemoteFileSubSystem.java:451)
+	at org.eclipse.rse.core.subsystems.SubSystem.resolveFilterStrings(SubSystem.java:2067)
+	at org.eclipse.rse.internal.ui.view.SystemViewFilterReferenceAdapter.internalGetChildren(SystemViewFilterReferenceAdapter.java:417)
+	at org.eclipse.rse.internal.ui.view.SystemViewFilterReferenceAdapter.getChildren(SystemViewFilterReferenceAdapter.java:258)
+	at org.eclipse.rse.internal.ui.view.SystemViewFilterReferenceAdapter.getChildren(SystemViewFilterReferenceAdapter.java:266)
+	at org.eclipse.rse.ui.operations.SystemFetchOperation.execute(SystemFetchOperation.java:265)
+	at org.eclipse.rse.ui.operations.SystemFetchOperation.run(SystemFetchOperation.java:128)
+	at org.eclipse.rse.ui.view.AbstractSystemViewAdapter.fetchDeferredChildren(AbstractSystemViewAdapter.java:1970)
+	at org.eclipse.ui.progress.DeferredTreeContentManager$1.run(DeferredTreeContentManager.java:196)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124863</commentid>
+    <comment_count>1</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-03 05:29:31 -0500</bug_when>
+    <thetext>Apparently, the problem is that your OpenCMS server does not understand the SYST command. Since we don&apos;t have an OpenCMS server, can you please do the following investigations on a commandline FTP client:
+
+1. Type &quot;help&quot; and attach the output to this bug, so we can see if there is an
+   alternative way of determining the system type.
+
+2. On a sample directory, type &quot;dir&quot; so we can see what directory listing parser
+   would be appropriate.
+
+Javier: As a quick fix, our FTP client should be able to deal with the case where the SYST command is not supported. In that case it should either fall back to information we get from the login line (the 220 message in this case), or just fall back to the default listing parser, which would be UNIX in this case.
+
+I&apos;d like to see this fixed for 3.0 since it&apos;s important to support all kinds of FTP servers we know.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124877</commentid>
+    <comment_count>2</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2008-01-03 07:59:36 -0500</bug_when>
+    <thetext>org.eclipse.team.ftp_3.1.100.I20061218 module used to work.
+From the developer&apos;s homepage:
+&quot;opencms ftpd is a little plugin for opencms that provides acces to the opencms vfs via ftp. it is based on jftpd by ryan heise (see http://www.progsoc.uts.edu.au/~rheise/projects/jftpd/). i (that&apos;s ruben [at] khm.de) have only modified a few things.
+this thing is pre-anything usable.&quot;
+
+It&apos;s quite old so don&apos;t boder too much. Opencms 7.x has builtin webdav support so this has been abandoned.
+
+
+ftp&gt; help
+Commands may be abbreviated.  Commands are:
+
+!               disconnect      lpage           nlist           rate            sndbuf
+$               edit            lpwd            nmap            rcvbuf          status
+account         epsv4           ls              ntrans          recv            struct
+append          exit            macdef          open            reget           sunique
+ascii           features        mdelete         page            remopts         system
+bell            fget            mdir            passive         rename          tenex
+binary          form            mget            pdir            reset           throttle
+bye             ftp             mkdir           pls             restart         trace
+case            gate            mls             pmlsd           rhelp           type
+cd              get             mlsd            preserve        rmdir           umask
+cdup            glob            mlst            progress        rstatus         unset
+chmod           hash            mode            prompt          runique         usage
+close           help            modtime         proxy           send            user
+cr              idle            more            put             sendport        verbose
+debug           image           mput            pwd             set             xferbuf
+delete          lcd             msend           quit            site            ?
+dir             less            newer           quote           size
+
+
+ftp&gt; dir
+500 &apos;EPSV&apos;: command not understood.
+227 Passive command successful (10,1,111,172,239,98)
+150 Opening ascii mode data connection.
+total 6
+drwxrwxrwx   1 ftp      ftp             0 Oct 03 04:44 channels
+-rwxrwxrwx   1 ftp      ftp           118 Oct 03 04:44 channels_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Oct 03 04:44 sites
+-rwxrwxrwx   1 ftp      ftp           115 Oct 03 04:44 sites_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 system
+-rwxrwxrwx   1 ftp      ftp           116 Mar 27 09:00 system_cmsproperties
+226 Transfer complete.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124878</commentid>
+    <comment_count>3</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-03 08:05:03 -0500</bug_when>
+    <thetext>Hm. Your help output lists a command named 
+   &quot;system&quot;
+and says that commands may be abbreviated, so &quot;syst&quot; should be valid.
+Please try entering &quot;syst&quot; and &quot;system&quot;. Also try &quot;rhelp&quot;.
+
+The DIR output looks like a UNIX directory, so for a quick fix we can treat missing answer to our SYST command as &quot;unknown&quot; and thus fall back to the UNIX parser.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125003</commentid>
+    <comment_count>4</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2008-01-03 11:00:01 -0500</bug_when>
+    <thetext>ftp&gt; rhelp
+500 &apos;HELP&apos;: command not supported.
+ftp&gt; syst
+500 &apos;SYST&apos;: command not supported.
+ftp&gt;                      
+ftp&gt; system
+500 &apos;SYST&apos;: command not supported.
+
+
+Thanks Martin. Changes will be available on next version right?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1205255</commentid>
+    <comment_count>5</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-04-16 15:07:55 -0400</bug_when>
+    <thetext>(In reply to comment #4)
+Ramon can you please try this command:
+
+ftp&gt; quote system
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1315080</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-08-19 11:36:15 -0400</bug_when>
+    <thetext>Won&apos;t change anything here without exact info from the submitter.
+Ramon please reopen if still interested, and answer (comment #4)
+&gt; 
+&gt; ftp&gt; quote system
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1315111</commentid>
+    <comment_count>7</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2008-08-19 11:55:37 -0400</bug_when>
+    <thetext>I apologize for missing comment #4.
+WONTFIX it&apos;s ok for me and if you need anything else from me just let me know.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1315146</commentid>
+    <comment_count>8</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-08-19 12:32:45 -0400</bug_when>
+    <thetext>Actually just out of curiosity, I&apos;d like to know what your server answers for this:
+
+ftp&gt; rhelp
+ftp&gt; quote system</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1323420</commentid>
+    <comment_count>9</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-09-02 15:06:03 -0400</bug_when>
+    <thetext>(In reply to comment #8)
+Actually the rhelp question was answered earlier. But Ramon if you have a spare minute, could you try this on your FTP server please:
+
+&gt; ftp&gt; quote system
+
+Thanks!
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1323846</commentid>
+    <comment_count>10</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2008-09-03 09:20:11 -0400</bug_when>
+    <thetext>Connected to 127.0.0.1.
+220 127.0.0.1 (OpenCMS FTPDVersion 0.4)
+331 Password required for Admin.
+Password:
+230 User Admin logged in.
+200 Type set to I
+ftp&gt; quote system
+500 &apos;system&apos;: command not understood.
+
+Best regards</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1456562</commentid>
+    <comment_count>11</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2009-03-19 18:05:21 -0400</bug_when>
+    <thetext>I think that I fixed this for 3.1m6 by avoiding exceptions when the SYST command is not implemented on the remote. We&apos;ll fall back to a default UNIX FTP Entry parser in this case, which should be appropriate.
+
+Could you verify?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1457238</commentid>
+    <comment_count>12</comment_count>
+    <who name="Ramón del Rincon">south.minds</who>
+    <bug_when>2009-03-20 14:59:23 -0400</bug_when>
+    <thetext>Hi Martin,
+Can&apos;t upgrade to 3.1m6 but I did some test with 3.0.3 and I think I have good news:
+Change: Ftp.connector Service -&gt; Ftp settings -&gt; parser from &apos;Default&apos; to &apos;org-eclipse.rse.ftp.parser.unix&apos;
+Create new filter: Filter String &apos;/Offline/system&apos; (default &apos;root&apos; filter doesn&apos;t work, cmd &apos;LIST -a&apos; says &apos;no such...&apos;)
+ It worked! Here is the console log (NOOPs excluded, by the way: aren&apos;t they too many?)
+ 
+ 220 127.0.0.1 (OpenCMS FTPDVersion 0.4)
+
+USER Admin
+331 Password required for Admin.
+
+PASS ******
+230 User Admin logged in.
+
+SYST
+500 &apos;SYST&apos;: command not supported.
+
+TYPE I
+200 Type set to I
+
+PWD
+257 &quot;/Offline&quot;
+
+CWD /Offline
+250 CWD command successful.
+
+PORT 127,0,0,1,146,135
+200 PORT command successful.
+
+LIST -a
+150 Opening ascii mode data connection.
+
+226 Transfer complete.
+
+CWD /Offline/system
+250 CWD command successful.
+
+PORT 127,0,0,1,205,124
+200 PORT command successful.
+
+LIST -a
+150 Opening ascii mode data connection.
+
+
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 galleries
+-rwxrwxrwx   1 ftp      ftp           126 Mar 27 09:00 galleries_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 handler
+-rwxrwxrwx   1 ftp      ftp           206 Mar 27 09:00 handler_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 login
+-rwxrwxrwx   1 ftp      ftp           200 Mar 27 09:00 login_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 lost-found
+-rwxrwxrwx   1 ftp      ftp           150 Mar 27 09:00 lost-found_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 modules
+-rwxrwxrwx   1 ftp      ftp           124 Mar 27 09:00 modules_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Mar 27 09:00 shared
+-rwxrwxrwx   1 ftp      ftp           146 Mar 27 09:00 shared_cmsproperties
+drwxrwxrwx   1 ftp      ftp             0 Sep 26 05:36 workplace
+-rwxrwxrwx   1 ftp      ftp           149 Sep 26 05:36 workplace_cmsproperties
+
+PORT 127,0,0,1,135,77
+200 PORT command successful.
+
+LIST -a
+150 Opening ascii mode data connection.
+
+226 Transfer complete.
+
+
+If you set &apos;Default&apos; to be &apos;org-eclipse.rse.ftp.parser.unix&apos; it should work.
+Anything else just let me know.
+Best regards</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,216 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214094</bug_id>
+          
+          <creation_ts>2008-01-02 06:47:00 -0500</creation_ts>
+          <short_desc>i can&apos;t edit the run configuration because of an AssertionFailedException</short_desc>
+          <delta_ts>2008-01-14 10:29:00 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Debug</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Steininger">tsteininger</reporter>
+          <assigned_to name="Michael Rennie">Michael_Rennie</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>tsteininger</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124065</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas Steininger">tsteininger</who>
+    <bug_when>2008-01-02 06:47:30 -0500</bug_when>
+    <thetext>Build ID: Build id: M20071023-1652
+
+Steps To Reproduce:
+1. OpenRunDialog
+2. Error-MsgBox: An error has occured. See error log...
+Reason: null argument:
+
+
+
+More information:
+!ENTRY org.eclipse.jface 4 2 2008-01-02 12:38:50.379
+!MESSAGE Problems occurred when invoking code from plug-in: &quot;org.eclipse.jface&quot;.
+!STACK 0
+org.eclipse.core.runtime.AssertionFailedException: null argument:
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:84)
+	at org.eclipse.core.runtime.Assert.isNotNull(Assert.java:72)
+	at org.eclipse.jface.viewers.StructuredViewer.assertElementsNotNull(StructuredViewer.java:580)
+	at org.eclipse.jface.viewers.CheckboxTableViewer.setCheckedElements(CheckboxTableViewer.java:371)
+	at org.eclipse.debug.ui.CommonTab.updateFavoritesFromConfig(CommonTab.java:572)
+	at org.eclipse.debug.ui.CommonTab.initializeFrom(CommonTab.java:467)
+	at org.eclipse.debug.ui.AbstractLaunchConfigurationTabGroup.initializeFrom(AbstractLaunchConfigurationTabGroup.java:86)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupWrapper.initializeFrom(LaunchConfigurationTabGroupWrapper.java:143)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupViewer.displayInstanceTabs(LaunchConfigurationTabGroupViewer.java:784)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupViewer$8.run(LaunchConfigurationTabGroupViewer.java:658)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupViewer.inputChanged(LaunchConfigurationTabGroupViewer.java:676)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupViewer.setInput0(LaunchConfigurationTabGroupViewer.java:637)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationTabGroupViewer.setInput(LaunchConfigurationTabGroupViewer.java:613)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationsDialog.handleLaunchConfigurationSelectionChanged(LaunchConfigurationsDialog.java:975)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationsDialog$4.selectionChanged(LaunchConfigurationsDialog.java:570)
+	at org.eclipse.jface.viewers.StructuredViewer$3.run(StructuredViewer.java:842)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+	at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+	at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+	at org.eclipse.jface.viewers.StructuredViewer.firePostSelectionChanged(StructuredViewer.java:840)
+	at org.eclipse.jface.viewers.StructuredViewer.handlePostSelect(StructuredViewer.java:1153)
+	at org.eclipse.jface.viewers.StructuredViewer$5.widgetSelected(StructuredViewer.java:1178)
+	at org.eclipse.jface.util.OpenStrategy.firePostSelectionEvent(OpenStrategy.java:250)
+	at org.eclipse.jface.util.OpenStrategy.access$4(OpenStrategy.java:244)
+	at org.eclipse.jface.util.OpenStrategy$3.run(OpenStrategy.java:418)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:820)
+	at org.eclipse.jface.window.Window.open(Window.java:796)
+	at org.eclipse.debug.internal.ui.launchConfigurations.LaunchConfigurationsDialog.open(LaunchConfigurationsDialog.java:1133)
+	at org.eclipse.debug.ui.DebugUITools$1.run(DebugUITools.java:387)
+	at org.eclipse.swt.custom.BusyIndicator.showWhile(BusyIndicator.java:67)
+	at org.eclipse.debug.ui.DebugUITools.openLaunchConfigurationDialogOnGroup(DebugUITools.java:391)
+	at org.eclipse.debug.ui.DebugUITools.openLaunchConfigurationDialogOnGroup(DebugUITools.java:333)
+	at org.eclipse.debug.ui.actions.OpenLaunchDialogAction.run(OpenLaunchDialogAction.java:82)
+	at org.eclipse.jface.action.Action.runWithEvent(Action.java:498)
+	at org.eclipse.jface.action.ActionContributionItem.handleWidgetSelection(ActionContributionItem.java:546)
+	at org.eclipse.jface.action.ActionContributionItem.access$2(ActionContributionItem.java:490)
+	at org.eclipse.jface.action.ActionContributionItem$5.handleEvent(ActionContributionItem.java:402)
+	at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+	at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:938)
+	at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3682)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3293)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124800</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Steininger">tsteininger</who>
+    <bug_when>2008-01-03 02:34:14 -0500</bug_when>
+    <thetext>with this error it is not possible to edit or add new launch configurations.
+please help.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125741</commentid>
+    <comment_count>2</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-04 09:34:20 -0500</bug_when>
+    <thetext>Moving to Platform/Debug.
+
+The bug is in CommonTab.updateFavoritesFromConfig():
+getLaunchConfigurationManager().getLaunchGroup(id) can be null.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125767</commentid>
+    <comment_count>3</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-04 10:05:58 -0500</bug_when>
+    <thetext>It looks like there must have been a plug-in/tool present that contributed a &quot;launch group&quot; that was subsequently removed from your Eclipse installation. The launch configuration was seeded as a favorite in that launch group and can no longer find the associated extension. 
+
+The fix is simple (but is not a regression). You can workaround the problem by manually deleting the configurations that are causing problems (from your workspace if they are &apos;shared&apos; or in the meta-data area if they are local).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125768</commentid>
+    <comment_count>4</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-04 10:07:01 -0500</bug_when>
+    <thetext>Fixed in HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125777</commentid>
+    <comment_count>5</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-04 10:15:51 -0500</bug_when>
+    <thetext>Please verify, Mike.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126382</commentid>
+    <comment_count>6</comment_count>
+    <who name="Thomas Steininger">tsteininger</who>
+    <bug_when>2008-01-07 03:31:42 -0500</bug_when>
+    <thetext>Thank you all for answering.
+
+But i don&apos;t know where to search for the configuration problem.
+Can you, darin, please say me the exact file name and place of the file that i have to search for and the content that i have to replace or change?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126567</commentid>
+    <comment_count>7</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-07 09:33:30 -0500</bug_when>
+    <thetext>(re-marking as fixed - note that you can still ask questions on a bug without re-opening).
+
+The local launch configurations are stored with your workspace in the .metadata/.plugins/org.eclipse.debug.core/.launches directory. In this directory, each configuration is stored by its user assigned name. You can selectively delete the configurations that are causing problems.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126621</commentid>
+    <comment_count>8</comment_count>
+    <who name="Thomas Steininger">tsteininger</who>
+    <bug_when>2008-01-07 10:32:30 -0500</bug_when>
+    <thetext>thank you for your help.
+i could find the launch-configuration that causes that problem.
+
+i also satisfied reading that this problem is fixed in the HEAD/TRUNC, cause it is not sensefull to delete launch-configurations that are shared (SVN) only because not all team-members are using the same PlugIns.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130665</commentid>
+    <comment_count>9</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-01-14 10:29:00 -0500</bug_when>
+    <thetext>verified</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

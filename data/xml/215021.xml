@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215021</bug_id>
+          
+          <creation_ts>2008-01-11 09:29:00 -0500</creation_ts>
+          <short_desc>test srcIncluded build without generating build.xml files</short_desc>
+          <delta_ts>2008-01-15 09:32:55 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Releng</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andrew Overholt">overholt</reporter>
+          <assigned_to name="Kim Moir">kim.moir</assigned_to>
+          <cc>kim.moir</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129619</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-11 09:29:17 -0500</bug_when>
+    <thetext>I&apos;m experimenting with bootstrapping PDE Build (see bug #214909) but I need a build source drop that doesn&apos;t have pre-generated build.xml files.  While I could just remove the generated build files from a drop, I&apos;ve been trying to duplicate building the source drop but without the build.xml generation.  I&apos;m having a hard time doing so and was wondering if my favourite releng people could do me a big favour and run a test build without the generation?  I&apos;ll attach a patch.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129620</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86672</attachid>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-11 09:30:08 -0500</bug_when>
+    <thetext>Created attachment 86672
+buildAll.xml patch to not generate build.xml files</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129655</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-11 10:16:14 -0500</bug_when>
+    <thetext>*blush* Your favourite releng people. I bet you say that to all the eclipse release engineers....
+
+I&apos;ve commented out the generate task for the source builds for the next build.
+I&apos;ll run a test build later today for this and other fixes...I&apos;ll put the source fetch zip in a build directory somewhere and send you the link.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129672</commentid>
+    <comment_count>3</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-11 10:44:43 -0500</bug_when>
+    <thetext>Thanks Kim :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129987</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-11 17:04:38 -0500</bug_when>
+    <thetext>The source builds weren&apos;t generated because the bit that makes the source zips is called from the postGenerate target of the SDK.  So when I commented out the call to generate, this task wasn&apos;t called.  I hacked around with it a bit but I have to let the build run to test my other bug fixes.  I&apos;ll take a look again on Monday.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130654</commentid>
+    <comment_count>5</comment_count>
+      <attachid>86830</attachid>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-14 10:22:33 -0500</bug_when>
+    <thetext>Created attachment 86830
+patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130666</commentid>
+    <comment_count>6</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-14 10:29:03 -0500</bug_when>
+    <thetext>running another test build</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130981</commentid>
+    <comment_count>7</comment_count>
+    <who name="Kim Moir">kim.moir</who>
+    <bug_when>2008-01-14 16:12:25 -0500</bug_when>
+    <thetext>Andrew the files will be 
+
+http://download.eclipse.org/eclipse/downloads/drops/N20080114-0010/eclipse-sourceBuild-srcIncluded-N20080114-1030.zip
+http://download.eclipse.org/eclipse/downloads/drops/N20080114-0010/eclipse-sourceBuild-srcFetch-N20080114-1030.zip
+
+They are replicating now.  There are still a few build.xmls from bundles that have custom build scripts such as swt.
+
+reverted patch in head.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131452</commentid>
+    <comment_count>8</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-15 09:32:55 -0500</bug_when>
+    <thetext>Thanks, Kim!</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86672</attachid>
+            <date>2008-01-11 09:30:00 -0500</date>
+            <delta_ts>2008-01-14 10:22:33 -0500</delta_ts>
+            <desc>buildAll.xml patch to not generate build.xml files</desc>
+            <filename>dontgeneratebuildxmls.patch</filename>
+            <type>text/plain</type>
+            <size>784</size>
+            <attacher name="Andrew Overholt">overholt</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5yZWxlbmcuZWNs
+aXBzZWJ1aWxkZXIKSW5kZXg6IGJ1aWxkQWxsLnhtbAo9PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zz
+cm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnJlbGVuZy5lY2xpcHNlYnVpbGRlci9idWlsZEFsbC54
+bWwsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNzEKZGlmZiAtdSAtcjEuNzEgYnVpbGRBbGwueG1s
+Ci0tLSBidWlsZEFsbC54bWwJMTAgSmFuIDIwMDggMDI6MDY6MzAgLTAwMDAJMS43MQorKysgYnVp
+bGRBbGwueG1sCTExIEphbiAyMDA4IDE0OjI2OjM2IC0wMDAwCkBAIC0xNDEsOSArMTQxLDYgQEAK
+IAkJPGFudCBhbnRmaWxlPSJidWlsZC54bWwiIGRpcj0iJHtlY2xpcHNlLnBkZWJ1aWxkLnNjcmlw
+dHN9IiB0YXJnZXQ9ImZldGNoIj4KIAkJCTxwcm9wZXJ0eSBuYW1lPSJidWlsZGVyIiB2YWx1ZT0i
+JHtlY2xpcHNlLmJ1aWxkLmNvbmZpZ3N9L3NkayIgLz4KIAkJPC9hbnQ+Ci0JCTxhbnQgYW50Zmls
+ZT0iYnVpbGQueG1sIiBkaXI9IiR7ZWNsaXBzZS5wZGVidWlsZC5zY3JpcHRzfSIgdGFyZ2V0PSJn
+ZW5lcmF0ZSI+Ci0JCQk8cHJvcGVydHkgbmFtZT0iYnVpbGRlciIgdmFsdWU9IiR7ZWNsaXBzZS5i
+dWlsZC5jb25maWdzfS9zZGsiIC8+Ci0JCTwvYW50PgogCTwvdGFyZ2V0PgogCiAJPHRhcmdldCBu
+YW1lPSJwYWNrTWFzdGVyRmVhdHVyZSIgdW5sZXNzPSJza2lwUGFjayI+Cg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86830</attachid>
+            <date>2008-01-14 10:22:00 -0500</date>
+            <delta_ts>2008-01-14 10:22:33 -0500</delta_ts>
+            <desc>patch</desc>
+            <filename>215021.txt</filename>
+            <type>text/plain</type>
+            <size>2050</size>
+            <attacher name="Kim Moir">kim.moir</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucmVsZW5nLmVj
+bGlwc2VidWlsZGVyDQpJbmRleDogZWNsaXBzZS9idWlsZENvbmZpZ3Mvc2RrL2N1c3RvbVRhcmdl
+dHMueG1sDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBz
+ZS5yZWxlbmcuZWNsaXBzZWJ1aWxkZXIvZWNsaXBzZS9idWlsZENvbmZpZ3Mvc2RrL2N1c3RvbVRh
+cmdldHMueG1sLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4yOA0KZGlmZiAtdSAtcjEuMjggY3Vz
+dG9tVGFyZ2V0cy54bWwNCi0tLSBlY2xpcHNlL2J1aWxkQ29uZmlncy9zZGsvY3VzdG9tVGFyZ2V0
+cy54bWwJMTAgSmFuIDIwMDggMTc6MDM6MTYgLTAwMDAJMS4yOA0KKysrIGVjbGlwc2UvYnVpbGRD
+b25maWdzL3Nkay9jdXN0b21UYXJnZXRzLnhtbAkxNCBKYW4gMjAwOCAxNToyMTo1MiAtMDAwMA0K
+QEAgLTIyNiw3ICsyMjYsNyBAQA0KIAkJCTxmaWxlc2V0IGRpcj0iJHtidWlsZERpcmVjdG9yeX0v
+cGx1Z2lucy9vcmcuZWNsaXBzZS5zd3QuZ3RrLmxpbnV4Lng4Nl82NCIgaW5jbHVkZXM9Ig0KIAkJ
+CQlhYm91dF9maWxlcy9tcGwtdjExLnR4dCIgLz4NCiAJCTwvY29weT4JDQotCQkJCQ0KKwkJPGFu
+dGNhbGwgdGFyZ2V0PSJidWlsZFNvdXJjZURyb3BzIiAvPgkJDQogCTwvdGFyZ2V0Pg0KIA0KIAk8
+IS0tID09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PSAtLT4NCkBAIC0yMzksOCArMjM5LDcgQEANCiAJPCEtLSBTdGVwcyB0
+byBkbyBhZnRlciBnZW5lcmF0aW5nIHRoZSBidWlsZCBzY3JpcHRzIC0tPg0KIAk8IS0tID09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PSAtLT4NCiAJPHRhcmdldCBuYW1lPSJwb3N0R2VuZXJhdGUiPg0KLQkJPGFudGNhbGwg
+dGFyZ2V0PSJjbGVhbiIgLz4NCi0JCTxhbnRjYWxsIHRhcmdldD0iYnVpbGRTb3VyY2VEcm9wcyIg
+Lz4NCisJCTxhbnRjYWxsIHRhcmdldD0iY2xlYW4iIC8+CQ0KIAk8L3RhcmdldD4NCiANCiAJPCEt
+LSA9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT0gLS0+DQpJbmRleDogYnVpbGRBbGwueG1sDQo9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1Mg
+ZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5yZWxlbmcuZWNsaXBzZWJ1aWxkZXIv
+YnVpbGRBbGwueG1sLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS43Mw0KZGlmZiAtdSAtcjEuNzMg
+YnVpbGRBbGwueG1sDQotLS0gYnVpbGRBbGwueG1sCTExIEphbiAyMDA4IDIwOjEwOjIxIC0wMDAw
+CTEuNzMNCisrKyBidWlsZEFsbC54bWwJMTQgSmFuIDIwMDggMTU6MjE6NTIgLTAwMDANCkBAIC0x
+NDEsOSArMTQxLDkgQEANCiAJCTxhbnQgYW50ZmlsZT0iYnVpbGQueG1sIiBkaXI9IiR7ZWNsaXBz
+ZS5wZGVidWlsZC5zY3JpcHRzfSIgdGFyZ2V0PSJmZXRjaCI+DQogCQkJPHByb3BlcnR5IG5hbWU9
+ImJ1aWxkZXIiIHZhbHVlPSIke2VjbGlwc2UuYnVpbGQuY29uZmlnc30vc2RrIiAvPg0KIAkJPC9h
+bnQ+DQotCQk8YW50IGFudGZpbGU9ImJ1aWxkLnhtbCIgZGlyPSIke2VjbGlwc2UucGRlYnVpbGQu
+c2NyaXB0c30iIHRhcmdldD0iZ2VuZXJhdGUiPg0KKwk8IS0tCTxhbnQgYW50ZmlsZT0iYnVpbGQu
+eG1sIiBkaXI9IiR7ZWNsaXBzZS5wZGVidWlsZC5zY3JpcHRzfSIgdGFyZ2V0PSJnZW5lcmF0ZSI+
+DQogCQkJPHByb3BlcnR5IG5hbWU9ImJ1aWxkZXIiIHZhbHVlPSIke2VjbGlwc2UuYnVpbGQuY29u
+Zmlnc30vc2RrIiAvPg0KLQkJPC9hbnQ+DQorCQk8L2FudD4gLS0+DQogCTwvdGFyZ2V0Pg0KIA0K
+IAk8dGFyZ2V0IG5hbWU9InBhY2tNYXN0ZXJGZWF0dXJlIiB1bmxlc3M9InNraXBQYWNrIj4NCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214408</bug_id>
+          
+          <creation_ts>2008-01-04 17:35:00 -0500</creation_ts>
+          <short_desc>Link from Java Development Overview to Basic Tutorial does not work from Help View</short_desc>
+          <delta_ts>2010-06-07 10:21:54 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Doc</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chris Goldthorpe">cgold</reporter>
+          <assigned_to name="JDT-Doc-Inbox">jdt-doc-inbox</assigned_to>
+          <cc>daniel_megert</cc>
+    
+    <cc>dejan</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126115</commentid>
+    <comment_count>0</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-04 17:35:20 -0500</bug_when>
+    <thetext>Help/Search - the help view opens
+Search for &quot;Java development overview&quot;
+Open the link titled &quot;Java development overview&quot;
+Click on the link &quot;Basic Tutorial&quot;
+
+Result &quot;This page cannot be displayed&quot;
+
+The problem is that this page contains some javascript which is assuming that the page was opened in either the help browser or in intro (see below). This is not a valid assumption since it can also be opened from the help view. I don&apos;t believe that this page can be opened from intro so the hyperlink could be just a simple url rather than a call to a Javascript function.
+
+ &lt;script type=&quot;text/javaScript&quot;&gt;
+	function openRelatedLink(rel) {
+		var href = &apos;/org.eclipse.jdt.doc.user/&apos;+rel;
+		if (self.name==&quot;ContentViewFrame&quot;) {
+			showTopicInContents(href);
+			window.location = &apos;../../&apos;+rel;
+		}
+		else {
+			window.location = &apos;http://org.eclipse.ui.intro/showHelpTopic?id=&apos;+href;
+		}
+	}
+   &lt;/script&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127232</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-08 07:01:24 -0500</bug_when>
+    <thetext>This was added via patch from the Help team (Dejan) long time ago in order to support external browsers. Platform and PDE do it exactly the same.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129638</commentid>
+    <comment_count>2</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-11 09:55:31 -0500</bug_when>
+    <thetext>If this can be changed we should change it everywhere.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129696</commentid>
+    <comment_count>3</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-11 11:00:05 -0500</bug_when>
+    <thetext>Dejan, do you remember why this was done and can we just change it back to a regular hyperlink?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129807</commentid>
+    <comment_count>4</comment_count>
+    <who name="Dejan Glozic">dejan</who>
+    <bug_when>2008-01-11 13:01:22 -0500</bug_when>
+    <thetext>I don&apos;t remember why this is done :-(. It may have been related to the time we switched to the platform-level external browser support. It seems that the &apos;else&apos; branch was added to support external browsers (the &apos;if&apos; was there all the time).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1756190</commentid>
+    <comment_count>5</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2010-06-07 10:21:54 -0400</bug_when>
+    <thetext>Works for me using 3.6 RC4.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

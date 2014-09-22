@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214326</bug_id>
+          
+          <creation_ts>2008-01-04 05:42:00 -0500</creation_ts>
+          <short_desc>R3 and R3_1 contain unnecessary files</short_desc>
+          <delta_ts>2008-05-30 16:16:30 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>GEF</product>
+          <component>RelEng</component>
+          <version>3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 RC3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Jacek Pospychala">jacek.pospychala</reporter>
+          <assigned_to name="Anthony Hunter">anthonyh</assigned_to>
+          <cc>anthonyh</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125596</commentid>
+    <comment_count>0</comment_count>
+    <who name="Jacek Pospychala">jacek.pospychala</who>
+    <bug_when>2008-01-04 05:42:36 -0500</bug_when>
+    <thetext>I&apos;m checking out GEF org.eclipse.gef plugin from CVS and there appear two files:
+org/eclipse/gef/ui/palette/editparts/PaletteEditPart.java (1.22.2.1),
+org/eclipse/gef/ui/palette/editparts/PaletteToolbarLayout.java (1.16),
+org/eclipse/gef/ui/palette/editparts/
+
+they contain class files from package org.eclipse.gef.INTERNAL.ui.palette.editparts.
+
+It seems to me, by some accident they were copied from internal.ui.palette.editparts and should not be there.
+
+It occurs for R3_Maintenance and R3_1_Maintenance, not for R3_2. I haven&apos;t checked other releases.
+
+Compared with ZIP files available for download there are is no such package gef.ui.palette.editparts.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126012</commentid>
+    <comment_count>1</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-04 15:01:35 -0500</bug_when>
+    <thetext>Yes, I know of the issue.
+
+Since refactoring does not preserve history (like SVN), when I refactored these classes, I copied them in CVS to maintain their version history.
+
+I fixed the issues you mentioned in the 3.4 and R3_3_maintenance streams, which are the two active streams when the refactor occurred.
+
+I did not care about the older streams as they are effectively dead. There are no further builds in R3_Maintenance and R3_1_Maintenance.
+
+I can go back into these streams and remove these new entries, but I am wondering why we would do this. CVS access is meant for GEF development. Since there is no development in these streams, it does not make sense to address this issue.
+
+Why do we need CVS access to these old streams? The GEF SDK has the source right?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126023</commentid>
+    <comment_count>2</comment_count>
+    <who name="Jacek Pospychala">jacek.pospychala</who>
+    <bug_when>2008-01-04 15:19:55 -0500</bug_when>
+    <thetext>Anthony,
+thanks for quick response.
+
+If you know then ok, I can live with WONTFIX :)
+
+It&apos;s just hard to figure out what&apos;s happening if you check out R* code and see it doesn&apos;t even compile.
+
+I needed code to check possibility of patch for our internal product based on GEF 3.0. So CVS was more comfortable than creating patch using SDK zip.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126025</commentid>
+    <comment_count>3</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-04 15:28:32 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; I needed code to check possibility of patch for our internal product based on
+&gt; GEF 3.0. So CVS was more comfortable than creating patch using SDK zip.
+
+OK, I get it, creating a patch pretty much requires CVS. If this is painful for you, let me know the stream you want fixed and I can make it so.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126035</commentid>
+    <comment_count>4</comment_count>
+    <who name="Jacek Pospychala">jacek.pospychala</who>
+    <bug_when>2008-01-04 15:37:28 -0500</bug_when>
+    <thetext>it&apos;s R3_Maintenance.
+Alternatively you could create folder (e.g. removed/history/...) not on classpath to contain these files to keep the history.
+
+thanks</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1254925</commentid>
+    <comment_count>5</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-05-30 16:16:30 -0400</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; I did not care about the older streams as they are effectively dead. There are
+&gt; no further builds in R3_Maintenance and R3_1_Maintenance.
+
+Fixed the CVS repo issue for R30_Maintenance, R31_Maintenance and R32_Maintenance</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

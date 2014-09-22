@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215048</bug_id>
+          
+          <creation_ts>2008-01-11 11:21:00 -0500</creation_ts>
+          <short_desc>Better error handling when implURLs not set</short_desc>
+          <delta_ts>2008-02-14 11:53:20 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Webservices</product>
+          <component>jst.ws</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kathy Chan">kathy</reporter>
+          <assigned_to name="Kathy Chan">kathy</assigned_to>
+          
+          <qa_contact name="Kathy Chan">kathy</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129720</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-01-11 11:21:02 -0500</bug_when>
+    <thetext>When the implURLs are not set (the Web service runtime extenders are supposed to set it at the end of develop so that skeleton merge can take effect), the code would result in:
+
+IWAB0014E Unexpected exception occurred.
+  
+      java.lang.NullPointerException
+      at org.eclipse.jst.ws.internal.consumption.common.JavaMerger.merge(Unknown Source)
+      at org.eclipse.jst.ws.internal.creation.ui.extension.PreServiceAssembleCommand.execute(Unknown Source)
+
+We should do better error handling in this case to avoid the NPE.  Merge would just do nothing in this case.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136117</commentid>
+    <comment_count>1</comment_count>
+      <attachid>87549</attachid>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-01-22 14:42:32 -0500</bug_when>
+    <thetext>Created attachment 87549
+patch
+
+When the extender do not call setImplURLs(), JavaMerger.load() is not called and thus loadStatus is not initialized.  So check for null for loadStatus.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136126</commentid>
+    <comment_count>2</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-01-22 14:48:03 -0500</bug_when>
+    <thetext>Patch released to HEAD as v200801221947.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156917</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-02-14 11:53:20 -0500</bug_when>
+    <thetext>Verified.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>87549</attachid>
+            <date>2008-01-22 14:42:00 -0500</date>
+            <delta_ts>2008-01-22 14:42:32 -0500</delta_ts>
+            <desc>patch</desc>
+            <filename>patch215048.txt</filename>
+            <type>text/plain</type>
+            <size>1681</size>
+            <attacher name="Kathy Chan">kathy</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuanN0LndzLmNv
+bnN1bXB0aW9uDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2pzdC93cy9pbnRlcm5hbC9jb25zdW1w
+dGlvbi9jb21tb24vSmF2YU1lcmdlci5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jv
+b3Qvd2VidG9vbHMvd2Vic2VydmljZXMvcGx1Z2lucy9vcmcuZWNsaXBzZS5qc3Qud3MuY29uc3Vt
+cHRpb24vc3JjL29yZy9lY2xpcHNlL2pzdC93cy9pbnRlcm5hbC9jb25zdW1wdGlvbi9jb21tb24v
+SmF2YU1lcmdlci5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4yDQpkaWZmIC11IC1yMS4y
+IEphdmFNZXJnZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9qc3Qvd3MvaW50ZXJuYWwvY29u
+c3VtcHRpb24vY29tbW9uL0phdmFNZXJnZXIuamF2YQkxMCBNYXkgMjAwNyAwMDozODowNSAtMDAw
+MAkxLjINCisrKyBzcmMvb3JnL2VjbGlwc2UvanN0L3dzL2ludGVybmFsL2NvbnN1bXB0aW9uL2Nv
+bW1vbi9KYXZhTWVyZ2VyLmphdmEJMjIgSmFuIDIwMDggMTk6NDE6NDQgLTAwMDANCkBAIC0xLDUg
+KzEsNSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDA3
+IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAwNywgMjAw
+OCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVkLiBU
+aGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1hZGUg
+YXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5zZSB2
+MS4wDQogICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFp
+bGFibGUgYXQNCkBAIC0xMCw2ICsxMCw3IEBADQogICogeXl5eW1tZGQgYnVnICAgICAgRW1haWwg
+YW5kIG90aGVyIGNvbnRhY3QgaW5mb3JtYXRpb24NCiAgKiAtLS0tLS0tLSAtLS0tLS0tLSAtLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
+ICAqIDIwMDcwNTA5ICAgMTgyMjc0IGthdGh5QGNhLmlibS5jb20gLSBLYXRoeSBDaGFuDQorICog
+MjAwODAxMjIgICAyMTUwNDgga2F0aHlAY2EuaWJtLmNvbSAtIEthdGh5IENoYW4NCiAgKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKi8NCiBwYWNrYWdlIG9yZy5lY2xpcHNlLmpzdC53cy5pbnRlcm5hbC5j
+b25zdW1wdGlvbi5jb21tb247DQogDQpAQCAtMTQ2LDcgKzE0Nyw3IEBADQogCQkNCiAJCUlTdGF0
+dXMgc3RhdHVzID0gU3RhdHVzLk9LX1NUQVRVUzsNCiAJCQ0KLQkJaWYgKGxvYWRTdGF0dXMuZ2V0
+U2V2ZXJpdHkoKSA9PSBJU3RhdHVzLkVSUk9SKSB7DQorCQlpZiAobG9hZFN0YXR1cyAhPSBudWxs
+ICYmIGxvYWRTdGF0dXMuZ2V0U2V2ZXJpdHkoKSA9PSBJU3RhdHVzLkVSUk9SKSB7DQogCQkJcmV0
+dXJuIGxvYWRTdGF0dXM7DQogCQl9DQogCQkNCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

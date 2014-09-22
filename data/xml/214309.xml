@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214309</bug_id>
+          
+          <creation_ts>2008-01-04 02:46:00 -0500</creation_ts>
+          <short_desc>warn user when committing a task to a non-associated source repository</short_desc>
+          <delta_ts>2008-02-13 21:04:11 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>UI</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mik Kersten">mik.kersten</reporter>
+          <assigned_to name="Mik Kersten">mik.kersten</assigned_to>
+          <cc>robert.elves</cc>
+    
+    <cc>shawn.minto</cc>
+    
+    <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125522</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 02:46:14 -0500</bug_when>
+    <thetext>Since Mylyn does not have a strict association between task repositories and source repositories, it is possible to have an automatic commit message from one task repository be wrongly used for another.  For example, if I have the following repositories:
+1) Eclipse CVS
+2) FooCorp CVS
+
+And I accidentally modify a file in (1) while working on a task in (2), the file can become part of the commit and have the automatic commit message for (2) be put in the public repository (1).  This is a privacy concern and too easy to slip up on (it has happened to me more than once).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125524</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 02:48:21 -0500</bug_when>
+    <thetext>We may be able to prevent this by detecting the associated repository as part of formulating the commit message (afaik we still don&apos;t have pre-commit hooks for CVS so that may be the only apprach).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125531</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 03:15:03 -0500</bug_when>
+    <thetext>Done.  Leaving open for 2.3 because we may want to give the user the option of dismissing this dialog permanently.
+
+Rob: I know that you&apos;ve been in a similar situation, please try this out.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125532</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86155</attachid>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 03:15:07 -0500</bug_when>
+    <thetext>Created attachment 86155
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125949</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-04 13:16:36 -0500</bug_when>
+    <thetext>Added check to avoid this happening at startup.  We will still need to see how common this dialog is and decide whether to make it a PONT or to refine the policy for when it shows up.
+
+Shawn: since you work with several task and source repositories let us know how the current policy works out for you.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130019</commentid>
+    <comment_count>5</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-11 17:52:03 -0500</bug_when>
+    <thetext>I&apos;m seeing this dialog when committing to a repository that is associated correctly. May need to check the files being committed (vs. entire change set).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147047</commentid>
+    <comment_count>6</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-31 21:56:07 -0500</bug_when>
+    <thetext>Yes, it is possible to get the dialog in that scenario (file is interesting, but has no outgoing changes).  Hopefully I can refine this policy for 2.3.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156490</commentid>
+    <comment_count>7</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-02-13 21:04:05 -0500</bug_when>
+    <thetext>Done.  We now avoid the case in comment#5, which will also improve the problems we previously had with an incorrectly formatted template for the outgoing changes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156491</commentid>
+    <comment_count>8</comment_count>
+      <attachid>89707</attachid>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-02-13 21:04:11 -0500</bug_when>
+    <thetext>Created attachment 89707
+mylyn/context/zip</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86155</attachid>
+            <date>2008-01-04 03:15:00 -0500</date>
+            <delta_ts>2008-01-04 03:15:07 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>2523</size>
+            <attacher name="Mik Kersten">mik.kersten</attacher>
+            
+              <data encoding="base64">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
+mG/eQqsdXAMiXhdh2tDWSW6HW1+ZMS5Yfhixq7enr8P4nAXlNsv4SyJ/x+jWB7oMk3np9GSWHnlk
+idFmbFfOA22uWOxnHaBZxqFOX5tl1GdQc1JNsAq1PZWS6pod2CGXwtCLwv+Y/MzbAiZU5OQRpwYD
+02yjRnvKlK3lENK3WXPEkFGrGdv9YkeDFatMLmpgxUSmd2f+LC5ee51yAvfvZeNxeXdJtuF2JOsB
+FFtbbFQJwoaavNtG1f5g3pylqLFDUZlMpZOMowK8uViyCE310/JVLEwRDymUeR6CdDYhB2CrUh+U
+cp7yfo+K7G+lZX9gN1ojY/8t0c6zMJ0cCiNIjZ6O7SIxGth+Z5xq4DaIMDf2trINnLvMPXYx8wjF
+MMcqAXyIcX34XCixADF2Gdah8KlpB1pQWWnqeTREPOWIm51FlNPP0JSUh7rcYyJHpdGnzmAXQ9q2
+qBhWYLft/h/8QsSkbtcB19CQH0q3kspSPZUGKdBmC79WRd5DKbHDstYS9dVRr44LiSatNgqHLySu
+qdoXxBsFHRtEM0Hf8ODy48ndi94p0Wfw9UFPsZKv7Ty3trrpabbb9n6/5ffdPXRhWxWCYGV18S75
+tIwFD4gCUj3PTPoTmHXNgadzO2sO/aBRF6KUjYjBzzO3sNxCae7uMZdX33KZN/nXZZCCLIBQpfY1
+dJCySdX+YN5oFlXZtH0327j7DPrDLcJy7Xal47W5drsn+1juzt658+YeiEw2IHkV5iLte/Y/UEsH
+CJ/ZEbUJCQAACZIAAFBLAQIUABQACAAIANoBJDif2RG1CQkAAAmSAAAwAAAAAAAAAAAAAAAAAAAA
+AABodHRwcyUzQSUyRiUyRmJ1Z3MuZWNsaXBzZS5vcmclMkZidWdzLTIxNDMwOS54bWxQSwUGAAAA
+AAEAAQBeAAAAZwkAAAAA
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>89707</attachid>
+            <date>2008-02-13 21:04:00 -0500</date>
+            <delta_ts>2008-02-13 21:04:11 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>4073</size>
+            <attacher name="Mik Kersten">mik.kersten</attacher>
+            
+              <data encoding="base64">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
+LnhtbFBLBQYAAAAAAQABAF4AAAB1DwAAAAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

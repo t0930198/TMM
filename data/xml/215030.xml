@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215030</bug_id>
+          
+          <creation_ts>2008-01-11 10:20:00 -0500</creation_ts>
+          <short_desc>Inappropriate cycle detection in PDE (and perhaps PDE build)</short_desc>
+          <delta_ts>2013-06-18 08:57:54 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          <dependson>309321</dependson>
+          <blocked>208011</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kim Horne">eclipse</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>aniefer</cc>
+    
+    <cc>dev</cc>
+    
+    <cc>ECOMAR</cc>
+    
+    <cc>gunnar</cc>
+    
+    <cc>hudsonr</cc>
+    
+    <cc>IngedevTeam.fr</cc>
+    
+    <cc>pwebster</cc>
+          
+          <votes>2</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129657</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kim Horne">eclipse</who>
+    <bug_when>2008-01-11 10:20:30 -0500</bug_when>
+    <thetext>I have the following scenarion:
+
+I have a bundle providing utility classes which depends on OSGI
+I have a fragment on OSGI that depends on this utility bundle.  Despite that the utility bundle doesn&apos;t require anything in the fragment PDE UI (and PDE build?) detect this as a cycle.  Given that there isn&apos;t REALLY a dependency between these bundles I would have thought that this would build but it doesn&apos;t.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129673</commentid>
+    <comment_count>1</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-01-11 10:45:22 -0500</bug_when>
+    <thetext>I remember having this conversation before but don&apos;t remember if there is another bug.  I think that UI is explicitly disallowing this (they are capable of building cycles)?
+
+In any case, I would like pde/build to be able to do this, as it comes up every so often.
+
+It would involve some extra analysis, perhaps something along the lines of what would the state look like if instead of being a fragment, this was a bundle with a dependency on the host.
+
+This is related to bug 208011</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1295250</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-07-21 11:44:06 -0400</bug_when>
+    <thetext>*** Bug 241377 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1355918</commentid>
+    <comment_count>3</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-10-23 11:04:51 -0400</bug_when>
+    <thetext>*** Bug 251832 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1398098</commentid>
+    <comment_count>4</comment_count>
+    <who name="Rafael Chaves">eclipse.rc</who>
+    <bug_when>2008-12-22 12:00:14 -0500</bug_when>
+    <thetext>This seems to be a duplicate of bug 164166 (or vice-versa).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1398601</commentid>
+    <comment_count>5</comment_count>
+    <who name="Curtis Windatt">cwindatt</who>
+    <bug_when>2008-12-23 12:44:19 -0500</bug_when>
+    <thetext>*** Bug 164166 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1628416</commentid>
+    <comment_count>6</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2009-11-16 10:40:44 -0500</bug_when>
+    <thetext>This just came up in e4 with a fragment on xwt causing a cycle between xwt and xwt.css.
+
+I plan to fix our code, but it would be nice if the build indicated that the fragment cause the problem:
+
+A cycle was detected when generating the classpath org.eclipse.e4.xwt_0.9.1.v20091115-2130, org.eclipse.e4.xwt.css_0.9.0.v20090714-1930, org.eclipse.e4.xwt_0.9.1.v20091115-2130
+
+PW</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

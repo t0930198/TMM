@@ -1,0 +1,541 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215138</bug_id>
+          
+          <creation_ts>2008-01-13 06:25:00 -0500</creation_ts>
+          <short_desc>OutOfMemory when profiling hundreds of JUnit tests.</short_desc>
+          <delta_ts>2011-02-11 14:45:19 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Profiling</product>
+          <component>Platform.Agents.JVMTI</component>
+          <version>4.4.0.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>housecleaned462 closed472</status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>4.6.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Martin Schaaf">mascha</reporter>
+          <assigned_to name="Eugene Chan">ewchan</assigned_to>
+          <cc>jkubasta</cc>
+    
+    <cc>paules</cc>
+    
+    <cc>sluiman</cc>
+    
+    <cc>te</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130263</commentid>
+    <comment_count>0</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-01-13 06:25:31 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+eclipse.buildId=M20071023-1652
+
+java.version=1.6.0_03
+
+java.vendor=Sun Microsystems Inc.
+
+BootLoader constants: OS=win32, ARCH=x86, WS=win32, NL=de_DE
+
+Command-line arguments:  -os win32 -ws win32 -arch x86
+
+Steps To Reproduce:
+We have written an eclipse plugin that set errors in source code and starts the junit testing after this. It makes for every change a unprofiled junit run and for every failed junit run it starts a profiled junit run. So we run hundreds of junit tests profiled and unprofiled in serial. On our profiling we need the information of called methods. For this we have two possibilities. One is tptp and the other collects the information directly from the source. If we run with tptp we get two exceptions after an half hour. With hour other method the run needs 4 hours and ends without errors. But we need the tptp profiling to exactly what methods are called. So it would be nice if you could help us in finding the problem. The exceptions will follow.
+
+More information:
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-10 10:30:31.156
+
+!MESSAGE LockManager.handleException
+
+!STACK 0
+
+java.lang.ArrayIndexOutOfBoundsException: 1393
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.reduceGraph(DeadlockDetector.java:533)
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.lockReleased(DeadlockDetector.java:353)
+
+	at org.eclipse.core.internal.jobs.LockManager.removeLockThread(LockManager.java:246)
+
+	at org.eclipse.core.internal.jobs.OrderedLock.setCurrentOperationThread(OrderedLock.java:265)
+
+	at org.eclipse.core.internal.jobs.OrderedLock.doRelease(OrderedLock.java:194)
+
+	at org.eclipse.core.internal.jobs.OrderedLock.release(OrderedLock.java:245)
+
+	at org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart.stopUpdateJobs(TestRunnerViewPart.java:951)
+
+	at org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart.access$15(TestRunnerViewPart.java:945)
+
+	at org.eclipse.jdt.internal.junit.ui.TestRunnerViewPart$TestSessionListener.sessionEnded(TestRunnerViewPart.java:534)
+
+	at org.eclipse.jdt.internal.junit.model.TestRunSession$TestSessionNotifier.testRunEnded(TestRunSession.java:583)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient$3.run(RemoteTestRunnerClient.java:469)
+
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient.testRunEnded(RemoteTestRunnerClient.java:467)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient.access$9(RemoteTestRunnerClient.java:462)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient$DefaultProcessingState.readMessage(RemoteTestRunnerClient.java:101)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient.receiveMessage(RemoteTestRunnerClient.java:346)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient.access$26(RemoteTestRunnerClient.java:345)
+
+	at org.eclipse.jdt.internal.junit.model.RemoteTestRunnerClient$ServerConnection.run(RemoteTestRunnerClient.java:265)
+
+
+
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-10 10:30:31.203
+
+!MESSAGE LockManager.handleException
+
+!STACK 0
+
+java.lang.ArrayIndexOutOfBoundsException: 1393
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.lockReleased(DeadlockDetector.java:352)
+
+	at org.eclipse.core.internal.jobs.LockManager.removeLockThread(LockManager.java:246)
+
+	at org.eclipse.core.internal.jobs.ImplicitJobs.endThreadJob(ImplicitJobs.java:157)
+
+	at org.eclipse.core.internal.jobs.ImplicitJobs.end(ImplicitJobs.java:115)
+
+	at org.eclipse.core.internal.jobs.JobManager.endRule(JobManager.java:560)
+
+	at org.eclipse.core.internal.utils.StringPoolJob.run(StringPoolJob.java:103)
+
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+
+
+!ENTRY org.projectory.ezunit 1 0 2008-01-10 10:30:32.546
+
+!MESSAGE org.projectory.ezunit: profiling session took 66985ms (all over)
+
+
+
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-10 10:31:11.031
+
+!MESSAGE An internal error occurred during: &quot;Compacting memory&quot;.
+
+!STACK 0
+
+java.lang.OutOfMemoryError: Java heap space
+
+	at java.util.Arrays.copyOf(Arrays.java:2882)
+
+	at java.lang.AbstractStringBuilder.expandCapacity(AbstractStringBuilder.java:100)
+
+	at java.lang.AbstractStringBuilder.append(AbstractStringBuilder.java:390)
+
+	at java.lang.StringBuffer.append(StringBuffer.java:224)
+
+	at java.io.StringWriter.write(StringWriter.java:95)
+
+	at java.io.PrintWriter.write(PrintWriter.java:412)
+
+	at java.io.PrintWriter.write(PrintWriter.java:429)
+
+	at java.io.PrintWriter.print(PrintWriter.java:559)
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.toDebugString(DeadlockDetector.java:693)
+
+	at org.eclipse.core.internal.jobs.LockManager.handleInternalError(LockManager.java:186)
+
+	at org.eclipse.core.internal.jobs.LockManager.removeLockThread(LockManager.java:249)
+
+	at org.eclipse.core.internal.jobs.ImplicitJobs.endThreadJob(ImplicitJobs.java:157)
+
+	at org.eclipse.core.internal.jobs.ImplicitJobs.end(ImplicitJobs.java:115)
+
+	at org.eclipse.core.internal.jobs.JobManager.endRule(JobManager.java:560)
+
+	at org.eclipse.core.internal.utils.StringPoolJob.run(StringPoolJob.java:103)
+
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+
+
+!ENTRY org.eclipse.ui 4 0 2008-01-10 10:37:06.109
+
+!MESSAGE Unhandled event loop exception
+
+!STACK 0
+
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.OutOfMemoryError: Java heap space)
+
+	at org.eclipse.swt.SWT.error(SWT.java:3563)
+
+	at org.eclipse.swt.SWT.error(SWT.java:3481)
+
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:126)
+
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+
+	at java.lang.reflect.Method.invoke(Method.java:597)
+
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)
+
+Caused by: java.lang.OutOfMemoryError: Java heap space
+
+
+
+!ENTRY org.eclipse.ui 4 0 2008-01-10 10:39:48.125
+
+!MESSAGE Unhandled event loop exception
+
+!STACK 0
+
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.OutOfMemoryError: Java heap space)
+
+	at org.eclipse.swt.SWT.error(SWT.java:3563)
+
+	at org.eclipse.swt.SWT.error(SWT.java:3481)
+
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:126)
+
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+
+	at org.eclipse.jface.window.Window.runEventLoop(Window.java:820)
+
+	at org.eclipse.jface.window.Window.open(Window.java:796)
+
+	at org.eclipse.ui.internal.ide.dialogs.InternalErrorDialog.open(InternalErrorDialog.java:78)
+
+	at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.openQuestionDialog(IDEWorkbenchErrorHandler.java:184)
+
+	at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.handleException(IDEWorkbenchErrorHandler.java:139)
+
+	at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler.access$0(IDEWorkbenchErrorHandler.java:131)
+
+	at org.eclipse.ui.internal.ide.IDEWorkbenchErrorHandler$1.runInUIThread(IDEWorkbenchErrorHandler.java:106)
+
+	at org.eclipse.ui.progress.UIJob$1.run(UIJob.java:94)
+
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+
+	at java.lang.reflect.Method.invoke(Method.java:597)
+
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)
+
+Caused by: java.lang.OutOfMemoryError: Java heap space
+
+
+
+!ENTRY org.projectory.ezunit 1 0 2008-01-10 10:40:03.031
+
+!MESSAGE org.projectory.ezunit: creating dynamic trace from traceModel took 570485ms
+
+
+
+!ENTRY org.projectory.ezunit 1 0 2008-01-10 10:40:05.046
+
+!MESSAGE org.projectory.ezunit: dynamic trace created
+
+
+
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-10 10:40:05.046
+
+!MESSAGE LockManager.handleException
+
+!STACK 0
+
+java.lang.ArrayIndexOutOfBoundsException: 1393
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.reduceGraph(DeadlockDetector.java:533)
+
+	at org.eclipse.core.internal.jobs.DeadlockDetector.lockReleasedCompletely(DeadlockDetector.java:383)
+
+	at org.eclipse.core.internal.jobs.LockManager.removeLockCompletely(LockManager.java:233)
+
+	at org.eclipse.core.internal.jobs.WorkerPool.endJob(WorkerPool.java:103)
+
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:71)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130264</commentid>
+    <comment_count>1</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-01-13 06:27:01 -0500</bug_when>
+    <thetext>The eclipse that shows this error is started with 1GB of memory.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130287</commentid>
+    <comment_count>2</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-01-13 10:50:49 -0500</bug_when>
+    <thetext>Paul, would you please let me know if you or Eugene should handle?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130434</commentid>
+    <comment_count>3</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-01-14 03:47:00 -0500</bug_when>
+    <thetext>The tptp build number is: 4.4.0.3-20070926175</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130558</commentid>
+    <comment_count>4</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-01-14 08:17:36 -0500</bug_when>
+    <thetext>I can not tell from your description how oyu are using TPTP and TPTP is not in the  stacks given.
+I can imagine ways to run out of memory running the profiler for half an hour, but I can&apos;t tell how you are doing this.
+
+Is the workbench session that is monitoring the execution of the test or the test application itself that is running out of memory?
+
+How are you starting and stopping profiling with TPTP during the execution of your tests? Or are you simply running a very long profiling session with method filtering to give you just the data you need?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134212</commentid>
+    <comment_count>5</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-01-18 16:26:37 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; Is the workbench session that is monitoring the execution of the test or the
+&gt; test application itself that is running out of memory?
+
+I can&apos;t tell you this. How can I find this out? I only see the OOM message in the eclipse log.
+
+&gt; How are you starting and stopping profiling with TPTP during the execution of
+&gt; your tests?
+
+We create for every test a profile launch configuration to trace only one test.
+We add a IProfileEventListener ( UIPlugin.getDefault().addProfileEventListener(DynamicTrace.this) ) to get the TRCAgent ( TRCAgent agent = ((TRCAgentProxy) processProxy.getAgentProxies().get(0)).getAgent() )
+
+Then we do the following to get the trace:
+
+TRCMethod method = this.getTRCMethodFromModel(trcAgent, context);
+...
+Object methodCandidate = method.getInvocations().get(0);
+...
+this.traverseModel((TRCMethodInvocation) methodCandidate, context);
+
+
+
+private synchronized void traverseModel(TRCMethodInvocation invoker, IMethod testMethod) {
+ EList&lt;TRCMethodInvocation&gt; invokees = invoker.getInvokes();
+ if (invokees != null &amp;&amp; invokees.size() &gt; 0) {
+  for (TRCMethodInvocation invokee : invokees) {
+   IMethod invokeeAsIMethod = HelperMethods.getIMethod(invokee.getMethod());
+   if (invokeeAsIMethod != null) {
+    // store the trace in our method object
+    IMethodUnderTest mut = MethodUnderTestStore.getInstance().findMut(invokeeAsIMethod);
+    mut.setTRCMethod(invokee.getMethod());
+    mut.addCallingTestMethod(testMethod);
+    this.addElement(mut);
+   }
+   // add more invokees recursively
+   traverseModel(invokee, testMethod);
+  }
+ }
+}
+
+We do not stop it excplicitly.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134218</commentid>
+    <comment_count>6</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-18 16:32:59 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; Paul, would you please let me know if you or Eugene should handle?
+&gt; 
+
+This would be a profiling issue since Martin is profiling a plain JUnit test class and not a TPTP JUnit Test Suite.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134226</commentid>
+    <comment_count>7</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-01-18 16:45:43 -0500</bug_when>
+    <thetext>Java 1.6 profiling problem</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135201</commentid>
+    <comment_count>8</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-01-21 13:01:00 -0500</bug_when>
+    <thetext>(In reply to comment #7)
+&gt; Java 1.6 profiling problem
+&gt; 
+
+Joanna, how did you conclude this is a Java 1.6 problem? 
+From the last post this looks like some direct manipulation on the workbench side of the profiling features and the model.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135208</commentid>
+    <comment_count>9</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-01-21 13:10:02 -0500</bug_when>
+    <thetext>bad wording.  My comment simply meant &apos;profiling problem reported on Java 1.6&apos;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151770</commentid>
+    <comment_count>10</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-02-07 05:16:54 -0500</bug_when>
+    <thetext>(In reply to comment #7)
+&gt; Java 1.6 profiling problem
+
+We see this OOM also with jvm 1.5. But you are right the agent controller runs more stable since we use 1.5 on this machine.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156647</commentid>
+    <comment_count>11</comment_count>
+    <who name="Martin Schaaf">mascha</who>
+    <bug_when>2008-02-14 06:02:22 -0500</bug_when>
+    <thetext>I profiled eclipse and saw that after every profiling we have a increasing number of this types of objects
+
+org.eclipse.hyades.models.trace.impl.TRCFullMethodInvocationImpl
+org.eclipse.emf.ecore.util.EObjectContainmentWithInverseEList
+
+From every type 1.000.000 instances.
+
+We tried to delete the used TRCAgent with EMFUtils.delete(), but this doesn&apos;t help.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1245943</commentid>
+    <comment_count>12</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-05-23 09:01:10 -0400</bug_when>
+    <thetext>Deferral to future with PMC approval</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1432670</commentid>
+    <comment_count>13</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-02-18 12:18:35 -0500</bug_when>
+    <thetext>Update priority field to P2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1691517</commentid>
+    <comment_count>14</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2010-03-10 12:23:10 -0500</bug_when>
+    <thetext>As of TPTP 4.6.0, TPTP is in maintenance mode and focusing on improving quality by resolving relevant defects and increasing test coverage through test creation, automation, Build Verification Tests (BVTs), and expanded run-time execution. Since this defect is more than 2 years old, it may be no longer relevant. As part of the TPTP Bugzilla housecleaning process (see http://wiki.eclipse.org/Bugzilla_Housecleaning_Processes), this defect is resolved as WONTFIX. If this defect is still relevant and reproducible in the latest TPTP release (http://www.eclipse.org/tptp/home/downloads/), please re-open.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1882028</commentid>
+    <comment_count>15</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2011-02-11 13:40:23 -0500</bug_when>
+    <thetext>This defect had been resolved as WONTFIX for more than 1 month.  Closing this on the reporter&apos;s behalf.  Please re-open if you have further comment on this issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1882318</commentid>
+    <comment_count>16</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2011-02-11 14:45:19 -0500</bug_when>
+    <thetext>Closed in TPTP 4.7.2.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

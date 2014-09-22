@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214186</bug_id>
+          
+          <creation_ts>2008-01-02 22:11:00 -0500</creation_ts>
+          <short_desc>[editor] attachement cannot be added to task</short_desc>
+          <delta_ts>2008-01-15 17:16:14 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>UI</component>
+          <version>dev</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="bartosz michalik">bartosz.michalik</reporter>
+          <assigned_to name="Robert Elves">robert.elves</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124724</commentid>
+    <comment_count>0</comment_count>
+    <who name="bartosz michalik">bartosz.michalik</who>
+    <bug_when>2008-01-02 22:11:35 -0500</bug_when>
+    <thetext>Build ID: I20071101-2000
+
+
+java.lang.NullPointerException
+at org.eclipse.mylyn.internal.bugzilla.core.BugzillaClient.postTaskData(Unknown Source)
+at org.eclipse.mylyn.internal.bugzilla.core.BugzillaTaskDataHandler.postTaskData(Unknown Source)
+at org.eclipse.mylyn.tasks.ui.editors.AbstractRepositoryTaskEditor$43.run(Unknown Source)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+after that error any attachement cannot be added to the task on bugzilla. instead there is a info dialog displayed (&quot;submit changes or synchronize ...&quot;).
+synchronization don&apos;t fix the problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129167</commentid>
+    <comment_count>1</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-10 14:29:33 -0500</bug_when>
+    <thetext>Sound like the task data is corrupt.  Some steps to fix this:
+
+* Add some text to the New Comment section of the bug report and save it.  Then right click within the editor to open the popup menu and select Mark &gt; Clear outgoing.  Then try attachments.
+
+* If the previous step didn&apos;t resolve this issue, delete the task from the task list by right clicking and choose delete from the popup. Synchronise your query and reopen the task once it arrives. Try attachments again.
+
+Let me know if this doesn&apos;t help and we can investigate further.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129208</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-10 15:02:53 -0500</bug_when>
+    <thetext>By the way, Rob, why there is a restriction to not allow to create attachments when there are unsubmitted local changes?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130812</commentid>
+    <comment_count>3</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-14 12:43:50 -0500</bug_when>
+    <thetext> (In reply to comment #2)
+&gt; By the way, Rob, why there is a restriction to not allow to create attachments
+&gt; when there are unsubmitted local changes?
+It was done this way to prevent loss of edits. Now that we maintain edits separately from task data we should be able to make this work (bug#188744).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131652</commentid>
+    <comment_count>4</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-15 12:53:57 -0500</bug_when>
+    <thetext>Bartosz, were you able to get up and running? Also consider using a more recent build. Mylyn 2.2 and weekly builds are available from: 
+
+   http://www.eclipse.org/mylyn/downloads/</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131736</commentid>
+    <comment_count>5</comment_count>
+    <who name="bartosz michalik">bartosz.michalik</who>
+    <bug_when>2008-01-15 14:50:00 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; Sound like the task data is corrupt.  Some steps to fix this:
+&gt; 
+&gt; * Add some text to the New Comment section of the bug report and save it.  Then
+&gt; right click within the editor to open the popup menu and select Mark &gt; Clear
+&gt; outgoing.  Then try attachments.
+sorry for not answering so long
+
+yes. this workaround works. on the version I have (2.2.0I20071107-1900). 
+I&apos;ll test on version from head and let you know. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131867</commentid>
+    <comment_count>6</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-15 17:16:14 -0500</bug_when>
+    <thetext>Great, thanks for the update Bartosz. I&apos;ll mark resolved and if you see this happen again, please post a new stack trace and reopen.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

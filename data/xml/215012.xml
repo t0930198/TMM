@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215012</bug_id>
+          
+          <creation_ts>2008-01-11 07:53:00 -0500</creation_ts>
+          <short_desc>beforeDestroy of SessionStoreListener  is called too late</short_desc>
+          <delta_ts>2008-08-13 08:11:43 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>RAP</product>
+          <component>RWT</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Klaus Musch">Klaus.Musch</reporter>
+          <assigned_to name="Project Inbox">rap-inbox</assigned_to>
+          <cc>weltenrichter</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129572</commentid>
+    <comment_count>0</comment_count>
+    <who name="Klaus Musch">Klaus.Musch</who>
+    <bug_when>2008-01-11 07:53:33 -0500</bug_when>
+    <thetext>In a registered SessionStoreListener the method beforeDestroy is called too late.
+
+When the user leaves the page, RAP is able to display a message like &quot;all unsaved data will be lost&quot;. So probably RAP knows about the user leaving the page.
+
+So the method beforeDestroy could be called immediately, couldn&apos;t it?
+
+I know that there was a similar bug 210520, but that one contained different issues, so I opened a new bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145124</commentid>
+    <comment_count>1</comment_count>
+    <who name="Benjamin Wolff">weltenrichter</who>
+    <bug_when>2008-01-30 04:44:34 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; In a registered SessionStoreListener the method beforeDestroy is called too
+&gt; late.
+&gt; 
+&gt; When the user leaves the page, RAP is able to display a message like &quot;all
+&gt; unsaved data will be lost&quot;. So probably RAP knows about the user leaving the
+&gt; page.
+&gt; 
+&gt; So the method beforeDestroy could be called immediately, couldn&apos;t it?
+&gt; 
+&gt; I know that there was a similar bug 210520, but that one contained different
+&gt; issues, so I opened a new bug.
+&gt; 
+
+
+as i understand it, the session isn&apos;t always destroyed when the user closes the browser/leaves the page. deployed on a tomcat it seems that tomcat is handling the sessions. or am i wrong?
+
+i&apos;m really missing this feature to destroy the session immediately when the user closes the browser because i&apos;m always afraid of memory leaks when the session is timed out by the servlet container. all objects bound to the session will remain in the heap as long as the session isn&apos;t destroyed, right?!?!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1212974</commentid>
+    <comment_count>2</comment_count>
+    <who name="Klaus Musch">Klaus.Musch</who>
+    <bug_when>2008-04-24 04:31:50 -0400</bug_when>
+    <thetext>A possible solution to destroy the session immediately when a user explicitly logs off from the application is to programmatically set 
+
+RWT.getRequest().getSession().setMaxInactiveInterval(1);
+
+This destroys the session after 1 second.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1309491</commentid>
+    <comment_count>3</comment_count>
+    <who name="Benjamin Muskalla">benjamin.muskalla</who>
+    <bug_when>2008-08-13 08:11:43 -0400</bug_when>
+    <thetext>We do not consider this as a bug as RAP uses the standard session timeout mechanism for invalidating the session. Detecting when the user leaves the page does not work reliable we cannot support this.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

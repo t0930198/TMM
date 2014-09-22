@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215217</bug_id>
+          
+          <creation_ts>2008-01-14 09:31:00 -0500</creation_ts>
+          <short_desc>Using java:importsLocation can create wrong Positions in c:userRegion</short_desc>
+          <delta_ts>2008-01-29 04:31:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>M2T</product>
+          <component>Jet</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>215263</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Maxime Jeanmart">maxime.jeanmart</reporter>
+          <assigned_to name="Paul Elder">pelder.eclipse</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130606</commentid>
+    <comment_count>0</comment_count>
+    <who name="Maxime Jeanmart">maxime.jeanmart</who>
+    <bug_when>2008-01-14 09:31:28 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Steps To Reproduce:
+1.Create a JET template for a java class
+2.Define a java:importsLocation
+3.After that, add a user region like this:
+&lt;c:userRegion&gt;
+	// user-defined variables here:
+	&lt;c:initialCode&gt;
+	&lt;/c:initialCode&gt;
+	// end of user-defined variables
+&lt;/c:userRegion&gt;
+4. after that, define some imports like this:
+public static &lt;java:import&gt;org.apache.log4j.Logger&lt;/java:import&gt; log = Logger.getLogger(&lt;c:get select=&quot;$clazz&quot;/&gt;WebController.class);
+5. generate the class
+6. edit the user region
+7. regenerate the class
+
+The user region is probably lost because, when the UserRegionTag is called, the Position elements are computed before the imports are added to the result. When UserRegionHelper.finalizeContent is called, the Positions are still not taking the imports into account. However, the code reads in the existing file (containing the imports) using those wrong positions, resulting in wrong existing regions.
+
+            final String beginMarker = bufferedwriter.getContent(beginMarkerPosition.offset, beginMarkerPosition.length);
+            final String endMarker = bufferedwriter.getContent(endMarkerPosition.offset, endMarkerPosition.length);
+
+            final int existingRegionOffset = fileContents.indexOf(beginMarker);
+            if (existingRegionOffset != -1)
+            {
+              final int existingEndMarkerOffset = fileContents.indexOf(endMarker, existingRegionOffset + beginMarker.length());
+              ...
+            }
+...
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1143875</commentid>
+    <comment_count>1</comment_count>
+    <who name="Paul Elder">pelder.eclipse</who>
+    <bug_when>2008-01-28 17:04:24 -0500</bug_when>
+    <thetext>I think this maybe a duplicate of bug 215263, which is fixed in the latest M build (0.8.2). Are you able to test whether your problem still occurs?
+
+Thx.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144181</commentid>
+    <comment_count>2</comment_count>
+    <who name="Maxime Jeanmart">maxime.jeanmart</who>
+    <bug_when>2008-01-29 04:31:36 -0500</bug_when>
+    <thetext>Indeed, the bug is fixed in 0.8.2.
+
+*** This bug has been marked as a duplicate of bug 215263 ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

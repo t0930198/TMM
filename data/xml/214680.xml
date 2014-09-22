@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214680</bug_id>
+          
+          <creation_ts>2008-01-08 17:05:00 -0500</creation_ts>
+          <short_desc>[Trim] TrimContributionManager won&apos;t accept IToolBarContributionItem</short_desc>
+          <delta_ts>2008-07-28 13:45:30 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>3.4</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Zack Roadhouse">zack.roadhouse</reporter>
+          <assigned_to name="Eric Moffatt">emoffatt</assigned_to>
+          <cc>pwebster</cc>
+    
+    <cc>remysuen</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127758</commentid>
+    <comment_count>0</comment_count>
+    <who name="Zack Roadhouse">zack.roadhouse</who>
+    <bug_when>2008-01-08 17:05:22 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+We are building a new presentation for Eclipse 3.3 and have implemented a custom IToolBarManager.  We would like to be able to use the org.eclipse.ui.menus extension point to allow adding custom controls to the status bar.   Unfortunately, TrimContributionManager checks for the ToolBarContributionItem class instead of the IToolBarContributionItem interface, so our contributions are ignored.  It&apos;s not possible for our presentation implementation to use ToolBarContributionItem directly since it has an assertion/cast in its constructor from IToolBarManager to ToolBarManager.  Our custom tool bar manager extends ContributionManager and implements IToolBarManager so we get an assertion failure here.
+
+More information:
+Here is the assertion failure stack I get when attempting to use ToolbarContributionItem:
+
+!ENTRY org.eclipse.ui.workbench 4 2 2008-01-08 14:26:00.842
+!MESSAGE Problems occurred when invoking code from plug-in: &quot;org.eclipse.ui.workbench&quot;.
+!STACK 0
+org.eclipse.core.runtime.AssertionFailedException: assertion failed: 
+	at org.eclipse.core.runtime.Assert.isTrue(Assert.java:109)
+	at org.eclipse.core.runtime.Assert.isTrue(Assert.java:95)
+	at org.eclipse.jface.action.ToolBarContributionItem.&lt;init&gt;(ToolBarContributionItem.java:126)
+	at org.eclipse.jface.internal.provisional.action.ToolBarContributionItem2.&lt;init&gt;(ToolBarContributionItem2.java:51)
+	at myplugin.MyPresentationFactory.createToolBarContributionItem(MyPresentationFactory.java:74)
+	at org.eclipse.ui.internal.menus.MenuAdditionCacheEntry.createToolBarAdditionContribution(MenuAdditionCacheEntry.java:206)
+	at org.eclipse.ui.internal.menus.MenuAdditionCacheEntry.createContributionItems(MenuAdditionCacheEntry.java:181)
+	at org.eclipse.ui.internal.menus.TrimContributionManager.update(TrimContributionManager.java:224)
+	at org.eclipse.ui.internal.WorkbenchWindow.updateLayoutDataForContents(WorkbenchWindow.java:3582)
+	at org.eclipse.ui.internal.WorkbenchWindow.setLayoutDataForContents(WorkbenchWindow.java:3593)
+	at org.eclipse.ui.internal.WorkbenchWindow.createDefaultContents(WorkbenchWindow.java:1090)
+	at org.eclipse.ui.internal.WorkbenchWindowConfigurer.createDefaultContents(WorkbenchWindowConfigurer.java:624)
+	at org.eclipse.ui.application.WorkbenchWindowAdvisor.createWindowContents(WorkbenchWindowAdvisor.java:268)
+	at myplugin.ApplicationWorkbenchWindowAdvisor.createWindowContents(ApplicationWorkbenchWindowAdvisor.java:141)
+...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128096</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-09 09:38:07 -0500</bug_when>
+    <thetext>
+Committed in &gt;20080109. Changed the check to be for IToolBarContributionItem.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149270</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-02-04 16:24:29 -0500</bug_when>
+    <thetext>
+Verified (visually) in I20080204-0010.
+
+Zack, can you verify that this has actually been fixed for you ? If not, please feel free to re-open.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1298789</commentid>
+    <comment_count>3</comment_count>
+    <who name="Zack Roadhouse">zack.roadhouse</who>
+    <bug_when>2008-07-25 13:58:28 -0400</bug_when>
+    <thetext>We have verified that this issue has been fixed.  Thank you.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1299702</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-07-28 13:45:30 -0400</bug_when>
+    <thetext>
+Beauty, thanks!
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

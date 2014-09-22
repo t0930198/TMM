@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214974</bug_id>
+          
+          <creation_ts>2008-01-10 18:35:00 -0500</creation_ts>
+          <short_desc>[Workbench] Allow Workbench UI state to save/restore to user-provided Input/Output Streams</short_desc>
+          <delta_ts>2014-02-03 10:09:33 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="G. Ralph Kuntz, MD">grk</reporter>
+          <assigned_to name="Platform UI Triaged">platform-ui-triaged</assigned_to>
+          <cc>caniszczyk</cc>
+    
+    <cc>emoffatt</cc>
+    
+    <cc>Kevin_McGuire</cc>
+    
+    <cc>pwebster</cc>
+    
+    <cc>remysuen</cc>
+    
+    <cc>Tod_Creasey</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129371</commentid>
+    <comment_count>0</comment_count>
+    <who name="G. Ralph Kuntz, MD">grk</who>
+    <bug_when>2008-01-10 18:35:40 -0500</bug_when>
+    <thetext>Presently, all of the methods in Workbench that are involved in saving and restoring the workbench UI state are private.  This means that a developer of an application based on the RCP cannot override the location where the state is kept.
+
+It would be very nice to be able to save and restore the UI state in a database so that clients could see the same screen layout even when using an application based on the RCP from different computers.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130616</commentid>
+    <comment_count>1</comment_count>
+    <who name="Tod Creasey">Tod_Creasey</who>
+    <bug_when>2008-01-14 09:45:38 -0500</bug_when>
+    <thetext>Something to consider if there is a workbench rework</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131731</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-15 14:46:02 -0500</bug_when>
+    <thetext>
+I&apos;ll mark this as 4.0 (where questions like this have a shot at clean answers).
+
+Would something that allowed you to construct the &apos;root&apos; IMemento work? This would likely be easier from our perspective...
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131745</commentid>
+    <comment_count>3</comment_count>
+    <who name="G. Ralph Kuntz, MD">grk</who>
+    <bug_when>2008-01-15 14:59:38 -0500</bug_when>
+    <thetext>I&apos;m not sure.  I haven&apos;t written an RCP application yet, but have done most of the tutorial in the Eclipse RCP book by McAffer, et al.
+
+I suspect it would work if it let me save the IMemento after the workbench did and restore it before the workbench reads it from the file.
+
+I was considering kludging it for now by doing this: grab the contents of the workbench.xml file from the filesystem after the save and before my application exits and over-writing it back to the filesystem the next time before calling &quot;new WorkbenchAdvisor()&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2268573</commentid>
+    <comment_count>4</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2013-06-05 10:41:25 -0400</bug_when>
+    <thetext>Removing outdated target milestone.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2269473</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2013-06-06 15:02:50 -0400</bug_when>
+    <thetext>
+This is part of implementing a way to have the UI Model (at least) separated from the Workspace it&apos;s being used to work on.
+
+The main problem is to identify what we mean by &apos;ui state&apos;. If it&apos;s just the UI Model then it&apos;s easy; if we want to include other state like preferences, dialog settings...then it&apos;s much more problematic (but still deserves a look).</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,907 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214271</bug_id>
+          
+          <creation_ts>2008-01-03 15:49:00 -0500</creation_ts>
+          <short_desc>[CommonNavigator] Undo/redo not enabled if nothing selected</short_desc>
+          <delta_ts>2008-05-08 17:20:20 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 RC1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Francis Upton IV">francisu</reporter>
+          <assigned_to name="Boris Bokowski">bokowski</assigned_to>
+          <cc>anton.leherbauer</cc>
+    
+    <cc>bokowski</cc>
+    
+    <cc>pwebster</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="6219"
+          type_id="1"
+          status="+"
+          setter="pwebster"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125263</commentid>
+    <comment_count>0</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-03 15:49:40 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+I am doing an RCP application using the 3.3.1 version of the CommonNavigator (I have not tried 3.4 yet).
+
+I have a problem with undo/redo enablement, which is easily duplicated:
+
+1) Create a file, using the project explorer (or whatever your CommonNavigator view is)
+2) You should see the undo button enabled.
+3) Then clear the selection (make sure there are no resources selected) in the project explorer.  The undo button will incorrectly no longer be enabled.
+
+
+
+More information:
+This is probably also related to bug 190571.
+
+
+I have tracked this down to the fact that the UndoRedoActionGroup is part of the RefactorActionProvider, and that the RefactorActionProvider is only enabled when there is a resource selected.
+
+I have worked around this by making my own action provider which contains only the UndoRedoActionGroup, and setting this up to be enabled all the time, using this markup (directly under the &quot;extension&quot; element, not under the &quot;navigatorContent&quot; element):
+
+        &lt;!-- see notes in UnfoRedoActionProvider about this --&gt;
+        &lt;actionProvider
+              class=&quot;com.oaklandsw.gui.UndoRedoActionProvider&quot;
+              id=&quot;com.oaklandsw.gui.UndoRedoActions&quot;&gt;
+          &lt;enablement&gt;
+        &lt;not&gt;
+          &lt;systemTest property=&quot;org.eclipse.core.runtime.product&quot; value=&quot;XXX&quot;/&gt;
+        &lt;/not&gt;
+          &lt;/enablement&gt;
+         &lt;/actionProvider&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154782</commentid>
+    <comment_count>1</comment_count>
+      <attachid>89484</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-12 04:30:19 -0500</bug_when>
+    <thetext>Created attachment 89484
+Patch for 3.4M5
+
+This separates the UndoRedo actions from the Refactor actions as the UndoRedo actions need to be enabled all the time, regardless of the selection state of the viewer.
+
+I&apos;m not happy with the &lt;enablement&gt; element in this patch, I want it just to be true, but I&apos;m not sure how to do this cleanly.  I seek guidance here and will happily revise the patch.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158768</commentid>
+    <comment_count>2</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-18 16:01:05 -0500</bug_when>
+    <thetext>Michael,
+
+I had a conversation with Paul Webster about the issue of an actionProvider being enabled if there is no &quot;enablement&quot; element.  He says the convention is that is the &quot;enablement&quot; element in the DTD is optional, then the action (or whatever) should *be* enabled if there is no enablement element present.  However, it appears at the actionProvider extension point does not work that way; if I leave off the enablement element, the action is *not* enabled.
+
+Do you know why it is done that way?
+
+Thanks,
+
+Francis</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158781</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michael D. Elder">mdelder</who>
+    <bug_when>2008-02-18 16:32:11 -0500</bug_when>
+    <thetext>A large concern in the original Project Explorer framework was the performance of impact of aggressively loading plugins. 
+
+In the case of action providers, they can either specify their own enablement expressions or inherit the possibleChildren expression of the containing content extension. When declared as top level contributions, the enablement was made explicit to avoid loading plugins unless absolutely needed. Otherwise, there was a concern that errant extensions could be enabled when not required and cause other issues (like overriding actions unintentionally) as well as a general performance impact. Remember that the action providers are notified as the selection changes to reconfigure which ones are enabled, including an update of the action bars to ensure the properly configured Retargetable actions.
+
+To enable on the world, I&apos;d suggest an adapt to expression for Object, OR&apos;d together with the empty selection enablement, e.g.:
+
+&lt;enablement&gt; 
+   &lt;or&gt;
+	&lt;adapt type=&quot;java.lang.Object&quot; /&gt;	 
+	&lt;adapt type=&quot;java.util.Collection&quot;&gt; 
+	  &lt;count value=&quot;0&quot; /&gt;
+	&lt;/adapt&gt;
+  &lt;/or&gt;	 
+&lt;/enablement&gt;
+
+This is how other extensions declare &quot;all the time&quot; (like the PortingActions extensions, which is IResource + no selection). 
+
+Does that help?
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158783</commentid>
+    <comment_count>4</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-18 16:38:06 -0500</bug_when>
+    <thetext>Yes, this helps.  I actually in my patch chose a different solution to getting to &quot;true&quot;.  In speaking with Paul about this (in IRC) I was arguing that the new expression stuff needed a &quot;true&quot; expression, and he said it didn&apos;t because by default things should be enabled if not present.  However (for good reason as you explain below) the CNF does not work that way.  
+
+So I would argue that we should have a &quot;true&quot; expression to make things simpler for everyone since it clearly has a need to exist.
+
+What do you think about adding a &quot;true&quot; expression?  I can do the work.
+
+(In reply to comment #3)
+&gt; A large concern in the original Project Explorer framework was the performance
+&gt; of impact of aggressively loading plugins. 
+&gt; 
+&gt; In the case of action providers, they can either specify their own enablement
+&gt; expressions or inherit the possibleChildren expression of the containing
+&gt; content extension. When declared as top level contributions, the enablement was
+&gt; made explicit to avoid loading plugins unless absolutely needed. Otherwise,
+&gt; there was a concern that errant extensions could be enabled when not required
+&gt; and cause other issues (like overriding actions unintentionally) as well as a
+&gt; general performance impact. Remember that the action providers are notified as
+&gt; the selection changes to reconfigure which ones are enabled, including an
+&gt; update of the action bars to ensure the properly configured Retargetable
+&gt; actions.
+&gt; 
+&gt; To enable on the world, I&apos;d suggest an adapt to expression for Object, OR&apos;d
+&gt; together with the empty selection enablement, e.g.:
+&gt; 
+&gt; &lt;enablement&gt; 
+&gt;    &lt;or&gt;
+&gt;         &lt;adapt type=&quot;java.lang.Object&quot; /&gt;        
+&gt;         &lt;adapt type=&quot;java.util.Collection&quot;&gt; 
+&gt;           &lt;count value=&quot;0&quot; /&gt;
+&gt;         &lt;/adapt&gt;
+&gt;   &lt;/or&gt;  
+&gt; &lt;/enablement&gt;
+&gt; 
+&gt; This is how other extensions declare &quot;all the time&quot; (like the PortingActions
+&gt; extensions, which is IResource + no selection). 
+&gt; 
+&gt; Does that help?
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158801</commentid>
+    <comment_count>5</comment_count>
+    <who name="Michael D. Elder">mdelder</who>
+    <bug_when>2008-02-18 16:58:43 -0500</bug_when>
+    <thetext>I&apos;m always apprehensive about anything that allows someone to declare &quot;my code is supremely important and should *always* be loaded&quot;, because IMHE (experience), it&apos;s often going to be abused beyond its original intended use. 
+
+That said, I&apos;ll leave it to your and Paul&apos;s judgment about what makes sense more generally for Platform/UI to expose. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158802</commentid>
+    <comment_count>6</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-18 17:01:57 -0500</bug_when>
+    <thetext>I agree with your concern, but I think having &quot;true&quot; be obscure will not help much.  Two reactions though:
+
+1) What about the subject of this report, where the UndoRedo action is always enabled, that seems legitimate?
+2) RCP applications will often have this requirement, since they will own the whole thing.
+
+(In reply to comment #5)
+&gt; I&apos;m always apprehensive about anything that allows someone to declare &quot;my code
+&gt; is supremely important and should *always* be loaded&quot;, because IMHE
+&gt; (experience), it&apos;s often going to be abused beyond its original intended use. 
+&gt; 
+&gt; That said, I&apos;ll leave it to your and Paul&apos;s judgment about what makes sense
+&gt; more generally for Platform/UI to expose. 
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158807</commentid>
+    <comment_count>7</comment_count>
+    <who name="Michael D. Elder">mdelder</who>
+    <bug_when>2008-02-18 17:18:26 -0500</bug_when>
+    <thetext>Because the Undo/Redo actions are general (e.g. they use the global command stack based on the active IUndoContext), I think their perpetual enablement from the point of view of the Project Explorer is probably okay. The case I&apos;d be most concerned about working properly:
+
+Perform a refactor on a Java file (e.g. Refactor &gt; Rename). From the Package Explorer, the Undo action is enabled to undo the rename. 
+
+Choose another editor that implements some sense of shared Undo (coordinated with the editor and the view). The general Undo/Redo actions would be smart enough to also rollback that change; but I&apos;m not sure what IUndoContext would be active when you switch back to the Project Explorer view. Perhaps the default behavior is really just to undo the last thing on the Global Operation History? I&apos;d need to verify this as I&apos;m not sure right off the top of my head. 
+
+It&apos;s the mixed Undo/Redo across different domains that&apos;s likely to present the most confusion; if I execute an action with an editor and then select the file in the PE, should Undo rollback the change to that file? If I change two files and then select the first file, will undo really be enabled to rollback the change to the second file?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160985</commentid>
+    <comment_count>8</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-20 22:23:41 -0500</bug_when>
+    <thetext>I&apos;m not sure I understand how the previous comment is relevant to this change.  Currently, the undo/redo handler associated with the navigator view is enabled some of the time, and when it is enabled, it is presumably set up for the global undo context.  This could allow undo for editors or not, depending on how the editors are configured.  But that has nothing to do with the enablement of the undo/redo action.  
+
+All *this* change does is have the undo/redo action enabled at all times (even with nothing selected) when the view is active.  The alternative is that the undo/redo action will not be enabled sometimes when the view is active which is clearly incorrect.
+
+I have played around with this with my changes, and undo/redo works as I expect, though it works with my editors different than in the IDE because I have chosen to &quot;match&quot; the editor&apos;s undo context with the global context.  So I can do a rename for example, and then something in the editor.  And then from the CN view do undo and it will undo the editor change and then undo the rename, as I would expect.  If I close the editor (before the undos) it will correctly undo only the rename change as the removal of the editor removes the editor&apos;s change.
+
+So in short, I don&apos;t think there is anything to worry about.  But maybe I&apos;m missing the point somewhere.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1161055</commentid>
+    <comment_count>9</comment_count>
+      <attachid>90292</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-21 01:22:50 -0500</bug_when>
+    <thetext>Created attachment 90292
+Revised Patch for 3.4M5
+
+The only change is the XML enablement condition to express &apos;true&apos; in the suggested manner.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1180163</commentid>
+    <comment_count>10</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-03-19 11:21:13 -0400</bug_when>
+    <thetext>Michael,  I&apos;m not sure, but I think this counts as an API change.  If that&apos;s the case, can we get this in this week?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1182965</commentid>
+    <comment_count>11</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-03-25 04:17:27 -0400</bug_when>
+    <thetext>Boris, can we try to get this in for M6?  This is a pretty serious problem for people using the CNF, and I think it might be an API change this it affects extension points.  The change is pretty straightforward.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1186216</commentid>
+    <comment_count>12</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-03-27 11:14:22 -0400</bug_when>
+    <thetext>This is not API according to Paul, but does need to be mentioned in the migration guide.  Let&apos;s try to get this in for M7.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1224246</commentid>
+    <comment_count>13</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-05-06 04:01:52 -0400</bug_when>
+    <thetext>Boris, can you have a look at this so that we can get it in for RC1?  This is a pretty important problem for the CN.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1224514</commentid>
+    <comment_count>14</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-05-06 08:49:50 -0400</bug_when>
+    <thetext>Thanks for pinging (again). The patch looks good to me (haven&apos;t tested it yet though). Paul, can you review the patch as well please?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1224769</commentid>
+    <comment_count>15</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-05-06 11:42:09 -0400</bug_when>
+    <thetext>If that enablement expression is simply to return true, a simpler version would be:
+
+&lt;enablement&gt;
+  &lt;or/&gt;
+&lt;/enablement&gt;
+
+
+With that, I think this is good to go.
+
+PW
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1224839</commentid>
+    <comment_count>16</comment_count>
+      <attachid>98873</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-05-06 12:03:25 -0400</bug_when>
+    <thetext>Created attachment 98873
+Revised to use &quot;&lt;or/&gt;&quot; per Paul&apos;s suggestion</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225008</commentid>
+    <comment_count>17</comment_count>
+      <attachid>98895</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-05-06 13:51:13 -0400</bug_when>
+    <thetext>Created attachment 98895
+Fixed copyright notices</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225137</commentid>
+    <comment_count>18</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-05-06 15:10:39 -0400</bug_when>
+    <thetext>The patch looks good but I cannot reproduce the original problem...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225228</commentid>
+    <comment_count>19</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-05-06 16:09:41 -0400</bug_when>
+    <thetext>The problem cannot be made to happen on the Eclipse SDK because a change was made in the JDT to add a JavaNavigatorRefactorActionProvider which is enabled when the collection size is 0, that is when nothing is selected.  This makes sure the undo stuff works in all cases (even if you are working with a non-Java project).
+
+*However*, this does not fix the RCP case.
+
+You can make the problem happen by using the Platform SDK (without JDT), I just did so with the 34m7 platform SDK.
+
+This fix should still be applied as it will affect RCP apps.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1229388</commentid>
+    <comment_count>20</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-05-08 17:10:46 -0400</bug_when>
+    <thetext>Released to HEAD.
+
+Paul, I am not sure what to write in the porting guide. Do you have any suggestion? How could this break existing clients?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1229395</commentid>
+    <comment_count>21</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-05-08 17:20:20 -0400</bug_when>
+    <thetext>(In reply to comment #20)
+&gt; Released to HEAD.
+&gt; 
+&gt; Paul, I am not sure what to write in the porting guide. Do you have any
+&gt; suggestion? How could this break existing clients?
+&gt; 
+
+(not that I&apos;m Paul - but I will try to answer)
+
+The old behavior was that undo/redo was not enabled is nothing was selected in the CN, the new behavior is that undo/redo will always be enabled when the CN is active, so that it properly reflects the undo/redo state.  This could only break existing clients that might rely on the enablement of undo/redo (like for some kind of automated GUI test).  It will now be correctly enabled when it was not before.  
+
+However my opinion is we should say nothing.  This is unlikely to break anyone&apos;s code who does not already know about this bug.
+
+(and thanks for getting this in)
+
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89484</attachid>
+            <date>2008-02-12 04:30:00 -0500</date>
+            <delta_ts>2008-02-21 01:22:50 -0500</delta_ts>
+            <desc>Patch for 3.4M5</desc>
+            <filename>214271.patch</filename>
+            <type>text/plain</type>
+            <size>6448</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0
+b3IucmVzb3VyY2VzCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1JlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQo9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5yZXNv
+dXJjZXMvc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0
+aW9ucy9SZWZhY3RvckFjdGlvblByb3ZpZGVyLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEu
+MwpkaWZmIC11IC1yMS4zIFJlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQotLS0gc3JjL29yZy9l
+Y2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9SZWZhY3RvckFj
+dGlvblByb3ZpZGVyLmphdmEJMjQgRmViIDIwMDYgMDU6MDk6MTQgLTAwMDAJMS4zCisrKyBzcmMv
+b3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1JlZmFj
+dG9yQWN0aW9uUHJvdmlkZXIuamF2YQkxMiBGZWIgMjAwOCAwMTowNTozMyAtMDAwMApAQCAtMTEs
+MTYgKzExLDEyIEBACiAKIHBhY2thZ2Ugb3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9y
+LnJlc291cmNlcy5hY3Rpb25zOwogCi1pbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5v
+cGVyYXRpb25zLklVbmRvQ29udGV4dDsKLWltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNl
+cy5SZXNvdXJjZXNQbHVnaW47CiBpbXBvcnQgb3JnLmVjbGlwc2UuamZhY2UuYWN0aW9uLklNZW51
+TWFuYWdlcjsKIGltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5UcmVlOwogaW1wb3J0IG9y
+Zy5lY2xpcHNlLnVpLklBY3Rpb25CYXJzOwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLmFjdGlvbnMu
+QWN0aW9uQ29udGV4dDsKIGltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuQ29tbW9uQWN0
+aW9uUHJvdmlkZXI7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25BY3Rp
+b25FeHRlbnNpb25TaXRlOwotaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5JQ29tbW9u
+Vmlld2VyV29ya2JlbmNoU2l0ZTsKLWltcG9ydCBvcmcuZWNsaXBzZS51aS5vcGVyYXRpb25zLlVu
+ZG9SZWRvQWN0aW9uR3JvdXA7CiAKIC8qKgogICogQHNpbmNlIDMuMgpAQCAtMjgsNDkgKzI0LDM0
+IEBACiAgKi8KIHB1YmxpYyBjbGFzcyBSZWZhY3RvckFjdGlvblByb3ZpZGVyIGV4dGVuZHMgQ29t
+bW9uQWN0aW9uUHJvdmlkZXIgewogCi0JcHJpdmF0ZSBVbmRvUmVkb0FjdGlvbkdyb3VwIHVuZG9S
+ZWRvR3JvdXA7Ci0KIAlwcml2YXRlIFJlZmFjdG9yQWN0aW9uR3JvdXAgcmVmYWN0b3JHcm91cDsK
+IAotCXByaXZhdGUgSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUgc2l0ZTsKLQogCS8qCiAJICog
+KG5vbi1KYXZhZG9jKQogCSAqIAogCSAqIEBzZWUgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLkNv
+bW1vbkFjdGlvblByb3ZpZGVyI2luaXQob3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25B
+Y3Rpb25FeHRlbnNpb25TaXRlKQogCSAqLwogCXB1YmxpYyB2b2lkIGluaXQoSUNvbW1vbkFjdGlv
+bkV4dGVuc2lvblNpdGUgYW5BY3Rpb25TaXRlKSB7Ci0JCXNpdGUgPSBhbkFjdGlvblNpdGU7Ci0J
+CXJlZmFjdG9yR3JvdXAgPSBuZXcgUmVmYWN0b3JBY3Rpb25Hcm91cChzaXRlLmdldFZpZXdTaXRl
+KCkuZ2V0U2hlbGwoKSwgKFRyZWUpc2l0ZS5nZXRTdHJ1Y3R1cmVkVmlld2VyKCkuZ2V0Q29udHJv
+bCgpKTsKLQotCQlJVW5kb0NvbnRleHQgd29ya3NwYWNlQ29udGV4dCA9IChJVW5kb0NvbnRleHQp
+IFJlc291cmNlc1BsdWdpbgotCQkJCS5nZXRXb3Jrc3BhY2UoKS5nZXRBZGFwdGVyKElVbmRvQ29u
+dGV4dC5jbGFzcyk7Ci0JCXVuZG9SZWRvR3JvdXAgPSBuZXcgVW5kb1JlZG9BY3Rpb25Hcm91cCgo
+KElDb21tb25WaWV3ZXJXb3JrYmVuY2hTaXRlKSBhbkFjdGlvblNpdGUuZ2V0Vmlld1NpdGUoKSku
+Z2V0U2l0ZSgpLAotCQkJCXdvcmtzcGFjZUNvbnRleHQsIHRydWUpOworCQlyZWZhY3Rvckdyb3Vw
+ID0gbmV3IFJlZmFjdG9yQWN0aW9uR3JvdXAoYW5BY3Rpb25TaXRlLmdldFZpZXdTaXRlKCkuZ2V0
+U2hlbGwoKSwgKFRyZWUpYW5BY3Rpb25TaXRlLmdldFN0cnVjdHVyZWRWaWV3ZXIoKS5nZXRDb250
+cm9sKCkpOwogCX0KIAogCXB1YmxpYyB2b2lkIGRpc3Bvc2UoKSB7Ci0JCXVuZG9SZWRvR3JvdXAu
+ZGlzcG9zZSgpOwogCQlyZWZhY3Rvckdyb3VwLmRpc3Bvc2UoKTsKIAl9CiAKIAlwdWJsaWMgdm9p
+ZCBmaWxsQWN0aW9uQmFycyhJQWN0aW9uQmFycyBhY3Rpb25CYXJzKSB7Ci0JCXVuZG9SZWRvR3Jv
+dXAuZmlsbEFjdGlvbkJhcnMoYWN0aW9uQmFycyk7CiAJCXJlZmFjdG9yR3JvdXAuZmlsbEFjdGlv
+bkJhcnMoYWN0aW9uQmFycyk7CiAJfQogCiAJcHVibGljIHZvaWQgZmlsbENvbnRleHRNZW51KElN
+ZW51TWFuYWdlciBtZW51KSB7Ci0JCXVuZG9SZWRvR3JvdXAuZmlsbENvbnRleHRNZW51KG1lbnUp
+OwogCQlyZWZhY3Rvckdyb3VwLmZpbGxDb250ZXh0TWVudShtZW51KTsKIAl9CiAKIAlwdWJsaWMg
+dm9pZCBzZXRDb250ZXh0KEFjdGlvbkNvbnRleHQgY29udGV4dCkgewotCQl1bmRvUmVkb0dyb3Vw
+LnNldENvbnRleHQoY29udGV4dCk7CiAJCXJlZmFjdG9yR3JvdXAuc2V0Q29udGV4dChjb250ZXh0
+KTsKIAl9CiAKIAlwdWJsaWMgdm9pZCB1cGRhdGVBY3Rpb25CYXJzKCkgewotCQl1bmRvUmVkb0dy
+b3VwLnVwZGF0ZUFjdGlvbkJhcnMoKTsKIAkJcmVmYWN0b3JHcm91cC51cGRhdGVBY3Rpb25CYXJz
+KCk7CiAJfQogCkluZGV4OiBwbHVnaW4ueG1sCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L2VjbGlwc2Uvb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy9wbHVnaW4ueG1sLHYK
+cmV0cmlldmluZyByZXZpc2lvbiAxLjM2CmRpZmYgLXUgLXIxLjM2IHBsdWdpbi54bWwKLS0tIHBs
+dWdpbi54bWwJMjkgTWF5IDIwMDcgMTE6NDM6MTEgLTAwMDAJMS4zNgorKysgcGx1Z2luLnhtbAkx
+MiBGZWIgMjAwOCAwMTowNTozMyAtMDAwMApAQCAtMjA2LDYgKzIwNiwxNiBAQAogICAgICAgICAg
+ICA8L2VuYWJsZW1lbnQ+CiAgICAgICAgIDwvYWN0aW9uUHJvdmlkZXI+IAogICAgICAgICAKKyAg
+ICAgICAgPGFjdGlvblByb3ZpZGVyIAorICAgICAgCQkJaWQ9Im9yZy5lY2xpcHNlLnVpLm5hdmln
+YXRvci5yZXNvdXJjZXMuVW5kb1JlZG9BY3Rpb25Qcm92aWRlciIKKwkJCQljbGFzcz0ib3JnLmVj
+bGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9yLnJlc291cmNlcy5hY3Rpb25zLlVuZG9SZWRvQWN0
+aW9uUHJvdmlkZXIiPgorCQkJPGVuYWJsZW1lbnQ+CisJCQkJPG5vdD4KKwkJCQkJPHN5c3RlbVRl
+c3QgcHJvcGVydHk9Im9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5wcm9kdWN0IiB2YWx1ZT0iWFhY
+Ii8+CisJCQkgICAgPC9ub3Q+CisJCQk8L2VuYWJsZW1lbnQ+CisJCTwvYWN0aW9uUHJvdmlkZXI+
+CisKICAgICAgIDwhLS0gRXhwcmVzc2lvbiBGaWx0ZXJzIC0tPiAgCiAgICAgICA8Y29tbW9uRmls
+dGVyCiAgICAgICAgICAgICBpZD0ib3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy5m
+aWx0ZXJzLnN0YXJ0c1dpdGhEb3QiCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwv
+bmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09ClJDUyBmaWxlOiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQpkaWZmIC1OIHNy
+Yy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9uYXZpZ2F0b3IvcmVzb3VyY2VzL2FjdGlvbnMvVW5k
+b1JlZG9BY3Rpb25Qcm92aWRlci5qYXZhCi0tLSAvZGV2L251bGwJMSBKYW4gMTk3MCAwMDowMDow
+MCAtMDAwMAorKysgc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJj
+ZXMvYWN0aW9ucy9VbmRvUmVkb0FjdGlvblByb3ZpZGVyLmphdmEJMSBKYW4gMTk3MCAwMDowMDow
+MCAtMDAwMApAQCAtMCwwICsxLDY0IEBACisvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgorICogQ29w
+eXJpZ2h0IChjKSAyMDA2IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLgorICogQWxsIHJpZ2h0
+cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscwor
+ICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJs
+aWMgTGljZW5zZSB2MS4wCisgKiB3aGljaCBhY2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwg
+YW5kIGlzIGF2YWlsYWJsZSBhdAorICogaHR0cDovL3d3dy5lY2xpcHNlLm9yZy9sZWdhbC9lcGwt
+djEwLmh0bWwKKyAqCisgKiBDb250cmlidXRvcnM6CisgKiAgICAgSUJNIENvcnBvcmF0aW9uIC0g
+aW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uCisgKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLwor
+CitwYWNrYWdlIG9yZy5lY2xpcHNlLnVpLmludGVybmFsLm5hdmlnYXRvci5yZXNvdXJjZXMuYWN0
+aW9uczsKKworaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUuY29tbWFuZHMub3BlcmF0aW9ucy5JVW5k
+b0NvbnRleHQ7CitpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5yZXNvdXJjZXMuUmVzb3VyY2VzUGx1
+Z2luOworaW1wb3J0IG9yZy5lY2xpcHNlLmpmYWNlLmFjdGlvbi5JTWVudU1hbmFnZXI7CitpbXBv
+cnQgb3JnLmVjbGlwc2UudWkuSUFjdGlvbkJhcnM7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkuYWN0
+aW9ucy5BY3Rpb25Db250ZXh0OworaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5Db21t
+b25BY3Rpb25Qcm92aWRlcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuSUNvbW1v
+bkFjdGlvbkV4dGVuc2lvblNpdGU7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklD
+b21tb25WaWV3ZXJXb3JrYmVuY2hTaXRlOworaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm9wZXJhdGlv
+bnMuVW5kb1JlZG9BY3Rpb25Hcm91cDsKKworLyoqCisgKiBAc2luY2UgMy40CisgKiAKKyAqLwor
+cHVibGljIGNsYXNzIFVuZG9SZWRvQWN0aW9uUHJvdmlkZXIgZXh0ZW5kcyBDb21tb25BY3Rpb25Q
+cm92aWRlciB7CisKKwlwcml2YXRlIFVuZG9SZWRvQWN0aW9uR3JvdXAgdW5kb1JlZG9Hcm91cDsK
+KworCS8qCisJICogKG5vbi1KYXZhZG9jKQorCSAqIAorCSAqIEBzZWUgb3JnLmVjbGlwc2UudWku
+bmF2aWdhdG9yLkNvbW1vbkFjdGlvblByb3ZpZGVyI2luaXQob3JnLmVjbGlwc2UudWkubmF2aWdh
+dG9yLklDb21tb25BY3Rpb25FeHRlbnNpb25TaXRlKQorCSAqLworCXB1YmxpYyB2b2lkIGluaXQo
+SUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUgYW5BY3Rpb25TaXRlKSB7CisJCUlVbmRvQ29udGV4
+dCB3b3Jrc3BhY2VDb250ZXh0ID0gKElVbmRvQ29udGV4dCkgUmVzb3VyY2VzUGx1Z2luCisJCQkJ
+LmdldFdvcmtzcGFjZSgpLmdldEFkYXB0ZXIoSVVuZG9Db250ZXh0LmNsYXNzKTsKKwkJdW5kb1Jl
+ZG9Hcm91cCA9IG5ldyBVbmRvUmVkb0FjdGlvbkdyb3VwKCgoSUNvbW1vblZpZXdlcldvcmtiZW5j
+aFNpdGUpIGFuQWN0aW9uU2l0ZS5nZXRWaWV3U2l0ZSgpKS5nZXRTaXRlKCksCisJCQkJd29ya3Nw
+YWNlQ29udGV4dCwgdHJ1ZSk7CisJfQorCisJcHVibGljIHZvaWQgZGlzcG9zZSgpIHsKKwkJdW5k
+b1JlZG9Hcm91cC5kaXNwb3NlKCk7CisJfQorCisJcHVibGljIHZvaWQgZmlsbEFjdGlvbkJhcnMo
+SUFjdGlvbkJhcnMgYWN0aW9uQmFycykgeworCQl1bmRvUmVkb0dyb3VwLmZpbGxBY3Rpb25CYXJz
+KGFjdGlvbkJhcnMpOworCX0KKworCXB1YmxpYyB2b2lkIGZpbGxDb250ZXh0TWVudShJTWVudU1h
+bmFnZXIgbWVudSkgeworCQl1bmRvUmVkb0dyb3VwLmZpbGxDb250ZXh0TWVudShtZW51KTsKKwl9
+CisKKwlwdWJsaWMgdm9pZCBzZXRDb250ZXh0KEFjdGlvbkNvbnRleHQgY29udGV4dCkgeworCQl1
+bmRvUmVkb0dyb3VwLnNldENvbnRleHQoY29udGV4dCk7CisJfQorCisJcHVibGljIHZvaWQgdXBk
+YXRlQWN0aW9uQmFycygpIHsKKwkJdW5kb1JlZG9Hcm91cC51cGRhdGVBY3Rpb25CYXJzKCk7CisJ
+fQorCit9Cg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>90292</attachid>
+            <date>2008-02-21 01:22:00 -0500</date>
+            <delta_ts>2008-05-06 12:03:25 -0400</delta_ts>
+            <desc>Revised Patch for 3.4M5</desc>
+            <filename>214271a.patch</filename>
+            <type>text/plain</type>
+            <size>6592</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0
+b3IucmVzb3VyY2VzCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1JlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQo9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5yZXNv
+dXJjZXMvc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0
+aW9ucy9SZWZhY3RvckFjdGlvblByb3ZpZGVyLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEu
+MwpkaWZmIC11IC1yMS4zIFJlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQotLS0gc3JjL29yZy9l
+Y2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9SZWZhY3RvckFj
+dGlvblByb3ZpZGVyLmphdmEJMjQgRmViIDIwMDYgMDU6MDk6MTQgLTAwMDAJMS4zCisrKyBzcmMv
+b3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1JlZmFj
+dG9yQWN0aW9uUHJvdmlkZXIuamF2YQkyMSBGZWIgMjAwOCAwNjoyMDo1OSAtMDAwMApAQCAtMTEs
+MTYgKzExLDEyIEBACiAKIHBhY2thZ2Ugb3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9y
+LnJlc291cmNlcy5hY3Rpb25zOwogCi1pbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5v
+cGVyYXRpb25zLklVbmRvQ29udGV4dDsKLWltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNl
+cy5SZXNvdXJjZXNQbHVnaW47CiBpbXBvcnQgb3JnLmVjbGlwc2UuamZhY2UuYWN0aW9uLklNZW51
+TWFuYWdlcjsKIGltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5UcmVlOwogaW1wb3J0IG9y
+Zy5lY2xpcHNlLnVpLklBY3Rpb25CYXJzOwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLmFjdGlvbnMu
+QWN0aW9uQ29udGV4dDsKIGltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuQ29tbW9uQWN0
+aW9uUHJvdmlkZXI7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25BY3Rp
+b25FeHRlbnNpb25TaXRlOwotaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5JQ29tbW9u
+Vmlld2VyV29ya2JlbmNoU2l0ZTsKLWltcG9ydCBvcmcuZWNsaXBzZS51aS5vcGVyYXRpb25zLlVu
+ZG9SZWRvQWN0aW9uR3JvdXA7CiAKIC8qKgogICogQHNpbmNlIDMuMgpAQCAtMjgsNDkgKzI0LDM0
+IEBACiAgKi8KIHB1YmxpYyBjbGFzcyBSZWZhY3RvckFjdGlvblByb3ZpZGVyIGV4dGVuZHMgQ29t
+bW9uQWN0aW9uUHJvdmlkZXIgewogCi0JcHJpdmF0ZSBVbmRvUmVkb0FjdGlvbkdyb3VwIHVuZG9S
+ZWRvR3JvdXA7Ci0KIAlwcml2YXRlIFJlZmFjdG9yQWN0aW9uR3JvdXAgcmVmYWN0b3JHcm91cDsK
+IAotCXByaXZhdGUgSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUgc2l0ZTsKLQogCS8qCiAJICog
+KG5vbi1KYXZhZG9jKQogCSAqIAogCSAqIEBzZWUgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLkNv
+bW1vbkFjdGlvblByb3ZpZGVyI2luaXQob3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25B
+Y3Rpb25FeHRlbnNpb25TaXRlKQogCSAqLwogCXB1YmxpYyB2b2lkIGluaXQoSUNvbW1vbkFjdGlv
+bkV4dGVuc2lvblNpdGUgYW5BY3Rpb25TaXRlKSB7Ci0JCXNpdGUgPSBhbkFjdGlvblNpdGU7Ci0J
+CXJlZmFjdG9yR3JvdXAgPSBuZXcgUmVmYWN0b3JBY3Rpb25Hcm91cChzaXRlLmdldFZpZXdTaXRl
+KCkuZ2V0U2hlbGwoKSwgKFRyZWUpc2l0ZS5nZXRTdHJ1Y3R1cmVkVmlld2VyKCkuZ2V0Q29udHJv
+bCgpKTsKLQotCQlJVW5kb0NvbnRleHQgd29ya3NwYWNlQ29udGV4dCA9IChJVW5kb0NvbnRleHQp
+IFJlc291cmNlc1BsdWdpbgotCQkJCS5nZXRXb3Jrc3BhY2UoKS5nZXRBZGFwdGVyKElVbmRvQ29u
+dGV4dC5jbGFzcyk7Ci0JCXVuZG9SZWRvR3JvdXAgPSBuZXcgVW5kb1JlZG9BY3Rpb25Hcm91cCgo
+KElDb21tb25WaWV3ZXJXb3JrYmVuY2hTaXRlKSBhbkFjdGlvblNpdGUuZ2V0Vmlld1NpdGUoKSku
+Z2V0U2l0ZSgpLAotCQkJCXdvcmtzcGFjZUNvbnRleHQsIHRydWUpOworCQlyZWZhY3Rvckdyb3Vw
+ID0gbmV3IFJlZmFjdG9yQWN0aW9uR3JvdXAoYW5BY3Rpb25TaXRlLmdldFZpZXdTaXRlKCkuZ2V0
+U2hlbGwoKSwgKFRyZWUpYW5BY3Rpb25TaXRlLmdldFN0cnVjdHVyZWRWaWV3ZXIoKS5nZXRDb250
+cm9sKCkpOwogCX0KIAogCXB1YmxpYyB2b2lkIGRpc3Bvc2UoKSB7Ci0JCXVuZG9SZWRvR3JvdXAu
+ZGlzcG9zZSgpOwogCQlyZWZhY3Rvckdyb3VwLmRpc3Bvc2UoKTsKIAl9CiAKIAlwdWJsaWMgdm9p
+ZCBmaWxsQWN0aW9uQmFycyhJQWN0aW9uQmFycyBhY3Rpb25CYXJzKSB7Ci0JCXVuZG9SZWRvR3Jv
+dXAuZmlsbEFjdGlvbkJhcnMoYWN0aW9uQmFycyk7CiAJCXJlZmFjdG9yR3JvdXAuZmlsbEFjdGlv
+bkJhcnMoYWN0aW9uQmFycyk7CiAJfQogCiAJcHVibGljIHZvaWQgZmlsbENvbnRleHRNZW51KElN
+ZW51TWFuYWdlciBtZW51KSB7Ci0JCXVuZG9SZWRvR3JvdXAuZmlsbENvbnRleHRNZW51KG1lbnUp
+OwogCQlyZWZhY3Rvckdyb3VwLmZpbGxDb250ZXh0TWVudShtZW51KTsKIAl9CiAKIAlwdWJsaWMg
+dm9pZCBzZXRDb250ZXh0KEFjdGlvbkNvbnRleHQgY29udGV4dCkgewotCQl1bmRvUmVkb0dyb3Vw
+LnNldENvbnRleHQoY29udGV4dCk7CiAJCXJlZmFjdG9yR3JvdXAuc2V0Q29udGV4dChjb250ZXh0
+KTsKIAl9CiAKIAlwdWJsaWMgdm9pZCB1cGRhdGVBY3Rpb25CYXJzKCkgewotCQl1bmRvUmVkb0dy
+b3VwLnVwZGF0ZUFjdGlvbkJhcnMoKTsKIAkJcmVmYWN0b3JHcm91cC51cGRhdGVBY3Rpb25CYXJz
+KCk7CiAJfQogCkluZGV4OiBwbHVnaW4ueG1sCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L2VjbGlwc2Uvb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy9wbHVnaW4ueG1sLHYK
+cmV0cmlldmluZyByZXZpc2lvbiAxLjM2CmRpZmYgLXUgLXIxLjM2IHBsdWdpbi54bWwKLS0tIHBs
+dWdpbi54bWwJMjkgTWF5IDIwMDcgMTE6NDM6MTEgLTAwMDAJMS4zNgorKysgcGx1Z2luLnhtbAky
+MSBGZWIgMjAwOCAwNjoyMDo1OSAtMDAwMApAQCAtMjA2LDYgKzIwNiwyMCBAQAogICAgICAgICAg
+ICA8L2VuYWJsZW1lbnQ+CiAgICAgICAgIDwvYWN0aW9uUHJvdmlkZXI+IAogICAgICAgICAKKyAg
+ICAgICAgPGFjdGlvblByb3ZpZGVyIAorICAgICAgCQkJaWQ9Im9yZy5lY2xpcHNlLnVpLm5hdmln
+YXRvci5yZXNvdXJjZXMuVW5kb1JlZG9BY3Rpb25Qcm92aWRlciIKKwkJCQljbGFzcz0ib3JnLmVj
+bGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9yLnJlc291cmNlcy5hY3Rpb25zLlVuZG9SZWRvQWN0
+aW9uUHJvdmlkZXIiPgorCQkJPGVuYWJsZW1lbnQ+IAorCQkJCTwhLS0gdGhpcyBpcyBhIGZhbmN5
+IHdheSBvZiBzYXlpbmcgc2ltcGx5ICd0cnVlJyAtLT4KKyAgIAkJCQk8b3I+CisgICAgICAgIAkJ
+CTxhZGFwdCB0eXBlPSJqYXZhLmxhbmcuT2JqZWN0IiAvPiAgICAgICAgCisgICAgICAgIAkJCTxh
+ZGFwdCB0eXBlPSJqYXZhLnV0aWwuQ29sbGVjdGlvbiI+IAorICAgICAgICAgIAkJCQk8Y291bnQg
+dmFsdWU9IjAiIC8+CisgICAgICAgIAkJCTwvYWRhcHQ+CisgIAkJCQk8L29yPiAgCisJCQk8L2Vu
+YWJsZW1lbnQ+CisJCTwvYWN0aW9uUHJvdmlkZXI+CisKICAgICAgIDwhLS0gRXhwcmVzc2lvbiBG
+aWx0ZXJzIC0tPiAgCiAgICAgICA8Y29tbW9uRmlsdGVyCiAgICAgICAgICAgICBpZD0ib3JnLmVj
+bGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy5maWx0ZXJzLnN0YXJ0c1dpdGhEb3QiCkluZGV4
+OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25z
+L1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiBzcmMvb3Jn
+L2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1VuZG9SZWRv
+QWN0aW9uUHJvdmlkZXIuamF2YQpkaWZmIC1OIHNyYy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9u
+YXZpZ2F0b3IvcmVzb3VyY2VzL2FjdGlvbnMvVW5kb1JlZG9BY3Rpb25Qcm92aWRlci5qYXZhCi0t
+LSAvZGV2L251bGwJMSBKYW4gMTk3MCAwMDowMDowMCAtMDAwMAorKysgc3JjL29yZy9lY2xpcHNl
+L3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9VbmRvUmVkb0FjdGlvblBy
+b3ZpZGVyLmphdmEJMSBKYW4gMTk3MCAwMDowMDowMCAtMDAwMApAQCAtMCwwICsxLDY0IEBACisv
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKgorICogQ29weXJpZ2h0IChjKSAyMDA2IElCTSBDb3Jwb3Jh
+dGlvbiBhbmQgb3RoZXJzLgorICogQWxsIHJpZ2h0cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFu
+ZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscworICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVy
+IHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5zZSB2MS4wCisgKiB3aGljaCBh
+Y2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdAorICogaHR0
+cDovL3d3dy5lY2xpcHNlLm9yZy9sZWdhbC9lcGwtdjEwLmh0bWwKKyAqCisgKiBDb250cmlidXRv
+cnM6CisgKiAgICAgSUJNIENvcnBvcmF0aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0
+aW9uCisgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqLworCitwYWNrYWdlIG9yZy5lY2xpcHNlLnVpLmlu
+dGVybmFsLm5hdmlnYXRvci5yZXNvdXJjZXMuYWN0aW9uczsKKworaW1wb3J0IG9yZy5lY2xpcHNl
+LmNvcmUuY29tbWFuZHMub3BlcmF0aW9ucy5JVW5kb0NvbnRleHQ7CitpbXBvcnQgb3JnLmVjbGlw
+c2UuY29yZS5yZXNvdXJjZXMuUmVzb3VyY2VzUGx1Z2luOworaW1wb3J0IG9yZy5lY2xpcHNlLmpm
+YWNlLmFjdGlvbi5JTWVudU1hbmFnZXI7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkuSUFjdGlvbkJh
+cnM7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkuYWN0aW9ucy5BY3Rpb25Db250ZXh0OworaW1wb3J0
+IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5Db21tb25BY3Rpb25Qcm92aWRlcjsKK2ltcG9ydCBv
+cmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGU7CitpbXBv
+cnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25WaWV3ZXJXb3JrYmVuY2hTaXRlOwor
+aW1wb3J0IG9yZy5lY2xpcHNlLnVpLm9wZXJhdGlvbnMuVW5kb1JlZG9BY3Rpb25Hcm91cDsKKwor
+LyoqCisgKiBAc2luY2UgMy40CisgKiAKKyAqLworcHVibGljIGNsYXNzIFVuZG9SZWRvQWN0aW9u
+UHJvdmlkZXIgZXh0ZW5kcyBDb21tb25BY3Rpb25Qcm92aWRlciB7CisKKwlwcml2YXRlIFVuZG9S
+ZWRvQWN0aW9uR3JvdXAgdW5kb1JlZG9Hcm91cDsKKworCS8qCisJICogKG5vbi1KYXZhZG9jKQor
+CSAqIAorCSAqIEBzZWUgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLkNvbW1vbkFjdGlvblByb3Zp
+ZGVyI2luaXQob3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25BY3Rpb25FeHRlbnNpb25T
+aXRlKQorCSAqLworCXB1YmxpYyB2b2lkIGluaXQoSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUg
+YW5BY3Rpb25TaXRlKSB7CisJCUlVbmRvQ29udGV4dCB3b3Jrc3BhY2VDb250ZXh0ID0gKElVbmRv
+Q29udGV4dCkgUmVzb3VyY2VzUGx1Z2luCisJCQkJLmdldFdvcmtzcGFjZSgpLmdldEFkYXB0ZXIo
+SVVuZG9Db250ZXh0LmNsYXNzKTsKKwkJdW5kb1JlZG9Hcm91cCA9IG5ldyBVbmRvUmVkb0FjdGlv
+bkdyb3VwKCgoSUNvbW1vblZpZXdlcldvcmtiZW5jaFNpdGUpIGFuQWN0aW9uU2l0ZS5nZXRWaWV3
+U2l0ZSgpKS5nZXRTaXRlKCksCisJCQkJd29ya3NwYWNlQ29udGV4dCwgdHJ1ZSk7CisJfQorCisJ
+cHVibGljIHZvaWQgZGlzcG9zZSgpIHsKKwkJdW5kb1JlZG9Hcm91cC5kaXNwb3NlKCk7CisJfQor
+CisJcHVibGljIHZvaWQgZmlsbEFjdGlvbkJhcnMoSUFjdGlvbkJhcnMgYWN0aW9uQmFycykgewor
+CQl1bmRvUmVkb0dyb3VwLmZpbGxBY3Rpb25CYXJzKGFjdGlvbkJhcnMpOworCX0KKworCXB1Ymxp
+YyB2b2lkIGZpbGxDb250ZXh0TWVudShJTWVudU1hbmFnZXIgbWVudSkgeworCQl1bmRvUmVkb0dy
+b3VwLmZpbGxDb250ZXh0TWVudShtZW51KTsKKwl9CisKKwlwdWJsaWMgdm9pZCBzZXRDb250ZXh0
+KEFjdGlvbkNvbnRleHQgY29udGV4dCkgeworCQl1bmRvUmVkb0dyb3VwLnNldENvbnRleHQoY29u
+dGV4dCk7CisJfQorCisJcHVibGljIHZvaWQgdXBkYXRlQWN0aW9uQmFycygpIHsKKwkJdW5kb1Jl
+ZG9Hcm91cC51cGRhdGVBY3Rpb25CYXJzKCk7CisJfQorCit9Cg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>98873</attachid>
+            <date>2008-05-06 12:03:00 -0400</date>
+            <delta_ts>2008-05-06 13:51:13 -0400</delta_ts>
+            <desc>Revised to use &quot;&lt;or/&gt;&quot; per Paul&apos;s suggestion</desc>
+            <filename>214271a.patch</filename>
+            <type>text/plain</type>
+            <size>6381</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0
+b3IucmVzb3VyY2VzCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1JlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQo9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5yZXNv
+dXJjZXMvc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0
+aW9ucy9SZWZhY3RvckFjdGlvblByb3ZpZGVyLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEu
+MwpkaWZmIC11IC1yMS4zIFJlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQotLS0gc3JjL29yZy9l
+Y2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9SZWZhY3RvckFj
+dGlvblByb3ZpZGVyLmphdmEJMjQgRmViIDIwMDYgMDU6MDk6MTQgLTAwMDAJMS4zCisrKyBzcmMv
+b3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1JlZmFj
+dG9yQWN0aW9uUHJvdmlkZXIuamF2YQkyMSBGZWIgMjAwOCAwNjoyMDo1OSAtMDAwMApAQCAtMTEs
+MTYgKzExLDEyIEBACiAKIHBhY2thZ2Ugb3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9y
+LnJlc291cmNlcy5hY3Rpb25zOwogCi1pbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5v
+cGVyYXRpb25zLklVbmRvQ29udGV4dDsKLWltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNl
+cy5SZXNvdXJjZXNQbHVnaW47CiBpbXBvcnQgb3JnLmVjbGlwc2UuamZhY2UuYWN0aW9uLklNZW51
+TWFuYWdlcjsKIGltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5UcmVlOwogaW1wb3J0IG9y
+Zy5lY2xpcHNlLnVpLklBY3Rpb25CYXJzOwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLmFjdGlvbnMu
+QWN0aW9uQ29udGV4dDsKIGltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuQ29tbW9uQWN0
+aW9uUHJvdmlkZXI7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25BY3Rp
+b25FeHRlbnNpb25TaXRlOwotaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5JQ29tbW9u
+Vmlld2VyV29ya2JlbmNoU2l0ZTsKLWltcG9ydCBvcmcuZWNsaXBzZS51aS5vcGVyYXRpb25zLlVu
+ZG9SZWRvQWN0aW9uR3JvdXA7CiAKIC8qKgogICogQHNpbmNlIDMuMgpAQCAtMjgsNDkgKzI0LDM0
+IEBACiAgKi8KIHB1YmxpYyBjbGFzcyBSZWZhY3RvckFjdGlvblByb3ZpZGVyIGV4dGVuZHMgQ29t
+bW9uQWN0aW9uUHJvdmlkZXIgewogCi0JcHJpdmF0ZSBVbmRvUmVkb0FjdGlvbkdyb3VwIHVuZG9S
+ZWRvR3JvdXA7Ci0KIAlwcml2YXRlIFJlZmFjdG9yQWN0aW9uR3JvdXAgcmVmYWN0b3JHcm91cDsK
+IAotCXByaXZhdGUgSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUgc2l0ZTsKLQogCS8qCiAJICog
+KG5vbi1KYXZhZG9jKQogCSAqIAogCSAqIEBzZWUgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLkNv
+bW1vbkFjdGlvblByb3ZpZGVyI2luaXQob3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLklDb21tb25B
+Y3Rpb25FeHRlbnNpb25TaXRlKQogCSAqLwogCXB1YmxpYyB2b2lkIGluaXQoSUNvbW1vbkFjdGlv
+bkV4dGVuc2lvblNpdGUgYW5BY3Rpb25TaXRlKSB7Ci0JCXNpdGUgPSBhbkFjdGlvblNpdGU7Ci0J
+CXJlZmFjdG9yR3JvdXAgPSBuZXcgUmVmYWN0b3JBY3Rpb25Hcm91cChzaXRlLmdldFZpZXdTaXRl
+KCkuZ2V0U2hlbGwoKSwgKFRyZWUpc2l0ZS5nZXRTdHJ1Y3R1cmVkVmlld2VyKCkuZ2V0Q29udHJv
+bCgpKTsKLQotCQlJVW5kb0NvbnRleHQgd29ya3NwYWNlQ29udGV4dCA9IChJVW5kb0NvbnRleHQp
+IFJlc291cmNlc1BsdWdpbgotCQkJCS5nZXRXb3Jrc3BhY2UoKS5nZXRBZGFwdGVyKElVbmRvQ29u
+dGV4dC5jbGFzcyk7Ci0JCXVuZG9SZWRvR3JvdXAgPSBuZXcgVW5kb1JlZG9BY3Rpb25Hcm91cCgo
+KElDb21tb25WaWV3ZXJXb3JrYmVuY2hTaXRlKSBhbkFjdGlvblNpdGUuZ2V0Vmlld1NpdGUoKSku
+Z2V0U2l0ZSgpLAotCQkJCXdvcmtzcGFjZUNvbnRleHQsIHRydWUpOworCQlyZWZhY3Rvckdyb3Vw
+ID0gbmV3IFJlZmFjdG9yQWN0aW9uR3JvdXAoYW5BY3Rpb25TaXRlLmdldFZpZXdTaXRlKCkuZ2V0
+U2hlbGwoKSwgKFRyZWUpYW5BY3Rpb25TaXRlLmdldFN0cnVjdHVyZWRWaWV3ZXIoKS5nZXRDb250
+cm9sKCkpOwogCX0KIAogCXB1YmxpYyB2b2lkIGRpc3Bvc2UoKSB7Ci0JCXVuZG9SZWRvR3JvdXAu
+ZGlzcG9zZSgpOwogCQlyZWZhY3Rvckdyb3VwLmRpc3Bvc2UoKTsKIAl9CiAKIAlwdWJsaWMgdm9p
+ZCBmaWxsQWN0aW9uQmFycyhJQWN0aW9uQmFycyBhY3Rpb25CYXJzKSB7Ci0JCXVuZG9SZWRvR3Jv
+dXAuZmlsbEFjdGlvbkJhcnMoYWN0aW9uQmFycyk7CiAJCXJlZmFjdG9yR3JvdXAuZmlsbEFjdGlv
+bkJhcnMoYWN0aW9uQmFycyk7CiAJfQogCiAJcHVibGljIHZvaWQgZmlsbENvbnRleHRNZW51KElN
+ZW51TWFuYWdlciBtZW51KSB7Ci0JCXVuZG9SZWRvR3JvdXAuZmlsbENvbnRleHRNZW51KG1lbnUp
+OwogCQlyZWZhY3Rvckdyb3VwLmZpbGxDb250ZXh0TWVudShtZW51KTsKIAl9CiAKIAlwdWJsaWMg
+dm9pZCBzZXRDb250ZXh0KEFjdGlvbkNvbnRleHQgY29udGV4dCkgewotCQl1bmRvUmVkb0dyb3Vw
+LnNldENvbnRleHQoY29udGV4dCk7CiAJCXJlZmFjdG9yR3JvdXAuc2V0Q29udGV4dChjb250ZXh0
+KTsKIAl9CiAKIAlwdWJsaWMgdm9pZCB1cGRhdGVBY3Rpb25CYXJzKCkgewotCQl1bmRvUmVkb0dy
+b3VwLnVwZGF0ZUFjdGlvbkJhcnMoKTsKIAkJcmVmYWN0b3JHcm91cC51cGRhdGVBY3Rpb25CYXJz
+KCk7CiAJfQogCkluZGV4OiBwbHVnaW4ueG1sCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L2VjbGlwc2Uvb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy9wbHVnaW4ueG1sLHYK
+cmV0cmlldmluZyByZXZpc2lvbiAxLjM2CmRpZmYgLXUgLXIxLjM2IHBsdWdpbi54bWwKLS0tIHBs
+dWdpbi54bWwJMjkgTWF5IDIwMDcgMTE6NDM6MTEgLTAwMDAJMS4zNgorKysgcGx1Z2luLnhtbAky
+MSBGZWIgMjAwOCAwNjoyMDo1OSAtMDAwMApAQCAtMjA2LDYgKzIwNiwyMCBAQAogICAgICAgICAg
+ICA8L2VuYWJsZW1lbnQ+CiAgICAgICAgIDwvYWN0aW9uUHJvdmlkZXI+IAogICAgICAgICAKKyAg
+ICAgICAgPGFjdGlvblByb3ZpZGVyIAorICAgICAgCQkJaWQ9Im9yZy5lY2xpcHNlLnVpLm5hdmln
+YXRvci5yZXNvdXJjZXMuVW5kb1JlZG9BY3Rpb25Qcm92aWRlciIKKwkJCQljbGFzcz0ib3JnLmVj
+bGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9yLnJlc291cmNlcy5hY3Rpb25zLlVuZG9SZWRvQWN0
+aW9uUHJvdmlkZXIiPgorCQkJPGVuYWJsZW1lbnQ+IAorCQkJCTwhLS0gJ3RydWUnIC0tPgorICAg
+CQkJPG9yLz4KKwkJCTwvZW5hYmxlbWVudD4KKwkJPC9hY3Rpb25Qcm92aWRlcj4KKwogICAgICAg
+PCEtLSBFeHByZXNzaW9uIEZpbHRlcnMgLS0+ICAKICAgICAgIDxjb21tb25GaWx0ZXIKICAgICAg
+ICAgICAgIGlkPSJvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IucmVzb3VyY2VzLmZpbHRlcnMuc3Rh
+cnRzV2l0aERvdCIKSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9uYXZpZ2F0b3Iv
+cmVzb3VyY2VzL2FjdGlvbnMvVW5kb1JlZG9BY3Rpb25Qcm92aWRlci5qYXZhCj09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0K
+UkNTIGZpbGU6IHNyYy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9uYXZpZ2F0b3IvcmVzb3VyY2Vz
+L2FjdGlvbnMvVW5kb1JlZG9BY3Rpb25Qcm92aWRlci5qYXZhCmRpZmYgLU4gc3JjL29yZy9lY2xp
+cHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9VbmRvUmVkb0FjdGlv
+blByb3ZpZGVyLmphdmEKLS0tIC9kZXYvbnVsbAkxIEphbiAxOTcwIDAwOjAwOjAwIC0wMDAwCisr
+KyBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25z
+L1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQkxIEphbiAxOTcwIDAwOjAwOjAwIC0wMDAwCkBA
+IC0wLDAgKzEsNjQgQEAKKy8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqCisgKiBDb3B5cmlnaHQgKGMp
+IDIwMDYgSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuCisgKiBBbGwgcmlnaHRzIHJlc2VydmVk
+LiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzCisgKiBhcmUgbWFk
+ZSBhdmFpbGFibGUgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBFY2xpcHNlIFB1YmxpYyBMaWNlbnNl
+IHYxLjAKKyAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9uLCBhbmQgaXMgYXZh
+aWxhYmxlIGF0CisgKiBodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2xlZ2FsL2VwbC12MTAuaHRtbAor
+ICoKKyAqIENvbnRyaWJ1dG9yczoKKyAqICAgICBJQk0gQ29ycG9yYXRpb24gLSBpbml0aWFsIEFQ
+SSBhbmQgaW1wbGVtZW50YXRpb24KKyAqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiovCisKK3BhY2thZ2Ug
+b3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9yLnJlc291cmNlcy5hY3Rpb25zOworCitp
+bXBvcnQgb3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5vcGVyYXRpb25zLklVbmRvQ29udGV4dDsK
+K2ltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291cmNlcy5SZXNvdXJjZXNQbHVnaW47CitpbXBv
+cnQgb3JnLmVjbGlwc2UuamZhY2UuYWN0aW9uLklNZW51TWFuYWdlcjsKK2ltcG9ydCBvcmcuZWNs
+aXBzZS51aS5JQWN0aW9uQmFyczsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5hY3Rpb25zLkFjdGlv
+bkNvbnRleHQ7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLkNvbW1vbkFjdGlvblBy
+b3ZpZGVyOworaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5JQ29tbW9uQWN0aW9uRXh0
+ZW5zaW9uU2l0ZTsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuSUNvbW1vblZpZXdl
+cldvcmtiZW5jaFNpdGU7CitpbXBvcnQgb3JnLmVjbGlwc2UudWkub3BlcmF0aW9ucy5VbmRvUmVk
+b0FjdGlvbkdyb3VwOworCisvKioKKyAqIEBzaW5jZSAzLjQKKyAqIAorICovCitwdWJsaWMgY2xh
+c3MgVW5kb1JlZG9BY3Rpb25Qcm92aWRlciBleHRlbmRzIENvbW1vbkFjdGlvblByb3ZpZGVyIHsK
+KworCXByaXZhdGUgVW5kb1JlZG9BY3Rpb25Hcm91cCB1bmRvUmVkb0dyb3VwOworCisJLyoKKwkg
+KiAobm9uLUphdmFkb2MpCisJICogCisJICogQHNlZSBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3Iu
+Q29tbW9uQWN0aW9uUHJvdmlkZXIjaW5pdChvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuSUNvbW1v
+bkFjdGlvbkV4dGVuc2lvblNpdGUpCisJICovCisJcHVibGljIHZvaWQgaW5pdChJQ29tbW9uQWN0
+aW9uRXh0ZW5zaW9uU2l0ZSBhbkFjdGlvblNpdGUpIHsKKwkJSVVuZG9Db250ZXh0IHdvcmtzcGFj
+ZUNvbnRleHQgPSAoSVVuZG9Db250ZXh0KSBSZXNvdXJjZXNQbHVnaW4KKwkJCQkuZ2V0V29ya3Nw
+YWNlKCkuZ2V0QWRhcHRlcihJVW5kb0NvbnRleHQuY2xhc3MpOworCQl1bmRvUmVkb0dyb3VwID0g
+bmV3IFVuZG9SZWRvQWN0aW9uR3JvdXAoKChJQ29tbW9uVmlld2VyV29ya2JlbmNoU2l0ZSkgYW5B
+Y3Rpb25TaXRlLmdldFZpZXdTaXRlKCkpLmdldFNpdGUoKSwKKwkJCQl3b3Jrc3BhY2VDb250ZXh0
+LCB0cnVlKTsKKwl9CisKKwlwdWJsaWMgdm9pZCBkaXNwb3NlKCkgeworCQl1bmRvUmVkb0dyb3Vw
+LmRpc3Bvc2UoKTsKKwl9CisKKwlwdWJsaWMgdm9pZCBmaWxsQWN0aW9uQmFycyhJQWN0aW9uQmFy
+cyBhY3Rpb25CYXJzKSB7CisJCXVuZG9SZWRvR3JvdXAuZmlsbEFjdGlvbkJhcnMoYWN0aW9uQmFy
+cyk7CisJfQorCisJcHVibGljIHZvaWQgZmlsbENvbnRleHRNZW51KElNZW51TWFuYWdlciBtZW51
+KSB7CisJCXVuZG9SZWRvR3JvdXAuZmlsbENvbnRleHRNZW51KG1lbnUpOworCX0KKworCXB1Ymxp
+YyB2b2lkIHNldENvbnRleHQoQWN0aW9uQ29udGV4dCBjb250ZXh0KSB7CisJCXVuZG9SZWRvR3Jv
+dXAuc2V0Q29udGV4dChjb250ZXh0KTsKKwl9CisKKwlwdWJsaWMgdm9pZCB1cGRhdGVBY3Rpb25C
+YXJzKCkgeworCQl1bmRvUmVkb0dyb3VwLnVwZGF0ZUFjdGlvbkJhcnMoKTsKKwl9CisKK30K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>98895</attachid>
+            <date>2008-05-06 13:51:00 -0400</date>
+            <delta_ts>2008-05-06 13:51:13 -0400</delta_ts>
+            <desc>Fixed copyright notices</desc>
+            <filename>214271b.txt</filename>
+            <type>text/plain</type>
+            <size>7263</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0
+b3IucmVzb3VyY2VzCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1JlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQo9PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5yZXNv
+dXJjZXMvc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0
+aW9ucy9SZWZhY3RvckFjdGlvblByb3ZpZGVyLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEu
+MwpkaWZmIC11IC1yMS4zIFJlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YQotLS0gc3JjL29yZy9l
+Y2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJjZXMvYWN0aW9ucy9SZWZhY3RvckFj
+dGlvblByb3ZpZGVyLmphdmEJMjQgRmViIDIwMDYgMDU6MDk6MTQgLTAwMDAJMS4zCisrKyBzcmMv
+b3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1JlZmFj
+dG9yQWN0aW9uUHJvdmlkZXIuamF2YQk2IE1heSAyMDA4IDE3OjUwOjEyIC0wMDAwCkBAIC0xLDUg
+KzEsNSBAQAogLyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioKLSAqIENvcHlyaWdodCAoYykgMjAwNiBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4KKyAqIENvcHlyaWdodCAoYykgMjAwNiwgMjAwOCBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4KICAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuIFRoaXMg
+cHJvZ3JhbSBhbmQgdGhlIGFjY29tcGFueWluZyBtYXRlcmlhbHMKICAqIGFyZSBtYWRlIGF2YWls
+YWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVibGljIExpY2Vuc2UgdjEuMAog
+ICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFpbGFibGUg
+YXQKQEAgLTcsMjAgKzcsMTggQEAKICAqCiAgKiBDb250cmlidXRvcnM6CiAgKiAgICAgSUJNIENv
+cnBvcmF0aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uCisgKiAgICAgT2FrbGFu
+ZCBTb2Z0d2FyZSAoRnJhbmNpcyBVcHRvbiAtIGZyYW5jaXN1QGllZWUub3JnKSAKKyAqICAgICAg
+ICBidWcgMjE0MjcxIFVuZG8vcmVkbyBub3QgZW5hYmxlZCBpZiBub3RoaW5nIHNlbGVjdGVkCiAg
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqLwogCiBwYWNrYWdlIG9yZy5lY2xpcHNlLnVpLmludGVybmFs
+Lm5hdmlnYXRvci5yZXNvdXJjZXMuYWN0aW9uczsKIAotaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUu
+Y29tbWFuZHMub3BlcmF0aW9ucy5JVW5kb0NvbnRleHQ7Ci1pbXBvcnQgb3JnLmVjbGlwc2UuY29y
+ZS5yZXNvdXJjZXMuUmVzb3VyY2VzUGx1Z2luOwogaW1wb3J0IG9yZy5lY2xpcHNlLmpmYWNlLmFj
+dGlvbi5JTWVudU1hbmFnZXI7CiBpbXBvcnQgb3JnLmVjbGlwc2Uuc3d0LndpZGdldHMuVHJlZTsK
+IGltcG9ydCBvcmcuZWNsaXBzZS51aS5JQWN0aW9uQmFyczsKIGltcG9ydCBvcmcuZWNsaXBzZS51
+aS5hY3Rpb25zLkFjdGlvbkNvbnRleHQ7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkubmF2aWdhdG9y
+LkNvbW1vbkFjdGlvblByb3ZpZGVyOwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5J
+Q29tbW9uQWN0aW9uRXh0ZW5zaW9uU2l0ZTsKLWltcG9ydCBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0
+b3IuSUNvbW1vblZpZXdlcldvcmtiZW5jaFNpdGU7Ci1pbXBvcnQgb3JnLmVjbGlwc2UudWkub3Bl
+cmF0aW9ucy5VbmRvUmVkb0FjdGlvbkdyb3VwOwogCiAvKioKICAqIEBzaW5jZSAzLjIKQEAgLTI4
+LDQ5ICsyNiwzNCBAQAogICovCiBwdWJsaWMgY2xhc3MgUmVmYWN0b3JBY3Rpb25Qcm92aWRlciBl
+eHRlbmRzIENvbW1vbkFjdGlvblByb3ZpZGVyIHsKIAotCXByaXZhdGUgVW5kb1JlZG9BY3Rpb25H
+cm91cCB1bmRvUmVkb0dyb3VwOwotCiAJcHJpdmF0ZSBSZWZhY3RvckFjdGlvbkdyb3VwIHJlZmFj
+dG9yR3JvdXA7CiAKLQlwcml2YXRlIElDb21tb25BY3Rpb25FeHRlbnNpb25TaXRlIHNpdGU7Ci0K
+IAkvKgogCSAqIChub24tSmF2YWRvYykKIAkgKiAKIAkgKiBAc2VlIG9yZy5lY2xpcHNlLnVpLm5h
+dmlnYXRvci5Db21tb25BY3Rpb25Qcm92aWRlciNpbml0KG9yZy5lY2xpcHNlLnVpLm5hdmlnYXRv
+ci5JQ29tbW9uQWN0aW9uRXh0ZW5zaW9uU2l0ZSkKIAkgKi8KIAlwdWJsaWMgdm9pZCBpbml0KElD
+b21tb25BY3Rpb25FeHRlbnNpb25TaXRlIGFuQWN0aW9uU2l0ZSkgewotCQlzaXRlID0gYW5BY3Rp
+b25TaXRlOwotCQlyZWZhY3Rvckdyb3VwID0gbmV3IFJlZmFjdG9yQWN0aW9uR3JvdXAoc2l0ZS5n
+ZXRWaWV3U2l0ZSgpLmdldFNoZWxsKCksIChUcmVlKXNpdGUuZ2V0U3RydWN0dXJlZFZpZXdlcigp
+LmdldENvbnRyb2woKSk7Ci0KLQkJSVVuZG9Db250ZXh0IHdvcmtzcGFjZUNvbnRleHQgPSAoSVVu
+ZG9Db250ZXh0KSBSZXNvdXJjZXNQbHVnaW4KLQkJCQkuZ2V0V29ya3NwYWNlKCkuZ2V0QWRhcHRl
+cihJVW5kb0NvbnRleHQuY2xhc3MpOwotCQl1bmRvUmVkb0dyb3VwID0gbmV3IFVuZG9SZWRvQWN0
+aW9uR3JvdXAoKChJQ29tbW9uVmlld2VyV29ya2JlbmNoU2l0ZSkgYW5BY3Rpb25TaXRlLmdldFZp
+ZXdTaXRlKCkpLmdldFNpdGUoKSwKLQkJCQl3b3Jrc3BhY2VDb250ZXh0LCB0cnVlKTsKKwkJcmVm
+YWN0b3JHcm91cCA9IG5ldyBSZWZhY3RvckFjdGlvbkdyb3VwKGFuQWN0aW9uU2l0ZS5nZXRWaWV3
+U2l0ZSgpLmdldFNoZWxsKCksIChUcmVlKWFuQWN0aW9uU2l0ZS5nZXRTdHJ1Y3R1cmVkVmlld2Vy
+KCkuZ2V0Q29udHJvbCgpKTsKIAl9CiAKIAlwdWJsaWMgdm9pZCBkaXNwb3NlKCkgewotCQl1bmRv
+UmVkb0dyb3VwLmRpc3Bvc2UoKTsKIAkJcmVmYWN0b3JHcm91cC5kaXNwb3NlKCk7CiAJfQogCiAJ
+cHVibGljIHZvaWQgZmlsbEFjdGlvbkJhcnMoSUFjdGlvbkJhcnMgYWN0aW9uQmFycykgewotCQl1
+bmRvUmVkb0dyb3VwLmZpbGxBY3Rpb25CYXJzKGFjdGlvbkJhcnMpOwogCQlyZWZhY3Rvckdyb3Vw
+LmZpbGxBY3Rpb25CYXJzKGFjdGlvbkJhcnMpOwogCX0KIAogCXB1YmxpYyB2b2lkIGZpbGxDb250
+ZXh0TWVudShJTWVudU1hbmFnZXIgbWVudSkgewotCQl1bmRvUmVkb0dyb3VwLmZpbGxDb250ZXh0
+TWVudShtZW51KTsKIAkJcmVmYWN0b3JHcm91cC5maWxsQ29udGV4dE1lbnUobWVudSk7CiAJfQog
+CiAJcHVibGljIHZvaWQgc2V0Q29udGV4dChBY3Rpb25Db250ZXh0IGNvbnRleHQpIHsKLQkJdW5k
+b1JlZG9Hcm91cC5zZXRDb250ZXh0KGNvbnRleHQpOwogCQlyZWZhY3Rvckdyb3VwLnNldENvbnRl
+eHQoY29udGV4dCk7CiAJfQogCiAJcHVibGljIHZvaWQgdXBkYXRlQWN0aW9uQmFycygpIHsKLQkJ
+dW5kb1JlZG9Hcm91cC51cGRhdGVBY3Rpb25CYXJzKCk7CiAJCXJlZmFjdG9yR3JvdXAudXBkYXRl
+QWN0aW9uQmFycygpOwogCX0KIApJbmRleDogcGx1Z2luLnhtbAo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxl
+OiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLnVpLm5hdmlnYXRvci5yZXNvdXJjZXMvcGx1
+Z2luLnhtbCx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS4zNgpkaWZmIC11IC1yMS4zNiBwbHVnaW4u
+eG1sCi0tLSBwbHVnaW4ueG1sCTI5IE1heSAyMDA3IDExOjQzOjExIC0wMDAwCTEuMzYKKysrIHBs
+dWdpbi54bWwJNiBNYXkgMjAwOCAxNzo1MDoxMiAtMDAwMApAQCAtMjA2LDYgKzIwNiwxNSBAQAog
+ICAgICAgICAgICA8L2VuYWJsZW1lbnQ+CiAgICAgICAgIDwvYWN0aW9uUHJvdmlkZXI+IAogICAg
+ICAgICAKKyAgICAgICAgPGFjdGlvblByb3ZpZGVyIAorICAgICAgCQkJaWQ9Im9yZy5lY2xpcHNl
+LnVpLm5hdmlnYXRvci5yZXNvdXJjZXMuVW5kb1JlZG9BY3Rpb25Qcm92aWRlciIKKwkJCQljbGFz
+cz0ib3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdhdG9yLnJlc291cmNlcy5hY3Rpb25zLlVu
+ZG9SZWRvQWN0aW9uUHJvdmlkZXIiPgorCQkJPGVuYWJsZW1lbnQ+IAorCQkJCTwhLS0gJ3RydWUn
+IC0tPgorICAgCQkJCTxvci8+CisJCQk8L2VuYWJsZW1lbnQ+CisJCTwvYWN0aW9uUHJvdmlkZXI+
+CisKICAgICAgIDwhLS0gRXhwcmVzc2lvbiBGaWx0ZXJzIC0tPiAgCiAgICAgICA8Y29tbW9uRmls
+dGVyCiAgICAgICAgICAgICBpZD0ib3JnLmVjbGlwc2UudWkubmF2aWdhdG9yLnJlc291cmNlcy5m
+aWx0ZXJzLnN0YXJ0c1dpdGhEb3QiCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwv
+bmF2aWdhdG9yL3Jlc291cmNlcy9hY3Rpb25zL1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09ClJDUyBmaWxlOiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvbmF2aWdhdG9y
+L3Jlc291cmNlcy9hY3Rpb25zL1VuZG9SZWRvQWN0aW9uUHJvdmlkZXIuamF2YQpkaWZmIC1OIHNy
+Yy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9uYXZpZ2F0b3IvcmVzb3VyY2VzL2FjdGlvbnMvVW5k
+b1JlZG9BY3Rpb25Qcm92aWRlci5qYXZhCi0tLSAvZGV2L251bGwJMSBKYW4gMTk3MCAwMDowMDow
+MCAtMDAwMAorKysgc3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL25hdmlnYXRvci9yZXNvdXJj
+ZXMvYWN0aW9ucy9VbmRvUmVkb0FjdGlvblByb3ZpZGVyLmphdmEJMSBKYW4gMTk3MCAwMDowMDow
+MCAtMDAwMApAQCAtMCwwICsxLDY3IEBACisvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKgorICogQ29w
+eXJpZ2h0IChjKSAyMDA2LCAyMDA4IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLgorICogQWxs
+IHJpZ2h0cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVy
+aWFscworICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBz
+ZSBQdWJsaWMgTGljZW5zZSB2MS4wCisgKiB3aGljaCBhY2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1
+dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdAorICogaHR0cDovL3d3dy5lY2xpcHNlLm9yZy9sZWdh
+bC9lcGwtdjEwLmh0bWwKKyAqCisgKiBDb250cmlidXRvcnM6CisgKiAgICAgSUJNIENvcnBvcmF0
+aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uIAorICogICAgICAgKHdhcyBvcmln
+aW5hbGx5IFJlZmFjdG9yQWN0aW9uUHJvdmlkZXIuamF2YSkKKyAqICAgICBPYWtsYW5kIFNvZnR3
+YXJlIChGcmFuY2lzIFVwdG9uIC0gZnJhbmNpc3VAaWVlZS5vcmcpIAorICogICAgICAgIGJ1ZyAy
+MTQyNzEgVW5kby9yZWRvIG5vdCBlbmFibGVkIGlmIG5vdGhpbmcgc2VsZWN0ZWQKKyAqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKiovCisKK3BhY2thZ2Ugb3JnLmVjbGlwc2UudWkuaW50ZXJuYWwubmF2aWdh
+dG9yLnJlc291cmNlcy5hY3Rpb25zOworCitpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5jb21tYW5k
+cy5vcGVyYXRpb25zLklVbmRvQ29udGV4dDsKK2ltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJlc291
+cmNlcy5SZXNvdXJjZXNQbHVnaW47CitpbXBvcnQgb3JnLmVjbGlwc2UuamZhY2UuYWN0aW9uLklN
+ZW51TWFuYWdlcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5JQWN0aW9uQmFyczsKK2ltcG9ydCBv
+cmcuZWNsaXBzZS51aS5hY3Rpb25zLkFjdGlvbkNvbnRleHQ7CitpbXBvcnQgb3JnLmVjbGlwc2Uu
+dWkubmF2aWdhdG9yLkNvbW1vbkFjdGlvblByb3ZpZGVyOworaW1wb3J0IG9yZy5lY2xpcHNlLnVp
+Lm5hdmlnYXRvci5JQ29tbW9uQWN0aW9uRXh0ZW5zaW9uU2l0ZTsKK2ltcG9ydCBvcmcuZWNsaXBz
+ZS51aS5uYXZpZ2F0b3IuSUNvbW1vblZpZXdlcldvcmtiZW5jaFNpdGU7CitpbXBvcnQgb3JnLmVj
+bGlwc2UudWkub3BlcmF0aW9ucy5VbmRvUmVkb0FjdGlvbkdyb3VwOworCisvKioKKyAqIEBzaW5j
+ZSAzLjQKKyAqIAorICovCitwdWJsaWMgY2xhc3MgVW5kb1JlZG9BY3Rpb25Qcm92aWRlciBleHRl
+bmRzIENvbW1vbkFjdGlvblByb3ZpZGVyIHsKKworCXByaXZhdGUgVW5kb1JlZG9BY3Rpb25Hcm91
+cCB1bmRvUmVkb0dyb3VwOworCisJLyoKKwkgKiAobm9uLUphdmFkb2MpCisJICogCisJICogQHNl
+ZSBvcmcuZWNsaXBzZS51aS5uYXZpZ2F0b3IuQ29tbW9uQWN0aW9uUHJvdmlkZXIjaW5pdChvcmcu
+ZWNsaXBzZS51aS5uYXZpZ2F0b3IuSUNvbW1vbkFjdGlvbkV4dGVuc2lvblNpdGUpCisJICovCisJ
+cHVibGljIHZvaWQgaW5pdChJQ29tbW9uQWN0aW9uRXh0ZW5zaW9uU2l0ZSBhbkFjdGlvblNpdGUp
+IHsKKwkJSVVuZG9Db250ZXh0IHdvcmtzcGFjZUNvbnRleHQgPSAoSVVuZG9Db250ZXh0KSBSZXNv
+dXJjZXNQbHVnaW4KKwkJCQkuZ2V0V29ya3NwYWNlKCkuZ2V0QWRhcHRlcihJVW5kb0NvbnRleHQu
+Y2xhc3MpOworCQl1bmRvUmVkb0dyb3VwID0gbmV3IFVuZG9SZWRvQWN0aW9uR3JvdXAoKChJQ29t
+bW9uVmlld2VyV29ya2JlbmNoU2l0ZSkgYW5BY3Rpb25TaXRlLmdldFZpZXdTaXRlKCkpLmdldFNp
+dGUoKSwKKwkJCQl3b3Jrc3BhY2VDb250ZXh0LCB0cnVlKTsKKwl9CisKKwlwdWJsaWMgdm9pZCBk
+aXNwb3NlKCkgeworCQl1bmRvUmVkb0dyb3VwLmRpc3Bvc2UoKTsKKwl9CisKKwlwdWJsaWMgdm9p
+ZCBmaWxsQWN0aW9uQmFycyhJQWN0aW9uQmFycyBhY3Rpb25CYXJzKSB7CisJCXVuZG9SZWRvR3Jv
+dXAuZmlsbEFjdGlvbkJhcnMoYWN0aW9uQmFycyk7CisJfQorCisJcHVibGljIHZvaWQgZmlsbENv
+bnRleHRNZW51KElNZW51TWFuYWdlciBtZW51KSB7CisJCXVuZG9SZWRvR3JvdXAuZmlsbENvbnRl
+eHRNZW51KG1lbnUpOworCX0KKworCXB1YmxpYyB2b2lkIHNldENvbnRleHQoQWN0aW9uQ29udGV4
+dCBjb250ZXh0KSB7CisJCXVuZG9SZWRvR3JvdXAuc2V0Q29udGV4dChjb250ZXh0KTsKKwl9CisK
+KwlwdWJsaWMgdm9pZCB1cGRhdGVBY3Rpb25CYXJzKCkgeworCQl1bmRvUmVkb0dyb3VwLnVwZGF0
+ZUFjdGlvbkJhcnMoKTsKKwl9CisKK30K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

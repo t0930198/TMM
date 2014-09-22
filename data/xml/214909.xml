@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214909</bug_id>
+          
+          <creation_ts>2008-01-10 11:01:00 -0500</creation_ts>
+          <short_desc>Bootstrap PDE Build with just ant</short_desc>
+          <delta_ts>2009-07-22 17:35:24 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Linux Tools</product>
+          <component>PackagingTools</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3</target_milestone>
+          
+          <blocked>280685</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andrew Overholt">overholt</reporter>
+          <assigned_to name="Alexander Kurtakov">akurtakov</assigned_to>
+          <cc>aniefer</cc>
+    
+    <cc>dj_houghton</cc>
+    
+    <cc>kim.moir</cc>
+    
+    <cc>linux.packagingtools-inbox</cc>
+    
+    <cc>pascal</cc>
+    
+    <cc>sonia_dimitrov</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128938</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-10 11:01:26 -0500</bug_when>
+    <thetext>It would be nice for Linux distributions if we could get a source drop of the SDK without the pre-generated build.xml files (see [1] for some background).  In order for that to be useful, though, we&apos;ll need to bootstrap PDE Build so that it can be used to generate the build.xml files for us.  I&apos;m envisioning something like:
+
+1) decompress source drop which doesn&apos;t have build.xml (and other generated) files
+2) build PDE Build with just ant
+3) use bootstrap PDE Build to generate PDE Build&apos;s build.xml
+4) build PDE Build using the generated build.xml
+5) use PDE Build to generate the rest of the build.xml files
+6) build the SDK
+
+DJ, does this make sense or am I way off base here?  Do you have any suggestions for how to proceed?
+
+[1]
+http://dev.eclipse.org/mhonarc/lists/linux-distros-dev/msg00321.html</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129032</commentid>
+    <comment_count>1</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-10 12:20:53 -0500</bug_when>
+    <thetext>Adding a few more CCs.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129068</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2008-01-10 13:13:45 -0500</bug_when>
+    <thetext>Note that (2) is more than just pde.build, you basically need to bootstrap the equivalent of the basebuilder.  This is something like 16 bundles or so. 
+This might not be all that bad if you accept pre-generated build scripts for this part (like the current source builds, but simpler since it isn&apos;t the entire eclipse).
+
+Or, if you can accept using pre-built binaries for the basebuilder, and maybe just build the pde.build, then is much simpler.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129079</commentid>
+    <comment_count>3</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-10 13:25:35 -0500</bug_when>
+    <thetext>Yeah, I realized that after looking at a generated build.xml for PDE Build :)  I think pre-generated build scripts for that part are perfectly okay.  Much better than pre-built binaries.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129535</commentid>
+    <comment_count>4</comment_count>
+    <who name="DJ Houghton">dj_houghton</who>
+    <bug_when>2008-01-11 05:57:41 -0500</bug_when>
+    <thetext>Yeah this seems like a good direction. I remember when I first started putting together the build for p2 I was trying to get a minimal builder but it ended up bringing a lot of things in which was unfortunate so I think pre-generated build scripts for at least that part is the way to go.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1341072</commentid>
+    <comment_count>5</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-09-30 14:12:28 -0400</bug_when>
+    <thetext>Tentatively setting 1.0 target.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1406505</commentid>
+    <comment_count>6</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-01-13 16:06:58 -0500</bug_when>
+    <thetext>Alex is working on this.  eclipse-build in Linux Tools SVN.  I&apos;ll let him comment as to what 3.5 milestone we&apos;re targetting.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1483084</commentid>
+    <comment_count>7</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-04-27 12:02:19 -0400</bug_when>
+    <thetext>Alex is working on this as part of his eclipse-build project.  It is mostly working and we&apos;re going to include the eclipse-build stuff as part of our 0.3 release in July if it can produce a working Eclipse SDK.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1556947</commentid>
+    <comment_count>8</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-07-22 16:58:30 -0400</bug_when>
+    <thetext>This work is now finished.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1556969</commentid>
+    <comment_count>9</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-07-22 17:19:20 -0400</bug_when>
+    <thetext>See revision 22560 and earlier in eclipse-build.  We include pre-generated build.xml files for PDE Build and its dependencies and use them to bootstrap the build.  We then use the bootstrapped PDE Build &amp; friends much like basebuilder is used by others.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1556981</commentid>
+    <comment_count>10</comment_count>
+    <who name="Andrew Niefer">aniefer</who>
+    <bug_when>2009-07-22 17:26:43 -0400</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; See revision 22560 and earlier in eclipse-build.  We include pre-generated
+&gt; build.xml files for PDE Build and its dependencies and use them to bootstrap
+&gt; the build.  We then use the bootstrapped PDE Build &amp; friends much like
+&gt; basebuilder is used by others.
+&gt; 
+
+In general, you would only really want to do this for major milestones/releases where you can believe that the pde.build you&apos;re bootstrapping is stable enough to actually perform the entire build.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1556986</commentid>
+    <comment_count>11</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-07-22 17:35:24 -0400</bug_when>
+    <thetext>(In reply to comment #10)
+&gt; (In reply to comment #9)
+&gt; &gt; See revision 22560 and earlier in eclipse-build.  We include pre-generated
+&gt; &gt; build.xml files for PDE Build and its dependencies and use them to bootstrap
+&gt; &gt; the build.  We then use the bootstrapped PDE Build &amp; friends much like
+&gt; &gt; basebuilder is used by others.
+&gt; &gt; 
+&gt; 
+&gt; In general, you would only really want to do this for major milestones/releases
+&gt; where you can believe that the pde.build you&apos;re bootstrapping is stable enough
+&gt; to actually perform the entire build.
+
+Understood.  I don&apos;t imagine we&apos;ll be doing it more than major releases.
+
+Thanks again for the help, Andrew!</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214489</bug_id>
+          
+          <creation_ts>2008-01-07 10:23:00 -0500</creation_ts>
+          <short_desc>URLs - generic problems: encoding; JAR URLs; documentation</short_desc>
+          <delta_ts>2008-01-07 10:23:58 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Framework</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Oleg Besedin">ob1.eclipse</reporter>
+          <assigned_to name="equinox.framework-inbox">equinox.framework-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126615</commentid>
+    <comment_count>0</comment_count>
+    <who name="Oleg Besedin">ob1.eclipse</who>
+    <bug_when>2008-01-07 10:23:58 -0500</bug_when>
+    <thetext>Some bugs recently highlighted unhappy state of URL handling and standardization. I&apos;d like to open this bug as a place to track such issues.
+
+Known problems:
+
+-&gt; URL encoding &lt;-
+
+The most URLs inside Eclipse are non-encoded (i.e., spaces are &apos; &apos;, not &quot;%x20&quot;). This goes against usual Java encoding practice and catches lost of unsuspecting users.
+
+Generally, attempt to use encoded URLs with runtime layer produces all sort of crashes and problems.
+
+By design (Javadoc of java.net.URL) URLs themselves don&apos;t specify if they are encoded:
+
+&quot;The URL class does not itself encode or decode any URL components according to the escaping mechanism defined in RFC2396.&quot;
+
+Possible approaches:
+ - see if we can extend URL to store encoding state and convert from one format to another
+ - start documenting in Javadoc what URLs methods are 
+ - introduce a clear standard of what is a &quot;standard&quot; valid URL in Eclipse runtime layer and, again, start documenting if URLs produced or consumed are any different
+
+-&gt; JAR URLs &lt;-
+
+The JAR URLs are essentially a single string with &quot;/!&quot; separating path to JAR from the relative entry path inside the JAR. 
+
+As both path to JAR and relative path inside the JAR potentially can have &quot;!&quot; characters too this is not a reliable way to store JAR URLs. 
+
+Also, for developers, there is no standard way to parse those strings so there are number of place in the code that repeat construction and parsing of those strings over and over and over ... :-)
+
+Possible approaches
+ - again, we probably need to create a superclass that stores those two paths in separate slots
+ - it would be nice to have a library class (probably need to place it at the OSGi level) to help with routine operations on JAR URLs.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

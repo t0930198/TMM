@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215032</bug_id>
+          
+          <creation_ts>2008-01-11 10:38:00 -0500</creation_ts>
+          <short_desc>[POG] unload of profiling data does not free memory</short_desc>
+          <delta_ts>2011-04-09 16:40:12 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Profiling</product>
+          <component>Platform.Model</component>
+          <version>4.6</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>close472</status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>4.6.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Harm Sluiman">sluiman</reporter>
+          <assigned_to name="Eugene Chan">ewchan</assigned_to>
+          <cc>ewchan</cc>
+    
+    <cc>kathy</cc>
+    
+    <cc>sluiman</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129667</commentid>
+    <comment_count>0</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-01-11 10:38:09 -0500</bug_when>
+    <thetext>The heap is not reduced after unloading trace data. Therefor the desired effect of reducing footprint and improving performance is not seen.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1258596</commentid>
+    <comment_count>1</comment_count>
+    <who name="">jkubasta</who>
+    <bug_when>2008-06-03 17:21:51 -0400</bug_when>
+    <thetext>Not containable in 4.5</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1295015</commentid>
+    <comment_count>2</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-07-21 08:27:22 -0400</bug_when>
+    <thetext>Eugene, these defects about the unloading of the trace models are core to many of the usability problems we have. I would like to see this prioritized high and addressed in the nearest point release possible. A fix may require some long term usage and testing, so getting a fix into the stream soon will ensure a good fix in the coming point release. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1295101</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2008-07-21 09:57:12 -0400</bug_when>
+    <thetext>*** Bug 203310 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1432672</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-02-18 12:18:44 -0500</bug_when>
+    <thetext>Update priority field to P2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1433062</commentid>
+    <comment_count>5</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2009-02-18 20:07:02 -0500</bug_when>
+    <thetext>Eugene, we really need to consider this a major bug. At least the root of the &quot;leak&quot; needs to be identified. At times the debugging has shown this to be an EMF bug and other times it has pointed to a duplicate monitor object instance that was not needed being created and anchoring the tree that should be freed.
+
+This is one of the most crippling scaling problems TPTP has. As you know if the user can free memory they can work with the profiler for longer periods of time.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1433127</commentid>
+    <comment_count>6</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-02-18 23:31:29 -0500</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; Eugene, we really need to consider this a major bug. At least the root of the
+&gt; &quot;leak&quot; needs to be identified. At times the debugging has shown this to be an
+&gt; EMF bug and other times it has pointed to a duplicate monitor object instance
+&gt; that was not needed being created and anchoring the tree that should be freed.
+&gt; 
+&gt; This is one of the most crippling scaling problems TPTP has. As you know if the
+&gt; user can free memory they can work with the profiler for longer periods of
+&gt; time.
+&gt; 
+
+Harm, you are right. Actually, I am planning to look into the refresh, unload bug 115325 and bug 259186 in 4.5.3, this defect definitely fits together with them.
+
+There are other POG defects ,some raised from the community, that I will raise in the next PMC call as 4.5.3 candidates.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1433128</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-02-18 23:32:11 -0500</bug_when>
+    <thetext>Target P1 to be work on in 4.5.3.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1464237</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-04-01 13:49:58 -0400</bug_when>
+    <thetext>*** Bug 115001 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1498794</commentid>
+    <comment_count>9</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2009-05-12 17:36:46 -0400</bug_when>
+    <thetext>Retargeting to v4.6.1.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1594728</commentid>
+    <comment_count>10</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2009-09-14 17:51:32 -0400</bug_when>
+    <thetext>Re-targeting to TPTP 4.6.2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1648984</commentid>
+    <comment_count>11</comment_count>
+      <attachid>155022</attachid>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-12-24 12:17:24 -0500</bug_when>
+    <thetext>Created attachment 155022
+incremental patch 1</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1648986</commentid>
+    <comment_count>12</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2009-12-24 12:20:17 -0500</bug_when>
+    <thetext>(In reply to comment #11)
+&gt; Created an attachment (id=155022) [details]
+&gt; incremental patch 1
+
+patch submitted to HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1650528</commentid>
+    <comment_count>13</comment_count>
+    <who name="Eugene Chan">ewchan</who>
+    <bug_when>2010-01-04 14:18:55 -0500</bug_when>
+    <thetext>Incremental fix is checked in.
+
+Bug 298788 is opened to follow up the remaining issue in perspective shutdown.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1882145</commentid>
+    <comment_count>14</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2011-02-11 13:45:58 -0500</bug_when>
+    <thetext>This defect had been resolved as FIXED for more than 1 month.  Please verify with the latest TPTP 4.7.2 driver.  If this defect is still left unverified by February 25, we&apos;ll close it on the originator&apos;s behalf.
+
+TPTP 4.7.2 driver can be downloaded from:
+
+http://www.eclipse.org/tptp/home/downloads/?ver=4.7.2</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1911205</commentid>
+    <comment_count>15</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2011-04-09 16:40:12 -0400</bug_when>
+    <thetext>Closing on behalf of the reporter.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>155022</attachid>
+            <date>2009-12-24 12:17:00 -0500</date>
+            <delta_ts>2009-12-24 12:17:24 -0500</delta_ts>
+            <desc>incremental patch 1</desc>
+            <filename>Bug215032_patch1.txt</filename>
+            <type>text/plain</type>
+            <size>1166</size>
+            <attacher name="Eugene Chan">ewchan</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UudHB0cC5wbGF0
+Zm9ybS5jb21tb24udWkudHJhY2UNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvaHlhZGVzL3RyYWNl
+L2ludGVybmFsL3VpL1BEQ29udGVudFByb3ZpZGVyLmphdmENCj09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxl
+OiAvY3Zzcm9vdC90cHRwL3BsYXRmb3JtL29yZy5lY2xpcHNlLnRwdHAucGxhdGZvcm0uY29tbW9u
+LnVpLnRyYWNlL3NyYy9vcmcvZWNsaXBzZS9oeWFkZXMvdHJhY2UvaW50ZXJuYWwvdWkvUERDb250
+ZW50UHJvdmlkZXIuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNQ0KZGlmZiAtdSAtcjEu
+NSBQRENvbnRlbnRQcm92aWRlci5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2h5YWRlcy90cmFj
+ZS9pbnRlcm5hbC91aS9QRENvbnRlbnRQcm92aWRlci5qYXZhCTEzIE1hciAyMDA4IDE2OjI0OjAx
+IC0wMDAwCTEuNQ0KKysrIHNyYy9vcmcvZWNsaXBzZS9oeWFkZXMvdHJhY2UvaW50ZXJuYWwvdWkv
+UERDb250ZW50UHJvdmlkZXIuamF2YQkyNCBEZWMgMjAwOSAxNzoxOToxNyAtMDAwMA0KQEAgLTUz
+MCw2ICs1MzAsMTAgQEANCiANCiAJcHVibGljIHN0YXRpYyB2b2lkIHJlbW92ZUNvbnRhaW5lcihJ
+Q29udGFpbmVyIGNvbnRhaW5lcikNCiAJew0KKwkJT2JqZWN0IGxpc3QgPSBmTW9uaXRvcnMuZ2V0
+KGNvbnRhaW5lcik7DQorCQlpZiAobGlzdCE9bnVsbCAmJiBsaXN0IGluc3RhbmNlb2YgQXJyYXlM
+aXN0KSB7DQorCQkJKChBcnJheUxpc3QpbGlzdCkuY2xlYXIoKTsNCisJCX0NCiAJCWZNb25pdG9y
+cy5yZW1vdmUoY29udGFpbmVyKTsNCiAJfQ0KIA0KQEAgLTU4MSw2ICs1ODUsMTMgQEANCiAJICov
+DQogCXB1YmxpYyBzdGF0aWMgdm9pZCByZXNldE1vbml0b3JzKCkNCiAJew0KKwkJRW51bWVyYXRp
+b24gbGlzdCA9IGZNb25pdG9ycy5lbGVtZW50cygpOw0KKwkJd2hpbGUgKGxpc3QuaGFzTW9yZUVs
+ZW1lbnRzKCkpDQorCQl7DQorCQkJQXJyYXlMaXN0IG1vbml0b3JzID0gKEFycmF5TGlzdCkgbGlz
+dC5uZXh0RWxlbWVudCgpOw0KKwkJCW1vbml0b3JzLmNsZWFyKCk7DQorCQl9DQorCQkNCiAJCWZN
+b25pdG9ycy5jbGVhcigpOw0KIAl9DQogDQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

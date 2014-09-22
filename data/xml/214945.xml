@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214945</bug_id>
+          
+          <creation_ts>2008-01-10 14:46:00 -0500</creation_ts>
+          <short_desc>[api] task activity listeners should not called from the UI thread</short_desc>
+          <delta_ts>2009-08-12 22:22:58 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          <blocked>247092</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Shawn Minto">shawn.minto</reporter>
+          <assigned_to name="Shawn Minto">shawn.minto</assigned_to>
+          <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129186</commentid>
+    <comment_count>0</comment_count>
+    <who name="Shawn Minto">shawn.minto</who>
+    <bug_when>2008-01-10 14:46:52 -0500</bug_when>
+    <thetext>Currently, all task activity listeners (and therefore some context listeners) are called from the UI thread since the user invokes a UI action to activate the task.  This means that Eclipse can lock up and become unresponsive if one of the listeners misbehaves.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131990</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-15 22:21:24 -0500</bug_when>
+    <thetext>Shawn: what&apos;s your suggested approach to resolving this?  Removing those calls from the UI thread and expecting each listener to do its own asyncExec if necessary?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139787</commentid>
+    <comment_count>2</comment_count>
+    <who name="Shawn Minto">shawn.minto</who>
+    <bug_when>2008-01-28 13:38:25 -0500</bug_when>
+    <thetext> (In reply to comment #1)
+&gt; Shawn: what&apos;s your suggested approach to resolving this?  Removing those calls
+&gt; from the UI thread and expecting each listener to do its own asyncExec if
+&gt; necessary?
+This was my initial thought.  To do this though, the actions that invoke these methods will have to each run a job to perform their operations so that ordering is still maintained.  It would be nice if the listener notification mechanism could do this, but then there is no guarantee that listeners are notified before the next operation is run.  For example, the DeleteAction must deactivate the task, delete the task, delete the comment and close the editor.  Deleting the task and context needs the task to be deactivated.  
+
+If these actions are moved to a job, we will have to make sure that progress is properly displayed to the user so that they know that something is happening since jobs can be delayed in their running unlike the current implementation where it is just run in the UI thread.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160893</commentid>
+    <comment_count>3</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-02-20 19:47:10 -0500</bug_when>
+    <thetext>Let&apos;s look at this for 3.0 and make a decision whether or not to do this in the UI Thread.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1216710</commentid>
+    <comment_count>4</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-04-28 19:39:35 -0400</bug_when>
+    <thetext>Using jobs for all notifications would come with a significant overhead that is unnecessary in most of the cases. Also most actions that are triggered by task activation, e.g. restoring of editors, focusing of views, need to run on the UI thread and should happen synchronously with activation. 
+
+Shawn, you should be able to implement a queue of notifications if you need to process them in the correct order. Alternatively you can also use the workbench progress service if you want the listener to block further processing while a long running operation is running from a listener.
+
++1 for leaving the current implementation </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1219981</commentid>
+    <comment_count>5</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-04-30 19:54:14 -0400</bug_when>
+    <thetext>Agreed.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

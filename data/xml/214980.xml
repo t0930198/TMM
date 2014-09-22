@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214980</bug_id>
+          
+          <creation_ts>2008-01-10 20:57:00 -0500</creation_ts>
+          <short_desc>Preview Extension Point</short_desc>
+          <delta_ts>2008-03-13 01:31:11 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Report Viewer</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3.0 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Scott Rosenbaum">scottr</reporter>
+          <assigned_to name="Jerry Cheng">cyfgod</assigned_to>
+          <cc>cyfgod</cc>
+    
+    <cc>jasonweathersby</cc>
+    
+    <cc>qaobsolete</cc>
+    
+    <cc>wenfeng.fwd</cc>
+    
+    <cc>whe</cc>
+    
+    <cc>wyan</cc>
+    
+    <cc>yli</cc>
+    
+    <cc>zqian</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129403</commentid>
+    <comment_count>0</comment_count>
+    <who name="Scott Rosenbaum">scottr</who>
+    <bug_when>2008-01-10 20:57:12 -0500</bug_when>
+    <thetext>The ability to pass Scriptable objects to a BIRT report is one of its best features.  Unfortunately, there is no good way to model this behavior from within the designer.
+
+The idea is that you create an extension point where you get access to either the engineConfig or more likely the Task that is used to run the report prior to the report running.  It is possible just providing access to the the AppConfig would be enough.  In any case, within the plug-in you could instantiate and add the Scriptable object at preview time.
+
+Jason - are there other reasons to be able to get access to the Engine Task that is used to run a report prior to the report running in the designer environment?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158483</commentid>
+    <comment_count>1</comment_count>
+    <who name="Wei Yan">wyan</who>
+    <bug_when>2008-02-18 03:14:18 -0500</bug_when>
+    <thetext>1. VIEWER create an extension point to prepare the appContext used to initialize report engine. The extension point may be a simple interface:
+
+class BIRTRuntime
+{
+   String getRuntime(); //return the name of runtime
+   HashMap getAppContext(); //return the appContext, it is a HashMap which contains the name/value pair which are used in the report design.
+}
+
+2. User implement the extension and package the plugin into the Eclipse IDE.
+
+3. The VIEW may select the runtime before preview the report design. The user&apos;s selection may serialized into the .config file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1164171</commentid>
+    <comment_count>2</comment_count>
+    <who name="Wenfeng Li">wenfeng.fwd</who>
+    <bug_when>2008-02-25 20:56:54 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; 1. VIEWER create an extension point to prepare the appContext used to
+&gt; initialize report engine. The extension point may be a simple interface:
+&gt; class BIRTRuntime
+&gt; {
+&gt;    String getRuntime(); //return the name of runtime
+&gt;    HashMap getAppContext(); //return the appContext, it is a HashMap which
+&gt; contains the name/value pair which are used in the report design.
+&gt; }
+&gt; 2. User implement the extension and package the plugin into the Eclipse IDE.
+&gt; 3. The VIEW may select the runtime before preview the report design. The user&apos;s
+&gt; selection may serialized into the .config file.
+
+
+Suggest to create an extension point to the viewer plugin as
+class AppContextExtension
+{
+    String getName(); //return the name of runtime
+    HashMap getAppContext(HashMap currentAppContext); //return an appContext, it is a HashMap which contains the name/value pair which will be passed into engine tasks as theAppContext parameter.  currentAppContext is the AppContext that viewer already has, the plugin extension can update the current context by inserting new name/value pair or updating existing ones.
+}
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169014</commentid>
+    <comment_count>3</comment_count>
+    <who name="Jerry Cheng">cyfgod</who>
+    <bug_when>2008-03-03 03:58:32 -0500</bug_when>
+    <thetext>In viewer plugin, add a new extension point named &quot;org.eclipse.birt.report.viewer.appcontext&quot;. User should define extension and extend the class &quot;org.eclipse.birt.report.viewer.api.AppContextExtension&quot;.
+
+Reassign to designer to add UI part to select certain extension.
+
+Designer can call AppContextUtil.getAppContextExtensionNames() to retrieve all extension names.
+And in WebViewer class, there is also a new key named &quot;APPCONTEXT_EXTENSION_KEY&quot; to pass user selected extension name in url.....</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169584</commentid>
+    <comment_count>4</comment_count>
+    <who name="Wenfeng Li">wenfeng.fwd</who>
+    <bug_when>2008-03-03 14:40:49 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+
+&gt; And in WebViewer class, there is also a new key named
+&gt; &quot;APPCONTEXT_EXTENSION_KEY&quot; to pass user selected extension name in url.....
+
+
+Is is optional to use this new key?  Can viewer use the first extension if found if this new key value is not set?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169792</commentid>
+    <comment_count>5</comment_count>
+    <who name="Wei Yan">wyan</who>
+    <bug_when>2008-03-03 19:57:52 -0500</bug_when>
+    <thetext>if the user doesn&apos;t select the APP_EXT, i think the vieweer should load all the APP_EXT instead of load the first APP_EXT.
+
+thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169802</commentid>
+    <comment_count>6</comment_count>
+    <who name="Wenfeng Li">wenfeng.fwd</who>
+    <bug_when>2008-03-03 20:44:23 -0500</bug_when>
+    <thetext>(In reply to comment #5)
+&gt; if the user doesn&apos;t select the APP_EXT, i think the vieweer should load all the
+&gt; APP_EXT instead of load the first APP_EXT.
+&gt; thanks.
+
+As long as user do not have to set APP_EXT would be ok.  Since in most case, there should be only one such extension.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169815</commentid>
+    <comment_count>7</comment_count>
+    <who name="Jerry Cheng">cyfgod</who>
+    <bug_when>2008-03-03 21:01:40 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; (In reply to comment #3)
+&gt; &gt; And in WebViewer class, there is also a new key named
+&gt; &gt; &quot;APPCONTEXT_EXTENSION_KEY&quot; to pass user selected extension name in url.....
+&gt; Is is optional to use this new key?  Can viewer use the first extension if
+&gt; found if this new key value is not set?
+
+Yes, it is optional. I think we&apos;d better no introduce this logic that use the first extension....maybe user doesn&apos;t want to use this extension when preview some reports...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169885</commentid>
+    <comment_count>8</comment_count>
+    <who name="Zhiqiang Qian">zqian</who>
+    <bug_when>2008-03-04 00:42:34 -0500</bug_when>
+    <thetext>UI will add support in preview preference page.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169897</commentid>
+    <comment_count>9</comment_count>
+    <who name="Chen Chao">cchen</who>
+    <bug_when>2008-03-04 01:44:48 -0500</bug_when>
+    <thetext>UI has supported it now.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1170772</commentid>
+    <comment_count>10</comment_count>
+    <who name="Jerry Cheng">cyfgod</who>
+    <bug_when>2008-03-04 22:42:12 -0500</bug_when>
+    <thetext>Fixed it.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

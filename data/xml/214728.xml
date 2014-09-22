@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214728</bug_id>
+          
+          <creation_ts>2008-01-09 05:23:00 -0500</creation_ts>
+          <short_desc>org.eclipse.babel.editor plugin.properties file is missing</short_desc>
+          <delta_ts>2008-02-06 15:12:02 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Babel</product>
+          <component>Plugins</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Antoine Toulmé">antoine</reporter>
+          <assigned_to name="Pascal Essiembre">pascal</assigned_to>
+          <cc>hmalphettes</cc>
+    
+    <cc>kitlo</cc>
+    
+    <cc>pascal</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127972</commentid>
+    <comment_count>0</comment_count>
+    <who name="Antoine Toulmé">antoine</who>
+    <bug_when>2008-01-09 05:23:36 -0500</bug_when>
+    <thetext>The plugin.properties file in the org.eclipse.babel.editor plugin is missing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127984</commentid>
+    <comment_count>1</comment_count>
+    <who name="Antoine Toulmé">antoine</who>
+    <bug_when>2008-01-09 05:37:21 -0500</bug_when>
+    <thetext>The file is actually in the nls plugin. The fix consists of copying plugin.properties to the editor plugin, unless I am missing something ?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129301</commentid>
+    <comment_count>2</comment_count>
+    <who name="Hugues Malphettes">hmalphettes</who>
+    <bug_when>2008-01-10 16:37:44 -0500</bug_when>
+    <thetext>In fact Antoine, Pascal does explain the choice he made here:
+http://dev.eclipse.org/mhonarc/lists/babel-dev/msg00063.html
+
+I don&apos;t think this is a bug.
+
+Although I must say that it is the first time I see a plugin that chooses to place all the resources including the one for the root-locale inside the nl-fragment.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129541</commentid>
+    <comment_count>3</comment_count>
+    <who name="Antoine Toulmé">antoine</who>
+    <bug_when>2008-01-11 06:12:05 -0500</bug_when>
+    <thetext>Well, this message is indeed from Pascal trying to push plugin.properties to the fragment. I don&apos;t see an explanation why he is doing so.
+
+By pushing plugin.properties to the fragment, Pascal makes the plugin unable to work independently without it. It seems contradictory with the nature of fragments, which are made to complement a plugin.
+
+I add Pascal in CC, so that he can jump in.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129654</commentid>
+    <comment_count>4</comment_count>
+    <who name="Pascal Essiembre">pascal</who>
+    <bug_when>2008-01-11 10:13:13 -0500</bug_when>
+    <thetext>One reply I made is missing from this trail.  I was able to make this work and everything is fine now.
+
+Still, what you are saying makes sense to me.  My take on it was that at least one fragment would always be shipped with it.  Right now I have multiple languages in the fragment, but one day if they get too big, one can decide to create multiple (e.g. one for each locales) to minimize download.   From that perspective, putting the plugin.properties or other resources in the host plugin for a non-English user (since default properties are English) would mean carrying an extra set of properties that are not used (as opposed to just have the ones for your language).
+
+But more so, the way I understand this, fragments can be updated independently of the plugins.  Having everything in fragments means we can fix some translation issues (typos, better terms, etc) and have Eclipse only download a tiny piece from the web as opposed to having to download the whole plugin just for a few string changes.
+
+That is my reasoning.  I am not saying it is the best one and I am certainly open for changes if it does not make sense (or not compatible with the intent behind fragments).
+
+The fact that it is the first time Hugues sees this setup explains a few things... I had a hard time finding any examples! ;-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129669</commentid>
+    <comment_count>5</comment_count>
+    <who name="Antoine Toulmé">antoine</who>
+    <bug_when>2008-01-11 10:42:20 -0500</bug_when>
+    <thetext>Yes, messages.properties and plugin.properties must stay in the original plugin.
+It looks like the policy for Eclipse. The goal is to complement the default locale with additional locales. When you think of it, if the default properties are not present, the plugin might just not work. For me it is a bit like a missing Java class.
+
+I had found a very useful document dated from 2006 explaining how Eclipse plugins should do i18n.
+http://www.eclipse.org/articles/Article-Speak-The-Local-Language/article.html
+
+It says that nl1 fragment should contain a set of chosen languages, so it is probable that you will not be able to create more than one fragment for i18n.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1151284</commentid>
+    <comment_count>6</comment_count>
+    <who name="Pascal Essiembre">pascal</who>
+    <bug_when>2008-02-06 15:12:02 -0500</bug_when>
+    <thetext>The default (English) set of properties file are now in the host plugin project.  
+
+It now follows these well described guidelines:
+
+http://wiki.eclipse.org/Eclipse_Globalization_Guidelines
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

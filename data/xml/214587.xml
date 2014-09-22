@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214587</bug_id>
+          
+          <creation_ts>2008-01-08 03:51:00 -0500</creation_ts>
+          <short_desc>Invalid diagram names are allowed -- should be rejected</short_desc>
+          <delta_ts>2008-03-08 10:34:01 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Tigerstripe</product>
+          <component>Diagrams</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3S1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Yoram">yramberg</reporter>
+          <assigned_to name="Richard Craddock">rcraddoc</assigned_to>
+          <cc>chrhartl</cc>
+    
+    <cc>erdillon</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127156</commentid>
+    <comment_count>0</comment_count>
+    <who name="Yoram">yramberg</who>
+    <bug_when>2008-01-08 03:51:47 -0500</bug_when>
+    <thetext>It is possible to assign invalid names to diagrams (and ossibly to other artifacts). For example, a name such as &quot;Nice &amp; Pretty Diagram&quot; is accepted. However,  once the daigram is saved any attempt to open it would result in a null pointer exception.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129427</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Hartley">chrhartl</who>
+    <bug_when>2008-01-10 22:45:49 -0500</bug_when>
+    <thetext>The diagram name should match this Regex (or something similar) - ^[a-zA-Z][0-9a-zA-Z _-]*[0-9a-zA-Z_-]$
+i.e. it should start with a letter and after that can contain letters, numbers, spaces, underscores and hyphens.
+It can end in a letter, number, underscore and hyphens but not a space.
+
+Perhaps we could also allow some other characters that are valid in XML, Windows and Linux file systems.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1168531</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Dillon">erdillon</who>
+    <bug_when>2008-02-29 18:38:46 -0500</bug_when>
+    <thetext>The validatePage() method in TigerstripeCreationWizardPage (visualeditor.diagram plugin) should contain the extra logic to validate the name. Same goes for InstanceCreationWizardPage (instancediagram.diagram plugin)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169057</commentid>
+    <comment_count>3</comment_count>
+    <who name="Richard Craddock">rcraddoc</who>
+    <bug_when>2008-03-03 05:49:08 -0500</bug_when>
+    <thetext>
+Implemented a simple check on file name using:
+
+String regex = &quot;^[a-zA-Z][0-9a-zA-Z _-]*$&quot;;
+
+The system automaticaly prevents file names ending in space.
+The regex proposed by Chris prevented single letter diagram names.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1173397</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eric Dillon">erdillon</who>
+    <bug_when>2008-03-08 10:34:01 -0500</bug_when>
+    <thetext>Bulk update of milestone to 0.3S1 now that this is a bit more established, to reflect what is in 0.3S1 build.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

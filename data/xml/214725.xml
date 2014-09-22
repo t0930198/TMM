@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214725</bug_id>
+          
+          <creation_ts>2008-01-09 05:01:00 -0500</creation_ts>
+          <short_desc>[batch][compiler][options] JDT and javac differ re. the use of . as a default sourcepath</short_desc>
+          <delta_ts>2011-03-29 09:13:51 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          <dependson>97332</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Maxime Daniel">maxime_daniel</reporter>
+          <assigned_to name="Olivier Thomann">Olivier_Thomann</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127966</commentid>
+    <comment_count>0</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-09 05:01:54 -0500</bug_when>
+    <thetext>I20080108-1320
+
+Setup : one class X refers to another class Y, both in default package. Both X.java and Y.java are in the same directory. Go to that directory and compile X.java, further specifying a -d directory that is different from the former one. javac (from 1.3 to 7) will compile OK. JDT will complain that it cannot find type Y. Adding and explicit &apos;-sourcepath .&apos; option gets JDT to compile.
+
+Not that critical since the workaround is ez. However, except we have a good reason to keep that discrepancy, we&apos;d better get rid of it.
+
+(Prepared associated test cases BatchCompilerTest#18* in the course of wip on bug 97332, will release them separately.)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128113</commentid>
+    <comment_count>1</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-09 09:52:25 -0500</bug_when>
+    <thetext>Further remark: javac -cp dummy.jar X.java won&apos;t compile either (except if dummy.jar defines Y). Which implies that the default mechanism only kicks in when no classpath is specified at all.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129488</commentid>
+    <comment_count>2</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 03:57:31 -0500</bug_when>
+    <thetext>Will wait until bug 97332 is released.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129492</commentid>
+    <comment_count>3</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 04:01:19 -0500</bug_when>
+    <thetext>Will wait on bug 211588 release, sorry.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131219</commentid>
+    <comment_count>4</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-15 02:49:44 -0500</bug_when>
+    <thetext>Definitely, 97332. Could fix this one separately, but this would induce work duplication and merge issues, which I&apos;d rather avoid.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

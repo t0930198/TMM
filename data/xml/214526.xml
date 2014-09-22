@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214526</bug_id>
+          
+          <creation_ts>2008-01-07 14:09:00 -0500</creation_ts>
+          <short_desc>Make accessible context to the StoreWriter</short_desc>
+          <delta_ts>2010-06-29 09:22:27 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>cdo.core</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>readme</keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Simon Mc Duff">smcduff</reporter>
+          <assigned_to name="Eike Stepper">stepper</assigned_to>
+          <cc>stepper</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126835</commentid>
+    <comment_count>0</comment_count>
+    <who name="Simon Mc Duff">smcduff</who>
+    <bug_when>2008-01-07 14:09:44 -0500</bug_when>
+    <thetext>&gt; Simon McDuff schrieb:
+&gt;&gt; &quot;Eike Stepper&quot; &lt;stepper@sympedia.de&gt; wrote in message 
+&gt;&gt; news:fltnv4$ci7$2@build.eclipse.org...
+&gt;&gt;   
+&gt;&gt;&gt; Simon McDuff schrieb:
+&gt;&gt;&gt;     
+&gt;&gt;&gt;&gt;&gt; If so, I&apos;d propose a different solution:
+&gt;&gt;&gt;&gt;&gt; By passing all together the values down before passing them down 
+&gt;&gt;&gt;&gt;&gt; separately again I&apos;d rather pass a sort of &quot;revisionDataFinished&quot; event 
+&gt;&gt;&gt;&gt;&gt; down to the store writer. Then it&apos;s up to your store implementation to 
+&gt;&gt;&gt;&gt;&gt; gather all the needed infos (without updating the database) within the 
+&gt;&gt;&gt;&gt;&gt; separate data calls and finally do the database update in one chunk at 
+&gt;&gt;&gt;&gt;&gt; the end (revisionDataFinished event).
+&gt;&gt;&gt;&gt;&gt;
+&gt;&gt;&gt;&gt;&gt; Would that be ok?
+&gt;&gt;&gt;&gt;&gt;
+&gt;&gt;&gt;&gt;&gt;
+&gt;&gt;&gt;&gt;&gt;         
+&gt;&gt;&gt;&gt; Sounds goods...
+&gt;&gt;&gt;&gt;
+&gt;&gt;&gt;&gt; Right now as we read the data from the stream we call primeNewObjects.
+&gt;&gt;&gt;&gt; This would have to change ? Right ? Because I want to make these call 
+&gt;&gt;&gt;&gt; after I gather all the infos.
+&gt;&gt;&gt;&gt;
+&gt;&gt;&gt;&gt;       
+&gt;&gt; I  don&apos;t have a problem with primeNewObjects... it is when we call it that I 
+&gt;&gt; have a problem with.
+&gt;&gt; We seems to mix up serialization and processing at many places.
+&gt;&gt;
+&gt;&gt; Should not we unserialize data... and then apply changes to have a real 
+&gt;&gt; transaction scope.
+&gt;&gt; Right now we do both of them at the same time.
+&gt;&gt; I would like to see a separation between two different processes.
+&gt;&gt; It is strange because we create ITransaction.. and in fact we already did 
+&gt;&gt; apply some changes to the graph.
+&gt;&gt;
+&gt;&gt; If we do all modifications after reading from the stream.. it will be easier 
+&gt;&gt; to manage stuff in my StoreWriter.
+&gt;&gt;
+&gt;&gt;   
+&gt;&gt;&gt; Funny that it was you who wanted to have the primeNewObject method in the 
+&gt;&gt;&gt; storage API ;-)
+&gt;&gt;&gt; I see your problem but I don&apos;t see an easy solution for it. For all your 
+&gt;&gt;&gt; optimizations I see more and more repository responsibilities walking down 
+&gt;&gt;&gt; to the store. In the end we can spare it completely and simply pass an 
+&gt;&gt;&gt; InputStream down to the store. Just joking!
+&gt;&gt;&gt;
+&gt;&gt;&gt; But seriously, can you tell me, how the mapping of tempIDs and metaIDs 
+&gt;&gt;&gt; should work then?
+&gt;&gt;&gt;
+&gt;&gt;&gt; Regards,
+&gt;&gt;&gt; Eike Stepper
+&gt;&gt;&gt; ----
+&gt;&gt;&gt; http://wiki.eclipse.org/CDO
+&gt;&gt;&gt; http://wiki.eclipse.org/Net4j
+&gt;&gt;&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126846</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86338</attachid>
+    <who name="Simon Mc Duff">smcduff</who>
+    <bug_when>2008-01-07 14:26:41 -0500</bug_when>
+    <thetext>Created attachment 86338
+Beta1
+
+This is where we can do the mapping of temporary objects.
+
+Now, we need to inform the storeWriter about the context of our changes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126855</commentid>
+    <comment_count>2</comment_count>
+    <who name="Simon Mc Duff">smcduff</who>
+    <bug_when>2008-01-07 14:37:17 -0500</bug_when>
+    <thetext>What I would like to see from this enhancement is really to detach 
+CommitTransactionIndication from what does the job of applying change to the graph.
+
+Let say I received newPackages,newResources,newObjects,dirtyObjects from somewhere else... I would like to be able to re-use that code wihout having to use CommitTransactionIndication.
+
+It will be good also for our 2 phases commit enhancement.
+
+
+
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195591</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-04-07 09:35:25 -0400</bug_when>
+    <thetext>Simon, Can this one be closed as well?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195782</commentid>
+    <comment_count>4</comment_count>
+    <who name="Simon Mc Duff">smcduff</who>
+    <bug_when>2008-04-07 11:53:59 -0400</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; Simon, Can this one be closed as well?
+
+Yes, with the latest changes.. I&apos;m very happy!!!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195968</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-04-07 14:51:30 -0400</bug_when>
+    <thetext>cleanup</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1208076</commentid>
+    <comment_count>6</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-04-19 04:48:34 -0400</bug_when>
+    <thetext>Fixed in S200804140606</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1265239</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-06-10 02:30:05 -0400</bug_when>
+    <thetext>Reversioned due to graduation</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86338</attachid>
+            <date>2008-01-07 14:26:00 -0500</date>
+            <delta_ts>2008-01-07 14:26:41 -0500</delta_ts>
+            <desc>Beta1</desc>
+            <filename>Commit.patch</filename>
+            <type>text/plain</type>
+            <size>2764</size>
+            <attacher name="Simon Mc Duff">smcduff</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZW1mLmNkby5z
+ZXJ2ZXINCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvZW1mL2Nkby9pbnRlcm5hbC9zZXJ2ZXIvcHJv
+dG9jb2wvQ29tbWl0VHJhbnNhY3Rpb25JbmRpY2F0aW9uLmphdmENCj09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBm
+aWxlOiAvY3Zzcm9vdC9tb2RlbGluZy9vcmcuZWNsaXBzZS5lbWYvb3JnLmVjbGlwc2UuZW1mLmNk
+by9wbHVnaW5zL29yZy5lY2xpcHNlLmVtZi5jZG8uc2VydmVyL3NyYy9vcmcvZWNsaXBzZS9lbWYv
+Y2RvL2ludGVybmFsL3NlcnZlci9wcm90b2NvbC9Db21taXRUcmFuc2FjdGlvbkluZGljYXRpb24u
+amF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMzMNCmRpZmYgLXUgLXIxLjMzIENvbW1pdFRy
+YW5zYWN0aW9uSW5kaWNhdGlvbi5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2VtZi9jZG8vaW50
+ZXJuYWwvc2VydmVyL3Byb3RvY29sL0NvbW1pdFRyYW5zYWN0aW9uSW5kaWNhdGlvbi5qYXZhCTcg
+SmFuIDIwMDggMTc6MzM6NTMgLTAwMDAJMS4zMw0KKysrIHNyYy9vcmcvZWNsaXBzZS9lbWYvY2Rv
+L2ludGVybmFsL3NlcnZlci9wcm90b2NvbC9Db21taXRUcmFuc2FjdGlvbkluZGljYXRpb24uamF2
+YQk3IEphbiAyMDA4IDE5OjI0OjM1IC0wMDAwDQpAQCAtMjksNiArMjksNyBAQA0KIGltcG9ydCBv
+cmcuZWNsaXBzZS5lbWYuY2RvLnByb3RvY29sLm1vZGVsLkNET1BhY2thZ2VNYW5hZ2VyOw0KIGlt
+cG9ydCBvcmcuZWNsaXBzZS5lbWYuY2RvLnByb3RvY29sLm1vZGVsLmNvcmUuQ0RPQ29yZVBhY2th
+Z2U7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmVtZi5jZG8ucHJvdG9jb2wubW9kZWwucmVzb3VyY2Uu
+Q0RPUmVzb3VyY2VQYWNrYWdlOw0KK2ltcG9ydCBvcmcuZWNsaXBzZS5lbWYuY2RvLnByb3RvY29s
+LnJldmlzaW9uLkNET1JldmlzaW9uOw0KIGltcG9ydCBvcmcuZWNsaXBzZS5lbWYuY2RvLnNlcnZl
+ci5JU3RvcmU7DQogaW1wb3J0IG9yZy5lY2xpcHNlLmVtZi5jZG8uc2VydmVyLklTdG9yZVdyaXRl
+cjsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuZW1mLmNkby5zZXJ2ZXIuSVZpZXc7DQpAQCAtMTE3LDEx
+ICsxMTgsMTcgQEANCiANCiAgICAgICB0cnkNCiAgICAgICB7DQorICAgIAkvLyBOb3RpZmljYXRp
+b24gbWVjaGFuaXNtIHRvIFN0b3JlV3JpdGVyDQorICAgIAkvLyBTaG91bGQgcHJvdmlkZSBpbmZv
+cm1hdGlvbiBzdWNoIGFzICBkaXJ0eU9iamVjdHMsICBuZXdPYmplY3RzLCBuZXdSZXNvdXJjZXMs
+IG5ld1BhY2thZ2VzDQorICAgIAkvLyBBdCB0aGlzIHN0YWdlLCBTdG9yZVdyaXRlciBzaG91bGQg
+a25vdyB0aGUgY29udGV4dCBvZiB0aGUgdHJhbnNhY3Rpb24uDQorICAgIAkgIA0KKyAgICAJY3Jl
+YXRlTmV3T2JqZWN0cyhzdG9yZVdyaXRlciwgbmV3UmVzb3VyY2VzKTsNCisgICAgCWNyZWF0ZU5l
+d09iamVjdHMoc3RvcmVXcml0ZXIsIG5ld09iamVjdHMpOw0KKyAgICAJDQogICAgICAgICBhZGRQ
+YWNrYWdlcyhzdG9yZVRyYW5zYWN0aW9uLCBuZXdQYWNrYWdlcyk7DQogICAgICAgICBhZGRSZXZp
+c2lvbnMoc3RvcmVUcmFuc2FjdGlvbiwgbmV3UmVzb3VyY2VzKTsNCiAgICAgICAgIGFkZFJldmlz
+aW9ucyhzdG9yZVRyYW5zYWN0aW9uLCBuZXdPYmplY3RzKTsNCiAgICAgICAgIHdyaXRlUmV2aXNp
+b25zKHN0b3JlVHJhbnNhY3Rpb24sIGRpcnR5T2JqZWN0cyk7DQotICAgICAgICAvLyBhZGRSZXZp
+c2lvbnMoc3RvcmVUcmFuc2FjdGlvbiwgZGlydHlPYmplY3RzKTsNCiANCiAgICAgICAgIHN0b3Jl
+VHJhbnNhY3Rpb24uY29tbWl0KCk7DQogICAgICAgfQ0KQEAgLTE2Myw3ICsxNzAsNyBAQA0KICAg
+ICAgIH0NCiAgICAgfQ0KICAgfQ0KLQ0KKyAgDQogICBwcml2YXRlIENET1BhY2thZ2VJbXBsW10g
+cmVhZE5ld1BhY2thZ2VzKEV4dGVuZGVkRGF0YUlucHV0U3RyZWFtIGluLCBJU3RvcmVXcml0ZXIg
+c3RvcmVXcml0ZXIpIHRocm93cyBJT0V4Y2VwdGlvbg0KICAgew0KICAgICBpbnQgc2l6ZSA9IGlu
+LnJlYWRJbnQoKTsNCkBAIC0yNDMsOCArMjUwLDE2IEBADQogICAgIH0NCiANCiAgICAgcmV0dXJu
+IGRlbHRhczsNCi0gIH0NCisgIH0gIA0KKyAgcHJpdmF0ZSB2b2lkIGNyZWF0ZU5ld09iamVjdHMo
+SVN0b3JlV3JpdGVyIHN0b3JlV3JpdGVyLCBDRE9SZXZpc2lvbkltcGwgcmV2aXNpb25zW10pIHRo
+cm93cyBJT0V4Y2VwdGlvbg0KKyAgew0KKwlpbnQgc2l6ZSA9IHJldmlzaW9ucy5sZW5ndGg7DQog
+DQorCWZvciAoaW50IGkgPSAwOyBpIDwgc2l6ZTsgaSsrKQ0KKwl7DQorCQltYXBUZW1wb3JhcnlJ
+RChyZXZpc2lvbnNbaV0sIHN0b3JlV3JpdGVyKTsNCisJfQ0KKyAgfQ0KICAgcHJpdmF0ZSBDRE9S
+ZXZpc2lvbkltcGxbXSByZWFkUmV2aXNpb25zKEV4dGVuZGVkRGF0YUlucHV0U3RyZWFtIGluLCBJ
+U3RvcmVXcml0ZXIgc3RvcmVXcml0ZXIsIGludCBzaXplKQ0KICAgICAgIHRocm93cyBJT0V4Y2Vw
+dGlvbg0KICAgew0KQEAgLTI1Myw3ICsyNjgsNiBAQA0KICAgICBmb3IgKGludCBpID0gMDsgaSA8
+IHNpemU7IGkrKykNCiAgICAgew0KICAgICAgIHJldmlzaW9uc1tpXSA9IG5ldyBDRE9SZXZpc2lv
+bkltcGwoaW4sIHJldmlzaW9uTWFuYWdlciwgdHJhbnNhY3Rpb25QYWNrYWdlTWFuYWdlcik7DQot
+ICAgICAgbWFwVGVtcG9yYXJ5SUQocmV2aXNpb25zW2ldLCBzdG9yZVdyaXRlcik7DQogICAgIH0N
+CiANCiAgICAgcmV0dXJuIHJldmlzaW9uczsNCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

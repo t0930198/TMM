@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215196</bug_id>
+          
+          <creation_ts>2008-01-14 06:38:00 -0500</creation_ts>
+          <short_desc>problems with hierarchy search scope&apos;s encloses(IJavaElement)</short_desc>
+          <delta_ts>2009-10-29 10:53:33 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.6 M3</target_milestone>
+          
+          <blocked>61185</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Markus Keller">markus_keller</reporter>
+          <assigned_to name="Frederic Fusier">frederic_fusier</assigned_to>
+          <cc>jerome_lanneluc</cc>
+    
+    <cc>stephan.herrmann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130510</commentid>
+    <comment_count>0</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-14 06:38:57 -0500</bug_when>
+    <thetext>HEAD
+
+The work on bug 61185 revealed some flaws with SearchEngine.createHierarchyScope(IType) and its encloses(IJavaElement) method. 
+
+a.) When we use SearchEngine.searchAllTypeNames(..) (e.g. in FilteredTypesSelectionDialog.fillContentProvider(AbstractContentProvider, ItemsFilter, IProgressMonitor)), we also get types that are not in the chosen hierarchy, but are nested or enclosing types of the given type&apos;s hierarchy.
+=&gt; members of the type can be expected (see Javadoc of createHierarchyScope), but enclosing types are unexpected
+
+b.) When we test types against the scope using encloses(IJavaElement) (e.g. in TypeInfoFilter.matchesScope(TypeNameMatch)), neither enclosing nor nested types are found.
+=&gt; the encloses(..) method should return true if and only if searchAllTypeNames(..) finds the type
+
+
+Steps:
+- install patch from bug 61185 comment 14
+- in runtime workbench, create a new Plug-in project, using template &quot;Hello, World Command&quot;
+- create
+public class Bla {
+	public static class InnerHandler implements IHandler {
+		// use quick fix to add missing methods
+	}
+}
+- create &quot;public class Inner {}&quot; as inner class of SampleHandler
+- open plugin.xml &gt; Extensions &gt; o.e.ui.handlers &gt; (handler)
+- click &quot;Browse...&quot; next to the &apos;class:&apos; attribute
+
+=&gt; Depending on whether the type selection dialog uses the search engine or its cache (calling IJavaSearchScope.encloses(IJavaElement)), elements &quot;Bla&quot;, &quot;InnerHandler&quot;, and &quot;Inner&quot; appear in the list or not.
+- to use the cache: enter first character, wait until search is done, add another character
+- to use the search engine: enter pattern &quot;z&quot;, wait until search is done, select &quot;z&quot; and paste prefix of what you want to to find</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130514</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-14 07:00:02 -0500</bug_when>
+    <thetext>I guess bug 61185 comment 10 mentions the same problem and Stephan proposed attachment 86635 in bug 61185 comment 13 as a fix.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1581010</commentid>
+    <comment_count>2</comment_count>
+    <who name="Stephan Herrmann">stephan.herrmann</who>
+    <bug_when>2009-08-27 14:23:07 -0400</bug_when>
+    <thetext>For cross reference: bug 215139 comment 35 ff. might decide to leave the
+inconsistency in the core and leave it to clients to supply a requestor
+that filters unwanted menbers/enclosings using the same hierarchy scope.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1618724</commentid>
+    <comment_count>3</comment_count>
+    <who name="Stephan Herrmann">stephan.herrmann</who>
+    <bug_when>2009-10-29 10:31:55 -0400</bug_when>
+    <thetext>Since both bug 215139 and bug 61185 have been resolved for M3,
+I gave it a try using I20091020-0931.
+
+No matter what I tried, 
+  I ALWAYS got InnerHandler and SampleHandler
+  I NEVER got Bla nor Inner
+
+Looks good, so I suggest to close this issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1618735</commentid>
+    <comment_count>4</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2009-10-29 10:42:00 -0400</bug_when>
+    <thetext>Thanks Stephan for the feedback =&gt; close as WORKSFORME</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1618750</commentid>
+    <comment_count>5</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2009-10-29 10:53:33 -0400</bug_when>
+    <thetext>Verified for 3.6M3 using build  I20091028-0100.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

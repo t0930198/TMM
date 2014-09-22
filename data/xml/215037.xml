@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215037</bug_id>
+          
+          <creation_ts>2008-01-11 10:51:00 -0500</creation_ts>
+          <short_desc>draw2d header figure throwing a null pointer based on current display</short_desc>
+          <delta_ts>2010-07-19 22:08:13 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMF-Tooling</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Brad Blancett">blancett</reporter>
+          <assigned_to name="gmf.models-inbox">gmf.models-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129681</commentid>
+    <comment_count>0</comment_count>
+    <who name="Brad Blancett">blancett</who>
+    <bug_when>2008-01-11 10:51:58 -0500</bug_when>
+    <thetext>I think this the right product/component.
+
+Build ID: I20071101-2000
+
+Steps To Reproduce:
+java.lang.NullPointerException
+	at com.ibm.xtools.uml.ui.diagram.internal.draw2d.HeaderFigure.setText(HeaderFigure.java:78)
+	at com.ibm.xtools.uml.ui.diagram.internal.draw2d.HeaderFigure.&lt;init&gt;(HeaderFigure.java:63)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart.addHeader(InteractionCompartmentEditPart.java:386)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart.access$0(InteractionCompartmentEditPart.java:377)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart$1.childAdded(InteractionCompartmentEditPart.java:286)
+	at org.eclipse.gef.editparts.AbstractEditPart.fireChildAdded(AbstractEditPart.java:375)
+	at org.eclipse.gef.editparts.AbstractEditPart.addChild(AbstractEditPart.java:202)
+	at org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart.addChild(GraphicalEditPart.java:1292)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart.addChild(InteractionCompartmentEditPart.java:196)
+	at org.eclipse.gef.editparts.AbstractEditPart.refreshChildren(AbstractEditPart.java:727)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart.refreshChildren(InteractionCompartmentEditPart.java:607)
+	at org.eclipse.gef.editparts.AbstractEditPart.refresh(AbstractEditPart.java:677)
+	at org.eclipse.gef.editparts.AbstractGraphicalEditPart.refresh(AbstractGraphicalEditPart.java:564)
+	at org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart.access$3(GraphicalEditPart.java:1)
+	at org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart$3.run(GraphicalEditPart.java:836)
+	at org.eclipse.gmf.runtime.emf.core.internal.domain.MSLTransactionalEditingDomain.runExclusive(MSLTransactionalEditingDomain.java:339)
+	at org.eclipse.gmf.runtime.emf.core.internal.domain.MSLEditingDomain.runExclusive(MSLEditingDomain.java:2500)
+	at org.eclipse.gmf.runtime.diagram.ui.editparts.GraphicalEditPart.refresh(GraphicalEditPart.java:826)
+	at com.ibm.xtools.uml.ui.diagrams.sequence.internal.editparts.InteractionCompartmentEditPart.refresh(InteractionCompartmentEditPart.java:588)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy.postProcessRefreshSemantic(CanonicalEditPolicy.java:1190)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy.postProcessRefreshSemantic(CanonicalConnectionEditPolicy.java:564)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy.refreshSemanticChildren(CanonicalEditPolicy.java:1125)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalConnectionEditPolicy.refreshSemantic(CanonicalConnectionEditPolicy.java:527)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy.refresh(CanonicalEditPolicy.java:962)
+	at org.eclipse.gmf.runtime.diagram.ui.editpolicies.CanonicalEditPolicy.enableRefresh(CanonicalEditPolicy.java:700)
+	at org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand.DoEnable(ToggleCanonicalModeCommand.java:184)
+	at org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand.access$1(ToggleCanonicalModeCommand.java:175)
+	at org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand$1.doExecute(ToggleCanonicalModeCommand.java:154)
+	at org.eclipse.emf.workspace.AbstractEMFOperation.execute(AbstractEMFOperation.java:137)
+	at org.eclipse.gmf.runtime.diagram.ui.internal.commands.ToggleCanonicalModeCommand.execute(ToggleCanonicalModeCommand.java:160)
+	at org.eclipse.gef.commands.CompoundCommand.execute(CompoundCommand.java:107)
+	at com.ibm.xtools.umlviz.ui.internal.vizedit.editpolicies.DropWrapperCommand.dropElements(DropWrapperCommand.java:142)
+	at com.ibm.xtools.umlviz.ui.internal.vizedit.editpolicies.DropWrapperCommand.execute(DropWrapperCommand.java:123)
+	at org.eclipse.gmf.runtime.diagram.ui.commands.CommandProxy.doExecuteWithResult(CommandProxy.java:49)
+	at org.eclipse.gmf.runtime.common.core.command.AbstractCommand.execute(AbstractCommand.java:134)
+	at org.eclipse.gmf.runtime.common.core.command.CompositeCommand.doExecuteWithResult(CompositeCommand.java:406)
+	at org.eclipse.gmf.runtime.common.core.command.AbstractCommand.execute(AbstractCommand.java:134)
+	at org.eclipse.core.commands.operations.DefaultOperationHistory.execute(DefaultOperationHistory.java:511)
+	at org.eclipse.gmf.runtime.common.ui.services.dnd.drop.AbstractDropTargetListener$2.run(AbstractDropTargetListener.java:435)
+	at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:113)
+
+3. Brad Blancett, Nov 7, 2007, 5:49 PM
+I cant reproduce this problem, but I just realized this path does not burn in the dnx to the constraint.
+
+4. Brad Blancett, Nov 7, 2007, 5:49 PM
+or emx
+
+5. Brad Blancett, Nov 8, 2007, 9:37 AM
+Looking a little closer at where this bug occurs:      
+ label.setFont(Display.getCurrent().getSystemFont());
+ 
+This is a problem in UML/GMF. The Display.getCurrent() has always been dangerous -  findDisplay (
+Thread.currentThread ()); this will return null if a Display isnt in the current thread. Any one that 
+spawns another thread will get a NullPointer when Display.getCurrent() returns null.
+
+The safest call to use would be Display.getDefault
+
+public static synchronized Display getDefault () {
+	if (Default == null) Default = new Display ();
+	return Default;
+}
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1160476</commentid>
+    <comment_count>1</comment_count>
+    <who name="Artem Tikhomirov">tikhomirov.artem</who>
+    <bug_when>2008-02-20 12:28:39 -0500</bug_when>
+    <thetext>com.ibm.xtools?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1783727</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2010-07-19 22:08:13 -0400</bug_when>
+    <thetext>[GMF Restructure] Bug 319140 : product GMF and component
+Models - Tooling was the original product and component for this bug</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

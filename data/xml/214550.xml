@@ -1,0 +1,230 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214550</bug_id>
+          
+          <creation_ts>2008-01-07 17:14:00 -0500</creation_ts>
+          <short_desc>[variables] Update variable MemoryChangedEvent</short_desc>
+          <delta_ts>2014-01-29 20:47:43 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-debug-dsf</component>
+          <version>0 DD 1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>DD 1.0</target_milestone>
+          <dependson>219351</dependson>
+    
+    <dependson>213061</dependson>
+          <blocked>159696</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Francois Chouinard">fchouinard</reporter>
+          <assigned_to name="DD General Inbox">dd.general-inbox</assigned_to>
+          <cc>dd.general-inbox</cc>
+    
+    <cc>dschaefer</cc>
+    
+    <cc>marc.khouzam</cc>
+    
+    <cc>pawel.1.piech</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126992</commentid>
+    <comment_count>0</comment_count>
+    <who name="Francois Chouinard">fchouinard</who>
+    <bug_when>2008-01-07 17:14:06 -0500</bug_when>
+    <thetext>When a debugged program is stopped and the content of a memory location is changed (in the memory view), a MemoryChangedEvent is fired.
+
+This event is not caught by the Variable/ExpressionService even though it could correspond to a displayed variable or be used in an expression.
+
+This can result in a memory display inconsistency.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1155035</commentid>
+    <comment_count>1</comment_count>
+    <who name="Marc Khouzam">marc.khouzam</who>
+    <bug_when>2008-02-12 11:31:23 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; This event is not caught by the Variable/ExpressionService even though it could
+&gt; correspond to a displayed variable or be used in an expression.
+
+The ExpressionService not catches this event.  This event reports a list of addresses and sizes to indicate which memory has changed.  To use this information the ExpressionService would need to know the address of each of its variable objects to know if any of them changed.  Currently, the Expression Servcie does not have this information.
+
+Possible solutions to solve this bug are:
+
+1- Have the expression service be aware of the address in memory of each of its variable objects and their size.  This would require two extra calls to the backend for each variable object.  Then, when a MemoryChangedEvent event is received, the ExpressionService would need to find if any of the variable objects match any of the memory addresses that have changed, and mark that variable object as as out-of-date.  For efficiency, we would need to use a data structure that would allow us to quickly find an address in our variable objects.
+
+This solution is expensive, in the sense that it requires to fetch more information from the backend for every variable object all the time, even if the memory view is not even used or the memory never changed.
+
+2- A simpler solution is that whenever the MemoryChangedEvent is received by the Expression Service, it will mark all variable objects as out-of-date and request the Variable view and Expression view to do a full refresh.  This solution is already the chosen one for bug 213061 (although solution 1 above would probably also work.)
+
+This solution is easy to implement and more efficient that it may seem.  First, there is no impact until a MemoryChangedEvent is received, which not a common case.  Also, although the views do a full refresh, they will only request information about expressions that are visible, which should be a small amount of them.  The negative impact is that that every variable object is marked out-of-date, but this is the same behavior as when the program steps, and the variable objects are optimized for this.
+
+I believe solution 2 is the easiest one to go with.  Besides, it is so easy to implement, that it can easily be changed to solution 1 if we ever feel it should.
+
+This bug depends on bug 213061 to refresh the relevant view.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1155105</commentid>
+    <comment_count>2</comment_count>
+      <attachid>89522</attachid>
+    <who name="Marc Khouzam">marc.khouzam</who>
+    <bug_when>2008-02-12 12:36:59 -0500</bug_when>
+    <thetext>Created attachment 89522
+Solution
+
+This solution has the MIVariableManager mark all variable objects as out-of-date when getting a MemoryChangedEvent.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163651</commentid>
+    <comment_count>3</comment_count>
+    <who name="Marc Khouzam">marc.khouzam</who>
+    <bug_when>2008-02-25 11:42:16 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; Created an attachment (id=89522) [details]
+&gt; Solution
+&gt; 
+&gt; This solution has the MIVariableManager mark all variable objects as
+&gt; out-of-date when getting a MemoryChangedEvent.
+&gt; 
+
+Since we chose status quo in bug 213061, Ok to commit ?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163972</commentid>
+    <comment_count>4</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-02-25 16:09:24 -0500</bug_when>
+    <thetext>+1 from me </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1164544</commentid>
+    <comment_count>5</comment_count>
+    <who name="Marc Khouzam">marc.khouzam</who>
+    <bug_when>2008-02-26 09:37:33 -0500</bug_when>
+    <thetext>Committed
+Can be verified when bug 213061 is committed.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165007</commentid>
+    <comment_count>6</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-02-26 16:22:16 -0500</bug_when>
+    <thetext>Verified, Thanks Marc.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1310358</commentid>
+    <comment_count>7</comment_count>
+    <who name="Pawel Piech">pawel.1.piech</who>
+    <bug_when>2008-08-13 13:07:00 -0400</bug_when>
+    <thetext>Closing out 1.0 bugs.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89522</attachid>
+            <date>2008-02-12 12:36:00 -0500</date>
+            <delta_ts>2014-01-29 20:47:43 -0500</delta_ts>
+            <desc>Solution</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>3223</size>
+            <attacher name="Marc Khouzam">marc.khouzam</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5kZC5kc2YubWku
+Y29yZQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2RkL2RzZi9taS9zZXJ2aWNlL01JVmFyaWFibGVN
+YW5hZ2VyLmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2c3Jvb3QvZHNkcC9vcmcuZWNsaXBz
+ZS5kZC5kc2YvcGx1Z2lucy9vcmcuZWNsaXBzZS5kZC5kc2YubWkuY29yZS9zcmMvb3JnL2VjbGlw
+c2UvZGQvZHNmL21pL3NlcnZpY2UvTUlWYXJpYWJsZU1hbmFnZXIuamF2YSx2CnJldHJpZXZpbmcg
+cmV2aXNpb24gMS4zMQpkaWZmIC11IC1yMS4zMSBNSVZhcmlhYmxlTWFuYWdlci5qYXZhCi0tLSBz
+cmMvb3JnL2VjbGlwc2UvZGQvZHNmL21pL3NlcnZpY2UvTUlWYXJpYWJsZU1hbmFnZXIuamF2YQk4
+IEZlYiAyMDA4IDIwOjU4OjUxIC0wMDAwCTEuMzEKKysrIHNyYy9vcmcvZWNsaXBzZS9kZC9kc2Yv
+bWkvc2VydmljZS9NSVZhcmlhYmxlTWFuYWdlci5qYXZhCTEyIEZlYiAyMDA4IDE3OjE5OjM4IC0w
+MDAwCkBAIC0zMyw2ICszMyw3IEBACiBpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLmRlYnVnLnNl
+cnZpY2UuSUV4cHJlc3Npb25zLklFeHByZXNzaW9uRE1Db250ZXh0OwogaW1wb3J0IG9yZy5lY2xp
+cHNlLmRkLmRzZi5kZWJ1Zy5zZXJ2aWNlLklGb3JtYXR0ZWRWYWx1ZXMuRm9ybWF0dGVkVmFsdWVE
+TUNvbnRleHQ7CiBpbXBvcnQgb3JnLmVjbGlwc2UuZGQuZHNmLmRlYnVnLnNlcnZpY2UuSUZvcm1h
+dHRlZFZhbHVlcy5Gb3JtYXR0ZWRWYWx1ZURNRGF0YTsKK2ltcG9ydCBvcmcuZWNsaXBzZS5kZC5k
+c2YuZGVidWcuc2VydmljZS5JTWVtb3J5LklNZW1vcnlDaGFuZ2VkRXZlbnQ7CiBpbXBvcnQgb3Jn
+LmVjbGlwc2UuZGQuZHNmLmRlYnVnLnNlcnZpY2UuSVN0YWNrLklGcmFtZURNQ29udGV4dDsKIGlt
+cG9ydCBvcmcuZWNsaXBzZS5kZC5kc2YuZGVidWcuc2VydmljZS5jb21tYW5kLklDb21tYW5kOwog
+aW1wb3J0IG9yZy5lY2xpcHNlLmRkLmRzZi5kZWJ1Zy5zZXJ2aWNlLmNvbW1hbmQuSUNvbW1hbmRD
+b250cm9sOwpAQCAtMTYyOCw2ICsxNjI5LDEzIEBACiAJcHJvdGVjdGVkIEJ1bmRsZUNvbnRleHQg
+Z2V0QnVuZGxlQ29udGV4dCgpIHsKIAkJcmV0dXJuIERzZk1JUGx1Z2luLmdldEJ1bmRsZUNvbnRl
+eHQoKTsKIAl9CisKKyAgICBwcml2YXRlIHZvaWQgbWFya0FsbE91dE9mRGF0ZSgpIHsKKyAgICAJ
+TUlSb290VmFyaWFibGVPYmplY3Qgcm9vdDsKKyAgICAJd2hpbGUgKChyb290ID0gdXBkYXRlZFJv
+b3RMaXN0LnBvbGwoKSkgIT0gbnVsbCkgeworICAgIAkJcm9vdC5tYXJrQXNPdXRPZkRhdGUoKTsK
+KyAgICAJfSAgICAJCisgICAgfQogICAgIAogICAgIEBEc2ZTZXJ2aWNlRXZlbnRIYW5kbGVyIAog
+ICAgIHB1YmxpYyB2b2lkIGV2ZW50RGlzcGF0Y2hlZChJUnVuQ29udHJvbC5JUmVzdW1lZERNRXZl
+bnQgZSkgewpAQCAtMTYzNiwxMyArMTY0NCwxOSBAQAogICAgIAkvLyB0byBkZWFsIHdpdGggdGhv
+c2UuICBBbHNvLCB0byBvcHRpbWl6ZSB0aGlzIG9wZXJhdGlvbiwgd2UgaGF2ZQogICAgIAkvLyBh
+IGxpc3Qgb2YgYWxsIHJvb3RzIHRoYXQgaGF2ZSBiZWVuIHVwZGF0ZWQsIHNvIHdlIG9ubHkgaGF2
+ZSB0bwogICAgIAkvLyBzZXQgdGhvc2UgdG8gbmVlZGluZyB0byBiZSB1cGRhdGVkLgotICAgIAlN
+SVJvb3RWYXJpYWJsZU9iamVjdCByb290OwotICAgIAl3aGlsZSAoKHJvb3QgPSB1cGRhdGVkUm9v
+dExpc3QucG9sbCgpKSAhPSBudWxsKSB7Ci0gICAgCQlyb290Lm1hcmtBc091dE9mRGF0ZSgpOwot
+ICAgIAl9CisgICAgCW1hcmtBbGxPdXRPZkRhdGUoKTsKICAgICB9CiAgICAgCiAgICAgQERzZlNl
+cnZpY2VFdmVudEhhbmRsZXIgCiAgICAgcHVibGljIHZvaWQgZXZlbnREaXNwYXRjaGVkKElSdW5D
+b250cm9sLklTdXNwZW5kZWRETUV2ZW50IGUpIHsKICAgICB9CisgICAgCisgICAgQERzZlNlcnZp
+Y2VFdmVudEhhbmRsZXIgCisgICAgcHVibGljIHZvaWQgZXZlbnREaXNwYXRjaGVkKElNZW1vcnlD
+aGFuZ2VkRXZlbnQgZSkgeworICAgIAkvLyBTb21lIG1lbW9yeSBoYXMgY2hhbmdlZC4gIFdlIGN1
+cnJlbnRseSBkbyBub3Qga25vdyB0aGUgYWRkcmVzcworICAgIAkvLyBvZiBlYWNoIG9mIG91ciB2
+YXJpYWJsZSBvYmplY3RzLCBzbyB0aGVyZSBpcyBubyB3YXkgdG8ga25vdworICAgIAkvLyB3aGlj
+aCBvbmUgaXMgYWZmZWN0ZWQuICBNYXJrIHRoZW0gYWxsIGFzIG91dCBvZiBkYXRlLgorICAgIAkv
+LyBUaGUgdmlld3Mgd2lsbCBmdWxseSByZWZyZXNoIG9uIGEgTWVtb3J5Q2hhbmdlZEV2ZW50Cisg
+ICAgCW1hcmtBbGxPdXRPZkRhdGUoKTsKKyAgICB9CiB9CkluZGV4OiBzcmMvb3JnL2VjbGlwc2Uv
+ZGQvZHNmL21pL3NlcnZpY2UvRXhwcmVzc2lvblNlcnZpY2UuamF2YQo9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBm
+aWxlOiAvY3Zzcm9vdC9kc2RwL29yZy5lY2xpcHNlLmRkLmRzZi9wbHVnaW5zL29yZy5lY2xpcHNl
+LmRkLmRzZi5taS5jb3JlL3NyYy9vcmcvZWNsaXBzZS9kZC9kc2YvbWkvc2VydmljZS9FeHByZXNz
+aW9uU2VydmljZS5qYXZhLHYKcmV0cmlldmluZyByZXZpc2lvbiAxLjM4CmRpZmYgLXUgLXIxLjM4
+IEV4cHJlc3Npb25TZXJ2aWNlLmphdmEKLS0tIHNyYy9vcmcvZWNsaXBzZS9kZC9kc2YvbWkvc2Vy
+dmljZS9FeHByZXNzaW9uU2VydmljZS5qYXZhCTggRmViIDIwMDggMjA6NTg6NTEgLTAwMDAJMS4z
+OAorKysgc3JjL29yZy9lY2xpcHNlL2RkL2RzZi9taS9zZXJ2aWNlL0V4cHJlc3Npb25TZXJ2aWNl
+LmphdmEJMTIgRmViIDIwMDggMTc6MTk6MzggLTAwMDAKQEAgLTg5Miw3ICs4OTIsNiBAQAogICAg
+IEBEc2ZTZXJ2aWNlRXZlbnRIYW5kbGVyIAogICAgIHB1YmxpYyB2b2lkIGV2ZW50RGlzcGF0Y2hl
+ZChJTWVtb3J5Q2hhbmdlZEV2ZW50IGUpIHsKICAgICAgICAgZkV4cHJlc3Npb25DYWNoZS5yZXNl
+dCgpOwotICAgICAgICAvLyBXZSBtdXN0IGFsc28gZGVhbCB3aXRoIG91ciBNSVZhcmlhYmxlTWFu
+YWdlciBzaW5jZSBpdAotICAgICAgICAvLyBjYWNoZXMgdmFyaWFibGUgdmFsdWVzLCB3aGljaCBt
+YXkgbm93IGhhdmUgY2hhbmdlZAorICAgICAgICAvLyBNSVZhcmlhYmxlTWFuYWdlciBzZXBhcmF0
+ZWx5IHRyYXBzIHRoaXMgZXZlbnQKICAgICB9CiB9Cg==
+</data>
+<flag name="iplog"
+          id="60964"
+          type_id="7"
+          status="-"
+          setter="dschaefer"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

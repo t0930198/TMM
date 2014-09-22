@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215159</bug_id>
+          
+          <creation_ts>2008-01-13 18:14:00 -0500</creation_ts>
+          <short_desc>[PropertiesView] description of last selected item stays in status line after deselection</short_desc>
+          <delta_ts>2008-02-04 16:19:34 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>3.4</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Christian Wolf">eclipse</reporter>
+          <assigned_to name="Eric Moffatt">emoffatt</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130331</commentid>
+    <comment_count>0</comment_count>
+    <who name="Christian Wolf">eclipse</who>
+    <bug_when>2008-01-13 18:14:32 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. use a standard java project
+2. make sure the package explorer and properties view are open
+3. select the &quot;src&quot; folder in the package explorer
+-&gt; status line shows &quot;project - src&quot;
+4. select a random property in the properties view (e.g. &quot;path&quot;) 
+-&gt; status line shows &quot;path&quot;
+5. select the &quot;JRE System Library&quot; in the package explorer
+-&gt; status line shows &quot;JRE System Library ... - project&quot;
+6. set focus on the (now empty) properties view
+-&gt; status line shows &quot;path&quot; (should be empty, shouldn&apos;t it?)
+
+
+More information:
+I found this one developing a RCP using PropertyDescriptors and its setDescription(String) method. It&apos;s a cosmetic bug, but I think it won&apos;t be much work clearing the status line when the properties view looses all content.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131708</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-15 14:18:07 -0500</bug_when>
+    <thetext>
+I&apos;ll take a look, shouldn&apos;t be too hard...;-).
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131711</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-15 14:19:29 -0500</bug_when>
+    <thetext>
+Committed in &gt;20080115. Now clears the old message(s) whenever &apos;setInput&apos; is called.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149263</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-02-04 16:19:34 -0500</bug_when>
+    <thetext>
+Verified in I20080204-0010.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

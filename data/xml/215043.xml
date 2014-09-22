@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215043</bug_id>
+          
+          <creation_ts>2008-01-11 11:02:00 -0500</creation_ts>
+          <short_desc>Non Java resources with the same name are not copied respecting the &quot;Order and export&quot; in Java Build Path preference page</short_desc>
+          <delta_ts>2011-03-29 09:16:00 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows 2000</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mauro Molinari">mauromol</reporter>
+          <assigned_to name="JDT-Core-Inbox">jdt-core-inbox</assigned_to>
+          <cc>jerome_lanneluc</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129701</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mauro Molinari">mauromol</who>
+    <bug_when>2008-01-11 11:02:13 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1) create a Java Project (use separate folders for src and bin) with two source folders:
+src1
+src2
+
+An output folder structure like the following is created:
+&lt;workspace&gt;\&lt;project&gt;\bin\
+
+Ensure that in &quot;Order and export&quot; in &quot;Java Build Path&quot; preference page for the project src1 is BEFORE src2.
+
+2) create a package &quot;a&quot; in both src1 and src2: the structure of the output folder is the following:
+&lt;workspace&gt;\&lt;project&gt;\bin\a
+
+3) create a non-Java file in src1\a, example.properties: in the output folder I find:
+&lt;workspace&gt;\&lt;project&gt;\bin\a\example.properties
+
+4) create another example.properties in src2\a, with different content in it; in the output folder I find:
+&lt;workspace&gt;\&lt;project&gt;\bin\a\example.properties
+
+OBSERVED BEHAVIOUR:
+The example.properties I find in the output folder is the latest one created (src2\a\example.properties).
+
+EXPECTED BEHAVIOUR:
+The example.properties I find in the output folder is the one in src1\a\example.properties, because src1 precedes src2 in the build path order defined in &quot;Order and Export&quot; preference page.
+
+More information:
+A warning message of &quot;duplicate entries in classpath&quot; may also help the user to determine that there&apos;s a duplicate resource in the source folders.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

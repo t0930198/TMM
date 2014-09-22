@@ -1,0 +1,313 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214843</bug_id>
+          
+          <creation_ts>2008-01-09 21:19:00 -0500</creation_ts>
+          <short_desc>Missing Classpath entry for New Plug-in Project from JAR</short_desc>
+          <delta_ts>2008-02-05 15:54:21 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chris Aniszczyk">caniszczyk</reporter>
+          <assigned_to name="Chris Aniszczyk">caniszczyk</assigned_to>
+          <cc>baumanbr</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128664</commentid>
+    <comment_count>0</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-09 21:19:55 -0500</bug_when>
+    <thetext>When you create a new plug-in project from a JAR, it should specify an additional classpath entry:
+
+ie.,
+
+&lt;classpathentry exported=&quot;true&quot; kind=&quot;lib&quot; path=&quot;&quot;/&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128665</commentid>
+    <comment_count>1</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-09 21:20:58 -0500</bug_when>
+    <thetext>up for this Bartosz?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133767</commentid>
+    <comment_count>2</comment_count>
+      <attachid>87252</attachid>
+    <who name="bartosz michalik">bartosz.michalik</who>
+    <bug_when>2008-01-18 07:02:08 -0500</bug_when>
+    <thetext>Created attachment 87252
+fix
+
+I am not sure if this is best solution. First of all is it optimal solution ? Second, is it correct from the  application logic point of view (changes for the class patch are done in manifest update procedure)?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133768</commentid>
+    <comment_count>3</comment_count>
+      <attachid>87253</attachid>
+    <who name="bartosz michalik">bartosz.michalik</who>
+    <bug_when>2008-01-18 07:02:10 -0500</bug_when>
+    <thetext>Created attachment 87253
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134459</commentid>
+    <comment_count>4</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-19 18:21:14 -0500</bug_when>
+    <thetext>not the correct approach, actually the patch is simple, we actually had code to do exactly what we needed to do... the problem was that we lost it when refactoring NewProjectCreationOperation... :(
+
+Thanks for helping me pinpoint the issue Bartosz!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134460</commentid>
+    <comment_count>5</comment_count>
+      <attachid>87341</attachid>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-19 18:21:54 -0500</bug_when>
+    <thetext>Created attachment 87341
+org.eclipse.pde.ui.patch
+
+I also found a mis-spelling ;o!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134461</commentid>
+    <comment_count>6</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-19 18:22:48 -0500</bug_when>
+    <thetext>done!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134462</commentid>
+    <comment_count>7</comment_count>
+      <attachid>87342</attachid>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-19 18:22:59 -0500</bug_when>
+    <thetext>Created attachment 87342
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150400</commentid>
+    <comment_count>8</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-02-05 15:54:21 -0500</bug_when>
+    <thetext>Verified on I20080204-0010</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>87252</attachid>
+            <date>2008-01-18 07:02:00 -0500</date>
+            <delta_ts>2008-01-18 07:02:08 -0500</delta_ts>
+            <desc>fix</desc>
+            <filename>patch_pde_214843.txt</filename>
+            <type>text/plain</type>
+            <size>1246</size>
+            <attacher name="bartosz michalik">bartosz.michalik</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLnVpDQpJ
+bmRleDogc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS93aXphcmRzL3BsdWdpbi9OZXdM
+aWJyYXJ5UGx1Z2luQ3JlYXRpb25PcGVyYXRpb24uamF2YQ0KPT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6
+IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2UucGRlLnVpL3NyYy9vcmcvZWNsaXBzZS9wZGUv
+aW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNyZWF0aW9uT3BlcmF0
+aW9uLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjI1DQpkaWZmIC11IC1yMS4yNSBOZXdM
+aWJyYXJ5UGx1Z2luQ3JlYXRpb25PcGVyYXRpb24uamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9w
+ZGUvaW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNyZWF0aW9uT3Bl
+cmF0aW9uLmphdmEJMTYgSmFuIDIwMDggMTc6MDg6MzMgLTAwMDAJMS4yNQ0KKysrIHNyYy9vcmcv
+ZWNsaXBzZS9wZGUvaW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNy
+ZWF0aW9uT3BlcmF0aW9uLmphdmEJMTggSmFuIDIwMDggMTE6NTk6MjggLTAwMDANCkBAIC03LDcg
+KzcsNyBAQA0KICAqDQogICogQ29udHJpYnV0b3JzOg0KICAqICAgICBJQk0gQ29ycG9yYXRpb24g
+LSBpbml0aWFsIEFQSSBhbmQgaW1wbGVtZW50YXRpb24NCi0gKiAgICAgQmFydG9zeiBNaWNoYWxp
+ayA8YmFydG9zei5taWNoYWxpa0BnbWFpbC5jb20+IC0gYnVnIDEwOTQ0MA0KKyAqICAgICBCYXJ0
+b3N6IE1pY2hhbGlrIDxiYXJ0b3N6Lm1pY2hhbGlrQGdtYWlsLmNvbT4gLSBidWcgMTA5NDQwLDIx
+NDg0Mw0KICAqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqLw0KIHBhY2thZ2Ugb3JnLmVjbGlwc2UucGRl
+LmludGVybmFsLnVpLndpemFyZHMucGx1Z2luOw0KIA0KQEAgLTExMCw2ICsxMTAsOCBAQA0KIAkJ
+CQltb25pdG9yLndvcmtlZCgxKTsNCiAJCQl9DQogCQl9DQorCQkvL3VwZGF0ZSBjbGFzc3BhdGNo
+IGVudHJpZXMNCisJCUNsYXNzcGF0aENvbXB1dGVyLnNldENsYXNzcGF0aChwcm9qZWN0LCBiYXNl
+LmdldFBsdWdpbk1vZGVsKCkpOw0KIAkJbW9uaXRvci5kb25lKCk7DQogCX0NCiANCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>87253</attachid>
+            <date>2008-01-18 07:02:00 -0500</date>
+            <delta_ts>2008-01-18 07:02:10 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>694</size>
+            <attacher name="bartosz michalik">bartosz.michalik</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIAEJoMjgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQ4NDMueG1s7ZddT9swFIb/iuWL3cWx02YNgcBF6QTaBJOA3Zv4KDNyHMt2
+yrL9+bnpwtc2RlGFGEqvLNc65z2Pn1TN3sG3WqElWCcbXWBGKEagy0ZIXRX44vxDlOGD/b1j7cHy
+0odDR9L5xnboWBT4q/fG5XF82VaOQKmkcUAaW/UbUcKm2XSC0Zeb6vhepcUStEeHoDwvsG6Vwmih
+xSH3UOCE0iyiLGIZYpOcJjlNSfI+RfPFOUZ9DXC+wBElScJo+CQYfZQ6ZKq5lqZVfNUBoxO+lFW/
+HlqcWllJvUofgt6ErjvVaVI2NiwbAYrIXz2IgJJ3GJ15bv0Tsp1525a+tXDEtVDhdHG3jRFAWhk7
+W77jtdlVfvfht31fzVU4Rq7ld26FI0a1IfKd2utJr/iS4/hZSJM83QnJSbifh0hnZCdlA0xjG8Or
+P7B8lB2IClzY0J5LXYdEm1O/1/gv7MMQ05xlhE3p/8T+zek8irkNMUfF/vHUjppt6/dvVG0ANDq1
+sVMvJw+b0Vctz9b+Xfw4getP8tJy233uN+YW+slOTSC6WpAe8kvJSgfiIKR/Oukr4VezzZvayPUt
+XWjpF6FGYx8TLs0ns3DZ7G1iXk83PE63mCe3mB0oKDez+vmsKSXZ7NUrHf/+xrn/E1BLBwiDLw5C
+5AEAAKwOAABQSwECFAAUAAgACABCaDI4gy8OQuQBAACsDgAAMAAAAAAAAAAAAAAAAAAAAAAAaHR0
+cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uub3JnJTJGYnVncy0yMTQ4NDMueG1sUEsFBgAAAAABAAEA
+XgAAAEICAAAAAA==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>87341</attachid>
+            <date>2008-01-19 18:21:00 -0500</date>
+            <delta_ts>2008-01-19 18:21:54 -0500</delta_ts>
+            <desc>org.eclipse.pde.ui.patch</desc>
+            <filename>clipboard.txt</filename>
+            <type>text/plain</type>
+            <size>3720</size>
+            <attacher name="Chris Aniszczyk">caniszczyk</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLnVpDQpJ
+bmRleDogc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS93aXphcmRzL3BsdWdpbi9OZXdM
+aWJyYXJ5UGx1Z2luQ3JlYXRpb25PcGVyYXRpb24uamF2YQ0KPT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6
+IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2UucGRlLnVpL3NyYy9vcmcvZWNsaXBzZS9wZGUv
+aW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNyZWF0aW9uT3BlcmF0
+aW9uLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjI1DQpkaWZmIC11IC1yMS4yNSBOZXdM
+aWJyYXJ5UGx1Z2luQ3JlYXRpb25PcGVyYXRpb24uamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9w
+ZGUvaW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNyZWF0aW9uT3Bl
+cmF0aW9uLmphdmEJMTYgSmFuIDIwMDggMTc6MDg6MzMgLTAwMDAJMS4yNQ0KKysrIHNyYy9vcmcv
+ZWNsaXBzZS9wZGUvaW50ZXJuYWwvdWkvd2l6YXJkcy9wbHVnaW4vTmV3TGlicmFyeVBsdWdpbkNy
+ZWF0aW9uT3BlcmF0aW9uLmphdmEJMTkgSmFuIDIwMDggMjM6MTk6MzggLTAwMDANCkBAIC0xLDUg
+KzEsNSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDAw
+LCAyMDA3IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAw
+MCwgMjAwOCAgSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQogICogQWxsIHJpZ2h0cyByZXNl
+cnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscw0KICAqIGFy
+ZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVibGljIExp
+Y2Vuc2UgdjEuMA0KICAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9uLCBhbmQg
+aXMgYXZhaWxhYmxlIGF0DQpAQCAtNyw3ICs3LDcgQEANCiAgKg0KICAqIENvbnRyaWJ1dG9yczoN
+CiAgKiAgICAgSUJNIENvcnBvcmF0aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9u
+DQotICogICAgIEJhcnRvc3ogTWljaGFsaWsgPGJhcnRvc3oubWljaGFsaWtAZ21haWwuY29tPiAt
+IGJ1ZyAxMDk0NDANCisgKiAgICAgQmFydG9zeiBNaWNoYWxpayA8YmFydG9zei5taWNoYWxpa0Bn
+bWFpbC5jb20+IC0gYnVnIDEwOTQ0MCwgMjE0ODQzDQogICoqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiov
+DQogcGFja2FnZSBvcmcuZWNsaXBzZS5wZGUuaW50ZXJuYWwudWkud2l6YXJkcy5wbHVnaW47DQog
+DQpAQCAtMjczLDcgKzI3Myw3IEBADQogCQl9DQogDQogCQkvLyBkZWxldGUgbWFuaWZlc3QubWYg
+aW1wb3J0ZWQgZnJvbSBsaWJyYXJpZXMNCi0JCUlGaWxlIGltcG9ydGVkTWFuaWZlc3QgPSBwcm9q
+ZWN0LmdldEZpbGUoSUNvcmVDb25zdGFudHMuQlVORExFX0ZJTEVOQU1FX0RFU0NSSVBUT1IpOyAv
+LyROT04tTkxTLTEkDQorCQlJRmlsZSBpbXBvcnRlZE1hbmlmZXN0ID0gcHJvamVjdC5nZXRGaWxl
+KElDb3JlQ29uc3RhbnRzLkJVTkRMRV9GSUxFTkFNRV9ERVNDUklQVE9SKTsNCiAJCWlmIChpbXBv
+cnRlZE1hbmlmZXN0LmV4aXN0cygpKSB7DQogCQkJaW1wb3J0ZWRNYW5pZmVzdC5kZWxldGUodHJ1
+ZSwgZmFsc2UsIG1vbml0b3IpOw0KIAkJCWlmICghZkRhdGEuaGFzQnVuZGxlU3RydWN0dXJlKCkp
+IHsNCkBAIC0zMTksNyArMzE5LDcgQEANCiAJCX0NCiAJfQ0KIA0KLQlwcm90ZWN0ZWQgSUNsYXNz
+cGF0aEVudHJ5W10gZ2V0SW50ZXJuYWxDbGFzc1BhdGhFbnRyaWVzKElQcm9qZWN0IHByb2plY3Qs
+IElGaWVsZERhdGEgZGF0YSkgew0KKwlwcm90ZWN0ZWQgSUNsYXNzcGF0aEVudHJ5W10gZ2V0SW50
+ZXJuYWxDbGFzc1BhdGhFbnRyaWVzKElKYXZhUHJvamVjdCBwcm9qZWN0LCBJRmllbGREYXRhIGRh
+dGEpIHsNCiAJCVN0cmluZ1tdIGxpYnJhcnlQYXRoczsNCiAJCWlmIChmRGF0YS5pc1VuemlwTGli
+cmFyaWVzKCkpIHsNCiAJCQlsaWJyYXJ5UGF0aHMgPSBuZXcgU3RyaW5nW10geyIifTsgLy8kTk9O
+LU5MUy0xJA0KQEAgLTMzMCw3ICszMzAsNyBAQA0KIAkJZm9yIChpbnQgaiA9IDA7IGogPCBsaWJy
+YXJ5UGF0aHMubGVuZ3RoOyBqKyspIHsNCiAJCQlGaWxlIGphckZpbGUgPSBuZXcgRmlsZShsaWJy
+YXJ5UGF0aHNbal0pOw0KIAkJCVN0cmluZyBqYXJOYW1lID0gamFyRmlsZS5nZXROYW1lKCk7DQot
+CQkJSVBhdGggcGF0aCA9IHByb2plY3QuZ2V0RnVsbFBhdGgoKS5hcHBlbmQoamFyTmFtZSk7DQor
+CQkJSVBhdGggcGF0aCA9IHByb2plY3QuZ2V0UHJvamVjdCgpLmdldEZ1bGxQYXRoKCkuYXBwZW5k
+KGphck5hbWUpOw0KIAkJCWVudHJpZXNbal0gPSBKYXZhQ29yZS5uZXdMaWJyYXJ5RW50cnkocGF0
+aCwgbnVsbCwgbnVsbCwgdHJ1ZSk7DQogCQl9DQogCQlyZXR1cm4gZW50cmllczsNCkluZGV4OiBz
+cmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL3VpL3BkZXJlc291cmNlcy5wcm9wZXJ0aWVzDQo9
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5wZGUudWkv
+c3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS9wZGVyZXNvdXJjZXMucHJvcGVydGllcyx2
+DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuOTU3DQpkaWZmIC11IC1yMS45NTcgcGRlcmVzb3VyY2Vz
+LnByb3BlcnRpZXMNCi0tLSBzcmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL3VpL3BkZXJlc291
+cmNlcy5wcm9wZXJ0aWVzCTE2IEphbiAyMDA4IDAwOjU1OjAxIC0wMDAwCTEuOTU3DQorKysgc3Jj
+L29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC91aS9wZGVyZXNvdXJjZXMucHJvcGVydGllcwkxOSBK
+YW4gMjAwOCAyMzoxOTozOCAtMDAwMA0KQEAgLTc0Niw3ICs3NDYsNyBAQA0KIE5ld0xpYnJhcnlQ
+bHVnaW5DcmVhdGlvblBhZ2VfaW52YWxpZElkID0gSW52YWxpZCBJRC4gIExlZ2FsIGNoYXJhY3Rl
+cnMgYXJlIEEtWiBhLXogMC05IC4gXw0KIE5ld0xpYnJhcnlQbHVnaW5DcmVhdGlvblBhZ2Vfbm92
+ZXJzaW9uID0gVmVyc2lvbiBmaWVsZCBpcyBub3Qgc2V0DQogTmV3TGlicmFyeVBsdWdpbkNyZWF0
+aW9uUGFnZV9ub25hbWUgPSBOYW1lIGlzIG5vdCBzZXQNCi1OZXdMaWJyYXJ5UGx1Z2luQ3JlYXRp
+b25QYWdlX1VwZGF0ZVJlZmVyZW5jZXNfYnV0dG9uPVVwZGF0ZSByZWZlcmVybmNlcyB0byB0aGUg
+SkFSIGZpbGVzDQorTmV3TGlicmFyeVBsdWdpbkNyZWF0aW9uUGFnZV9VcGRhdGVSZWZlcmVuY2Vz
+X2J1dHRvbj1VcGRhdGUgcmVmZXJlbmNlcyB0byB0aGUgSkFSIGZpbGVzDQogTGlicmFyeVBsdWdp
+bkphcnNQYWdlX3RpdGxlID0gSkFSIHNlbGVjdGlvbg0KIExpYnJhcnlQbHVnaW5KYXJzUGFnZV9k
+ZXNjID0gU2VsZWN0IHRoZSBKQVIgYXJjaGl2ZXMgdG8gaW5jbHVkZSBpbiB0aGUgcGx1Zy1pbi4N
+CiBMaWJyYXJ5UGx1Z2luSmFyc1BhZ2VfbGFiZWwgPSAmSkFSIGFyY2hpdmVzIHRvIGluY2x1ZGUg
+aW4gdGhlIHBsdWctaW46
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>87342</attachid>
+            <date>2008-01-19 18:22:00 -0500</date>
+            <delta_ts>2008-01-19 18:22:59 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>817</size>
+            <attacher name="Chris Aniszczyk">caniszczyk</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIANaKMzgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQ4NDMueG1s7ZhNT+MwEIb/iuXD3uo4H5BQCBxKEWhXgFTYu0lGWbOOEzlO
+obt/fp2UVqWFbkuj0lTk5ExGnrePJzOTnpw9pwINQRU8kyG2CcUIZJTFXCYhvr+76AT47PTkSmpQ
+LNLG6ZIXOlMjdBWH+JfWedG1rIcyKQhEgucFkEwltaHj2F7guRj9nO6OX+3UH4LU6ByEZiGWpRAY
+9WV8zjSE2KE06FC7Yx8h2+86TtfziGs7qDe4w6jeAwod4g4lNDig5rIx+s6l0ZQyyfNSsCoCRtds
+yJN6PQlxo3jCZaXeCJ2KTkdiJEmUKbPMYhCEv8QgMURshNFAM6VX0DbQqox0qeCSyVgY73A2TB4D
+KblVqGjGc6z7kQ0Ztj4OiB6RA+9wHpBD/IoOdSd4cpXlLHmDzlIaECdQGIPUjMvUqFqf46vAy2hS
+nxwG/ifT3Ld0+8bS/Fjo4/mndVzJhHEjT/wPU3FBclEayV8J2mSC7gD/1qZ04yRcSlzPnSfh7lkm
+bjGBXG9Xc8d6+3WszNaL2TJma/IeWua5uTexs1JF5iCrswClORQLPCdOmzB1KDFD0jzTegwbB4GY
+69VBPsa6qiS3U9EXXEDfbJGp5RBndbQS4mGwBGIBAqL1UnIjkhMxrSPZ2h7RWNv9ew1PP/iDYmp0
+Wxt6CupfdmO41wtS19HGpyPftJ+FnrRpIehlac7Hp3QvuV4lf2eF7CHmd4bQJkoFi36zBPrPuTAJ
+/n/KW5ghP4tyGyeFj0NvHN97Q4Hfnsl0aRfcIdT71PC+vtibqrZb+uJsZkJdp+3M6tgIhLX4j/Dp
+P1BLBwgOaVMOXwIAAEwWAABQSwECFAAUAAgACADWijM4DmlTDl8CAABMFgAAMAAAAAAAAAAAAAAA
+AAAAAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uub3JnJTJGYnVncy0yMTQ4NDMueG1sUEsF
+BgAAAAABAAEAXgAAAL0CAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

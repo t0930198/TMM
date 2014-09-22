@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214172</bug_id>
+          
+          <creation_ts>2008-01-02 18:00:00 -0500</creation_ts>
+          <short_desc>Exceptions with Accprobe Caret tracking</short_desc>
+          <delta_ts>2009-03-05 17:24:30 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>ACTF</product>
+          <component>examples</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P4</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Kavitha Teegala">teegala</reporter>
+          <assigned_to name="Kavitha Teegala">teegala</assigned_to>
+          <cc>masquill</cc>
+    
+    <cc>remcd</cc>
+    
+    <cc>teegala</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124616</commentid>
+    <comment_count>0</comment_count>
+    <who name="Kavitha Teegala">teegala</who>
+    <bug_when>2008-01-02 18:00:56 -0500</bug_when>
+    <thetext>Build ID: 3.3
+
+Steps To Reproduce:
+1.Start AccProbe and firefox3
+2.Choose firefox in explorerView and check Options-&gt;tracking-&gt;caret position
+3.As the caret position changes as we type in any text field on firefox3,the Explorer View updates with the object containing the caret and in the properties view, accessibleText field (for IA2 objects)  is selected and expanded. The following exceptions are seen once in a while in the logs, although it doesn&apos;t really seem to effect Caret tracking functionality.
+RunTimeException
+NoSuchElementException
+
+
+
+More information:
+!ENTRY org.eclipse.jface 2 0 2008-01-02 11:47:32.906
+!MESSAGE Ignored reentrant call while viewer is busy. This is only logged once per viewer instance, but similar calls will still be ignored.
+!STACK 0
+java.lang.RuntimeException
+	at org.eclipse.jface.viewers.ColumnViewer.isBusy(ColumnViewer.java:79)
+	at org.eclipse.jface.viewers.AbstractTreeViewer.setExpandedState(AbstractTreeViewer.java:2358)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView.expandProperty(ExplorerView.java:515)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView.processCaretTrackingEvent(ExplorerView.java:487)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView$4.handleEvent(ExplorerView.java:409)
+	at org.eclipse.actf.accservice.core.win32.msaa.MsaaAccessibilityEventService.fireAccessibilityModelEvent(MsaaAccessibilityEventService.java:261)
+	at org.eclipse.actf.accservice.core.win32.ia2.IA2AccessibilityEventService.winEventCallback(IA2AccessibilityEventService.java:106)
+	at org.eclipse.actf.accservice.core.win32.ia2.IA2Accessible.internalIsIA2Accessible(Native Method)
+	at org.eclipse.actf.accservice.core.win32.ia2.IA2Accessible.isIA2Accessible(IA2Accessible.java:409)
+	at org.eclipse.actf.examples.accprobe.views.EventMonitorView.findModel(EventMonitorView.java:302)
+	at org.eclipse.actf.examples.accprobe.views.EventMonitorView.removeEventListener(EventMonitorView.java:532)
+	at org.eclipse.actf.examples.accprobe.providers.EventTableContentProvider.inputChanged(EventTableContentProvider.java:41)
+	at org.eclipse.jface.viewers.ContentViewer.setInput(ContentViewer.java:247)
+	at org.eclipse.jface.viewers.StructuredViewer.setInput(StructuredViewer.java:1606)
+	at org.eclipse.actf.examples.accprobe.views.EventMonitorView.setInput(EventMonitorView.java:284)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView$7.run(ExplorerView.java:368)
+
+
+
+
+java.util.NoSuchElementException
+	at java.util.LinkedList.remove(LinkedList.java:659)
+	at java.util.LinkedList.removeFirst(LinkedList.java:149)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView$5.run(ExplorerView.java:159)
+	at org.eclipse.swt.widgets.Synchronizer.syncExec(Synchronizer.java:152)
+	at org.eclipse.ui.internal.UISynchronizer.syncExec(UISynchronizer.java:118)
+	at org.eclipse.swt.widgets.Display.syncExec(Display.java:4097)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView.selectNextNode(ExplorerView.java:153)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView.showNode(ExplorerView.java:418)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView.processCaretTrackingEvent(ExplorerView.java:485)
+	at org.eclipse.actf.examples.accprobe.views.ExplorerView$4.handleEvent(ExplorerView.java:409)
+	at org.eclipse.actf.accservice.core.win32.msaa.MsaaAccessibilityEventService.fireAccessibilityModelEvent(MsaaAccessibilityEventService.java:261)
+	at org.eclipse.actf.accservice.core.win32.ia2.IA2AccessibilityEventService.winEventCallback(IA2AccessibilityEventService.java:106)
+	at org.eclipse.swt.internal.win32.OS.PeekMessageW(Native Method)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124617</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kavitha Teegala">teegala</who>
+    <bug_when>2008-01-02 18:01:41 -0500</bug_when>
+    <thetext>Adding Mike on the CC</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1211484</commentid>
+    <comment_count>2</comment_count>
+    <who name="Mike">masquill</who>
+    <bug_when>2008-04-23 09:32:58 -0400</bug_when>
+    <thetext>have not seen this behvior for some time so will CC Ted and let him verify</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1211897</commentid>
+    <comment_count>3</comment_count>
+    <who name="Ann Ford">fordann</who>
+    <bug_when>2008-04-23 13:21:50 -0400</bug_when>
+    <thetext>Ted has verified that this is fixed</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1213449</commentid>
+    <comment_count>4</comment_count>
+    <who name="Kavitha Teegala">teegala</who>
+    <bug_when>2008-04-24 11:00:54 -0400</bug_when>
+    <thetext>Fixed Caret tracking and I see the above exception again. Also, when I modify the properties filter, I was unable to expand newtext and oldText properties under accessibleText. Turning off caret tracking seem to turn off Mouse cursor tracking.
+
+To reproduce:
+1)Open google webpage (google.com) in FF3 and turn on caret tracking for FF3. (keyboard and mouse tracking are on by default)
+2)Type something in Google serach field. The accessibleText field expands showing showing the caretOffset, newtext, oldtext, charCount, and the actual text. Expand newText and oldText under accessibleText to see old and new text. The above exception can be seen in the log.
+3) Modify preperties filter to display minimum properties (say name, role and accessibleText. Repeat step 2. newText and oldText donot expand
+4) Turn off caret tracking. Mouse tracking no longer seem to work.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1279177</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kavitha Teegala">teegala</who>
+    <bug_when>2008-06-26 19:28:27 -0400</bug_when>
+    <thetext>Global Caret tracking works for IA2 applications (FF3, Symphony) when Mouse and keyboard tracking are turned off. User will be prompted to turn off Mouse/Keybiard tracking before turning on Caret tracking. Also fixed properties view to expand AccessibleText properties. Ted, please verify.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1445037</commentid>
+    <comment_count>6</comment_count>
+    <who name="Kavitha Teegala">teegala</who>
+    <bug_when>2009-03-05 17:24:30 -0500</bug_when>
+    <thetext>Verified.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

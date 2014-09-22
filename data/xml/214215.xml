@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214215</bug_id>
+          
+          <creation_ts>2008-01-03 06:28:00 -0500</creation_ts>
+          <short_desc>[prefs] Synchronization issue the first time preferences are accessed</short_desc>
+          <delta_ts>2010-08-30 20:17:14 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Compendium</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          <blocked>270326</blocked>
+    
+    <blocked>320723</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Arnaud Lucien">IngedevTeam.fr</reporter>
+          <assigned_to name="equinox.compendium-inbox">equinox.compendium-inbox</assigned_to>
+          <cc>angvoz.dev</cc>
+    
+    <cc>dj_houghton</cc>
+    
+    <cc>idzelis</cc>
+    
+    <cc>marc-andre.laperle</cc>
+    
+    <cc>pwebster</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124867</commentid>
+    <comment_count>0</comment_count>
+    <who name="Arnaud Lucien">IngedevTeam.fr</who>
+    <bug_when>2008-01-03 06:28:09 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Steps To Reproduce:
+The problem occurs when at plugin startup, preferences are accessed by 2 threads at the same time:
+Let&apos;s imagine the first thread asks for the value of a preference: this is the first time the preferences of this plugin are accessed, so it causes the method #initializeDefaultPreferences of the initializer to be called.
+Now let&apos;s imagine a second thread also asks for a preference value, while the method initializeDefaultPreferences HAS NOT RETURNED YET. Then, instead of waiting for the initialization to be completed, the default-default value for this preference is returned.
+
+The attached sample plugin demonstrates the bug: it prints in the console the default value of a preference from 2 different threads. The first thread prints the correct value, the second thread prints an empty string:
+Default value = defaultValue
+Default value =</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124868</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86090</attachid>
+    <who name="Arnaud Lucien">IngedevTeam.fr</who>
+    <bug_when>2008-01-03 06:28:53 -0500</bug_when>
+    <thetext>Created attachment 86090
+Sample plugin</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1548743</commentid>
+    <comment_count>2</comment_count>
+    <who name="DJ Houghton">dj_houghton</who>
+    <bug_when>2009-07-09 10:29:27 -0400</bug_when>
+    <thetext>*** Bug 253989 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1747749</commentid>
+    <comment_count>3</comment_count>
+    <who name="Andrew Gvozdev">angvoz.dev</who>
+    <bug_when>2010-05-26 23:55:07 -0400</bug_when>
+    <thetext>This seems to be the cause of bug 270326. CDT uses getPreferenceStore() in place of deprecated getPluginPreferences() but the problem still there.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1750043</commentid>
+    <comment_count>4</comment_count>
+    <who name="CDT Genie">cdt.genie</who>
+    <bug_when>2010-05-28 17:23:05 -0400</bug_when>
+    <thetext>*** cdt cvs genie on behalf of agvozdev ***
+bug 270326: console window displays black
+Workaround to get around bug 214215
+
+[*] TargetBuild.java 1.16 http://dev.eclipse.org/viewcvs/index.cgi/org.eclipse.cdt/all/org.eclipse.cdt.make.ui/src/org/eclipse/cdt/make/ui/TargetBuild.java?root=Tools_Project&amp;r1=1.15&amp;r2=1.16</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86090</attachid>
+            <date>2008-01-03 06:28:00 -0500</date>
+            <delta_ts>2008-01-03 06:28:53 -0500</delta_ts>
+            <desc>Sample plugin</desc>
+            <filename>prefBug.zip</filename>
+            <type>application/x-zip-compressed</type>
+            <size>3645</size>
+            <attacher name="Arnaud Lucien">IngedevTeam.fr</attacher>
+            
+              <data encoding="base64">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
+8RgWOvQrD0bIgC/NHrAOogEFswEqEULtI1BI9x72XBJwUJJIIZRBErwJEKdIXslePHCSRrda+ckP
+9AYBxLdxj/PpFMh99n3GtSod8px5hWjTh8lkMpx2wBEEJ1FCutAU2lJZwnx+EGib7Dj8LRbvgtS0
+pHDzVmE4mF6ptU0+F7NEulivuaoQNsb1ioAknpMuptfwBvPwCJf7wwqk82DSYXzJVFVIfTWknpkm
+nvkuZpE1X7KP7G3+MoLk7Ow9GkvayKaEsP0AUEsHCH6i5MaAAQAAWwMAAFBLAQIUABQACAAIAO5i
+IzjVHJzSpQAAADMBAAASAAAAAAAAAAAAAAAAAAAAAABwcmVmQnVnLy5jbGFzc3BhdGhQSwECFAAU
+AAgACADuYiM4wE54CeYAAACcAgAAEAAAAAAAAAAAAAAAAADlAAAAcHJlZkJ1Zy8ucHJvamVjdFBL
+AQIUABQACAAIAO5iIzgjePZ6SgAAAG0AAAAYAAAAAAAAAAAAAAAAAAkCAABwcmVmQnVnL2J1aWxk
+LnByb3BlcnRpZXNQSwECFAAUAAgACADuYiM496ZvPr4AAACoAQAAEgAAAAAAAAAAAAAAAACZAgAA
+cHJlZkJ1Zy9wbHVnaW4ueG1sUEsBAhQAFAAIAAgA7mIjOGlnV9ifAAAABgEAABwAAAAAAAAAAAAA
+AAAAlwMAAHByZWZCdWcvTUVUQS1JTkYvTUFOSUZFU1QuTUZQSwECFAAUAAgACADuYiM4ifsqWpYB
+AAAOBAAAIgAAAAAAAAAAAAAAAACABAAAcHJlZkJ1Zy9zcmMvcHJlZmJ1Zy9BY3RpdmF0b3IuamF2
+YVBLAQIUABQACAAIAO5iIzgxdT5URgIAAOsFAAAgAAAAAAAAAAAAAAAAAGYGAABwcmVmQnVnL3Ny
+Yy9wcmVmYnVnL1N0YXJ0dXAuamF2YVBLAQIUABQACAAIAO5iIzjhntWXVwAAAGsAAAAlAAAAAAAA
+AAAAAAAAAPoIAABwcmVmQnVnL3NyYy9wcmVmYnVnL3ByZWZzL0lQcmVmcy5qYXZhUEsBAhQAFAAI
+AAgA7mIjOH6i5MaAAQAAWwMAADQAAAAAAAAAAAAAAAAApAkAAHByZWZCdWcvc3JjL3ByZWZidWcv
+cHJlZnMvUHJlZmVyZW5jZUluaXRpYWxpemVyLmphdmFQSwUGAAAAAAkACQChAgAAhgsAAAAA
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

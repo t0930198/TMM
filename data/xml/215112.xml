@@ -1,0 +1,196 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215112</bug_id>
+          
+          <creation_ts>2008-01-12 08:22:00 -0500</creation_ts>
+          <short_desc>Source roots not updated if resources are added</short_desc>
+          <delta_ts>2008-02-05 09:36:03 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>5.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Gerhard Schaber">gerhard.schaber</reporter>
+          <assigned_to name="Anton Leherbauer">anton.leherbauer</assigned_to>
+          <cc>martin.gutschelhofer</cc>
+    
+    <cc>wbprio</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130147</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86758</attachid>
+    <who name="Gerhard Schaber">gerhard.schaber</who>
+    <bug_when>2008-01-12 08:22:02 -0500</bug_when>
+    <thetext>Created attachment 86758
+Sample project
+
+Build ID: v200712060500
+
+Steps To Reproduce:
+1. Import the CDT project from the attached cdtpro.zip (it contains preconfigured exclusion filters)
+2. Add the content of cdtpro_data.zip (it contains the required resources)
+3. Refresh the project
+4. The source root ignore/sub does not show up until the project is closed and reopened
+
+
+
+More information:
+This may or may not be a bug, maybe it is an enhancement request. However, we set up exclusion filters for several directories when a project is created. This includes directories of which we know they should never be parsed. In fact we use also wildcards.
+
+The corresponding directories are created sometime, and we do not know exactly when--it depends on what the user does. In some cases the corresponding directories are never created.
+
+The problem here is that the specified source roots do not become available, even if the directories are added to the project. The project must be closed and reopened to get the source roots, or for each added folder:
+
+ICProject icproject = 
+   CoreModel.getDefault().create(fProject);
+icproject.close();
+icproject.open(NPM);
+
+Maybe there is some good place in CDT the refresh the corresponding cache (I think it is the project entry in CModelManager.cache that is not updated automatically).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130148</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86759</attachid>
+    <who name="Gerhard Schaber">gerhard.schaber</who>
+    <bug_when>2008-01-12 08:22:47 -0500</bug_when>
+    <thetext>Created attachment 86759
+Resources for the sample project</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149781</commentid>
+    <comment_count>2</comment_count>
+    <who name="Anton Leherbauer">anton.leherbauer</who>
+    <bug_when>2008-02-05 09:36:03 -0500</bug_when>
+    <thetext>Fixed in 5.0 &gt; 20080205.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86758</attachid>
+            <date>2008-01-12 08:22:00 -0500</date>
+            <delta_ts>2008-01-12 08:22:02 -0500</delta_ts>
+            <desc>Sample project</desc>
+            <filename>cdtpro.zip</filename>
+            <type>application/x-zip-compressed</type>
+            <size>2354</size>
+            <attacher name="Gerhard Schaber">gerhard.schaber</attacher>
+            
+              <data encoding="base64">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
+AAAAAwADALAAAABsCAAAAAA=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86759</attachid>
+            <date>2008-01-12 08:22:00 -0500</date>
+            <delta_ts>2008-01-12 08:22:47 -0500</delta_ts>
+            <desc>Resources for the sample project</desc>
+            <filename>cdtpro_data.zip</filename>
+            <type>application/x-zip-compressed</type>
+            <size>826</size>
+            <attacher name="Gerhard Schaber">gerhard.schaber</attacher>
+            
+              <data encoding="base64">UEsDBAoAAAAAAEKbKzgAAAAAAAAAAAAAAAAHAAAAaWdub3JlL1BLAwQKAAAAAABZmys4uikFaRQA
+AAAUAAAADwAAAGlnbm9yZS9pZ25vcmUuY3ZvaWQgaWdub3JlKCkgew0KfQ0KUEsDBAoAAAAAAEyb
+KzgAAAAAAAAAAAAAAAALAAAAaWdub3JlL3N1Yi9QSwMECgAAAAAAUJsrOBXXA0kRAAAAEQAAABAA
+AABpZ25vcmUvc3ViL3N1Yi5jdm9pZCBzdWIoKSB7DQp9DQpQSwMECgAAAAAANZsrOAAAAAAAAAAA
+AAAAABIAAABpZ25vcmUvc3ViL3N1YnN1Yi9QSwMECgAAAAAASJsrOF4k+5UUAAAAFAAAABoAAABp
+Z25vcmUvc3ViL3N1YnN1Yi9zdWJzdWIuY3ZvaWQgc3Vic3ViKCkgew0KfQ0KUEsDBAoAAAAAANea
+KzixTZNyEQAAABEAAAAGAAAAbWFpbi5jaW50IG1haW4oKSB7DQp9DQpQSwECFAAKAAAAAABCmys4
+AAAAAAAAAAAAAAAABwAAAAAAAAAAABAAAAAAAAAAaWdub3JlL1BLAQIUAAoAAAAAAFmbKzi6KQVp
+FAAAABQAAAAPAAAAAAAAAAAAIAAAACUAAABpZ25vcmUvaWdub3JlLmNQSwECFAAKAAAAAABMmys4
+AAAAAAAAAAAAAAAACwAAAAAAAAAAABAAAABmAAAAaWdub3JlL3N1Yi9QSwECFAAKAAAAAABQmys4
+FdcDSREAAAARAAAAEAAAAAAAAAAAACAAAACPAAAAaWdub3JlL3N1Yi9zdWIuY1BLAQIUAAoAAAAA
+ADWbKzgAAAAAAAAAAAAAAAASAAAAAAAAAAAAEAAAAM4AAABpZ25vcmUvc3ViL3N1YnN1Yi9QSwEC
+FAAKAAAAAABImys4XiT7lRQAAAAUAAAAGgAAAAAAAAAAACAAAAD+AAAAaWdub3JlL3N1Yi9zdWJz
+dWIvc3Vic3ViLmNQSwECFAAKAAAAAADXmis4sU2TchEAAAARAAAABgAAAAAAAAAAACAAAABKAQAA
+bWFpbi5jUEsFBgAAAAAHAAcApQEAAH8BAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

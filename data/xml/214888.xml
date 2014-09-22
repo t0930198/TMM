@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214888</bug_id>
+          
+          <creation_ts>2008-01-10 08:31:00 -0500</creation_ts>
+          <short_desc>metadata in jsf.standard.tagsupport has dependency on pagedesigner</short_desc>
+          <delta_ts>2008-06-19 09:29:07 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Java Server Faces</product>
+          <component>JSF Tools</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>3.0 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Xiaonan Jiang">xiaonan_jiang</reporter>
+          <assigned_to name="Gerry Kessler">gerry.kessler</assigned_to>
+          <cc>raghunathan.srinivasan</cc>
+    
+    <cc>robert_gallagher</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128836</commentid>
+    <comment_count>0</comment_count>
+    <who name="Xiaonan Jiang">xiaonan_jiang</who>
+    <bug_when>2008-01-10 08:31:11 -0500</bug_when>
+    <thetext>Build ID: wtp 20071222
+
+Steps To Reproduce:
+In the metadata files jsf_core.xml and jsf_html.xml of the plugin org.eclipse.jst.jsf.standard.tagsupport, it now contains the metadata for pagedesigner&apos;s QuickEditTabSections.
+
+This should be in pagedesigner&apos;s metadata file so that the feature &quot;org.eclipse.jst.jsf.feature&quot; has no dependency on the feature &quot;org.eclipse.jst.webpageeditor&quot;.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147868</commentid>
+    <comment_count>1</comment_count>
+    <who name="Gerry Kessler">gerry.kessler</who>
+    <bug_when>2008-02-01 16:28:21 -0500</bug_when>
+    <thetext>Fixed and checked in.   
+
+I have refactored and fixed a bunch of code that allows all of our project metadata to move into the tagSupport plugin.  A metadata file will now load properly even when an extension eCore model, like QuickEditTabSections in the pagedesigner plugin, is not be available.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1172337</commentid>
+    <comment_count>2</comment_count>
+    <who name="Xiaonan Jiang">xiaonan_jiang</who>
+    <bug_when>2008-03-06 16:13:46 -0500</bug_when>
+    <thetext>    Thanks for the fix. 
+    But on the other hand, those pagedesigner metadata should NOT be org.eclipse.jst.jsf.standard.tagsupport. 
+    In jsf_html.xml, we can see &quot;org.eclipse.jst.pagedesigner.attributevalues.CSSClassType&quot;, and in jsf_html_dti.xml, we can see &quot;org.eclipse.jst.pagedesigner.jsf.ui.ColumnOperation&quot;. Consequently, without pagedesigner plugins, the other editor won&apos;t be able to see the content assist for the &quot;styleClass&quot; attribute or even provide its own.
+    I believe those pagedesigner metadata should be moved to pagedesigner plugins.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1175117</commentid>
+    <comment_count>3</comment_count>
+    <who name="Xiaonan Jiang">xiaonan_jiang</who>
+    <bug_when>2008-03-11 11:53:37 -0400</bug_when>
+    <thetext>We need to get rid of the pagedesigner feature since we have a similar editor. 
+The pagedesigner metadata in jst.jsf.standard.tagsupport will prohibit us providing the content-assist for some attributes e.g. &quot;styleClass&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1175515</commentid>
+    <comment_count>4</comment_count>
+    <who name="Gerry Kessler">gerry.kessler</who>
+    <bug_when>2008-03-11 17:59:35 -0400</bug_when>
+    <thetext>We are currently reviewing our options.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1182758</commentid>
+    <comment_count>5</comment_count>
+    <who name="Gerry Kessler">gerry.kessler</who>
+    <bug_when>2008-03-24 18:14:50 -0400</bug_when>
+    <thetext>Fixed and checked in 3/24/08.   
+
+CSS*Types have moved from pagedesigner plugin to jsf.core.   Any references to CSS*Types need to be moved accordingly.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1273871</commentid>
+    <comment_count>6</comment_count>
+    <who name="Raghunathan Srinivasan">raghunathan.srinivasan</who>
+    <bug_when>2008-06-18 19:05:39 -0400</bug_when>
+    <thetext>Hi Xiaonan,
+Please verify this fix so that we can close it for 3.0
+Thanks</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1274280</commentid>
+    <comment_count>7</comment_count>
+    <who name="Xiaonan Jiang">xiaonan_jiang</who>
+    <bug_when>2008-06-19 09:29:07 -0400</bug_when>
+    <thetext>verified ok.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

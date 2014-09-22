@@ -1,0 +1,181 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214072</bug_id>
+          
+          <creation_ts>2008-01-02 02:10:00 -0500</creation_ts>
+          <short_desc>[Automation]Exception is thrown out when link a label to another label.</short_desc>
+          <delta_ts>2008-01-02 21:42:39 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Report Engine</component>
+          <version>2.3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3.0 M4</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Wen Lin">wlin</reporter>
+          <assigned_to name="Birt-ReportEngine-inbox@eclipse.org">Birt-ReportEngine-inbox</assigned_to>
+          <cc>wyan</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1123951</commentid>
+    <comment_count>0</comment_count>
+    <who name="Wen Lin">wlin</who>
+    <bug_when>2008-01-02 02:10:16 -0500</bug_when>
+    <thetext>Description:
+  Exception is thrown out when link a label to another label.
+
+Test Date:
+20080102
+
+Test Build:
+BIRT2.3.0 Daily Build: v20080102-1021
+
+Step to reproduce:
+
+1. Creat a label, set text as &quot;label&quot;
+2. Set it&apos;s bookmark as &quot;label&quot;
+3. Add another label &quot;dde&quot;and set its hyperlink as &quot;internal bookmark&quot;, enter &quot;label&quot;.
+4. Preview report.
+
+Error log:
+org.eclipse.birt.report.service.api.ReportServiceException: Error happened while running the report; nested exception is: org.mozilla.javascript.EcmaError: ReferenceError: &quot;label&quot; is not defined. (#1) 
+Show Exception Stack Trace 
+Hide Exception Stack Trace  
+Stack Trace:
+ 
+org.mozilla.javascript.ScriptRuntime.constructError(ScriptRuntime.java:3350)
+org.mozilla.javascript.ScriptRuntime.constructError(ScriptRuntime.java:3340)
+org.mozilla.javascript.ScriptRuntime.notFoundError(ScriptRuntime.java:3413)
+org.mozilla.javascript.ScriptRuntime.name(ScriptRuntime.java:1612)
+org.mozilla.javascript.gen.c770._c0(:1)
+org.mozilla.javascript.gen.c770.call()
+org.mozilla.javascript.ContextFactory.doTopCall(ContextFactory.java:393)
+org.mozilla.javascript.ScriptRuntime.doTopCall(ScriptRuntime.java:2834)
+org.mozilla.javascript.gen.c770.call()
+org.mozilla.javascript.gen.c770.exec()
+org.eclipse.birt.core.script.ScriptContext.eval(ScriptContext.java:230)
+org.eclipse.birt.core.script.ScriptContext.eval(ScriptContext.java:204)
+org.eclipse.birt.report.engine.executor.ExecutionContext.evaluate(ExecutionContext.java:594)
+org.eclipse.birt.report.engine.executor.ReportItemExecutor.evaluate(ReportItemExecutor.java:275)
+org.eclipse.birt.report.engine.executor.ReportItemExecutor.processBookmark(ReportItemExecutor.java:295)
+org.eclipse.birt.report.engine.executor.LabelItemExecutor.execute(LabelItemExecutor.java:63)
+org.eclipse.birt.report.engine.internal.executor.dup.SuppressDuplicateItemExecutor.execute(SuppressDuplicateItemExecutor.java:42)
+org.eclipse.birt.report.engine.internal.executor.wrap.WrappedReportItemExecutor.execute(WrappedReportItemExecutor.java:45)
+org.eclipse.birt.report.engine.internal.executor.l18n.LocalizedReportItemExecutor.execute(LocalizedReportItemExecutor.java:33)
+org.eclipse.birt.report.engine.layout.html.HTMLBlockStackingLM.layoutNodes(HTMLBlockStackingLM.java:63)
+org.eclipse.birt.report.engine.layout.html.HTMLPageLM.layout(HTMLPageLM.java:85)
+org.eclipse.birt.report.engine.layout.html.HTMLReportLayoutEngine.layout(HTMLReportLayoutEngine.java:106)
+org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.doRun(RunAndRenderTask.java:138)
+org.eclipse.birt.report.engine.api.impl.RunAndRenderTask.run(RunAndRenderTask.java:66)
+org.eclipse.birt.report.service.ReportEngineService.runAndRenderReport(Unknown Source)
+org.eclipse.birt.report.service.ReportEngineService.runAndRenderReport(Unknown Source)
+org.eclipse.birt.report.service.BirtViewerReportService.runAndRenderReport(Unknown Source)
+org.eclipse.birt.report.service.actionhandler.BirtGetPageAllActionHandler.__execute(Unknown Source)
+org.eclipse.birt.report.service.actionhandler.AbstractBaseActionHandler.execute(Unknown Source)
+org.eclipse.birt.report.soapengine.processor.AbstractBaseDocumentProcessor.__executeAction(Unknown Source)
+org.eclipse.birt.report.soapengine.processor.AbstractBaseComponentProcessor.executeAction(Unknown Source)
+org.eclipse.birt.report.soapengine.processor.BirtDocumentProcessor.handleGetPageAll(Unknown Source)
+sun.reflect.GeneratedMethodAccessor97.invoke(Unknown Source)
+sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+java.lang.reflect.Method.invoke(Unknown Source)
+org.eclipse.birt.report.soapengine.processor.AbstractBaseComponentProcessor.process(Unknown Source)
+org.eclipse.birt.report.soapengine.endpoint.BirtSoapBindingImpl.getUpdatedObjects(Unknown Source)
+sun.reflect.GeneratedMethodAccessor96.invoke(Unknown Source)
+sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+java.lang.reflect.Method.invoke(Unknown Source)
+org.apache.axis.providers.java.RPCProvider.invokeMethod(RPCProvider.java:397)
+org.apache.axis.providers.java.RPCProvider.processMessage(RPCProvider.java:186)
+org.apache.axis.providers.java.JavaProvider.invoke(JavaProvider.java:323)
+org.apache.axis.strategies.InvocationStrategy.visit(InvocationStrategy.java:32)
+org.apache.axis.SimpleChain.doVisiting(SimpleChain.java:118)
+org.apache.axis.SimpleChain.invoke(SimpleChain.java:83)
+org.apache.axis.handlers.soap.SOAPService.invoke(SOAPService.java:453)
+org.apache.axis.server.AxisServer.invoke(AxisServer.java:281)
+org.apache.axis.transport.http.AxisServlet.doPost(AxisServlet.java:699)
+org.eclipse.birt.report.servlet.BirtSoapMessageDispatcherServlet.doPost(Unknown Source)
+javax.servlet.http.HttpServlet.service(HttpServlet.java:616)
+org.apache.axis.transport.http.AxisServletBase.service(AxisServletBase.java:327)
+javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+org.eclipse.equinox.http.registry.internal.ServletManager$ServletWrapper.service(ServletManager.java:180)
+org.eclipse.equinox.http.servlet.internal.ServletRegistration.handleRequest(ServletRegistration.java:90)
+org.eclipse.equinox.http.servlet.internal.ProxyServlet.processAlias(ProxyServlet.java:111)
+org.eclipse.equinox.http.servlet.internal.ProxyServlet.service(ProxyServlet.java:59)
+javax.servlet.http.HttpServlet.service(HttpServlet.java:689)
+org.eclipse.equinox.http.jetty.internal.HttpServerManager$InternalHttpServiceServlet.service(HttpServerManager.java:270)
+org.mortbay.jetty.servlet.ServletHolder.handle(ServletHolder.java:428)
+org.mortbay.jetty.servlet.ServletHandler.dispatch(ServletHandler.java:677)
+org.mortbay.jetty.servlet.ServletHandler.handle(ServletHandler.java:568)
+org.mortbay.http.HttpContext.handle(HttpContext.java:1530)
+org.mortbay.http.HttpContext.handle(HttpContext.java:1482)
+org.mortbay.http.HttpServer.service(HttpServer.java:909)
+org.mortbay.http.HttpConnection.service(HttpConnection.java:820)
+org.mortbay.http.HttpConnection.handleNext(HttpConnection.java:986)
+org.mortbay.http.HttpConnection.handle(HttpConnection.java:837)
+org.mortbay.http.SocketListener.handleConnection(SocketListener.java:245)
+org.mortbay.util.ThreadedServer.handle(ThreadedServer.java:357)
+org.mortbay.util.ThreadPool$PoolThread.run(ThreadPool.java:534)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1123965</commentid>
+    <comment_count>1</comment_count>
+    <who name="Wei Yan">wyan</who>
+    <bug_when>2008-01-02 03:02:42 -0500</bug_when>
+    <thetext>please verify if the generated report design looks like:
+
+ &lt;label id=&quot;6&quot;&gt;
+            &lt;expression name=&quot;bookmark&quot;&gt;&quot;label&quot;&lt;/expression&gt;
+            &lt;text-property name=&quot;text&quot;&gt;target&lt;/text-property&gt;
+&lt;/label&gt;
+&lt;label id=&quot;7&quot;&gt;
+            &lt;text-property name=&quot;text&quot;&gt;link to target&lt;/text-property&gt;
+            &lt;structure name=&quot;action&quot;&gt;
+                &lt;property name=&quot;linkType&quot;&gt;bookmark-link&lt;/property&gt;
+                &lt;expression name=&quot;targetBookmark&quot;&gt;&quot;label&quot;&lt;/expression&gt;
+            &lt;/structure&gt;
+&lt;/label&gt;
+
+All expression should start and end with quote.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124698</commentid>
+    <comment_count>2</comment_count>
+    <who name="Wen Lin">wlin</who>
+    <bug_when>2008-01-02 21:42:39 -0500</bug_when>
+    <thetext>Closed</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

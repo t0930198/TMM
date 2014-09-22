@@ -1,0 +1,243 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214363</bug_id>
+          
+          <creation_ts>2008-01-04 11:42:00 -0500</creation_ts>
+          <short_desc>XMLSave* file is not removed from the user&apos;s temporary directory.</short_desc>
+          <delta_ts>2008-01-18 08:11:34 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>XML/XMI</component>
+          <version>2.4.0</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          <blocked>184206</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Paul Slauenwhite">paules</reporter>
+          <assigned_to name="Ed Merks">Ed.Merks</assigned_to>
+          <cc>sluiman</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125851</commentid>
+    <comment_count>0</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-04 11:42:35 -0500</bug_when>
+    <thetext>XMLSave* file is not removed from the user&apos;s temporary directory.
+
+This file is created in org.eclipse.emf.ecore.xmi\src\org\eclipse\emf\ecore\xmi\impl\XMLSaveImpl.java#init(XMLResource , Map) but not flagged to be deleted when the VM exits.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126028</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-04 15:29:51 -0500</bug_when>
+    <thetext>Are you sure?  When I look in StringSegment I see it deletes the temporary file...
+
+    String temporaryFileName = this.temporaryFileName;
+    if (temporaryFileName != null)
+    {
+      InputStream inputStream = new FileInputStream(temporaryFileName);
+      for (int length = inputStream.read(outputbytes, 0, outputbytes.length); length &gt; 0; length = inputStream.read(
+        outputbytes,
+        0,
+        outputbytes.length))
+      {
+        os.write(outputbytes, 0, length);
+        count += length;
+        if (count &gt; flushThreshold)
+        {
+          os.flush();
+          count = 0;
+        }
+      }
+      inputStream.close();
+      new File(temporaryFileName).delete();
+    }
+
+Maybe it would be good for you to write a test case as a way to demonstrate the problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126187</commentid>
+    <comment_count>2</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-05 07:28:55 -0500</bug_when>
+    <thetext>I couldn&apos;t reproduce the problem for the reason described below.  I&apos;ll need a test case if you still believe it&apos;s a problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126874</commentid>
+    <comment_count>3</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-07 15:03:49 -0500</bug_when>
+    <thetext>Hi Ed, 
+We can not consistently recreate the problem using the EMF 2.4 M4 driver.  The XMLSave files (https://bugs.eclipse.org/bugs/attachment.cgi?id=65065) on our user&apos;s temp directory were created using EMF 2.2.2.  I did have some on my temp directory but they may have been the result of a workbench crash.  Sorry for the trouble.
+
+Closing.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128912</commentid>
+    <comment_count>4</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-10 10:31:23 -0500</bug_when>
+    <thetext>Using the S200712160044/emf-sdo-xsd-SDK-2.4.0M4.zip, XMLSave&lt;counter&gt;.tmp files are created and not deleted in the temporary directory (see screen capture) when working (opening, editing, and saving) with TPTP Test Suite (EMF resources).
+
+Ed, I am wondering if the call to File#delete() is returning false since there are remaining open handles to this file.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128919</commentid>
+    <comment_count>5</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-10 10:44:34 -0500</bug_when>
+    <thetext>Please provide a JUnit test.  I can&apos;t fix what I can&apos;t reproduce.  I&apos;ll close this without a test case. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128922</commentid>
+    <comment_count>6</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-10 10:49:04 -0500</bug_when>
+    <thetext>Why would there be remaining open file handles for it?  It&apos;s only used while transferring the contents...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129745</commentid>
+    <comment_count>7</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-11 11:43:58 -0500</bug_when>
+    <thetext>I&apos;ll return this pending a test case.  Of course I&apos;m happy to fix it if I can reproduce it and know what I do actually fixes it...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133248</commentid>
+    <comment_count>8</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-17 11:29:54 -0500</bug_when>
+    <thetext>Steps to reproduce:
+
+1) Download TPTP 4.5.0 (200801010400) from http://www.eclipse.org/tptp/home/downloads/?buildId=TPTP-4.5.0-200801010400.
+
+2) Create a test class:
+
+public class test {
+
+	public test(){
+		methodA();
+	}
+
+	public void methodA(){
+		System.out.println(&quot;test.methodA()&quot;);
+	}
+
+	public static void main(String[] args) {
+		new test();
+	}
+}
+
+3) Profile the Hello World class with Memory Analysis enabled.
+
+4) After the profiling session is complete, save the DefaultMonitor in the Profiling monitor of the Profilingand Logging Perspective.
+
+5) Note the four XMLSave&lt;counter&gt;.tmp files in the %TEMP% (Windows) directory corresponding to the four serialized profiling resource in the ProfileProject project under the workspace.  These XMLSave&lt;counter&gt;.tmp files are not delete when Eclipse is closed.
+
+The code that does the save:
+
+Map options = new HashMap();
+options.put(XMIResource.OPTION_DECLARE_XML, Boolean.TRUE);
+
+resource.save(options);
+
+String uri = resource.getURI().toString();
+int extIndex = uri.indexOf(&quot;.trca&quot;);
+        
+if(extIndex!=-1){
+
+  String newUri = uri.substring(0,extIndex);
+  newUri = newUri.concat(&quot;.trciov&quot;).concat(uri.substring(extIndex+5));
+  
+  Resource iovr =  HierarchyResourceSetImpl.getInstance().getResource(SaveUtil.createURI(newUri),false);
+  
+  if(iovr!=null){
+    iovr.save(options);
+  }
+}
+
+[Source: http://dev.eclipse.org/viewcvs/index.cgi/platform/org.eclipse.tptp.platform.models.hierarchy/src-hierarchy/org/eclipse/hyades/models/hierarchy/util/SaveUtil.java?root=TPTP_Project&amp;view=log]
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133358</commentid>
+    <comment_count>9</comment_count>
+    <who name="Harm Sluiman">sluiman</who>
+    <bug_when>2008-01-17 12:46:04 -0500</bug_when>
+    <thetext>Paul, I see you are finding this for all TPTP serialized models, but I am also noticing that temporary directories are being created for test annotations. They are empty but the directories remain. Is this something extra (IE we need a separate bugzilla) that needs to be fixed? </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133459</commentid>
+    <comment_count>10</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-17 14:42:58 -0500</bug_when>
+    <thetext>Paul,
+
+It would be a lot better if you&apos;d track problems from your end before dropping them over the fence.  It took a lot of setup time for me to quickly reach the conclusion that you should just not use the option that causes the problem.  Given that OPTION_USE_FILE_BUFFER creates a temporary file for use by &quot;doc&quot;
+
+       doc = new XMLString(effectiveLineWidth, publicId, systemId, temporaryFileName);
+
+and given that you&apos;ve overridden this to replace that &quot;doc&quot; with something that doesn&apos;t use a temporary file
+
+
+    public void save(XMLResource resource, OutputStream outputStream, Map options) throws IOException {
+	    init(resource, options);
+	    doc = new HierarchyXMLString(null);
+
+the option is really doing nothing but causing a problem...
+
+I&apos;ll bet you could further optimize your HierarchyXMLString&apos;s many calls to write(int) to call write(char[], 0, x) directly with character arrays containing that literals you need to save.  This would avoid extra locking and a bunch of other things is might give you a nice boost...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133805</commentid>
+    <comment_count>11</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-18 08:09:00 -0500</bug_when>
+    <thetext>(In reply to comment #10)
+
+Ed, thanks for your time to determine the problem.  Unfortunately, I was trying to help out another component in TPTP that I am not familiar with the code.
+
+I have opened TPTP defect https://bugs.eclipse.org/bugs/show_bug.cgi?id=215784 to fix this problem.
+
+Closing this defect.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133806</commentid>
+    <comment_count>12</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-18 08:11:34 -0500</bug_when>
+    <thetext>(In reply to comment #9)
+&gt; Paul, I see you are finding this for all TPTP serialized models, but I am also
+&gt; noticing that temporary directories are being created for test annotations.
+&gt; They are empty but the directories remain. Is this something extra (IE we need
+&gt; a separate bugzilla) that needs to be fixed? 
+&gt; 
+
+I cannot reproduce this symptom with the latest TPTP code from CVS (HEAD).  I reviewed org.eclipse.hyades.models.common.facades.behavioral.impl.FacadeResourceImpl.java and this directory (and its children) are removed when the Manual Test View/Test Log View/Eclipse is closed.  If you can reproduce the symptom, please open a TPTP bugzilla against the Test.Model component.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

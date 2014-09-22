@@ -1,0 +1,332 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215230</bug_id>
+          
+          <creation_ts>2008-01-14 11:06:00 -0500</creation_ts>
+          <short_desc>[Webapp] Parse errors reported when running Eclipse Help System as a WAR (version 3.4)</short_desc>
+          <delta_ts>2008-08-05 13:38:55 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>User Assistance</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Guillermo Hurtado">hurtado</reporter>
+          <assigned_to name="platform-ua-inbox">platform-ua-inbox</assigned_to>
+          <cc>cgold</cc>
+    
+    <cc>packham</cc>
+    
+    <cc>rwatts</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130713</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86842</attachid>
+    <who name="Guillermo Hurtado">hurtado</who>
+    <bug_when>2008-01-14 11:06:51 -0500</bug_when>
+    <thetext>Created attachment 86842
+Stack trace for the error
+
+Build ID: I20071213-1700 
+
+Steps To Reproduce:
+1.Package the Help System as a WAR file and add some documenation plug-ins as indicated in https://bugs.eclipse.org/bugs/show_bug.cgi?id=201666 
+
+2. Deploy the WAR in a web server. In this case Websphere Application Server 6.1 was used.
+
+3.Sometimes you will get the following error reported when accessing a TOC:
+
+
+org.xml.sax.SAXException: FWK005 parse may not be called while parsing.
+		 at org.apache.xerces.parsers.DOMParser.parse(Unknown Source)
+		 at org.apache.xerces.jaxp.DocumentBuilderImpl.parse(Unknown Source)
+		 at org.eclipse.help.internal.dynamic.DocumentReader.read(DocumentReader.java:51)
+		 at org.eclipse.help.internal.dynamic.XMLProcessor.process(XMLProcessor.java:49)
+		 at org.eclipse.help.internal.xhtml.DynamicXHTMLProcessor.process(DynamicXHTMLProcessor.java:76)
+		 at org.eclipse.help.internal.webapp.servlet.DynamicXHTMLFilter$1.close(DynamicXHTMLFilter.java:79)
+		 at java.io.FilterOutputStream.close(FilterOutputStream.java:160)
+		 at org.eclipse.help.internal.webapp.servlet.FilterHTMLHeadAndBodyOutputStream.close(FilterHTMLHeadAndBodyOutputStream.java:311)
+		 at java.io.FilterOutputStream.close(FilterOutputStream.java:160)
+		 at org.eclipse.help.internal.webapp.servlet.FilterHTMLHeadOutputStream.close(FilterHTMLHeadOutputStream.java:159)
+		 at org.eclipse.help.internal.webapp.servlet.EclipseConnector.transfer(EclipseConnector.java:165)
+		 at org.eclipse.help.internal.webapp.servlet.ContentServlet.doGet(ContentServlet.java:42)
+		 at javax.servlet.http.HttpServlet.service(HttpServlet.java:690)
+		 at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)
+		 at org.eclipse.equinox.http.registry.internal.ServletManager$ServletWrapper.service(ServletManager.java:180)
+		 at org.eclipse.equinox.http.servlet.internal.ServletRegistration.handleRequest(ServletRegistration.java:90)
+		 at org.eclipse.equinox.http.servlet.internal.ProxyServlet.processAlias(ProxyServlet.java:111)
+		 at org.eclipse.equinox.http.servlet.internal.ProxyServlet.service(ProxyServlet.java:67)
+		 at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)
+		 at org.eclipse.equinox.servletbridge.BridgeServlet.service(BridgeServlet.java:115)
+		 at javax.servlet.http.HttpServlet.service(HttpServlet.java:803)
+		 at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:269)
+		 at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:188)
+		 at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:210)
+		 at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:174)		 at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:127)
+		 at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:117)
+		 at org.apache.catalina.valves.AccessLogValve.invoke(AccessLogValve.java:542)
+		 at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:108)
+		 at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:151)
+		 at org.apache.jk.server.JkCoyoteHandler.invoke(JkCoyoteHandler.java:200)
+		 at org.apache.jk.common.HandlerRequest.invoke(HandlerRequest.java:283)
+		 at org.apache.jk.common.ChannelSocket.invoke(ChannelSocket.java:773)
+		 at org.apache.jk.common.ChannelSocket.processConnection(ChannelSocket.java:703)
+		 at org.apache.jk.common.ChannelSocket$SocketConnection.runIt(ChannelSocket.java:895)
+		 at org.apache.tomcat.util.threads.ThreadPool$ControlRunnable.run(ThreadPool.java:685)
+		 at java.lang.Thread.run(Thread.java:803)
+
+
+
+More information:
+It appears that you get this error when two threads call the parse method of a DocumentBuilder instance simultaneously. The Xerces DocumentBuilder doesn&apos;t seem to be thread safe.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130721</commentid>
+    <comment_count>1</comment_count>
+    <who name="Guillermo Hurtado">hurtado</who>
+    <bug_when>2008-01-14 11:11:30 -0500</bug_when>
+    <thetext>CORRECTION TO THE ABOVE STEPS TO REPRODUCE THE ISSUE! The server in use is Tomcat 5.23 and not WAS 6.1</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130879</commentid>
+    <comment_count>2</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-14 13:59:56 -0500</bug_when>
+    <thetext>The problem was some non reentrant code in DocumentReader that apparently was being called from more than one thread simultaneously. I wrote a JUnit to reproduce the problem, which is now fixed in HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130881</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86859</attachid>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-01-14 14:00:40 -0500</bug_when>
+    <thetext>Created attachment 86859
+Patch against HEAD</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1304745</commentid>
+    <comment_count>4</comment_count>
+    <who name="Chris Goldthorpe">cgold</who>
+    <bug_when>2008-08-05 13:38:55 -0400</bug_when>
+    <thetext>*** Bug 201152 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86842</attachid>
+            <date>2008-01-14 11:06:00 -0500</date>
+            <delta_ts>2008-01-14 11:06:51 -0500</delta_ts>
+            <desc>Stack trace for the error</desc>
+            <filename>parse_stacktrace.txt</filename>
+            <type>text/plain</type>
+            <size>3278</size>
+            <attacher name="Guillermo Hurtado">hurtado</attacher>
+            
+              <data encoding="base64">b3JnLnhtbC5zYXguU0FYRXhjZXB0aW9uOiBGV0swMDUgcGFyc2UgbWF5IG5vdCBiZSBjYWxsZWQg
+d2hpbGUgcGFyc2luZy4NCgkJIGF0IG9yZy5hcGFjaGUueGVyY2VzLnBhcnNlcnMuRE9NUGFyc2Vy
+LnBhcnNlKFVua25vd24gU291cmNlKQ0KCQkgYXQgb3JnLmFwYWNoZS54ZXJjZXMuamF4cC5Eb2N1
+bWVudEJ1aWxkZXJJbXBsLnBhcnNlKFVua25vd24gU291cmNlKQ0KCQkgYXQgb3JnLmVjbGlwc2Uu
+aGVscC5pbnRlcm5hbC5keW5hbWljLkRvY3VtZW50UmVhZGVyLnJlYWQoRG9jdW1lbnRSZWFkZXIu
+amF2YTo1MSkNCgkJIGF0IG9yZy5lY2xpcHNlLmhlbHAuaW50ZXJuYWwuZHluYW1pYy5YTUxQcm9j
+ZXNzb3IucHJvY2VzcyhYTUxQcm9jZXNzb3IuamF2YTo0OSkNCgkJIGF0IG9yZy5lY2xpcHNlLmhl
+bHAuaW50ZXJuYWwueGh0bWwuRHluYW1pY1hIVE1MUHJvY2Vzc29yLnByb2Nlc3MoRHluYW1pY1hI
+VE1MUHJvY2Vzc29yLmphdmE6NzYpDQoJCSBhdCBvcmcuZWNsaXBzZS5oZWxwLmludGVybmFsLndl
+YmFwcC5zZXJ2bGV0LkR5bmFtaWNYSFRNTEZpbHRlciQxLmNsb3NlKER5bmFtaWNYSFRNTEZpbHRl
+ci5qYXZhOjc5KQ0KCQkgYXQgamF2YS5pby5GaWx0ZXJPdXRwdXRTdHJlYW0uY2xvc2UoRmlsdGVy
+T3V0cHV0U3RyZWFtLmphdmE6MTYwKQ0KCQkgYXQgb3JnLmVjbGlwc2UuaGVscC5pbnRlcm5hbC53
+ZWJhcHAuc2VydmxldC5GaWx0ZXJIVE1MSGVhZEFuZEJvZHlPdXRwdXRTdHJlYW0uY2xvc2UoRmls
+dGVySFRNTEhlYWRBbmRCb2R5T3V0cHV0U3RyZWFtLmphdmE6MzExKQ0KCQkgYXQgamF2YS5pby5G
+aWx0ZXJPdXRwdXRTdHJlYW0uY2xvc2UoRmlsdGVyT3V0cHV0U3RyZWFtLmphdmE6MTYwKQ0KCQkg
+YXQgb3JnLmVjbGlwc2UuaGVscC5pbnRlcm5hbC53ZWJhcHAuc2VydmxldC5GaWx0ZXJIVE1MSGVh
+ZE91dHB1dFN0cmVhbS5jbG9zZShGaWx0ZXJIVE1MSGVhZE91dHB1dFN0cmVhbS5qYXZhOjE1OSkN
+CgkJIGF0IG9yZy5lY2xpcHNlLmhlbHAuaW50ZXJuYWwud2ViYXBwLnNlcnZsZXQuRWNsaXBzZUNv
+bm5lY3Rvci50cmFuc2ZlcihFY2xpcHNlQ29ubmVjdG9yLmphdmE6MTY1KQ0KCQkgYXQgb3JnLmVj
+bGlwc2UuaGVscC5pbnRlcm5hbC53ZWJhcHAuc2VydmxldC5Db250ZW50U2VydmxldC5kb0dldChD
+b250ZW50U2VydmxldC5qYXZhOjQyKQ0KCQkgYXQgamF2YXguc2VydmxldC5odHRwLkh0dHBTZXJ2
+bGV0LnNlcnZpY2UoSHR0cFNlcnZsZXQuamF2YTo2OTApDQoJCSBhdCBqYXZheC5zZXJ2bGV0Lmh0
+dHAuSHR0cFNlcnZsZXQuc2VydmljZShIdHRwU2VydmxldC5qYXZhOjgwMykNCgkJIGF0IG9yZy5l
+Y2xpcHNlLmVxdWlub3guaHR0cC5yZWdpc3RyeS5pbnRlcm5hbC5TZXJ2bGV0TWFuYWdlciRTZXJ2
+bGV0V3JhcHBlci5zZXJ2aWNlKFNlcnZsZXRNYW5hZ2VyLmphdmE6MTgwKQ0KCQkgYXQgb3JnLmVj
+bGlwc2UuZXF1aW5veC5odHRwLnNlcnZsZXQuaW50ZXJuYWwuU2VydmxldFJlZ2lzdHJhdGlvbi5o
+YW5kbGVSZXF1ZXN0KFNlcnZsZXRSZWdpc3RyYXRpb24uamF2YTo5MCkNCgkJIGF0IG9yZy5lY2xp
+cHNlLmVxdWlub3guaHR0cC5zZXJ2bGV0LmludGVybmFsLlByb3h5U2VydmxldC5wcm9jZXNzQWxp
+YXMoUHJveHlTZXJ2bGV0LmphdmE6MTExKQ0KCQkgYXQgb3JnLmVjbGlwc2UuZXF1aW5veC5odHRw
+LnNlcnZsZXQuaW50ZXJuYWwuUHJveHlTZXJ2bGV0LnNlcnZpY2UoUHJveHlTZXJ2bGV0LmphdmE6
+NjcpDQoJCSBhdCBqYXZheC5zZXJ2bGV0Lmh0dHAuSHR0cFNlcnZsZXQuc2VydmljZShIdHRwU2Vy
+dmxldC5qYXZhOjgwMykNCgkJIGF0IG9yZy5lY2xpcHNlLmVxdWlub3guc2VydmxldGJyaWRnZS5C
+cmlkZ2VTZXJ2bGV0LnNlcnZpY2UoQnJpZGdlU2VydmxldC5qYXZhOjExNSkNCgkJIGF0IGphdmF4
+LnNlcnZsZXQuaHR0cC5IdHRwU2VydmxldC5zZXJ2aWNlKEh0dHBTZXJ2bGV0LmphdmE6ODAzKQ0K
+CQkgYXQgb3JnLmFwYWNoZS5jYXRhbGluYS5jb3JlLkFwcGxpY2F0aW9uRmlsdGVyQ2hhaW4uaW50
+ZXJuYWxEb0ZpbHRlcihBcHBsaWNhdGlvbkZpbHRlckNoYWluLmphdmE6MjY5KQ0KCQkgYXQgb3Jn
+LmFwYWNoZS5jYXRhbGluYS5jb3JlLkFwcGxpY2F0aW9uRmlsdGVyQ2hhaW4uZG9GaWx0ZXIoQXBw
+bGljYXRpb25GaWx0ZXJDaGFpbi5qYXZhOjE4OCkNCgkJIGF0IG9yZy5hcGFjaGUuY2F0YWxpbmEu
+Y29yZS5TdGFuZGFyZFdyYXBwZXJWYWx2ZS5pbnZva2UoU3RhbmRhcmRXcmFwcGVyVmFsdmUuamF2
+YToyMTApDQoJCSBhdCBvcmcuYXBhY2hlLmNhdGFsaW5hLmNvcmUuU3RhbmRhcmRDb250ZXh0VmFs
+dmUuaW52b2tlKFN0YW5kYXJkQ29udGV4dFZhbHZlLmphdmE6MTc0KQkJIGF0IG9yZy5hcGFjaGUu
+Y2F0YWxpbmEuY29yZS5TdGFuZGFyZEhvc3RWYWx2ZS5pbnZva2UoU3RhbmRhcmRIb3N0VmFsdmUu
+amF2YToxMjcpDQoJCSBhdCBvcmcuYXBhY2hlLmNhdGFsaW5hLnZhbHZlcy5FcnJvclJlcG9ydFZh
+bHZlLmludm9rZShFcnJvclJlcG9ydFZhbHZlLmphdmE6MTE3KQ0KCQkgYXQgb3JnLmFwYWNoZS5j
+YXRhbGluYS52YWx2ZXMuQWNjZXNzTG9nVmFsdmUuaW52b2tlKEFjY2Vzc0xvZ1ZhbHZlLmphdmE6
+NTQyKQ0KCQkgYXQgb3JnLmFwYWNoZS5jYXRhbGluYS5jb3JlLlN0YW5kYXJkRW5naW5lVmFsdmUu
+aW52b2tlKFN0YW5kYXJkRW5naW5lVmFsdmUuamF2YToxMDgpDQoJCSBhdCBvcmcuYXBhY2hlLmNh
+dGFsaW5hLmNvbm5lY3Rvci5Db3lvdGVBZGFwdGVyLnNlcnZpY2UoQ295b3RlQWRhcHRlci5qYXZh
+OjE1MSkNCgkJIGF0IG9yZy5hcGFjaGUuamsuc2VydmVyLkprQ295b3RlSGFuZGxlci5pbnZva2Uo
+SmtDb3lvdGVIYW5kbGVyLmphdmE6MjAwKQ0KCQkgYXQgb3JnLmFwYWNoZS5qay5jb21tb24uSGFu
+ZGxlclJlcXVlc3QuaW52b2tlKEhhbmRsZXJSZXF1ZXN0LmphdmE6MjgzKQ0KCQkgYXQgb3JnLmFw
+YWNoZS5qay5jb21tb24uQ2hhbm5lbFNvY2tldC5pbnZva2UoQ2hhbm5lbFNvY2tldC5qYXZhOjc3
+MykNCgkJIGF0IG9yZy5hcGFjaGUuamsuY29tbW9uLkNoYW5uZWxTb2NrZXQucHJvY2Vzc0Nvbm5l
+Y3Rpb24oQ2hhbm5lbFNvY2tldC5qYXZhOjcwMykNCgkJIGF0IG9yZy5hcGFjaGUuamsuY29tbW9u
+LkNoYW5uZWxTb2NrZXQkU29ja2V0Q29ubmVjdGlvbi5ydW5JdChDaGFubmVsU29ja2V0LmphdmE6
+ODk1KQ0KCQkgYXQgb3JnLmFwYWNoZS50b21jYXQudXRpbC50aHJlYWRzLlRocmVhZFBvb2wkQ29u
+dHJvbFJ1bm5hYmxlLnJ1bihUaHJlYWRQb29sLmphdmE6Njg1KQ0KCQkgYXQgamF2YS5sYW5nLlRo
+cmVhZC5ydW4oVGhyZWFkLmphdmE6ODAzKQ0KDQo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86859</attachid>
+            <date>2008-01-14 14:00:00 -0500</date>
+            <delta_ts>2008-01-14 14:00:40 -0500</delta_ts>
+            <desc>Patch against HEAD</desc>
+            <filename>patch215230.txt</filename>
+            <type>text/plain</type>
+            <size>5219</size>
+            <attacher name="Chris Goldthorpe">cgold</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuaGVscA0KSW5k
+ZXg6IHNyYy9vcmcvZWNsaXBzZS9oZWxwL2ludGVybmFsL2R5bmFtaWMvRG9jdW1lbnRSZWFkZXIu
+amF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVjbGlwc2Uu
+aGVscC9zcmMvb3JnL2VjbGlwc2UvaGVscC9pbnRlcm5hbC9keW5hbWljL0RvY3VtZW50UmVhZGVy
+LmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjYNCmRpZmYgLXUgLXIxLjYgRG9jdW1lbnRS
+ZWFkZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9oZWxwL2ludGVybmFsL2R5bmFtaWMvRG9j
+dW1lbnRSZWFkZXIuamF2YQkxMCBKdWwgMjAwNyAxNzoyMzo1MyAtMDAwMAkxLjYNCisrKyBzcmMv
+b3JnL2VjbGlwc2UvaGVscC9pbnRlcm5hbC9keW5hbWljL0RvY3VtZW50UmVhZGVyLmphdmEJMTQg
+SmFuIDIwMDggMTg6NTc6MTggLTAwMDANCkBAIC0zMyw3ICszMyw3IEBADQogCQlyZXR1cm4gcmVh
+ZChpbiwgbnVsbCk7DQogCX0NCiAJDQotCXB1YmxpYyBVQUVsZW1lbnQgcmVhZChJbnB1dFN0cmVh
+bSBpbiwgU3RyaW5nIGNoYXJzZXQpIHRocm93cyBJT0V4Y2VwdGlvbiwgU0FYRXhjZXB0aW9uLCBQ
+YXJzZXJDb25maWd1cmF0aW9uRXhjZXB0aW9uIHsNCisJcHVibGljIHN5bmNocm9uaXplZCBVQUVs
+ZW1lbnQgcmVhZChJbnB1dFN0cmVhbSBpbiwgU3RyaW5nIGNoYXJzZXQpIHRocm93cyBJT0V4Y2Vw
+dGlvbiwgU0FYRXhjZXB0aW9uLCBQYXJzZXJDb25maWd1cmF0aW9uRXhjZXB0aW9uIHsNCiAJCWlm
+IChidWlsZGVyID09IG51bGwpIHsNCiAJCQlEb2N1bWVudEJ1aWxkZXJGYWN0b3J5IGZhY3Rvcnkg
+PSBEb2N1bWVudEJ1aWxkZXJGYWN0b3J5Lm5ld0luc3RhbmNlKCk7DQogCQkJZmFjdG9yeS5zZXRO
+YW1lc3BhY2VBd2FyZShmYWxzZSk7DQojUCBvcmcuZWNsaXBzZS51YS50ZXN0cw0KSW5kZXg6IGhl
+bHAvb3JnL2VjbGlwc2UvdWEvdGVzdHMvaGVscC9vdGhlci9BbGxPdGhlckhlbHBUZXN0cy5qYXZh
+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS51YS50
+ZXN0cy9oZWxwL29yZy9lY2xpcHNlL3VhL3Rlc3RzL2hlbHAvb3RoZXIvQWxsT3RoZXJIZWxwVGVz
+dHMuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNQ0KZGlmZiAtdSAtcjEuNSBBbGxPdGhl
+ckhlbHBUZXN0cy5qYXZhDQotLS0gaGVscC9vcmcvZWNsaXBzZS91YS90ZXN0cy9oZWxwL290aGVy
+L0FsbE90aGVySGVscFRlc3RzLmphdmEJNSBOb3YgMjAwNyAyMTo0NzoxOSAtMDAwMAkxLjUNCisr
+KyBoZWxwL29yZy9lY2xpcHNlL3VhL3Rlc3RzL2hlbHAvb3RoZXIvQWxsT3RoZXJIZWxwVGVzdHMu
+amF2YQkxNCBKYW4gMjAwOCAxODo1NzoxOSAtMDAwMA0KQEAgLTMzLDUgKzMzLDYgQEANCiAJCWFk
+ZFRlc3RTdWl0ZShVQUVsZW1lbnRUZXN0LmNsYXNzKTsNCiAJCWFkZFRlc3RTdWl0ZShDb250ZXh0
+VGVzdC5jbGFzcyk7DQogCQlhZGRUZXN0U3VpdGUoVG9waWNUZXN0LmNsYXNzKTsNCisJCWFkZFRl
+c3RTdWl0ZShEb2N1bWVudFJlYWRlclRlc3QuY2xhc3MpOw0KIAl9DQogfQ0KSW5kZXg6IGhlbHAv
+b3JnL2VjbGlwc2UvdWEvdGVzdHMvaGVscC9vdGhlci9Eb2N1bWVudFJlYWRlclRlc3QuamF2YQ0K
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PQ0KUkNTIGZpbGU6IGhlbHAvb3JnL2VjbGlwc2UvdWEvdGVzdHMvaGVscC9vdGhl
+ci9Eb2N1bWVudFJlYWRlclRlc3QuamF2YQ0KZGlmZiAtTiBoZWxwL29yZy9lY2xpcHNlL3VhL3Rl
+c3RzL2hlbHAvb3RoZXIvRG9jdW1lbnRSZWFkZXJUZXN0LmphdmENCi0tLSAvZGV2L251bGwJMSBK
+YW4gMTk3MCAwMDowMDowMCAtMDAwMA0KKysrIGhlbHAvb3JnL2VjbGlwc2UvdWEvdGVzdHMvaGVs
+cC9vdGhlci9Eb2N1bWVudFJlYWRlclRlc3QuamF2YQkxIEphbiAxOTcwIDAwOjAwOjAwIC0wMDAw
+DQpAQCAtMCwwICsxLDkxIEBADQorLyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioNCisgKiBDb3B5cmln
+aHQgKGMpIDIwMDcgSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQorICogQWxsIHJpZ2h0cyBy
+ZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscw0KKyAq
+IGFyZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVibGlj
+IExpY2Vuc2UgdjEuMA0KKyAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9uLCBh
+bmQgaXMgYXZhaWxhYmxlIGF0DQorICogaHR0cDovL3d3dy5lY2xpcHNlLm9yZy9sZWdhbC9lcGwt
+djEwLmh0bWwNCisgKg0KKyAqIENvbnRyaWJ1dG9yczoNCisgKiAgICAgSUJNIENvcnBvcmF0aW9u
+IC0gaW5pdGlhbCBBUEkgYW5kIGltcGxlbWVudGF0aW9uDQorICoqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KiovDQorDQorcGFja2FnZSBvcmcuZWNsaXBzZS51YS50ZXN0cy5oZWxwLm90aGVyOw0KKw0KK2lt
+cG9ydCBqYXZhLmlvLklPRXhjZXB0aW9uOw0KK2ltcG9ydCBqYXZhLmlvLklucHV0U3RyZWFtOw0K
+Kw0KK2ltcG9ydCBqYXZheC54bWwucGFyc2Vycy5QYXJzZXJDb25maWd1cmF0aW9uRXhjZXB0aW9u
+Ow0KKw0KK2ltcG9ydCBqdW5pdC5mcmFtZXdvcmsuVGVzdDsNCitpbXBvcnQganVuaXQuZnJhbWV3
+b3JrLlRlc3RDYXNlOw0KK2ltcG9ydCBqdW5pdC5mcmFtZXdvcmsuVGVzdFN1aXRlOw0KKw0KK2lt
+cG9ydCBvcmcuZWNsaXBzZS5oZWxwLmludGVybmFsLmR5bmFtaWMuRG9jdW1lbnRSZWFkZXI7DQor
+aW1wb3J0IG9yZy5lY2xpcHNlLmhlbHAuaW50ZXJuYWwudXRpbC5SZXNvdXJjZUxvY2F0b3I7DQor
+aW1wb3J0IG9yZy5lY2xpcHNlLnVhLnRlc3RzLnBsdWdpbi5Vc2VyQXNzaXN0YW5jZVRlc3RQbHVn
+aW47DQoraW1wb3J0IG9yZy54bWwuc2F4LlNBWEV4Y2VwdGlvbjsNCisNCitwdWJsaWMgY2xhc3Mg
+RG9jdW1lbnRSZWFkZXJUZXN0IGV4dGVuZHMgVGVzdENhc2Ugew0KKwlwcml2YXRlIGZpbmFsIHN0
+YXRpYyBpbnQgUlVOTklORyA9IDA7DQorCXByaXZhdGUgZmluYWwgc3RhdGljIGludCBTVUNDRVNT
+ID0gMTsNCisJcHJpdmF0ZSBmaW5hbCBzdGF0aWMgaW50IEZBSUxVUkUgPSAyOw0KKw0KKwlwdWJs
+aWMgc3RhdGljIFRlc3Qgc3VpdGUoKSB7DQorCQlyZXR1cm4gbmV3IFRlc3RTdWl0ZShEb2N1bWVu
+dFJlYWRlclRlc3QuY2xhc3MpOw0KKwl9DQorDQorCXByaXZhdGUgdm9pZCByZWFkRmlsZShEb2N1
+bWVudFJlYWRlciBkb2NSZWFkZXIsIFN0cmluZyBmaWxlKSB0aHJvd3MgSU9FeGNlcHRpb24sIFNB
+WEV4Y2VwdGlvbiwgUGFyc2VyQ29uZmlndXJhdGlvbkV4Y2VwdGlvbiB7DQorCQkgU3RyaW5nIHBs
+dWdpbklkID0gVXNlckFzc2lzdGFuY2VUZXN0UGx1Z2luLmdldFBsdWdpbklkKCk7DQorCQkgU3Ry
+aW5nIGxvY2FsZSA9ICJlbiI7DQorCSAgICAgSW5wdXRTdHJlYW0gaW4gID0gUmVzb3VyY2VMb2Nh
+dG9yLm9wZW5Gcm9tUGx1Z2luKHBsdWdpbklkLCBmaWxlLCBsb2NhbGUpOw0KKwkJIGRvY1JlYWRl
+ci5yZWFkKGluKTsNCisJfQ0KKw0KKwlwdWJsaWMgdm9pZCB0ZXN0RG9jdW1lbnRSZWFkZXIoKSB0
+aHJvd3MgSU9FeGNlcHRpb24sIFNBWEV4Y2VwdGlvbiwgUGFyc2VyQ29uZmlndXJhdGlvbkV4Y2Vw
+dGlvbiB7DQorICAgICAgICBEb2N1bWVudFJlYWRlciBkb2NSZWFkZXIgPSBuZXcgRG9jdW1lbnRS
+ZWFkZXIoKTsNCisJCVJlc291cmNlUmVhZGVyW10gcmVzUmVhZGVycyA9IG5ldyBSZXNvdXJjZVJl
+YWRlclszXTsNCisJCXJlc1JlYWRlcnNbMF0gPSBuZXcgUmVzb3VyY2VSZWFkZXIoZG9jUmVhZGVy
+LCJkYXRhL2hlbHAvaW5kZXgvYXNzZW1ibGVyL2EueG1sIik7DQorCQlyZXNSZWFkZXJzWzFdID0g
+bmV3IFJlc291cmNlUmVhZGVyKGRvY1JlYWRlciwiZGF0YS9oZWxwL2luZGV4L2Fzc2VtYmxlci9i
+LnhtbCIpOw0KKwkJcmVzUmVhZGVyc1syXSA9IG5ldyBSZXNvdXJjZVJlYWRlcihkb2NSZWFkZXIs
+ImRhdGEvaGVscC9pbmRleC9hc3NlbWJsZXIvYy54bWwiKTsNCisJCWZvciAoaW50IGkgPSAwOyBp
+IDwgMzsgaSsrKSB7DQorCQkJcmVzUmVhZGVyc1tpXS5zdGFydCgpOw0KKwkJfQ0KKwkJaW50IGNv
+dW50ID0gMDsNCisJCWZvciAoaW50IGkgPSAwIDsgaSA8IDM7IGkrKykgew0KKwkJCXdoaWxlIChy
+ZXNSZWFkZXJzW2ldLnN0YXR1cyA9PSBSVU5OSU5HICYmIGNvdW50IDwgNTApIHsNCisJCQkJdHJ5
+IHsNCisJCQkJCVRocmVhZC5zbGVlcCgxMDApOw0KKwkJCQkJY291bnQrKzsNCisJCQkJfSBjYXRj
+aCAoSW50ZXJydXB0ZWRFeGNlcHRpb24gZSkgeyANCisJCQkJfQ0KKwkJCX0NCisJCX0NCisJCWFz
+c2VydFRydWUocmVzUmVhZGVyc1swXS5zdGF0dXMgPT0gU1VDQ0VTUyk7DQorCQlhc3NlcnRUcnVl
+KHJlc1JlYWRlcnNbMV0uc3RhdHVzID09IFNVQ0NFU1MpOw0KKwkJYXNzZXJ0VHJ1ZShyZXNSZWFk
+ZXJzWzJdLnN0YXR1cyA9PSBTVUNDRVNTKTsNCisJfQ0KKwkNCisJcHJpdmF0ZSBjbGFzcyBSZXNv
+dXJjZVJlYWRlciBleHRlbmRzIFRocmVhZCB7DQorCQkNCisJCXByaXZhdGUgRG9jdW1lbnRSZWFk
+ZXIgcmVhZGVyOw0KKwkJcHJpdmF0ZSBTdHJpbmcgZmlsZTsNCisJCVJlc291cmNlUmVhZGVyKERv
+Y3VtZW50UmVhZGVyIHJlYWRlciwgU3RyaW5nIGZpbGUpIHsNCisJCQl0aGlzLnJlYWRlciA9IHJl
+YWRlcjsNCisJCQl0aGlzLmZpbGUgPSBmaWxlOw0KKwkJfQ0KKwkJcHVibGljIGludCBzdGF0dXMg
+PSBSVU5OSU5HOw0KKwkJDQorCQlwdWJsaWMgdm9pZCBydW4oKSB7DQorCQkJdHJ5IHsNCisJCQkJ
+Zm9yIChpbnQgaSA9IDA7IGkgPCAxMDsgaSsrKSB7DQorCQkJCSAgICByZWFkRmlsZShyZWFkZXIs
+IGZpbGUpOw0KKwkJCQl9DQorCQkJCXN0YXR1cyA9IFNVQ0NFU1M7DQorCQkJfSBjYXRjaCAoRXhj
+ZXB0aW9uIGUpIHsNCisJCQkJZS5wcmludFN0YWNrVHJhY2UoKTsNCisJCQkJc3RhdHVzID0gRkFJ
+TFVSRTsNCisJCQl9DQorCQl9DQorCX0NCisNCit9DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

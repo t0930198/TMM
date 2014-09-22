@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215179</bug_id>
+          
+          <creation_ts>2008-01-14 03:50:00 -0500</creation_ts>
+          <short_desc>The way DiagramGenerator#findConnectionsToPaint(...) gets the view connections source will cause the image export to fail</short_desc>
+          <delta_ts>2010-07-19 21:57:47 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMF-Runtime</product>
+          <component>General</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>blocker</bug_severity>
+          <target_milestone>2.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mariot Chauvin">mariot.chauvin</reporter>
+          <assigned_to name="Mariot Chauvin">mariot.chauvin</assigned_to>
+          <cc>aboyko</cc>
+    
+    <cc>anthonyh</cc>
+    
+    <cc>cedric.brun</cc>
+    
+    <cc>richard.gronback</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130435</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-01-14 03:50:03 -0500</bug_when>
+    <thetext>The way DiagramGenerator#findConnectionsToPaint(...)  gets the view connections source ( view.getSourceEdges() ) seems to me unsafe. I think that it would be preferable to get the
+source connections from the edit part :
+
+AbstractGraphicalEditPart agep = (AbstractGraphicalEditPart) viewer.getEditPartRegistry().get(view);
+List sourceConnections = agep.getModelSourceConnections();
+
+For instance, if the edge has it &quot;Visible&quot; property set to false, the method getSourceEdges() will return the edge in the List.
+It will result a null pointer when the code will try to get the connectionEditPart from the edit part :
+
+ConnectionNodeEditPart connectionEditPart = (ConnectionNodeEditPart) viewer.getEditPartRegistry().get(edge);
+
+Furthermore the image export will fail due to this null pointer in DiagramGenerator#mapFiguresToEditParts(Collection editParts) on the getFigure() call :
+
+...
+result.put(next.getFigure(), next);
+...
+
+
+see http://dev.eclipse.org/newslists/news.eclipse.modeling.gmf/msg10329.html</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163086</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-02-24 07:06:50 -0500</bug_when>
+    <thetext>I will provide a patch for the next eclipse bugday : http://wiki.eclipse.org/BugDay/February_2008</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169016</commentid>
+    <comment_count>2</comment_count>
+      <attachid>91333</attachid>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-03-03 04:04:30 -0500</bug_when>
+    <thetext>Created attachment 91333
+patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1180463</commentid>
+    <comment_count>3</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-03-19 17:47:37 -0400</bug_when>
+    <thetext>I know GMF team is very busy, but if you can just have a quick look at this bug and the provided patch, it would be nice.
+Thanks.
+
+Mariot</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1320164</commentid>
+    <comment_count>4</comment_count>
+    <who name="Alex Boyko">aboyko</who>
+    <bug_when>2008-08-27 12:13:32 -0400</bug_when>
+    <thetext>I took a quick look at the patch and it seems outdated. The method DiagramGenerator#findConnectionsToPaint(...) has changed completely. Note, that it works with editparts only now, not the views, so it&apos;s very likely that the issue has been fixed indirectly.
+(The method has been reworked to find connections between connections)
+
+Mariot, could you please look at the #findConnectionsToPaint(...) method and check whether the issue is indeed fixed indirectly as I suspect?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1320765</commentid>
+    <comment_count>5</comment_count>
+      <attachid>111196</attachid>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-08-28 08:35:17 -0400</bug_when>
+    <thetext>Created attachment 111196
+patch for the R_2_0_maintenance branch
+
+Alex I checked the code from the CVS head, and you are right the issue seems to be indeed fixed indirectly.
+
+However in DiagramGenerator from last 2.0.2 build and in DiagramGenerator from R_2_0_maintenance branch the bug is still here.
+
+As my previous patch was not in the right format, I created a new one from the R_2_0_maintenance branch.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1324645</commentid>
+    <comment_count>6</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-09-04 10:08:33 -0400</bug_when>
+    <thetext>Just to confirm, there is no plans to fix the 2.0 branch as there are no further 2.0 maintenance builds planned.
+
+Since it is fixed in 2.1, are we ok to close this Bugzilla?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1325362</commentid>
+    <comment_count>7</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-09-05 06:42:25 -0400</bug_when>
+    <thetext>&gt; Just to confirm, there is no plans to fix the 2.0 branch as there are no
+&gt; further 2.0 maintenance builds planned.
+
+Anthony, As said in comment of 243888, we prefer to build from official source rather than provide our custom version of the concerned GMF plug-in.
+
+&gt; Since it is fixed in 2.1, are we ok to close this Bugzilla?
+
+It is ok.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1325367</commentid>
+    <comment_count>8</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2008-09-05 06:53:22 -0400</bug_when>
+    <thetext>&gt; Anthony, As said in comment of 243888, we prefer to build from official source
+&gt; rather than provide our custom version of the concerned GMF plug-in.
+
+And for this we must have these fixes committed in 2.0 maintenance stream.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1466326</commentid>
+    <comment_count>9</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2009-04-03 17:06:02 -0400</bug_when>
+    <thetext>(In reply to comment #8)
+&gt; &gt; Anthony, As said in comment of 243888, we prefer to build from official source
+&gt; &gt; rather than provide our custom version of the concerned GMF plug-in.
+&gt; 
+&gt; And for this we must have these fixes committed in 2.0 maintenance stream.
+&gt; 
+
+Ok, committed in the 2.0 maintenance stream.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1603382</commentid>
+    <comment_count>10</comment_count>
+    <who name="Mariot Chauvin">mariot.chauvin</who>
+    <bug_when>2009-09-30 04:47:00 -0400</bug_when>
+    <thetext>was fixed in 2.1 and committed in 2.0 maintenance stream</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1783084</commentid>
+    <comment_count>11</comment_count>
+    <who name="Eclipse Webmaster">webmaster</who>
+    <bug_when>2010-07-19 21:57:47 -0400</bug_when>
+    <thetext>[GMF Restructure] Bug 319140 : product GMF and component
+Runtime was the original product and component for this bug</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>91333</attachid>
+            <date>2008-03-03 04:04:00 -0500</date>
+            <delta_ts>2008-08-28 08:35:17 -0400</delta_ts>
+            <desc>patch</desc>
+            <filename>DiagramGenerator.patch</filename>
+            <type>text/plain</type>
+            <size>750</size>
+            <attacher name="Mariot Chauvin">mariot.chauvin</attacher>
+            
+              <data encoding="base64">MmMyCjwgICogQ29weXJpZ2h0IChjKSAyMDAyLCAyMDA3IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3Ro
+ZXJzLgotLS0KPiAgKiBDb3B5cmlnaHQgKGMpIDIwMDIsIDIwMDguIElCTSBDb3Jwb3JhdGlvbiBh
+bmQgb3RoZXJzLgo5YzksMTAKPCAgKiAgICBJQk0gQ29ycG9yYXRpb24gLSBpbml0aWFsIEFQSSBh
+bmQgaW1wbGVtZW50YXRpb24gCi0tLQo+ICAqICAgIElCTSBDb3Jwb3JhdGlvbiAtIGluaXRpYWwg
+QVBJIGFuZCBpbXBsZW1lbnRhdGlvbgo+ICAqICAgIE1hcmlvdCBDaGF1dmluIDxtYXJpb3QuY2hh
+dXZpbkBnbWFpbC5mcj4gLSBidWcgMjE1MTc5ICAKMjlhMzEKPiBpbXBvcnQgb3JnLmVjbGlwc2Uu
+Z2VmLkVkaXRQYXJ0Owo1MTMsNTE1ZDUxNAo8IAkJCS8vIEdldCBpdHMgdmlldwo8IAkJCVZpZXcg
+dmlldyA9IChWaWV3KSBlbGVtZW50LmdldE1vZGVsKCk7CjwgCjUxOWM1MTgKPCAJCQkJTGlzdCBz
+b3VyY2VDb25uZWN0aW9ucyA9IHZpZXcuZ2V0U291cmNlRWRnZXMoKTsKLS0tCj4gCQkJCUxpc3Qg
+c291cmNlQ29ubmVjdGlvbnMgPSBlbGVtZW50LmdldFNvdXJjZUNvbm5lY3Rpb25zKCk7CjUyMyw1
+MjRjNTIyLDUyNAo8IAkJCQkJRWRnZSBlZGdlID0gKEVkZ2UpIHNvdXJjZUNvbm5lY3Rpb25zLmdl
+dChpKTsKPCAKLS0tCj4gCQkJCQlFZGl0UGFydCBwYXJ0ID0gKEVkaXRQYXJ0KSBzb3VyY2VDb25u
+ZWN0aW9ucy5nZXQoaSk7Cj4JCQkJCUVkZ2UgZWRnZSA9IChFZGdlKSBwYXJ0LmdldE1vZGVsKCk7
+Cj4gCQkJCQkK
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>111196</attachid>
+            <date>2008-08-28 08:35:00 -0400</date>
+            <delta_ts>2009-04-03 17:06:10 -0400</delta_ts>
+            <desc>patch for the R_2_0_maintenance branch</desc>
+            <filename>patch-215179.txt</filename>
+            <type>text/plain</type>
+            <size>2514</size>
+            <attacher name="Mariot Chauvin">mariot.chauvin</attacher>
+            
+              <data encoding="base64">SW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9nbWYvcnVudGltZS9kaWFncmFtL3VpL3JlbmRlci9jbGlw
+Ym9hcmQvRGlhZ3JhbUdlbmVyYXRvci5qYXZhCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0KUkNTIGZpbGU6IC9jdnNyb290
+L21vZGVsaW5nL29yZy5lY2xpcHNlLmdtZi9wbHVnaW5zL29yZy5lY2xpcHNlLmdtZi5ydW50aW1l
+LmRpYWdyYW0udWkucmVuZGVyL3NyYy9vcmcvZWNsaXBzZS9nbWYvcnVudGltZS9kaWFncmFtL3Vp
+L3JlbmRlci9jbGlwYm9hcmQvRGlhZ3JhbUdlbmVyYXRvci5qYXZhLHYKcmV0cmlldmluZyByZXZp
+c2lvbiAxLjEwCmRpZmYgLXUgLXIxLjEwIERpYWdyYW1HZW5lcmF0b3IuamF2YQotLS0gc3JjL29y
+Zy9lY2xpcHNlL2dtZi9ydW50aW1lL2RpYWdyYW0vdWkvcmVuZGVyL2NsaXBib2FyZC9EaWFncmFt
+R2VuZXJhdG9yLmphdmEJMzAgSmFuIDIwMDcgMTY6MTY6MzMgLTAwMDAJMS4xMAorKysgc3JjL29y
+Zy9lY2xpcHNlL2dtZi9ydW50aW1lL2RpYWdyYW0vdWkvcmVuZGVyL2NsaXBib2FyZC9EaWFncmFt
+R2VuZXJhdG9yLmphdmEJMjggQXVnIDIwMDggMTI6MTI6MjUgLTAwMDAKQEAgLTEsMTIgKzEsMTMg
+QEAKIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioKLSAqIENvcHlyaWdodCAoYykgMjAwMiwgMjAwNyBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4KKyAqIENvcHlyaWdodCAoYykgMjAwMiwgMjAwOCBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4KICAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuIFRoaXMg
+cHJvZ3JhbSBhbmQgdGhlIGFjY29tcGFueWluZyBtYXRlcmlhbHMKICAqIGFyZSBtYWRlIGF2YWls
+YWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVibGljIExpY2Vuc2UgdjEuMAog
+ICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFpbGFibGUg
+YXQKICAqIGh0dHA6Ly93d3cuZWNsaXBzZS5vcmcvbGVnYWwvZXBsLXYxMC5odG1sCiAgKgogICog
+Q29udHJpYnV0b3JzOgotICogICAgSUJNIENvcnBvcmF0aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGlt
+cGxlbWVudGF0aW9uIAorICogICAgSUJNIENvcnBvcmF0aW9uIC0gaW5pdGlhbCBBUEkgYW5kIGlt
+cGxlbWVudGF0aW9uCisgKiAgICBNYXJpb3QgQ2hhdXZpbiA8bWFyaW90LmNoYXV2aW5Ab2Jlby5m
+cj4gLSBidWcgMjE1MTc5IAogICoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiovCiAKIHBhY2thZ2Ugb3JnLmVj
+bGlwc2UuZ21mLnJ1bnRpbWUuZGlhZ3JhbS51aS5yZW5kZXIuY2xpcGJvYXJkOwpAQCAtMjcsNiAr
+MjgsNyBAQAogaW1wb3J0IG9yZy5lY2xpcHNlLmRyYXcyZC5nZW9tZXRyeS5SZWN0YW5nbGU7CiBp
+bXBvcnQgb3JnLmVjbGlwc2UuZHJhdzJkLmdlb21ldHJ5LlRyYW5zbGF0YWJsZTsKIGltcG9ydCBv
+cmcuZWNsaXBzZS5nZWYuQ29ubmVjdGlvbkVkaXRQYXJ0OworaW1wb3J0IG9yZy5lY2xpcHNlLmdl
+Zi5FZGl0UGFydDsKIGltcG9ydCBvcmcuZWNsaXBzZS5nZWYuRWRpdFBhcnRWaWV3ZXI7CiBpbXBv
+cnQgb3JnLmVjbGlwc2UuZ2VmLkdyYXBoaWNhbEVkaXRQYXJ0OwogaW1wb3J0IG9yZy5lY2xpcHNl
+LmdlZi5MYXllckNvbnN0YW50czsKQEAgLTUxMCwxNyArNTEyLDE3IEBACiAJCWZvciAoSXRlcmF0
+b3IgaXRlciA9IGVkaXRQYXJ0cy5pdGVyYXRvcigpOyBpdGVyLmhhc05leHQoKTspIHsKIAkJCUlH
+cmFwaGljYWxFZGl0UGFydCBlbGVtZW50ID0gKElHcmFwaGljYWxFZGl0UGFydCkgaXRlci5uZXh0
+KCk7CiAKLQkJCS8vIEdldCBpdHMgdmlldwotCQkJVmlldyB2aWV3ID0gKFZpZXcpIGVsZW1lbnQu
+Z2V0TW9kZWwoKTsKIAogCQkJLy8gSWYgdGhlIHZpZXcgaXMgYSBzaGFwZSB2aWV3Li4uCiAJCQlp
+ZiAoZWxlbWVudCBpbnN0YW5jZW9mIFNoYXBlRWRpdFBhcnQpIHsKIAkJCQkvLyBHZXQgaXRzIGNv
+bm5lY3Rpb25zIHNvdXJjZQotCQkJCUxpc3Qgc291cmNlQ29ubmVjdGlvbnMgPSB2aWV3LmdldFNv
+dXJjZUVkZ2VzKCk7CisJCQkJTGlzdCBzb3VyY2VDb25uZWN0aW9ucyA9IGVsZW1lbnQuZ2V0U291
+cmNlQ29ubmVjdGlvbnMoKTsKIAogCQkJCS8vIEZvciBlYWNoIHNvdXJjZSBjb25uZWN0aW9uLi4u
+CiAJCQkJZm9yIChpbnQgaSA9IDA7IGkgPCBzb3VyY2VDb25uZWN0aW9ucy5zaXplKCk7IGkrKykg
+ewotCQkJCQlFZGdlIGVkZ2UgPSAoRWRnZSkgc291cmNlQ29ubmVjdGlvbnMuZ2V0KGkpOworCQkJ
+CQlFZGl0UGFydCBwYXJ0ID0gKEVkaXRQYXJ0KSBzb3VyY2VDb25uZWN0aW9ucy5nZXQoaSk7CisJ
+CQkJCUVkZ2UgZWRnZSA9IChFZGdlKSBwYXJ0LmdldE1vZGVsKCk7CisKIAogCQkJCQkvLyBHZXQg
+dGhlIGNvbm5lY3Rpb25zIHRhcmdldAogCQkJCQlWaWV3IHRvVmlldyA9IChlZGdlKS5nZXRUYXJn
+ZXQoKTsK
+</data>
+<flag name="iplog"
+          id="16445"
+          type_id="7"
+          status="+"
+          setter="anthonyh"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

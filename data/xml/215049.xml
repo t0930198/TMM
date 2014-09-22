@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215049</bug_id>
+          
+          <creation_ts>2008-01-11 11:23:00 -0500</creation_ts>
+          <short_desc>Error in Ant-based builder when using dsl.dir.name property</short_desc>
+          <delta_ts>2008-01-11 11:23:06 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMT</product>
+          <component>TCS</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andy Carpenter">Andy.Carpenter</reporter>
+          <assigned_to name="Project Inbox">gmt-tcs-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129722</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andy Carpenter">Andy.Carpenter</who>
+    <bug_when>2008-01-11 11:23:06 -0500</bug_when>
+    <thetext>I&apos;ve been using the Ant-based builder and using the dsl.dir.name property to give the eclipse project a different name to the dsl. When doing this, during the megamodel build an error is reported that the /dsl/Syntax/dsl-parser.jar resource can&apos;t be found. I&apos;ve traced this back to an issue in the AMMAScripts/build.megamodel.xml file. In the second parameter of the ant action the property dsl.name not dsl.dir.name is used to define the location of the dsl-parser.jar file; see snippet below
+
+  antAction {
+    &apos;${dsl.ext}&apos;,
+    &apos;Inject ${dsl.name} File to ${dsl.name} Model&apos;,
+    &apos;${dslscripts.dir}/injector.xml&apos;,
+    context = param {
+      properties { &apos;MUri&apos; = &apos;uri&apos;, }
+    },
+    parameters = [
+      param {
+        &apos;${mm.location}&apos;,
+        properties { &apos;MMUri&apos; = &apos;uri&apos;, }
+      }
+      param {
+        &apos;/${dsl.name}/Syntax/${dsl.name}-parser.jar&apos;, **** issue here ****
+        properties { &apos;EBNFInjectorUri&apos; = &apos;uri&apos;, &apos;classNamePrefix&apos; = &apos;classNamePrefix&apos;, }
+      }
+    ]
+  }</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

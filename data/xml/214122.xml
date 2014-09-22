@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214122</bug_id>
+          
+          <creation_ts>2008-01-02 10:59:00 -0500</creation_ts>
+          <short_desc>response to query with contentSelector does not contain property values</short_desc>
+          <delta_ts>2012-01-03 13:46:31 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Cosmos</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ray Ellis">rayellis</reporter>
+          <assigned_to>amehrega</assigned_to>
+          <cc>dlwhiteman</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124186</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-02 10:59:42 -0500</bug_when>
+    <thetext>When a query contains a contentSelector specifying selectedProperty&apos;s, the response contains the property elements, but not their values.  
+
+Thus, in the case where the response to the query
+
+&lt;query xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+   &lt;itemTemplate id=&quot;IDTemplate&quot;&gt;
+      &lt;instanceIdConstraint&gt;
+         &lt;instanceId&gt;
+            &lt;mdrId&gt;http://my.mdr&lt;/mdrId&gt;
+            &lt;localId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/localId&gt;
+         &lt;/instanceId&gt;
+      &lt;/instanceIdConstraint&gt;
+   &lt;/itemTemplate&gt;
+&lt;/query&gt;
+
+is 
+
+&lt;queryResult xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+   &lt;nodes templateId=&quot;firstTemplate&quot;&gt;
+      &lt;item&gt;
+         &lt;record&gt;
+            &lt;svc:GenericObject xmlns:svc=&quot;http://eis.ibm.com/mdrr/wsrr&quot;&gt;
+               &lt;svc:classificationURIs/&gt;
+               &lt;svc:bsrURI&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/svc:bsrURI&gt;
+               &lt;svc:name&gt;foo&lt;/svc:name&gt;
+               &lt;svc:namespace/&gt;
+               &lt;svc:version/&gt;
+               &lt;svc:description&gt;doodle&lt;/svc:description&gt;
+               &lt;svc:owner&gt;UNAUTHENTICATED&lt;/svc:owner&gt;
+               &lt;svc:lastModified&gt;1198279106531&lt;/svc:lastModified&gt;
+               &lt;svc:creationTimestamp&gt;1198126197250&lt;/svc:creationTimestamp&gt;
+               &lt;svc:lastModifiedBy&gt;UNAUTHENTICATED&lt;/svc:lastModifiedBy&gt;
+               &lt;svc:primaryType/&gt;
+            &lt;/svc:GenericObject&gt;
+            &lt;recordMetadata&gt;
+               &lt;recordId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/recordId&gt;
+            &lt;/recordMetadata&gt;
+         &lt;/record&gt;
+         &lt;instanceId&gt;
+            &lt;mdrId&gt;http://eis.ibm.com/mdrr/wsrr&lt;/mdrId&gt;
+            &lt;localId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/localId&gt;
+         &lt;/instanceId&gt;
+      &lt;/item&gt;
+   &lt;/nodes&gt;
+&lt;/queryResult&gt;
+
+the response to the query
+
+&lt;query xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+   &lt;itemTemplate id=&quot;firstTemplate&quot;&gt;
+      &lt;contentSelector&gt;
+         &lt;selectedRecordType namespace=&quot;http://eis.ibm.com/mdrr/wsrr&quot;
+                             localName = &quot;GenericObject&quot;&gt;
+            &lt;selectedProperty namespace=&quot;http://eis.ibm.com/mdrr/wsrr&quot;
+                              localName = &quot;name&quot;/&gt;
+            &lt;selectedProperty namespace=&quot;http://eis.ibm.com/mdrr/wsrr&quot;
+                              localName = &quot;version&quot;/&gt;
+         &lt;/selectedRecordType&gt;
+      &lt;/contentSelector&gt;
+      &lt;instanceIdConstraint&gt;
+         &lt;instanceId&gt;
+            &lt;mdrId&gt;http://my.mdr&lt;/mdrId&gt;
+            &lt;localId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/localId&gt;
+         &lt;/instanceId&gt;
+      &lt;/instanceIdConstraint&gt;
+   &lt;/itemTemplate&gt;
+&lt;/query&gt;
+
+is
+
+&lt;queryResult xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+   &lt;nodes templateId=&quot;firstTemplate&quot;&gt;
+      &lt;item&gt;
+         &lt;record&gt;
+            &lt;svc:GenericObject xmlns:svc=&quot;http://eis.ibm.com/mdrr/wsrr&quot;&gt;
+               &lt;svc:name/&gt;
+               &lt;svc:version/&gt;
+            &lt;/svc:GenericObject&gt;
+            &lt;recordMetadata&gt;
+               &lt;recordId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/recordId&gt;
+            &lt;/recordMetadata&gt;
+         &lt;/record&gt;
+         &lt;instanceId&gt;
+            &lt;mdrId&gt;http://eis.ibm.com/mdrr/wsrr&lt;/mdrId&gt;
+            &lt;localId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/localId&gt;
+         &lt;/instanceId&gt;
+      &lt;/item&gt;
+   &lt;/nodes&gt;
+&lt;/queryResult&gt;
+
+Note that &lt;svc:name/&gt; should be &lt;svc:name&gt;foo&lt;/svc:name&gt; -- the value of the &quot;name&quot; property has been lost.
+
+(I&apos;ve taken the liberty of formatting the XML to make it more readable -- it tends to be one big string in practice.)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124194</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-02 11:04:50 -0500</bug_when>
+    <thetext>The problem seems to lay in the way the findCandidateNodes method in org.eclipse.cosmos.dc.cmdbf.services.provisional.query.service.impl.CMDBfQueryOperation removes children from their parent nodes:  the child text node containing &quot;foo&quot; in the example is removed from it&apos;s parent when it is examined as a possible match to the property &quot;version&quot;, making it unavailable when the match to the &quot;name&quot; property is discovered.
+
+One way around this is would be not to alter the DOM tree at all while searching for matches, and then make the required alterations after all the matches have been found.  Changing the code around line 554 of CMDBfQueryOperation.findCandidateNodes to
+
+      for (int i = 0, childCount = children.getLength(); i &lt; childCount; i++)
+      {
+         Node child = children.item(i);
+         
+         if (child.getNodeType() != Node.ELEMENT_NODE)
+
+keeps the DOM tree intact during search, and changing the retrieveProperties method to
+
+   private void retrieveProperties(Node rootNode, IPropertyId[] properties)
+   {            
+      List&lt;Node&gt; candidateNodes = new ArrayList&lt;Node&gt;();
+      findCandidateNodes (rootNode, candidateNodes, properties);
+
+      for (int i = 0, candidateCount = candidateNodes.size();
+           i &lt; candidateCount; i++)
+      {
+         Node candidateNode = candidateNodes.get(i);
+         candidateNode.getParentNode().removeChild(candidateNode);
+      }
+
+      for (int i = 0, numChildren = rootNode.getChildNodes().getLength();
+           i &lt; numChildren; i++) {
+         rootNode.removeChild(rootNode.getChildNodes().item(0));
+      }
+
+      for (int i = 0, candidateCount = candidateNodes.size();
+           i &lt; candidateCount; i++)
+      {
+         rootNode.appendChild(candidateNodes.get(i));
+      }
+   }
+
+collects all the required changes together after searching.  With this approach the response to the example query becomes
+
+&lt;queryResult xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+   &lt;nodes templateId=&quot;firstTemplate&quot;&gt;
+      &lt;item&gt;
+         &lt;record&gt;
+            &lt;svc:GenericObject xmlns:svc=&quot;http://eis.ibm.com/mdrr/wsrr&quot;&gt;
+               &lt;svc:name&gt;foo&lt;/svc:name&gt;
+               &lt;svc:version/&gt;
+            &lt;/svc:GenericObject&gt;
+            &lt;recordMetadata&gt;
+               &lt;recordId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/recordId&gt;
+            &lt;/recordMetadata&gt;
+         &lt;/record&gt;
+         &lt;instanceId&gt;
+            &lt;mdrId&gt;http://eis.ibm.com/mdrr/wsrr&lt;/mdrId&gt;
+            &lt;localId&gt;47dc6d47-354e-4e53.80ac.d27640d2ac34&lt;/localId&gt;
+         &lt;/instanceId&gt;
+      &lt;/item&gt;
+   &lt;/nodes&gt;
+&lt;/queryResult&gt;
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124487</commentid>
+    <comment_count>2</comment_count>
+    <who name="">amehrega</who>
+    <bug_when>2008-01-02 15:34:33 -0500</bug_when>
+    <thetext>Thanks for reporting this problem.
+My fix is very similar to what you suggested.  It doesn&apos;t include the first for-loop you have in retrieveProperties(...):
+
+      for (int i = 0, candidateCount = candidateNodes.size();
+           i &lt; candidateCount; i++)
+      {
+         Node candidateNode = candidateNodes.get(i);
+         candidateNode.getParentNode().removeChild(candidateNode);
+      }
+
+I missed the significance of this for-loop.  Why do you remove the candidate node from its parent?
+
+I&apos;ve added a new test case to exercise this fix.  Please see:
+org.eclipse.cosmos.rm.repository.internal.operations.cmdbf.TestCMDBfQueryOperation.testPropertySubsetMultiple
+
+Ray, please let me know if the fix in HEAD is sufficient.
+Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124696</commentid>
+    <comment_count>3</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-02 21:40:29 -0500</bug_when>
+    <thetext>I was concerned that if the node you identified were not a direct child of rootNode, then without this step it would still have its parent, siblings, etc. hanging on to it when you added it into the cleaned-out root node in the last loop.  I&apos;ll try out the new HEAD and let you know how it goes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125376</commentid>
+    <comment_count>4</comment_count>
+    <who name="Ray Ellis">rayellis</who>
+    <bug_when>2008-01-03 18:07:23 -0500</bug_when>
+    <thetext>Works ok.  I tried it out with some structured data where the desired property was not a direct child of rootNode (the situation I was concerned about) and the result was correct.  Nice work!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125713</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Whiteman">dlwhiteman</who>
+    <bug_when>2008-01-04 08:45:45 -0500</bug_when>
+    <thetext>closing</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

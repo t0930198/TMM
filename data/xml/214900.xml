@@ -1,0 +1,275 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214900</bug_id>
+          
+          <creation_ts>2008-01-10 10:22:00 -0500</creation_ts>
+          <short_desc>GEF should be using ICU instead of java.text</short_desc>
+          <delta_ts>2008-09-18 13:48:40 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>GEF</product>
+          <component>GEF (MVC) [GEF 3.x / Zest 1.x]</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          <dependson>214406</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Pierre Carlson">mpcarl</reporter>
+          <assigned_to name="Pierre Carlson">mpcarl</assigned_to>
+          <cc>anthonyh</cc>
+    
+    <cc>nickboldt</cc>
+    
+    <cc>ppshah</cc>
+    
+    <cc>raji</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128902</commentid>
+    <comment_count>0</comment_count>
+    <who name="Pierre Carlson">mpcarl</who>
+    <bug_when>2008-01-10 10:22:04 -0500</bug_when>
+    <thetext>GEF should be using ICU instead of java.text per http://wiki.eclipse.org/ICU4J.
+
+org.eclipse.gef is using java.text.MessageFormat and draw2d is using java.text.Bidi.  I&apos;ll attach a patch that changes the imports to com.ibm.icu.  The draw2d piece of the patch won&apos;t work until Eclipse upgrades to ICU 3.8.  This is supposed to happen in M5.  See bug 214406.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128904</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86560</attachid>
+    <who name="Pierre Carlson">mpcarl</who>
+    <bug_when>2008-01-10 10:23:00 -0500</bug_when>
+    <thetext>Created attachment 86560
+Patches org.eclipse.gef and org.eclipse.draw2d to use icu classes</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128913</commentid>
+    <comment_count>2</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-10 10:31:35 -0500</bug_when>
+    <thetext>We were supposed to already be ICU4J compliant, must have missed a few places.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129477</commentid>
+    <comment_count>3</comment_count>
+    <who name="Pratik Shah">ppshah</who>
+    <bug_when>2008-01-11 03:30:28 -0500</bug_when>
+    <thetext>We should be careful here.  It&apos;s not always a simple case of changing the import statement.  I know for a fact that the word iterators in JDK and ICU work quite differently, so changing the word iterator in the text example (TextFlowPart) to the ICU4J version introduced bugs in the word navigation behaviour.  Similarly, changing the line iterator in FlowUtilities might have introduced a bug.
+
+Looking at http://wiki.eclipse.org/ICU4J, I don&apos;t see Bidi mentioned in there as a class that needs to be changed.  If we do change it, we&apos;d have to do sufficient testing to ensure that it didn&apos;t introduce any problems.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129623</commentid>
+    <comment_count>4</comment_count>
+    <who name="Pierre Carlson">mpcarl</who>
+    <bug_when>2008-01-11 09:34:31 -0500</bug_when>
+    <thetext>The change that is important to my product is the Bidi change.  The only usage is the static method requiresBidi() which determines if a string needs to be Bidi processed.  The Bidi class was not added to ICU until 3.8, which Eclipse is just adopting now.  I suspect that is why it is not on the Eclipse/ICU page.  It seems like we should be able to rely on the ICU testing of this single static method.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148946</commentid>
+    <comment_count>5</comment_count>
+    <who name="Pierre Carlson">mpcarl</who>
+    <bug_when>2008-02-04 12:25:17 -0500</bug_when>
+    <thetext>I verified this morning that the attached patch still works against what is in HEAD.  the patch should just need to be reviewed and committed to CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153447</commentid>
+    <comment_count>6</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-02-08 15:32:58 -0500</bug_when>
+    <thetext>Missed M5, so moving to M6</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1185210</commentid>
+    <comment_count>7</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-03-26 15:55:20 -0400</bug_when>
+    <thetext>Committed to HEAD,
+
+Also added the explicit bundle version dependency to draw2d and gef.
+
+ com.ibm.icu;bundle-version=&quot;[3.8.0,4.0.0)&quot;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1189879</commentid>
+    <comment_count>8</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-03-31 17:33:48 -0400</bug_when>
+    <thetext>(In reply to comment #7)
+&gt; Also added the explicit bundle version dependency to draw2d and gef.
+&gt; 
+&gt;  com.ibm.icu;bundle-version=&quot;[3.8.0,4.0.0)&quot;
+&gt; 
+
+I guess this was a bad idea. GEF originally used 
+Import-Package: com.ibm.icu.text
+
+Given we fixed this bug, I changed this to explicitly require the 3.8.0 or newer bundle, since it depends on the new ICU.
+
+For whatever reason, this change broken the GMF build.
+
+For now I have put the import package back in the Manifest.MF</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86560</attachid>
+            <date>2008-01-10 10:23:00 -0500</date>
+            <delta_ts>2008-09-18 13:48:40 -0400</delta_ts>
+            <desc>Patches org.eclipse.gef and org.eclipse.draw2d to use icu classes</desc>
+            <filename>icu-gef.patch</filename>
+            <type>application/octet-stream</type>
+            <size>6435</size>
+            <attacher name="Pierre Carlson">mpcarl</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZ2VmDQpJbmRl
+eDogc3JjL29yZy9lY2xpcHNlL2dlZi91aS9hY3Rpb25zL1JlZG9BY3Rpb24uamF2YQ0KPT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L3Rvb2xzL29yZy5lY2xpcHNlLmdlZi9wbHVnaW5zL29y
+Zy5lY2xpcHNlLmdlZi9zcmMvb3JnL2VjbGlwc2UvZ2VmL3VpL2FjdGlvbnMvUmVkb0FjdGlvbi5q
+YXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xMQ0KZGlmZiAtdSAtcjEuMTEgUmVkb0FjdGlv
+bi5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2dlZi91aS9hY3Rpb25zL1JlZG9BY3Rpb24uamF2
+YQkyOSBNYXIgMjAwNSAyMzo1NzozNiAtMDAwMAkxLjExDQorKysgc3JjL29yZy9lY2xpcHNlL2dl
+Zi91aS9hY3Rpb25zL1JlZG9BY3Rpb24uamF2YQkxMCBKYW4gMjAwOCAxNToxOToxMiAtMDAwMA0K
+QEAgLTEwLDcgKzEwLDcgQEANCiAgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKi8NCiBwYWNrYWdlIG9y
+Zy5lY2xpcHNlLmdlZi51aS5hY3Rpb25zOw0KIA0KLWltcG9ydCBqYXZhLnRleHQuTWVzc2FnZUZv
+cm1hdDsNCitpbXBvcnQgY29tLmlibS5pY3UudGV4dC5NZXNzYWdlRm9ybWF0Ow0KIA0KIGltcG9y
+dCBvcmcuZWNsaXBzZS51aS5JRWRpdG9yUGFydDsNCiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuSVNo
+YXJlZEltYWdlczsNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvZ2VmL3VpL2FjdGlvbnMvUmVkb1Jl
+dGFyZ2V0QWN0aW9uLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90b29scy9v
+cmcuZWNsaXBzZS5nZWYvcGx1Z2lucy9vcmcuZWNsaXBzZS5nZWYvc3JjL29yZy9lY2xpcHNlL2dl
+Zi91aS9hY3Rpb25zL1JlZG9SZXRhcmdldEFjdGlvbi5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNp
+b24gMS4xMA0KZGlmZiAtdSAtcjEuMTAgUmVkb1JldGFyZ2V0QWN0aW9uLmphdmENCi0tLSBzcmMv
+b3JnL2VjbGlwc2UvZ2VmL3VpL2FjdGlvbnMvUmVkb1JldGFyZ2V0QWN0aW9uLmphdmEJMjkgTWFy
+IDIwMDUgMjM6NTc6MzYgLTAwMDAJMS4xMA0KKysrIHNyYy9vcmcvZWNsaXBzZS9nZWYvdWkvYWN0
+aW9ucy9SZWRvUmV0YXJnZXRBY3Rpb24uamF2YQkxMCBKYW4gMjAwOCAxNToxOToxMiAtMDAwMA0K
+QEAgLTEwLDcgKzEwLDcgQEANCiAgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKi8NCiBwYWNrYWdlIG9y
+Zy5lY2xpcHNlLmdlZi51aS5hY3Rpb25zOw0KIA0KLWltcG9ydCBqYXZhLnRleHQuTWVzc2FnZUZv
+cm1hdDsNCitpbXBvcnQgY29tLmlibS5pY3UudGV4dC5NZXNzYWdlRm9ybWF0Ow0KIA0KIGltcG9y
+dCBvcmcuZWNsaXBzZS51aS5JU2hhcmVkSW1hZ2VzOw0KIGltcG9ydCBvcmcuZWNsaXBzZS51aS5Q
+bGF0Zm9ybVVJOw0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9nZWYvdWkvYWN0aW9ucy9VbmRvQWN0
+aW9uLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90b29scy9vcmcuZWNsaXBz
+ZS5nZWYvcGx1Z2lucy9vcmcuZWNsaXBzZS5nZWYvc3JjL29yZy9lY2xpcHNlL2dlZi91aS9hY3Rp
+b25zL1VuZG9BY3Rpb24uamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMTENCmRpZmYgLXUg
+LXIxLjExIFVuZG9BY3Rpb24uamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9nZWYvdWkvYWN0aW9u
+cy9VbmRvQWN0aW9uLmphdmEJMjkgTWFyIDIwMDUgMjM6NTc6MzYgLTAwMDAJMS4xMQ0KKysrIHNy
+Yy9vcmcvZWNsaXBzZS9nZWYvdWkvYWN0aW9ucy9VbmRvQWN0aW9uLmphdmEJMTAgSmFuIDIwMDgg
+MTU6MTk6MTIgLTAwMDANCkBAIC0xLDUgKzEsNSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+DQotICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA1IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJz
+Lg0KKyAqIENvcHlyaWdodCAoYykgMjAwMCwgMjAwOCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVy
+cy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVkLiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBh
+bnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBv
+ZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5zZSB2MS4wDQogICogd2hpY2ggYWNjb21wYW5pZXMg
+dGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFpbGFibGUgYXQNCkBAIC0xMCw3ICsxMCw3IEBA
+DQogICoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKiovDQogcGFja2FnZSBvcmcuZWNsaXBzZS5nZWYudWku
+YWN0aW9uczsNCiANCi1pbXBvcnQgamF2YS50ZXh0Lk1lc3NhZ2VGb3JtYXQ7DQoraW1wb3J0IGNv
+bS5pYm0uaWN1LnRleHQuTWVzc2FnZUZvcm1hdDsNCiANCiBpbXBvcnQgb3JnLmVjbGlwc2UudWku
+SUVkaXRvclBhcnQ7DQogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLklTaGFyZWRJbWFnZXM7DQpJbmRl
+eDogc3JjL29yZy9lY2xpcHNlL2dlZi91aS9hY3Rpb25zL1VuZG9SZXRhcmdldEFjdGlvbi5qYXZh
+DQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvdG9vbHMvb3JnLmVjbGlwc2UuZ2VmL3Bs
+dWdpbnMvb3JnLmVjbGlwc2UuZ2VmL3NyYy9vcmcvZWNsaXBzZS9nZWYvdWkvYWN0aW9ucy9VbmRv
+UmV0YXJnZXRBY3Rpb24uamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMTANCmRpZmYgLXUg
+LXIxLjEwIFVuZG9SZXRhcmdldEFjdGlvbi5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2dlZi91
+aS9hY3Rpb25zL1VuZG9SZXRhcmdldEFjdGlvbi5qYXZhCTI5IE1hciAyMDA1IDIzOjU3OjM2IC0w
+MDAwCTEuMTANCisrKyBzcmMvb3JnL2VjbGlwc2UvZ2VmL3VpL2FjdGlvbnMvVW5kb1JldGFyZ2V0
+QWN0aW9uLmphdmEJMTAgSmFuIDIwMDggMTU6MTk6MTIgLTAwMDANCkBAIC0xLDUgKzEsNSBAQA0K
+IC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA1IElC
+TSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAwMCwgMjAwOCBJ
+Qk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVkLiBUaGlz
+IHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1hZGUgYXZh
+aWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5zZSB2MS4w
+DQogICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFpbGFi
+bGUgYXQNCkBAIC0xMCw3ICsxMCw3IEBADQogICoqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKiovDQogcGFj
+a2FnZSBvcmcuZWNsaXBzZS5nZWYudWkuYWN0aW9uczsNCiANCi1pbXBvcnQgamF2YS50ZXh0Lk1l
+c3NhZ2VGb3JtYXQ7DQoraW1wb3J0IGNvbS5pYm0uaWN1LnRleHQuTWVzc2FnZUZvcm1hdDsNCiAN
+CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuSVNoYXJlZEltYWdlczsNCiBpbXBvcnQgb3JnLmVjbGlw
+c2UudWkuUGxhdGZvcm1VSTsNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvZ2VmL3VpL3Byb3BlcnRp
+ZXMvU2V0VmFsdWVDb21tYW5kLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90
+b29scy9vcmcuZWNsaXBzZS5nZWYvcGx1Z2lucy9vcmcuZWNsaXBzZS5nZWYvc3JjL29yZy9lY2xp
+cHNlL2dlZi91aS9wcm9wZXJ0aWVzL1NldFZhbHVlQ29tbWFuZC5qYXZhLHYNCnJldHJpZXZpbmcg
+cmV2aXNpb24gMS4xDQpkaWZmIC11IC1yMS4xIFNldFZhbHVlQ29tbWFuZC5qYXZhDQotLS0gc3Jj
+L29yZy9lY2xpcHNlL2dlZi91aS9wcm9wZXJ0aWVzL1NldFZhbHVlQ29tbWFuZC5qYXZhCTMxIE1h
+ciAyMDA1IDE5OjA1OjUxIC0wMDAwCTEuMQ0KKysrIHNyYy9vcmcvZWNsaXBzZS9nZWYvdWkvcHJv
+cGVydGllcy9TZXRWYWx1ZUNvbW1hbmQuamF2YQkxMCBKYW4gMjAwOCAxNToxOToxMiAtMDAwMA0K
+QEAgLTEsNSArMSw1IEBADQogLyoqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioNCi0gKiBDb3B5cmlnaHQg
+KGMpIDIwMDAsIDIwMDUgSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQorICogQ29weXJpZ2h0
+IChjKSAyMDAwLCAyMDA4IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KICAqIEFsbCByaWdo
+dHMgcmVzZXJ2ZWQuIFRoaXMgcHJvZ3JhbSBhbmQgdGhlIGFjY29tcGFueWluZyBtYXRlcmlhbHMN
+CiAgKiBhcmUgbWFkZSBhdmFpbGFibGUgdW5kZXIgdGhlIHRlcm1zIG9mIHRoZSBFY2xpcHNlIFB1
+YmxpYyBMaWNlbnNlIHYxLjANCiAgKiB3aGljaCBhY2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1dGlv
+biwgYW5kIGlzIGF2YWlsYWJsZSBhdA0KQEAgLTEwLDcgKzEwLDcgQEANCiAgKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKi8NCiBwYWNrYWdlIG9yZy5lY2xpcHNlLmdlZi51aS5wcm9wZXJ0aWVzOw0KIA0K
+LWltcG9ydCBqYXZhLnRleHQuTWVzc2FnZUZvcm1hdDsNCitpbXBvcnQgY29tLmlibS5pY3UudGV4
+dC5NZXNzYWdlRm9ybWF0Ow0KIA0KIGltcG9ydCBvcmcuZWNsaXBzZS51aS52aWV3cy5wcm9wZXJ0
+aWVzLklQcm9wZXJ0eVNvdXJjZTsNCiBpbXBvcnQgb3JnLmVjbGlwc2UudWkudmlld3MucHJvcGVy
+dGllcy5JUHJvcGVydHlTb3VyY2UyOw0KI1Agb3JnLmVjbGlwc2UuZHJhdzJkDQpJbmRleDogc3Jj
+L29yZy9lY2xpcHNlL2RyYXcyZC90ZXh0L0JpZGlQcm9jZXNzb3IuamF2YQ0KPT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0K
+UkNTIGZpbGU6IC9jdnNyb290L3Rvb2xzL29yZy5lY2xpcHNlLmdlZi9wbHVnaW5zL29yZy5lY2xp
+cHNlLmRyYXcyZC9zcmMvb3JnL2VjbGlwc2UvZHJhdzJkL3RleHQvQmlkaVByb2Nlc3Nvci5qYXZh
+LHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xNw0KZGlmZiAtdSAtcjEuMTcgQmlkaVByb2Nlc3Nv
+ci5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2RyYXcyZC90ZXh0L0JpZGlQcm9jZXNzb3IuamF2
+YQk3IEp1biAyMDA1IDE4OjI5OjM2IC0wMDAwCTEuMTcNCisrKyBzcmMvb3JnL2VjbGlwc2UvZHJh
+dzJkL3RleHQvQmlkaVByb2Nlc3Nvci5qYXZhCTEwIEphbiAyMDA4IDE1OjE5OjE2IC0wMDAwDQpA
+QCAtMSw1ICsxLDUgQEANCiAvKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKg0KLSAqIENvcHlyaWdodCAo
+YykgMjAwNCwgMjAwNSBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCisgKiBDb3B5cmlnaHQg
+KGMpIDIwMDQsIDIwMDggSUJNIENvcnBvcmF0aW9uIGFuZCBvdGhlcnMuDQogICogQWxsIHJpZ2h0
+cyByZXNlcnZlZC4gVGhpcyBwcm9ncmFtIGFuZCB0aGUgYWNjb21wYW55aW5nIG1hdGVyaWFscw0K
+ICAqIGFyZSBtYWRlIGF2YWlsYWJsZSB1bmRlciB0aGUgdGVybXMgb2YgdGhlIEVjbGlwc2UgUHVi
+bGljIExpY2Vuc2UgdjEuMA0KICAqIHdoaWNoIGFjY29tcGFuaWVzIHRoaXMgZGlzdHJpYnV0aW9u
+LCBhbmQgaXMgYXZhaWxhYmxlIGF0DQpAQCAtMTAsNyArMTAsNyBAQA0KICAqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqLw0KIHBhY2thZ2Ugb3JnLmVjbGlwc2UuZHJhdzJkLnRleHQ7DQogDQotaW1wb3J0
+IGphdmEudGV4dC5CaWRpOw0KK2ltcG9ydCBjb20uaWJtLmljdS50ZXh0LkJpZGk7DQogaW1wb3J0
+IGphdmEudXRpbC5BcnJheUxpc3Q7DQogaW1wb3J0IGphdmEudXRpbC5MaXN0Ow0KIA0K
+</data>
+<flag name="iplog"
+          id="12118"
+          type_id="7"
+          status="+"
+          setter="anthonyh"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

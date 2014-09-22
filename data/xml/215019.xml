@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215019</bug_id>
+          
+          <creation_ts>2008-01-11 09:28:00 -0500</creation_ts>
+          <short_desc>[search] JavaSearchBugsTests.testBug181488a is randomly failing</short_desc>
+          <delta_ts>2008-02-05 09:20:29 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Frederic Fusier">frederic_fusier</reporter>
+          <assigned_to name="Frederic Fusier">frederic_fusier</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129617</commentid>
+    <comment_count>0</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-11 09:28:19 -0500</bug_when>
+    <thetext>N20080111-0010.
+
+Got the following trace failure in this nightly build:
+Index file should be unchanged!!! expected:&lt;1200046881796&gt; but was:&lt;1200046887156&gt; 
+junit.framework.AssertionFailedError: Index file should be unchanged!!! expected:&lt;1200046881796&gt; but was:&lt;1200046887156&gt;
+at org.eclipse.jdt.core.tests.model.JavaSearchBugsTests.testBug181488a(JavaSearchBugsTests.java:8529)
+
+While re-running the test I sometimes reproduce it but not systematically...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131297</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86926</attachid>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-15 05:20:55 -0500</bug_when>
+    <thetext>Created attachment 86926
+Proposed patch
+
+This patch only fixes the test itself. It seems that some previous tests make some changes to the JavaSearchBugs project which implied a re-indexing. But as there was not enough changes in the indexes, they were not saved on disk. So, when simulating exit, the save occurred but I stored the index file before it really happened =&gt; simply move the storage of the index file last modification date between the exit and the restart solve the problem :-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131298</commentid>
+    <comment_count>2</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-15 05:21:10 -0500</bug_when>
+    <thetext>Released for 3.4M5 in HEAD stream.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149588</commentid>
+    <comment_count>3</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-02-05 05:15:31 -0500</bug_when>
+    <thetext>The code in HEAD, released on the 15th of January, is markedly different from the patch attached here, and there is no warranty that the result won&apos;t fail at some random time (since the assert is back). I hence seems to me that sole the fact that releng tests pass repeatedly could lead to a VERIFIED status here. There have been quite a few nightly builds without this bug being hit again, but in the tens range only. Given the fact that a quick fix is possible (revert to assume), I&apos;ll mark this one as verified though.
+
+Verified for 3.4 M5 (looking at the code and considering latest releng tests).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149627</commentid>
+    <comment_count>4</comment_count>
+      <attachid>88868</attachid>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-02-05 06:25:29 -0500</bug_when>
+    <thetext>Created attachment 88868
+Released patch
+
+Indeed, I attached the wrong patch file :-(
+This one was the real released code...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149765</commentid>
+    <comment_count>5</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-02-05 09:20:29 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; The code in HEAD, released on the 15th of January, is markedly different from
+&gt; the patch attached here, and there is no warranty that the result won&apos;t fail
+&gt; at some random time (since the assert is back). I hence seems to me that sole
+&gt; the fact that releng tests pass repeatedly could lead to a VERIFIED status here.
+&gt; There have been quite a few nightly builds without this bug being hit again,
+&gt; but in the tens range only. Given the fact that a quick fix is possible (revert
+&gt; to assume), I&apos;ll mark this one as verified though.
+&gt; 
+&gt; Verified for 3.4 M5 (looking at the code and considering latest releng tests).
+&gt; 
+No, it will never happen again as the index file last modified time is now stored after the exit where an ultimate save may occur if the index manager didn&apos;t do it between the last time the indexes were verified to be ready and when the simulated exit happens.
+
+So, there&apos;s still no reason that this last modified time changes for the index file (except a regression in this area), hence justify that the assertion was put back...
+
+Note that run locally RunJavaSearchTests suite 5 times without the fix results to get the test failure on 3 runs (60%). The test was *always* successful on 5 runs with the fix, so I would have been really surprised if this bug hadn&apos;t granted to VERIFIED status...
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86926</attachid>
+            <date>2008-01-15 05:20:00 -0500</date>
+            <delta_ts>2008-02-05 06:25:29 -0500</delta_ts>
+            <desc>Proposed patch</desc>
+            <filename>v01.txt</filename>
+            <type>text/plain</type>
+            <size>2583</size>
+            <attacher name="Frederic Fusier">frederic_fusier</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUu
+dGVzdHMubW9kZWwNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvbW9kZWwv
+SmF2YVNlYXJjaEJ1Z3NUZXN0cy5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3Qv
+ZWNsaXBzZS9vcmcuZWNsaXBzZS5qZHQuY29yZS50ZXN0cy5tb2RlbC9zcmMvb3JnL2VjbGlwc2Uv
+amR0L2NvcmUvdGVzdHMvbW9kZWwvSmF2YVNlYXJjaEJ1Z3NUZXN0cy5qYXZhLHYNCnJldHJpZXZp
+bmcgcmV2aXNpb24gMS4xNDANCmRpZmYgLXUgLXIxLjE0MCBKYXZhU2VhcmNoQnVnc1Rlc3RzLmph
+dmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvbW9kZWwvSmF2YVNlYXJjaEJ1
+Z3NUZXN0cy5qYXZhCTEwIEphbiAyMDA4IDE1OjQ1OjAxIC0wMDAwCTEuMTQwDQorKysgc3JjL29y
+Zy9lY2xpcHNlL2pkdC9jb3JlL3Rlc3RzL21vZGVsL0phdmFTZWFyY2hCdWdzVGVzdHMuamF2YQkx
+MSBKYW4gMjAwOCAxNjo0NTo1MCAtMDAwMA0KQEAgLTg1MjYsNyArODUyNiw5IEBADQogCXNpbXVs
+YXRlRXhpdFJlc3RhcnQoKTsNCiAJd2FpdFVudGlsSW5kZXhlc1JlYWR5KCk7DQogCUluZGV4IG5l
+d0luZGV4ID0gbWFuYWdlci5nZXRJbmRleChKQVZBX1BST0pFQ1QuZ2V0UGF0aCgpLCB0cnVlLCBm
+YWxzZSk7DQotCWFzc2VydEVxdWFscygiSW5kZXggZmlsZSBzaG91bGQgYmUgdW5jaGFuZ2VkISEh
+IiwgbGFzdE1vZGlmaWVkLCBuZXdJbmRleC5nZXRJbmRleEZpbGUoKS5sYXN0TW9kaWZpZWQoKSk7
+DQorCS8vIFRPRE8gKGZyZWRlcmljKSBWZXJpZnkgdGhpcyB0ZXN0IHJlc3VsdCBvbiByZWxlbmcg
+YnVpbGQgdG8ga25vdyB3aGV0aGVyIGl0IGNvbnRpbnVlcyB0byBmYWlsIG9yIG5vdA0KKwl0aGlz
+LmFib3J0T25GYWlsdXJlID0gZmFsc2U7DQorCWFzc3VtZUVxdWFscygiSW5kZXggZmlsZSBzaG91
+bGQgYmUgdW5jaGFuZ2VkISEhIiwgbGFzdE1vZGlmaWVkLCBuZXdJbmRleC5nZXRJbmRleEZpbGUo
+KS5sYXN0TW9kaWZpZWQoKSk7DQogfQ0KIHB1YmxpYyB2b2lkIHRlc3RCdWcxODE0ODhiKCkgdGhy
+b3dzIENvcmVFeGNlcHRpb24gew0KIAlJSmF2YVByb2plY3QgcHJvamVjdCA9IGNyZWF0ZUphdmFQ
+cm9qZWN0KCJCdWcxODE0ODgiKTsNCiNQIG9yZy5lY2xpcHNlLmpkdC5jb3JlLnRlc3RzLmNvbXBp
+bGVyDQpJbmRleDogc3JjL29yZy9lY2xpcHNlL2pkdC9jb3JlL3Rlc3RzL2p1bml0L2V4dGVuc2lv
+bi9UZXN0Q2FzZS5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9v
+cmcuZWNsaXBzZS5qZHQuY29yZS50ZXN0cy5jb21waWxlci9zcmMvb3JnL2VjbGlwc2UvamR0L2Nv
+cmUvdGVzdHMvanVuaXQvZXh0ZW5zaW9uL1Rlc3RDYXNlLmphdmEsdg0KcmV0cmlldmluZyByZXZp
+c2lvbiAxLjMzDQpkaWZmIC11IC1yMS4zMyBUZXN0Q2FzZS5qYXZhDQotLS0gc3JjL29yZy9lY2xp
+cHNlL2pkdC9jb3JlL3Rlc3RzL2p1bml0L2V4dGVuc2lvbi9UZXN0Q2FzZS5qYXZhCTEyIFNlcCAy
+MDA3IDE3OjUxOjQ0IC0wMDAwCTEuMzMNCisrKyBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVz
+dHMvanVuaXQvZXh0ZW5zaW9uL1Rlc3RDYXNlLmphdmEJMTEgSmFuIDIwMDggMTY6NDU6NTEgLTAw
+MDANCkBAIC0yODksNiArMjg5LDIzIEBADQogfQ0KIA0KIC8qKg0KKyAqIFNhbWUgbWV0aG9kIGFz
+IHtAbGluayAjYXNzZXJ0RXF1YWxzKFN0cmluZywgbG9uZywgbG9uZyl9IGlmIHRoZSBmbGFnDQor
+ICoge0BsaW5rICNhYm9ydE9uRmFpbHVyZX0gaGFzIGJlZW4gc2V0IHRvIDxjb2RlPnRydWU8L2Nv
+ZGU+Lg0KKyAqIE90aGVyd2lzZSwgdGhlIHRocm93biBleGNlcHRpb24ge0BsaW5rIEFzc2VydGlv
+bkZhaWxlZEVycm9yfSBpcyBjYXVnaHQNCisgKiBhbmQgaXRzIG1lc3NhZ2UgaXMgb25seSBkaXNw
+bGF5ZWQgaW4gdGhlIGNvbnNvbGUgaGVuY2UgcHJvZHVjaW5nIG5vIEpVbml0IGZhaWx1cmUuDQor
+ICovDQorcHJvdGVjdGVkIHZvaWQgYXNzdW1lRXF1YWxzKFN0cmluZyBtc2csIGxvbmcgZXhwZWN0
+ZWQsIGxvbmcgYWN0dWFsKSB7DQorCXRyeSB7DQorCQlhc3NlcnRFcXVhbHMobXNnLCBleHBlY3Rl
+ZCwgYWN0dWFsKTsNCisJfSBjYXRjaCAoQXNzZXJ0aW9uRmFpbGVkRXJyb3IgYWZlKSB7DQorCQlp
+ZiAoYWJvcnRPbkZhaWx1cmUpIHsNCisJCQl0aHJvdyBhZmU7DQorCQl9DQorCQlwcmludEFzc2Vy
+dGlvbkZhaWx1cmUoYWZlKTsNCisJfQ0KK30NCisNCisvKioNCiAgKiBTYW1lIG1ldGhvZCBhcyB7
+QGxpbmsgI2Fzc2VydFRydWUoU3RyaW5nLCBib29sZWFuKX0gaWYgdGhlIGZsYWcNCiAgKiB7QGxp
+bmsgI2Fib3J0T25GYWlsdXJlfSBoYXMgYmVlbiBzZXQgdG8gPGNvZGU+dHJ1ZTwvY29kZT4uDQog
+ICogT3RoZXJ3aXNlLCB0aGUgdGhyb3duIGV4Y2VwdGlvbiB7QGxpbmsgQXNzZXJ0aW9uRmFpbGVk
+RXJyb3J9IGlzIGNhdWdodA0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>88868</attachid>
+            <date>2008-02-05 06:25:00 -0500</date>
+            <delta_ts>2008-02-05 06:25:29 -0500</delta_ts>
+            <desc>Released patch</desc>
+            <filename>v00.txt</filename>
+            <type>text/plain</type>
+            <size>1833</size>
+            <attacher name="Frederic Fusier">frederic_fusier</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUu
+dGVzdHMubW9kZWwNCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvbW9kZWwv
+SmF2YVNlYXJjaEJ1Z3NUZXN0cy5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3Qv
+ZWNsaXBzZS9vcmcuZWNsaXBzZS5qZHQuY29yZS50ZXN0cy5tb2RlbC9zcmMvb3JnL2VjbGlwc2Uv
+amR0L2NvcmUvdGVzdHMvbW9kZWwvSmF2YVNlYXJjaEJ1Z3NUZXN0cy5qYXZhLHYNCnJldHJpZXZp
+bmcgcmV2aXNpb24gMS4xNDENCmRpZmYgLXUgLXIxLjE0MSBKYXZhU2VhcmNoQnVnc1Rlc3RzLmph
+dmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvbW9kZWwvSmF2YVNlYXJjaEJ1
+Z3NUZXN0cy5qYXZhCTExIEphbiAyMDA4IDE2OjQ4OjI5IC0wMDAwCTEuMTQxDQorKysgc3JjL29y
+Zy9lY2xpcHNlL2pkdC9jb3JlL3Rlc3RzL21vZGVsL0phdmFTZWFyY2hCdWdzVGVzdHMuamF2YQkx
+NSBKYW4gMjAwOCAwODoyMDo0NiAtMDAwMA0KQEAgLTEwLDYgKzEwLDcgQEANCiAgKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKi8NCiBwYWNrYWdlIG9yZy5lY2xpcHNlLmpkdC5jb3JlLnRlc3RzLm1vZGVs
+Ow0KIA0KK2ltcG9ydCBqYXZhLmlvLkZpbGU7DQogaW1wb3J0IGphdmEuaW8uSU9FeGNlcHRpb247
+DQogaW1wb3J0IGphdmEudXRpbC5BcnJheUxpc3Q7DQogaW1wb3J0IGphdmEudXRpbC5MaXN0Ow0K
+QEAgLTg1MjIsMTMgKzg1MjMsMTMgQEANCiAJd2FpdFVudGlsSW5kZXhlc1JlYWR5KCk7DQogCUlu
+ZGV4TWFuYWdlciBtYW5hZ2VyID0gSmF2YU1vZGVsTWFuYWdlci5nZXRJbmRleE1hbmFnZXIoKTsN
+CiAJSW5kZXggaW5kZXggPSBtYW5hZ2VyLmdldEluZGV4KEpBVkFfUFJPSkVDVC5nZXRQYXRoKCks
+IHRydWUsIGZhbHNlKTsNCi0JbG9uZyBsYXN0TW9kaWZpZWQgPSBpbmRleC5nZXRJbmRleEZpbGUo
+KS5sYXN0TW9kaWZpZWQoKTsNCi0Jc2ltdWxhdGVFeGl0UmVzdGFydCgpOw0KKwlGaWxlIGluZGV4
+RmlsZSA9IGluZGV4LmdldEluZGV4RmlsZSgpOw0KKwlzaW11bGF0ZUV4aXQoKTsNCisJbG9uZyBs
+YXN0TW9kaWZpZWQgPSBpbmRleEZpbGUubGFzdE1vZGlmaWVkKCk7DQorCXNpbXVsYXRlUmVzdGFy
+dCgpOw0KIAl3YWl0VW50aWxJbmRleGVzUmVhZHkoKTsNCiAJSW5kZXggbmV3SW5kZXggPSBtYW5h
+Z2VyLmdldEluZGV4KEpBVkFfUFJPSkVDVC5nZXRQYXRoKCksIHRydWUsIGZhbHNlKTsNCi0JLy8g
+VE9ETyAoZnJlZGVyaWMpIFZlcmlmeSB0aGlzIHRlc3QgcmVzdWx0IG9uIHJlbGVuZyBidWlsZCB0
+byBrbm93IHdoZXRoZXIgaXQgY29udGludWVzIHRvIGZhaWwgb3Igbm90DQotCXRoaXMuYWJvcnRP
+bkZhaWx1cmUgPSBmYWxzZTsNCi0JYXNzdW1lRXF1YWxzKCJJbmRleCBmaWxlIHNob3VsZCBiZSB1
+bmNoYW5nZWQhISEiLCBsYXN0TW9kaWZpZWQsIG5ld0luZGV4LmdldEluZGV4RmlsZSgpLmxhc3RN
+b2RpZmllZCgpKTsNCisJYXNzZXJ0RXF1YWxzKCJJbmRleCBmaWxlIHNob3VsZCBiZSB1bmNoYW5n
+ZWQhISEiLCBsYXN0TW9kaWZpZWQsIG5ld0luZGV4LmdldEluZGV4RmlsZSgpLmxhc3RNb2RpZmll
+ZCgpKTsNCiB9DQogcHVibGljIHZvaWQgdGVzdEJ1ZzE4MTQ4OGIoKSB0aHJvd3MgQ29yZUV4Y2Vw
+dGlvbiB7DQogCUlKYXZhUHJvamVjdCBwcm9qZWN0ID0gY3JlYXRlSmF2YVByb2plY3QoIkJ1ZzE4
+MTQ4OCIpOw0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

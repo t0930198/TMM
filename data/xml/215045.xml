@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215045</bug_id>
+          
+          <creation_ts>2008-01-11 11:06:00 -0500</creation_ts>
+          <short_desc>Resource not copied again to the output folder after deleting another resource with the same name</short_desc>
+          <delta_ts>2011-03-29 09:16:01 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows 2000</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mauro Molinari">mauromol</reporter>
+          <assigned_to name="JDT-Core-Inbox">jdt-core-inbox</assigned_to>
+          <cc>jerome_lanneluc</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129708</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mauro Molinari">mauromol</who>
+    <bug_when>2008-01-11 11:06:49 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1) create a Java Project (use separate folders for src and bin) with two source
+folders:
+src1
+src2
+
+An output folder structure like the following is created:
+&lt;workspace&gt;\&lt;project&gt;\bin\
+
+2) create a package &quot;a&quot; in both src1 and src2: the structure of the output
+folder is the following:
+&lt;workspace&gt;\&lt;project&gt;\bin\a
+
+3) create a non-Java file in src1\a, example.properties: in the output folder I
+find:
+&lt;workspace&gt;\&lt;project&gt;\bin\a\example.properties
+
+4) create another example.properties in src2\a; in the output folder I find:
+&lt;workspace&gt;\&lt;project&gt;\bin\a\example.properties
+
+5) delete example.properties from src2\a (case 1.) or from src1\a (case 2.)
+
+OBSERVED BEHAVIOUR:
+In the output folder I don&apos;t find example.properties anymore, although is IS present in src1\a (case 1.) or in src2\a (case 2.). You have to edit the still existing example.properties and save it again to have it copied again in the output folder.
+ 
+EXPECTED BEHAVIOUR:
+After removing one copy of example.properties, I should still find the other one (coming from src1\a in case 1., or from src2\a in case 2.), without having to edit and save it again.
+
+More information:
+This bug might depend on bug #215043</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

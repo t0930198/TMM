@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215231</bug_id>
+          
+          <creation_ts>2008-01-14 11:16:00 -0500</creation_ts>
+          <short_desc>Variable totalPage doesn&apos;t work on PDF</short_desc>
+          <delta_ts>2013-08-27 06:09:45 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Report Engine</component>
+          <version>2.2.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>plan</keywords>
+          <priority>P5</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Adam Domanski">adomanski</reporter>
+          <assigned_to name="Gary Xue">gxue</assigned_to>
+          <cc>bluesoldier</cc>
+    
+    <cc>gxue</cc>
+    
+    <cc>joe</cc>
+    
+    <cc>wenfeng.fwd</cc>
+    
+    <cc>wyan</cc>
+    
+    <cc>zimmermann.tho</cc>
+          <qa_contact name="Xiaodan Wang">xwang</qa_contact>
+          <votes>6</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130725</commentid>
+    <comment_count>0</comment_count>
+    <who name="Adam Domanski">adomanski</who>
+    <bug_when>2008-01-14 11:16:25 -0500</bug_when>
+    <thetext>Build ID: Eclipse 3.3.0 I20070621-1340
+
+Steps To Reproduce:
+I&apos;ve created report with data expanded on 2 pages. I need total pages count in report footer in following form &quot;Page $m of $n&quot;, but I cannot choose auto-text &quot;Page $m of $n&quot;, because there will be some gaps in output. So I just created html text field with following values: &quot;Page &lt;value-of&gt;pageNumber&lt;/value-of&gt; of &lt;value-of&gt;totalPage&lt;/value-of&gt;&quot;.
+
+I get following wrong results:
+
+on page 1: &quot;Page 1 of 1&quot;
+on page 2: &quot;Page 2 of 2&quot;
+
+
+
+More information:
+To check what is going on, I temporarily added auto-text with total-page and it worked as expected:
+
+on page 1: &quot;2&quot;
+on page 2: &quot;2&quot;
+
+My BIRT version ID: 2.2.1.v20070718
+
+I checked source code of BIRT and debug it. I found that code that populates total page count in located in PDFPageLM.resolveTotalPage() method and works only with auto-text.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1182016</commentid>
+    <comment_count>1</comment_count>
+    <who name="Wei Yan">wyan</who>
+    <bug_when>2008-03-23 23:21:41 -0400</bug_when>
+    <thetext>suggest defer to future release.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1397827</commentid>
+    <comment_count>2</comment_count>
+    <who name="Gang Liu">hustlg</who>
+    <bug_when>2008-12-22 00:29:12 -0500</bug_when>
+    <thetext>Currently we support totalPage in autoText item. Need we support totalPage variable in script?
+If we need support it in PDF, we should layout twice.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1398157</commentid>
+    <comment_count>3</comment_count>
+    <who name="Gary Xue">gxue</who>
+    <bug_when>2008-12-22 13:19:22 -0500</bug_when>
+    <thetext>Deferring this issue, as the requested feature requires that generation-time scripts have access to render-type information (page number etc). Gang&apos;s suggested 2-pass rendering solution will kill performance. 
+
+We should instead focus on improving the usability of autotext element in 2.5. There are several enhancements already logged for that.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1875031</commentid>
+    <comment_count>4</comment_count>
+    <who name="Joe Bordes">joe</who>
+    <bug_when>2011-01-28 18:04:40 -0500</bug_when>
+    <thetext>Just ran into this problem while trying to show a text block only on the last page of the PDF. Would be nice if a solution was proposed in some way.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1875032</commentid>
+    <comment_count>5</comment_count>
+    <who name="Joe Bordes">joe</who>
+    <bug_when>2011-01-28 18:05:41 -0500</bug_when>
+    <thetext>This is the forum thread where I expose the problem:
+http://www.birt-exchange.org/org/forum/index.php/topic/21423-conditional-visibility-block-on-last-page/</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2299433</commentid>
+    <comment_count>6</comment_count>
+    <who name="Thomas Zimmermann">zimmermann.tho</who>
+    <bug_when>2013-08-27 06:09:45 -0400</bug_when>
+    <thetext>Just some additional Info.
+I am using BIRT 4.2.2.
+
+In my Master Page of a PDF Report I have something like this:
+
+&lt;VIEWTIME-VALUE-OF&gt;&quot;Page&quot; + pageNumber + &quot; of &quot; + totalPage&lt;/VIEWTIME-VALUE-OF&gt;
+
+This almost works, but not always. If I have an element with Page Break behaviour of &quot;Before: Always&quot;, it works and shows &quot;Page 1 of 2&quot;.
+But if I don&apos;t have this element, every page shows &quot;Page 1 of 1&quot;, &quot;Page 2 of 2&quot; as already described.
+
+This may be an appropriate workaround for someone.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

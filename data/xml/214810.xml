@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214810</bug_id>
+          
+          <creation_ts>2008-01-09 15:56:00 -0500</creation_ts>
+          <short_desc>undefined function error is not correct</short_desc>
+          <delta_ts>2010-03-03 11:18:21 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>JSDT</product>
+          <component>General</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Thompson">dthompson</reporter>
+          <assigned_to name="Phil Berkland">berkland</assigned_to>
+          
+          <qa_contact name="Phil Berkland">berkland</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128453</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Thompson">dthompson</who>
+    <bug_when>2008-01-09 15:56:09 -0500</bug_when>
+    <thetext>In the following code:
+
+function getDateTime() {
+    this.ctime = new Object();
+    this.ctime.getDay = new function() { return &quot;Mon&quot;; };
+    return this;
+}
+
+function debug3() {
+    var newObj = getDateTime();
+    return newObj.ctime.getDay();
+}
+
+The last return errors out as stating getDay() is an undefined function. It also states that ctime can not be resolved. If a property can not be resolved, then the function call on that property should not be shown as an error.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137003</commentid>
+    <comment_count>1</comment_count>
+    <who name="Phil Berkland">berkland</who>
+    <bug_when>2008-01-23 12:58:03 -0500</bug_when>
+    <thetext> I just want to point out that the code snippet as it looks like a potential programming error in that there is no &quot;new&quot;.  It looks like it should be:
+function debug3() {
+    var newObj = new getDateTime();
+}
+But in any case this is still a valid bug.  What should be happening as the snippet is shown is field &quot;ctime&quot; is created on the &quot;global&quot; object, with a function &quot;getDay&quot;.  The &quot;getDateTime&quot; returns the global object.  both ctime and getDay should be resolvable.  Even with the &quot;new&quot;, it is not resolving correctly, so I will fix both cases.
+
+I have been thinking maybe I should add a warning message for when a function which appears to be a constructor is called without the &quot;new&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145427</commentid>
+    <comment_count>2</comment_count>
+    <who name="Phil Berkland">berkland</who>
+    <bug_when>2008-01-30 11:58:42 -0500</bug_when>
+    <thetext>fixed</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

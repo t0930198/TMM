@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215208</bug_id>
+          
+          <creation_ts>2008-01-14 08:18:00 -0500</creation_ts>
+          <short_desc>[breakpoints] Unable to unset breakpoints within inline interface implementations</short_desc>
+          <delta_ts>2008-04-28 16:21:16 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Debug</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M7</target_milestone>
+          
+          <blocked>100865</blocked>
+    
+    <blocked>186020</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Victor Roldan Betancort">vroldan</reporter>
+          <assigned_to name="Darin Wright">darin.eclipse</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>Michael_Rennie</cc>
+    
+    <cc>vsanchez</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130559</commentid>
+    <comment_count>0</comment_count>
+    <who name="Victor Roldan Betancort">vroldan</who>
+    <bug_when>2008-01-14 08:18:26 -0500</bug_when>
+    <thetext>Build ID: I20071213-1700
+
+Steps To Reproduce:
+
+1. Create the following test class
+
+************************************************************
+
+public class TestClass {
+
+  public void aTest() {
+
+    Iterator myIterator = new Iterator&lt;Integer&gt;() {
+
+      public boolean hasNext() {
+
+          class aSecondClass  {
+    
+            public boolean breakPointMe1() {
+              String foobar = new String();
+              return false;
+            }
+    
+            public String breakPointMe2() {
+              String foo = &quot;bar&quot;; 
+              return foo;
+            }
+          }
+        return false;
+      }
+
+      public Integer next() {
+        return null;
+      }
+
+      public void remove() {
+      }
+
+    };
+  }
+}
+
+************************************************************
+
+2. Open Debug perspective
+3. Try to set and then unset a breakpoint within breakPointMe1 (or breakPointMe2) method.
+
+More information:
+- Breakpoints cannot be unsetted.
+- These bugged breakpoints also dissapear when saving the file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130591</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-01-14 09:12:10 -0500</bug_when>
+    <thetext>Sure enough, each double-click creates another breakpoint at the same location.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1206493</commentid>
+    <comment_count>2</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-17 14:44:15 -0400</bug_when>
+    <thetext>The underlying problem is the handling of anonymous inner types
+
+In the given example, when we try to compare the type names we end up comparing TestClass$1$aSecondClass (from an IMember) against TestClass$aSecondClass (built by visiting the AST for the compilation unit in the location verifier). There already exists code which prunes anaonymouse inner types from the end of type names prior to comparison. We need to extend this capability to prune anonymous inner type names from fully qualified names in any occurrence.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1206639</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-17 16:53:35 -0400</bug_when>
+    <thetext>fixed in HEAD.
+
+
+Also made adjustments to work with ITypeRoot&apos;s when creating an AST instead of setting char arrays.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1206640</commentid>
+    <comment_count>4</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-04-17 16:53:48 -0400</bug_when>
+    <thetext>please verify Darin W</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1216437</commentid>
+    <comment_count>5</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-04-28 16:21:16 -0400</bug_when>
+    <thetext>Verified</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

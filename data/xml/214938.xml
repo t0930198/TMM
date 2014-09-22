@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214938</bug_id>
+          
+          <creation_ts>2008-01-10 13:58:00 -0500</creation_ts>
+          <short_desc>Implicit &apos;self&apos; context incorrectly calculated for oclAsType/oclIsTypeOf operations</short_desc>
+          <delta_ts>2008-02-04 17:12:35 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>MMT.QVTo</product>
+          <component>Engine</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alex Shatalin">shatalin</reporter>
+          <assigned_to name="Radomil Dvorak">dvorak.radek</assigned_to>
+          <cc>dvorak.radek</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129108</commentid>
+    <comment_count>0</comment_count>
+    <who name="Alex Shatalin">shatalin</who>
+    <bug_when>2008-01-10 13:58:33 -0500</bug_when>
+    <thetext>To reproduce an error just execute attached transformation with &quot;platform:/plugin/org.eclipse.emf.ecore/model/Ecore.ecore#/&quot; specified as an input.
+
+This tansformation create two EPackages with names &quot;Error-1&quot;, &quot;Error-2&quot; now. If you&apos;ll modify both queries in the transformation and add &quot;self.&quot; prefixes (see second attachement) - transformation will starts working as designed (two EPackages with name &quot;ecore&quot; will be creates).
+
+Attached transformation should produce correct output without &quot;self.&quot; prefixes specified in queries.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129110</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86580</attachid>
+    <who name="Alex Shatalin">shatalin</who>
+    <bug_when>2008-01-10 13:59:52 -0500</bug_when>
+    <thetext>Created attachment 86580
+Sample transformation reproducing this problem</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129112</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86581</attachid>
+    <who name="Alex Shatalin">shatalin</who>
+    <bug_when>2008-01-10 14:01:05 -0500</bug_when>
+    <thetext>Created attachment 86581
+corrected transformation srcipt (self. prefixes were added)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129114</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86582</attachid>
+    <who name="Alex Shatalin">shatalin</who>
+    <bug_when>2008-01-10 14:02:04 -0500</bug_when>
+    <thetext>Created attachment 86582
+Corrected transformation srcipt (self. prefixes were added)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149332</commentid>
+    <comment_count>4</comment_count>
+    <who name="Radomil Dvorak">dvorak.radek</who>
+    <bug_when>2008-02-04 17:12:35 -0500</bug_when>
+    <thetext>Fixed.
+
+Tested by 
+org.eclipse.m2m.tests.qvt.oml/parserTestData/models/bug_214938
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86580</attachid>
+            <date>2008-01-10 13:59:00 -0500</date>
+            <delta_ts>2008-01-10 13:59:52 -0500</delta_ts>
+            <desc>Sample transformation reproducing this problem</desc>
+            <filename>SampleTransformation.qvto</filename>
+            <type>text/plain</type>
+            <size>738</size>
+            <attacher name="Alex Shatalin">shatalin</attacher>
+            
+              <data encoding="base64">Cm1vZGVsdHlwZSBlY29yZSB1c2VzICJodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2VtZi8yMDAyL0Vj
+b3JlIjsKCnRyYW5zZm9ybWF0aW9uIFNhbXBsZVRyYW5zZm9ybWF0aW9uKGluIGluRWNvcmUgOiBl
+Y29yZSwgb3V0IG91dEVjb3JlIDogZWNvcmUpOwoKbWFwcGluZyBtYWluKGluIGluUGFja2FnZSA6
+IGVjb3JlOjpFUGFja2FnZSwgb3V0IG91dFBhY2thZ2UgOiBlY29yZTo6RVBhY2thZ2UpIHsKCWlu
+aXQgewoJCW9iamVjdCBlY29yZTo6RVBhY2thZ2UgewoJCQluYW1lIDo9IGluUGFja2FnZS5nZXRO
+YW1lKCk7CgkJCWVTdWJwYWNrYWdlcyArPSBpblBhY2thZ2UubWFwIG1hcFRvU3ViUGFja2FnZSgp
+OwoJCX0KCX0KfQoKcXVlcnkgZWNvcmU6OkVQYWNrYWdlOjpnZXROYW1lKCkgOiBTdHJpbmcgewoJ
+aWYgb2NsQXNUeXBlKGVjb3JlOjpFUGFja2FnZSkubmFtZSA9ICdlY29yZScKCQl0aGVuIG9jbEFz
+VHlwZShlY29yZTo6RVBhY2thZ2UpLm5hbWUKCQllbHNlICdFcnJvci0xJwoJZW5kaWYKfQoKcXVl
+cnkgZWNvcmU6OkVQYWNrYWdlOjpnZXROYW1lMigpIDogU3RyaW5nIHsKCWlmIG9jbElzVHlwZU9m
+KGVjb3JlOjpFUGFja2FnZSkKCQl0aGVuIG9jbEFzVHlwZShlY29yZTo6RVBhY2thZ2UpLm5hbWUK
+CQllbHNlICdFcnJvci0yJwoJZW5kaWYKfQoKbWFwcGluZyBlY29yZTo6RVBhY2thZ2U6Om1hcFRv
+U3ViUGFja2FnZSgpIDogZWNvcmU6OkVQYWNrYWdlIHsKCW5hbWUgOj0gZ2V0TmFtZTIoKQp9
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86581</attachid>
+            <date>2008-01-10 14:01:00 -0500</date>
+            <delta_ts>2008-01-10 14:02:20 -0500</delta_ts>
+            <desc>corrected transformation srcipt (self. prefixes were added)</desc>
+            <filename>SampleTransformation_corrected.qvto</filename>
+            <type>text/plain</type>
+            <size>758</size>
+            <attacher name="Alex Shatalin">shatalin</attacher>
+            
+              <data encoding="base64">Cm1vZGVsdHlwZSBlY29yZSB1c2VzICJodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2VtZi8yMDAyL0Vj
+b3JlIjsKCnRyYW5zZm9ybWF0aW9uIFNhbXBsZVRyYW5zZm9ybWF0aW9uKGluIGluRWNvcmUgOiBl
+Y29yZSwgb3V0IG91dEVjb3JlIDogZWNvcmUpOwoKbWFwcGluZyBtYWluKGluIGluUGFja2FnZSA6
+IGVjb3JlOjpFUGFja2FnZSwgb3V0IG91dFBhY2thZ2UgOiBlY29yZTo6RVBhY2thZ2UpIHsKCWlu
+aXQgewoJCW9iamVjdCBlY29yZTo6RVBhY2thZ2UgewoJCQluYW1lIDo9IGluUGFja2FnZS5nZXRO
+YW1lKCk7CgkJCWVTdWJwYWNrYWdlcyArPSBpblBhY2thZ2UubWFwIG1hcFRvU3ViUGFja2FnZSgp
+OwoJCX0KCX0KfQoKcXVlcnkgZWNvcmU6OkVQYWNrYWdlOjpnZXROYW1lKCkgOiBTdHJpbmcgewoJ
+aWYgc2VsZi5vY2xBc1R5cGUoZWNvcmU6OkVQYWNrYWdlKS5uYW1lID0gJ2Vjb3JlJwoJCXRoZW4g
+c2VsZi5vY2xBc1R5cGUoZWNvcmU6OkVQYWNrYWdlKS5uYW1lCgkJZWxzZSAnRXJyb3ItMScKCWVu
+ZGlmCn0KCnF1ZXJ5IGVjb3JlOjpFUGFja2FnZTo6Z2V0TmFtZTIoKSA6IFN0cmluZyB7CglpZiBz
+ZWxmLm9jbElzVHlwZU9mKGVjb3JlOjpFUGFja2FnZSkKCQl0aGVuIHNlbGYub2NsQXNUeXBlKGVj
+b3JlOjpFUGFja2FnZSkubmFtZQoJCWVsc2UgJ0Vycm9yLTInCgllbmRpZgp9CgptYXBwaW5nIGVj
+b3JlOjpFUGFja2FnZTo6bWFwVG9TdWJQYWNrYWdlKCkgOiBlY29yZTo6RVBhY2thZ2UgewoJbmFt
+ZSA6PSBnZXROYW1lMigpCn0=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86582</attachid>
+            <date>2008-01-10 14:02:00 -0500</date>
+            <delta_ts>2008-01-10 14:02:04 -0500</delta_ts>
+            <desc>Corrected transformation srcipt (self. prefixes were added) </desc>
+            <filename>SampleTransformation_corrected.qvto</filename>
+            <type>text/plain</type>
+            <size>768</size>
+            <attacher name="Alex Shatalin">shatalin</attacher>
+            
+              <data encoding="base64">Cm1vZGVsdHlwZSBlY29yZSB1c2VzICJodHRwOi8vd3d3LmVjbGlwc2Uub3JnL2VtZi8yMDAyL0Vj
+b3JlIjsKCnRyYW5zZm9ybWF0aW9uIFNhbXBsZVRyYW5zZm9ybWF0aW9uX2NvcnJlY3RlZChpbiBp
+bkVjb3JlIDogZWNvcmUsIG91dCBvdXRFY29yZSA6IGVjb3JlKTsKCm1hcHBpbmcgbWFpbihpbiBp
+blBhY2thZ2UgOiBlY29yZTo6RVBhY2thZ2UsIG91dCBvdXRQYWNrYWdlIDogZWNvcmU6OkVQYWNr
+YWdlKSB7Cglpbml0IHsKCQlvYmplY3QgZWNvcmU6OkVQYWNrYWdlIHsKCQkJbmFtZSA6PSBpblBh
+Y2thZ2UuZ2V0TmFtZSgpOwoJCQllU3VicGFja2FnZXMgKz0gaW5QYWNrYWdlLm1hcCBtYXBUb1N1
+YlBhY2thZ2UoKTsKCQl9Cgl9Cn0KCnF1ZXJ5IGVjb3JlOjpFUGFja2FnZTo6Z2V0TmFtZSgpIDog
+U3RyaW5nIHsKCWlmIHNlbGYub2NsQXNUeXBlKGVjb3JlOjpFUGFja2FnZSkubmFtZSA9ICdlY29y
+ZScKCQl0aGVuIHNlbGYub2NsQXNUeXBlKGVjb3JlOjpFUGFja2FnZSkubmFtZQoJCWVsc2UgJ0Vy
+cm9yLTEnCgllbmRpZgp9CgpxdWVyeSBlY29yZTo6RVBhY2thZ2U6OmdldE5hbWUyKCkgOiBTdHJp
+bmcgewoJaWYgc2VsZi5vY2xJc1R5cGVPZihlY29yZTo6RVBhY2thZ2UpCgkJdGhlbiBzZWxmLm9j
+bEFzVHlwZShlY29yZTo6RVBhY2thZ2UpLm5hbWUKCQllbHNlICdFcnJvci0yJwoJZW5kaWYKfQoK
+bWFwcGluZyBlY29yZTo6RVBhY2thZ2U6Om1hcFRvU3ViUGFja2FnZSgpIDogZWNvcmU6OkVQYWNr
+YWdlIHsKCW5hbWUgOj0gZ2V0TmFtZTIoKQp9
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

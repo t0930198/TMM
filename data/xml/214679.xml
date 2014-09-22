@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214679</bug_id>
+          
+          <creation_ts>2008-01-08 16:44:00 -0500</creation_ts>
+          <short_desc>[prov] [ui] NPE when trying to expand metadata repositories</short_desc>
+          <delta_ts>2008-01-08 17:20:01 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="DJ Houghton">dj_houghton</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          <cc>susan</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127749</commentid>
+    <comment_count>0</comment_count>
+    <who name="DJ Houghton">dj_houghton</who>
+    <bug_when>2008-01-08 16:44:18 -0500</bug_when>
+    <thetext>- I generated repositories with code from HEAD which creates a content.xml.jar file and no content.xml file.
+- Run ProvAdminUI from HEAD.
+- Add your new metadata repository
+- Expand the repo and get an NPE
+
+The problem seems to be in MetadataRepositoryElement#getQueryable which returns null in the case where the repository fails to load.
+
+Here is a stack trace. The top one is most likely from the handled exception when we couldn&apos;t load, and the bottom one is the NPE.
+
+!ENTRY org.eclipse.equinox.p2.ui 4 0 2008-01-08 16:21:02.052
+!MESSAGE Error loading repository http://capilano/p2
+!STACK 0
+org.eclipse.equinox.p2.core.ProvisionException: Unable to load the repository http://capilano/p2
+	at org.eclipse.equinox.p2.ui.operations.ProvisioningUtil.loadMetadataRepository(ProvisioningUtil.java:62)
+	at org.eclipse.equinox.p2.ui.model.MetadataRepositoryElement.getQueryable(MetadataRepositoryElement.java:72)
+	at org.eclipse.equinox.internal.p2.ui.admin.ProvAdminQueryProvider.getQueryDescriptor(ProvAdminQueryProvider.java:74)
+	at org.eclipse.equinox.internal.p2.ui.model.RemoteQueriedElement.fetchChildren(RemoteQueriedElement.java:44)
+	at org.eclipse.equinox.internal.p2.ui.model.RemoteQueriedElement.fetchDeferredChildren(RemoteQueriedElement.java:33)
+	at org.eclipse.ui.progress.DeferredTreeContentManager$1.run(DeferredTreeContentManager.java:227)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+
+!ENTRY org.eclipse.core.jobs 4 2 2008-01-08 16:21:02.082
+!MESSAGE An internal error occurred during: &quot;Fetching children of http://capilano/p2&quot;.
+!STACK 0
+java.lang.NullPointerException
+	at org.eclipse.equinox.internal.p2.ui.model.RemoteQueriedElement.fetchChildren(RemoteQueriedElement.java:47)
+	at org.eclipse.equinox.internal.p2.ui.model.RemoteQueriedElement.fetchDeferredChildren(RemoteQueriedElement.java:33)
+	at org.eclipse.ui.progress.DeferredTreeContentManager$1.run(DeferredTreeContentManager.java:227)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127773</commentid>
+    <comment_count>1</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 17:20:01 -0500</bug_when>
+    <thetext>I ran into this earlier today and fixed it alongside a bunch of other changes.  Please reload the latest and reopen this bug if you see it again.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

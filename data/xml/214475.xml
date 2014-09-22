@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214475</bug_id>
+          
+          <creation_ts>2008-01-07 07:28:00 -0500</creation_ts>
+          <short_desc>The shellIconified event is triggered incorrectly</short_desc>
+          <delta_ts>2008-02-27 08:17:21 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.4</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux-GTK</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Patrick">phaz.spam</reporter>
+          <assigned_to name="Bogdan Gheorghe">gheorghe</assigned_to>
+          <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126476</commentid>
+    <comment_count>0</comment_count>
+    <who name="Patrick">phaz.spam</who>
+    <bug_when>2008-01-07 07:28:39 -0500</bug_when>
+    <thetext>The GTK implementation of the Shell sents shellIconified notifications whenever the X Window is unmapped:
+
+ApplicationWorkbenchAdvisor$1.shellIconified(ShellEvent) line: 196   
+...
+Shell(Widget).sendEvent(int) line: 1106   
+Shell.gtk_unmap_event(int, int) line: 1015
+
+   int /*long*/ gtk_unmap_event (int /*long*/ widget, int /*long*/ event) {
+      minimized = true;
+      sendEvent (SWT.Iconify);
+      return 0;
+   }
+
+I&apos;ve looked into the UNMAP event and apparently it is sent whenever an X window is no longer on the screen -- i.e. when switching from one desktop to another. The two events, unmapping and iconification are not identical and mapping them in this way creates inconsistent and unexpected behaviour.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165413</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-02-27 08:17:21 -0500</bug_when>
+    <thetext>Bogdan, another bug that you fixed recently.  Please mark as a duplicate or close.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

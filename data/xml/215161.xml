@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215161</bug_id>
+          
+          <creation_ts>2008-01-13 18:49:00 -0500</creation_ts>
+          <short_desc>[generate constructor] Generate constructor using fields should respect field order</short_desc>
+          <delta_ts>2008-08-06 09:13:20 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>UI</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Willian Mitsuda">wmitsuda</reporter>
+          <assigned_to name="Markus Keller">markus_keller</assigned_to>
+          <cc>aeschli</cc>
+    
+    <cc>cho</cc>
+    
+    <cc>daniel_megert</cc>
+    
+    <cc>Konstantin.Scheglov</cc>
+    
+    <cc>p35t173nc3</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="10609"
+          type_id="1"
+          status="+"
+          setter="daniel_megert"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130337</commentid>
+    <comment_count>0</comment_count>
+    <who name="Willian Mitsuda">wmitsuda</who>
+    <bug_when>2008-01-13 18:49:14 -0500</bug_when>
+    <thetext>The &quot;generate constructor using fields&quot; generates a constructor where the parameters and the field assignment are sorted alphabetically.
+
+It should respect the order the fields are declared, like the &quot;generate getters and setters&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130496</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-14 05:56:46 -0500</bug_when>
+    <thetext>You can choose the order in the dialog, but I agree that the default ordering should be the one taken </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130734</commentid>
+    <comment_count>2</comment_count>
+    <who name="Willian Mitsuda">wmitsuda</who>
+    <bug_when>2008-01-14 11:21:32 -0500</bug_when>
+    <thetext>It is curious that I only noted the up/down buttons now, after your comment.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1245842</commentid>
+    <comment_count>3</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-05-23 07:11:33 -0400</bug_when>
+    <thetext>*** Bug 232733 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1259072</commentid>
+    <comment_count>4</comment_count>
+    <who name="Christian Holm">cho</who>
+    <bug_when>2008-06-04 05:27:38 -0400</bug_when>
+    <thetext>As additional info this is a regression from 3.3, so this should be fixed.
+
+I remember that this regression has occured before in a beta release of another version (I think it was 3.0 or 3.1). Maybe a regression test should be made for this. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1290217</commentid>
+    <comment_count>5</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-07-14 04:33:19 -0400</bug_when>
+    <thetext>We should fix this for 3.4.1. People also complained on the newsgroup about this. In addition, the current code lists the field in an undefined order. Bug is in
+GenerateNewConstructorUsingFieldsAction.run(IType, IField[], boolean).
+
+Targeting for 3.4.1 but might be deferred to 3.5 if fix is non-trivial.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1295288</commentid>
+    <comment_count>6</comment_count>
+      <attachid>107964</attachid>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-07-21 12:22:20 -0400</bug_when>
+    <thetext>Created attachment 107964
+Fix
+
+Released to HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1303872</commentid>
+    <comment_count>7</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-08-04 10:14:00 -0400</bug_when>
+    <thetext>Committed to R3_4_maintenance.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1305345</commentid>
+    <comment_count>8</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-08-06 09:13:20 -0400</bug_when>
+    <thetext>Verified in build input for M20080808-0800.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>107964</attachid>
+            <date>2008-07-21 12:22:00 -0400</date>
+            <delta_ts>2008-07-21 12:22:20 -0400</delta_ts>
+            <desc>Fix</desc>
+            <filename>215161_maintenance_patch.txt</filename>
+            <type>text/plain</type>
+            <size>2333</size>
+            <attacher name="Markus Keller">markus_keller</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LnVpDQpJ
+bmRleDogdWkvb3JnL2VjbGlwc2UvamR0L3VpL2FjdGlvbnMvR2VuZXJhdGVOZXdDb25zdHJ1Y3Rv
+clVzaW5nRmllbGRzQWN0aW9uLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9l
+Y2xpcHNlL29yZy5lY2xpcHNlLmpkdC51aS91aS9vcmcvZWNsaXBzZS9qZHQvdWkvYWN0aW9ucy9H
+ZW5lcmF0ZU5ld0NvbnN0cnVjdG9yVXNpbmdGaWVsZHNBY3Rpb24uamF2YSx2DQpyZXRyaWV2aW5n
+IHJldmlzaW9uIDEuNTMNCmRpZmYgLXUgLXIxLjUzIEdlbmVyYXRlTmV3Q29uc3RydWN0b3JVc2lu
+Z0ZpZWxkc0FjdGlvbi5qYXZhDQotLS0gdWkvb3JnL2VjbGlwc2UvamR0L3VpL2FjdGlvbnMvR2Vu
+ZXJhdGVOZXdDb25zdHJ1Y3RvclVzaW5nRmllbGRzQWN0aW9uLmphdmEJMyBBcHIgMjAwOCAwNzoz
+Mzo0NiAtMDAwMAkxLjUzDQorKysgdWkvb3JnL2VjbGlwc2UvamR0L3VpL2FjdGlvbnMvR2VuZXJh
+dGVOZXdDb25zdHJ1Y3RvclVzaW5nRmllbGRzQWN0aW9uLmphdmEJMjEgSnVsIDIwMDggMTY6MTk6
+MzcgLTAwMDANCkBAIC0xMyw2ICsxMyw3IEBADQogaW1wb3J0IGphdmEubGFuZy5yZWZsZWN0Lklu
+dm9jYXRpb25UYXJnZXRFeGNlcHRpb247DQogaW1wb3J0IGphdmEudXRpbC5BcnJheUxpc3Q7DQog
+aW1wb3J0IGphdmEudXRpbC5BcnJheXM7DQoraW1wb3J0IGphdmEudXRpbC5IYXNoTWFwOw0KIGlt
+cG9ydCBqYXZhLnV0aWwuTGlzdDsNCiANCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1l
+LkNvcmVFeGNlcHRpb247DQpAQCAtMzIxLDcgKzMyMiw3IEBADQogCQkJcmV0dXJuOw0KIAkJfQ0K
+IA0KLQkJQXJyYXlMaXN0IGZpZWxkcz0gbmV3IEFycmF5TGlzdCgpOw0KKwkJSGFzaE1hcCBmaWVs
+ZHNUb0JpbmRpbmdzPSBuZXcgSGFzaE1hcCgpOw0KIAkJQXJyYXlMaXN0IHNlbGVjdGVkPSBuZXcg
+QXJyYXlMaXN0KCk7DQogDQogCQlJVmFyaWFibGVCaW5kaW5nW10gY2FuZGlkYXRlcz0gdHlwZUJp
+bmRpbmcuZ2V0RGVjbGFyZWRGaWVsZHMoKTsNCkBAIC0zMzksMTYgKzM0MCwyNyBAQA0KIAkJCQkJ
+Y29udGludWU7IC8vIERvIG5vdCBhZGQgZmluYWwgZmllbGRzIHdoaWNoIGhhdmUgYmVlbiBzZXQg
+aW4gdGhlIDxjbGluaXQ+DQogCQkJCX0NCiAJCQl9DQotCQkJZmllbGRzLmFkZChjdXJyKTsNCi0J
+CQlpZiAoYWxsU2VsZWN0ZWQuY29udGFpbnMoY3Vyci5nZXRKYXZhRWxlbWVudCgpKSkgew0KKwkJ
+CUlKYXZhRWxlbWVudCBqYXZhRWxlbWVudD0gY3Vyci5nZXRKYXZhRWxlbWVudCgpOw0KKwkJCWZp
+ZWxkc1RvQmluZGluZ3MucHV0KGphdmFFbGVtZW50LCBjdXJyKTsNCisJCQlpZiAoYWxsU2VsZWN0
+ZWQuY29udGFpbnMoamF2YUVsZW1lbnQpKSB7DQogCQkJCXNlbGVjdGVkLmFkZChjdXJyKTsNCiAJ
+CQl9DQogCQl9DQotCQlpZiAoZmllbGRzLmlzRW1wdHkoKSkgew0KKwkJaWYgKGZpZWxkc1RvQmlu
+ZGluZ3MuaXNFbXB0eSgpKSB7DQogCQkJTWVzc2FnZURpYWxvZy5vcGVuSW5mb3JtYXRpb24oZ2V0
+U2hlbGwoKSwgQWN0aW9uTWVzc2FnZXMuR2VuZXJhdGVDb25zdHJ1Y3RvclVzaW5nRmllbGRzQWN0
+aW9uX2Vycm9yX3RpdGxlLCBBY3Rpb25NZXNzYWdlcy5HZW5lcmF0ZUNvbnN0cnVjdG9yVXNpbmdG
+aWVsZHNBY3Rpb25fdHlwZUNvbnRhaW5zTm9GaWVsZHNfbWVzc2FnZSk7DQogCQkJbm90aWZ5UmVz
+dWx0KGZhbHNlKTsNCiAJCQlyZXR1cm47DQogCQl9DQorCQkNCisJCUFycmF5TGlzdCBmaWVsZHM9
+IG5ldyBBcnJheUxpc3QoKTsNCisJCUlGaWVsZFtdIGFsbEZpZWxkcz0gdHlwZS5nZXRGaWVsZHMo
+KTsNCisJCWZvciAoaW50IGk9IDA7IGkgPCBhbGxGaWVsZHMubGVuZ3RoOyBpKyspIHsNCisJCQlP
+YmplY3QgZmllbGRCaW5kaW5nPSBmaWVsZHNUb0JpbmRpbmdzLnJlbW92ZShhbGxGaWVsZHNbaV0p
+Ow0KKwkJCWlmIChmaWVsZEJpbmRpbmcgIT0gbnVsbCkgew0KKwkJCQlmaWVsZHMuYWRkKGZpZWxk
+QmluZGluZyk7DQorCQkJfQ0KKwkJfQ0KKwkJZmllbGRzLmFkZEFsbChmaWVsZHNUb0JpbmRpbmdz
+LnZhbHVlcygpKTsgLy8gcGFyYW5vaWEgY29kZSwgc2hvdWxkIG5vdCBoYXBwZW4NCiANCiAJCWZp
+bmFsIEdlbmVyYXRlQ29uc3RydWN0b3JVc2luZ0ZpZWxkc0NvbnRlbnRQcm92aWRlciBwcm92aWRl
+cj0gbmV3IEdlbmVyYXRlQ29uc3RydWN0b3JVc2luZ0ZpZWxkc0NvbnRlbnRQcm92aWRlcihmaWVs
+ZHMsIHNlbGVjdGVkKTsNCiAJCUlNZXRob2RCaW5kaW5nW10gYmluZGluZ3M9IG51bGw7DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

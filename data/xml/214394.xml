@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214394</bug_id>
+          
+          <creation_ts>2008-01-04 14:58:00 -0500</creation_ts>
+          <short_desc>Nested custom tags produce bogus .jsp validation errors</short_desc>
+          <delta_ts>2011-04-04 11:04:43 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>jst.jsp</component>
+          <version>1.5</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mike Reid">mikereid</reporter>
+          <assigned_to name="Nitin Dahyabhai">nitind</assigned_to>
+          <cc>david_williams</cc>
+    
+    <cc>randall.x.fox</cc>
+          <qa_contact name="Nitin Dahyabhai">nitind</qa_contact>
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126010</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mike Reid">mikereid</who>
+    <bug_when>2008-01-04 14:58:53 -0500</bug_when>
+    <thetext>Build ID: M20070212-1330
+
+Steps To Reproduce:
+This was found in RAD 7.0.0.5 based on Eclipse 3.2.2.
+
+In a .jsp file, nested custom tags of the same name that define variables are not properly interpreted causing bogus validation errors to be reported in the .jsp. e.g.:                                       
+                                                                        
+&lt;@ taglib uri=&quot;/WEB-INF/mytags.tld&quot; prefix=&quot;my&quot;&gt;                        
+                                                                        
+&lt;my:customTag declareVariable=&quot;foo&quot;&gt;                                    
+  &lt;my:customTag declareVariable=&quot;bar&quot;&gt;                                  
+   ....                                                                 
+  &lt;/my:customTag&gt;                                                       
+&lt;/my:customTag                                                          
+                                                                        
+If the &quot;customTag&quot; tag impl. declares any variables by extending the TagExtraInfo class, the .jsp validator will report bogus errors such as:
+
+ Syntax error, insert &quot;}&quot; to complete ClassBody.
+                                                                        
+This can be worked around by declaring the taglib a second time with a different prefix for use in the nested tag:                             
+                                                                        
+&lt;@ taglib uri=&quot;/WEB-INF/mytags.tld&quot; prefix=&quot;my&quot;&gt;                        
+&lt;@ taglib uri=&quot;/WEB-INF/mytags.tld&quot; prefix=&quot;my2&quot;&gt;                       
+                                                                        
+&lt;my:customTag declareVariable=&quot;foo&quot;&gt;                                    
+  &lt;my2:customTag declareVariable=&quot;bar&quot;&gt;                                 
+   ....                                                                 
+  &lt;/my2:customTag&gt;                                                      
+&lt;/my:customTag&gt;
+
+but this is by no means a long-term solution.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126307</commentid>
+    <comment_count>1</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-06 13:35:32 -0500</bug_when>
+    <thetext>3.2.x means WTP 1.5.x.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133086</commentid>
+    <comment_count>2</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-01-17 08:08:49 -0500</bug_when>
+    <thetext>I believe this is fixed in 2.0 and 3.0? 
+
+Nitin, perhaps you could document which version? Or, is there a dup bug? 
+
+Thanks, 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139334</commentid>
+    <comment_count>3</comment_count>
+    <who name="Nitin Dahyabhai">nitind</who>
+    <bug_when>2008-01-27 23:16:10 -0500</bug_when>
+    <thetext>Not a duplicate, but it is fixed both in 2.0 and the current 3.0 branch, but not in any 1.5.x release.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1225022</commentid>
+    <comment_count>4</comment_count>
+    <who name="Randall Fox">randall.x.fox</who>
+    <bug_when>2008-05-06 13:59:44 -0400</bug_when>
+    <thetext>Is there a fixpack available for this? Like a lot of shops we have jsp&apos;s that use the same tag name quite few times. It just seems a bit &apos;cloogy&apos; to have to add a new taglib for each usage.
+
+Please advise! Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1908236</commentid>
+    <comment_count>5</comment_count>
+    <who name="Mike Reid">mikereid</who>
+    <bug_when>2011-04-04 11:04:43 -0400</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

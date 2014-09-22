@@ -1,0 +1,381 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214613</bug_id>
+          
+          <creation_ts>2008-01-08 09:45:00 -0500</creation_ts>
+          <short_desc>ConcurrentModificationException in AbstractModelManager during shutdown</short_desc>
+          <delta_ts>2008-04-08 23:54:48 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M7</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Hallgren">thomas</reporter>
+          <assigned_to name="Darin Wright">darin.eclipse</assigned_to>
+          <cc>baumanbr</cc>
+    
+    <cc>caniszczyk</cc>
+    
+    <cc>vaidasn</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127292</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-08 09:45:00 -0500</bug_when>
+    <thetext>When I run Buckminster in headless mode I sometimes encounter concurrent modification exceptions in AbstractModelManager.fireModelProviderEvent during shutdown. Buckminster is not involved AFAICS. This happens using Eclipse 3.3.1.1 on a Linux x86_64 box.
+
+Here is the stacktrace:
+
+java.util.ConcurrentModificationException
+	at java.util.AbstractList$Itr.checkForComodification(AbstractList.java:372)
+	at java.util.AbstractList$Itr.next(AbstractList.java:343)
+	at org.eclipse.pde.internal.core.AbstractModelManager.fireModelProviderEvent(AbstractModelManager.java:34)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.processModelChanges(WorkspaceModelManager.java:237)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.resourceChanged(WorkspaceModelManager.java:128)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState$1.run(DeltaProcessingState.java:363)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState.resourceChanged(DeltaProcessingState.java:358)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:282)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:276)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:148)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:311)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1018)
+	at org.eclipse.core.internal.resources.Synchronizer.setSyncInfo(Synchronizer.java:258)
+	at org.tigris.subversion.subclipse.core.status.SynchronizerSyncInfoCache$SyncInfoSynchronizedAccessor.internalSetCachedSyncBytes(SynchronizerSyncInfoCache.java:226)
+	at org.tigris.subversion.subclipse.core.status.SynchronizerSyncInfoCache.setCachedSyncBytes(SynchronizerSyncInfoCache.java:150)
+	at org.tigris.subversion.subclipse.core.status.SynchronizerSyncInfoCache.addStatus(SynchronizerSyncInfoCache.java:74)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.updateCache(StatusCacheManager.java:123)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.updateCache(StatusCacheManager.java:93)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.setStatuses(StatusCacheManager.java:237)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.basicGetStatus(StatusCacheManager.java:217)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.getStatus(StatusCacheManager.java:188)
+	at org.tigris.subversion.subclipse.core.status.StatusCacheManager.getStatus(StatusCacheManager.java:136)
+	at org.tigris.subversion.subclipse.core.sync.SVNWorkspaceSubscriber.getSyncInfo(SVNWorkspaceSubscriber.java:175)
+	at org.eclipse.team.core.subscribers.Subscriber.getDiff(Subscriber.java:370)
+	at org.eclipse.team.internal.core.subscribers.SubscriberChangeSetManager.getDiff(SubscriberChangeSetManager.java:302)
+	at org.eclipse.team.internal.core.subscribers.SubscriberChangeSetManager$EventHandler.handleChange(SubscriberChangeSetManager.java:183)
+	at org.eclipse.team.internal.core.subscribers.SubscriberChangeSetManager$EventHandler.doDispatchEvents(SubscriberChangeSetManager.java:80)
+	at org.eclipse.team.internal.core.BackgroundEventHandler.dispatchEvents(BackgroundEventHandler.java:394)
+	at org.eclipse.team.internal.core.BackgroundEventHandler.processEvents(BackgroundEventHandler.java:374)
+	at org.eclipse.team.internal.core.BackgroundEventHandler$1.run(BackgroundEventHandler.java:203)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127364</commentid>
+    <comment_count>1</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-08 11:22:36 -0500</bug_when>
+    <thetext>Hi Thomas,
+
+Any chance you can reproduce on a 32 bit machine (either windows or linux)?  Unfortunately, I don&apos;t have access to a 64 bit machine.  I figure the bits #&apos;s should not matter, but wanted to make sure to take that out of the equation.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127725</commentid>
+    <comment_count>2</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-08 16:13:44 -0500</bug_when>
+    <thetext>I&apos;ve tried the same build a couple of times on a win32/x86 machine without encountering this. The problem is intermittent though, so I can&apos;t say for certain that it will not happen if I continue trying.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134897</commentid>
+    <comment_count>3</comment_count>
+    <who name="Vaidas Nargėlas">vaidasn</who>
+    <bug_when>2008-01-21 08:59:10 -0500</bug_when>
+    <thetext>I get the same exception on linux.x86. I noticed it when I was running buckminster build in an endless loop. It failed with this exception in 1 out of ~20 runs.
+
+ERROR: Problems occurred when invoking code from plug-in: &quot;org.eclipse.jdt.core&quot;.
+java.util.ConcurrentModificationException
+	at java.util.AbstractList$Itr.checkForComodification(AbstractList.java:449)
+	at java.util.AbstractList$Itr.next(AbstractList.java:420)
+	at org.eclipse.pde.internal.core.AbstractModelManager.fireModelProviderEvent(AbstractModelManager.java:34)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.processModelChanges(WorkspaceModelManager.java:237)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.resourceChanged(WorkspaceModelManager.java:128)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState$1.run(DeltaProcessingState.java:363)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState.resourceChanged(DeltaProcessingState.java:358)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:282)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:276)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:148)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:311)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1018)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:150)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:235)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+ERROR: Exception occurred in listener of pre Java resource change notification
+java.util.ConcurrentModificationException
+	at java.util.AbstractList$Itr.checkForComodification(AbstractList.java:449)
+	at java.util.AbstractList$Itr.next(AbstractList.java:420)
+	at org.eclipse.pde.internal.core.AbstractModelManager.fireModelProviderEvent(AbstractModelManager.java:34)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.processModelChanges(WorkspaceModelManager.java:237)
+	at org.eclipse.pde.internal.core.WorkspaceModelManager.resourceChanged(WorkspaceModelManager.java:128)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState$1.run(DeltaProcessingState.java:363)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.jdt.internal.core.DeltaProcessingState.resourceChanged(DeltaProcessingState.java:358)
+	at org.eclipse.core.internal.events.NotificationManager$2.run(NotificationManager.java:282)
+	at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+	at org.eclipse.core.internal.events.NotificationManager.notify(NotificationManager.java:276)
+	at org.eclipse.core.internal.events.NotificationManager.broadcastChanges(NotificationManager.java:148)
+	at org.eclipse.core.internal.resources.Workspace.broadcastPostChange(Workspace.java:311)
+	at org.eclipse.core.internal.resources.Workspace.endOperation(Workspace.java:1018)
+	at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:150)
+	at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:235)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:55)
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134982</commentid>
+    <comment_count>4</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-21 09:54:42 -0500</bug_when>
+    <thetext>There&apos;s obviously some arcane synchronization problem on shutdown, just need to figure out what it is, targetting to 3.4</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1189145</commentid>
+    <comment_count>5</comment_count>
+      <attachid>94218</attachid>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-03-31 09:19:42 -0400</bug_when>
+    <thetext>Created attachment 94218
+patch
+
+A listener list should fix the synchronization problem here as well.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1189155</commentid>
+    <comment_count>6</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-03-31 09:27:27 -0400</bug_when>
+    <thetext>Thanks Darin.
+
+You&apos;re the guy to go to when it comes to listener lists and launch configurations ;)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1189715</commentid>
+    <comment_count>7</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-03-31 14:47:42 -0400</bug_when>
+    <thetext>This patch can cause an exception on shutdown:
+
+Caused by: java.lang.IllegalArgumentException
+    at org.eclipse.core.runtime.ListenerList.remove(ListenerList.java:155)
+    at org.eclipse.pde.internal.core.AbstractModelManager.removeModelProviderListener(AbstractModelManager.java:22)
+    at org.eclipse.pde.internal.core.FeatureModelManager.shutdown(FeatureModelManager.java:66)
+    at org.eclipse.pde.internal.core.PDECore.stop(PDECore.java:254)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl$3.run(BundleContextImpl.java:1050)
+    at java.security.AccessController.doPrivileged(Native Method)
+    at org.eclipse.osgi.framework.internal.core.BundleContextImpl.stop(BundleContextImpl.java:1046)
+
+I will update the patch to fix this problem. However, it feels like there is a better fix, which is to patch FeatureModelManager to do the right thing on shutdown (i.e. don&apos;t ask to remove a listener if it was never created/added). I will leave that decision up to you.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1189719</commentid>
+    <comment_count>8</comment_count>
+      <attachid>94273</attachid>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-03-31 14:48:47 -0400</bug_when>
+    <thetext>Created attachment 94273
+patch
+
+updated patch to avoid illegal/null argument</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1197571</commentid>
+    <comment_count>9</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-04-08 23:54:44 -0400</bug_when>
+    <thetext>looks good Darin. I added a comment to investigate feature model manager in the future of why this is popping up.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1197572</commentid>
+    <comment_count>10</comment_count>
+      <attachid>95314</attachid>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-04-08 23:54:48 -0400</bug_when>
+    <thetext>Created attachment 95314
+mylyn/context/zip</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>94218</attachid>
+            <date>2008-03-31 09:19:00 -0400</date>
+            <delta_ts>2008-03-31 14:48:47 -0400</delta_ts>
+            <desc>patch</desc>
+            <filename>listener-list2.patch</filename>
+            <type>text/plain</type>
+            <size>2386</size>
+            <attacher name="Darin Wright">darin.eclipse</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLmNvcmUN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL2NvcmUvQWJzdHJhY3RNb2RlbE1h
+bmFnZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVj
+bGlwc2UucGRlLmNvcmUvc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC9jb3JlL0Fic3RyYWN0
+TW9kZWxNYW5hZ2VyLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjUNCmRpZmYgLXUgLXIx
+LjUgQWJzdHJhY3RNb2RlbE1hbmFnZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9wZGUvaW50
+ZXJuYWwvY29yZS9BYnN0cmFjdE1vZGVsTWFuYWdlci5qYXZhCTIgSmFuIDIwMDggMTU6NTY6MTgg
+LTAwMDAJMS41DQorKysgc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC9jb3JlL0Fic3RyYWN0
+TW9kZWxNYW5hZ2VyLmphdmEJMzEgTWFyIDIwMDggMTM6MTg6MjYgLTAwMDANCkBAIC0xLDUgKzEs
+NSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDA2LCAy
+MDA3IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAwNiwg
+MjAwOCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVk
+LiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1h
+ZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5z
+ZSB2MS4wDQogICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBh
+dmFpbGFibGUgYXQNCkBAIC0xMCwyOCArMTAsMjYgQEANCiAgKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+Ki8NCiBwYWNrYWdlIG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC5jb3JlOw0KIA0KLWltcG9ydCBq
+YXZhLnV0aWwuQXJyYXlMaXN0Ow0KLWltcG9ydCBqYXZhLnV0aWwuSXRlcmF0b3I7DQotDQoraW1w
+b3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5MaXN0ZW5lckxpc3Q7DQogaW1wb3J0IG9yZy5l
+Y2xpcHNlLnBkZS5jb3JlLklNb2RlbFByb3ZpZGVyRXZlbnQ7DQogaW1wb3J0IG9yZy5lY2xpcHNl
+LnBkZS5jb3JlLklNb2RlbFByb3ZpZGVyTGlzdGVuZXI7DQogDQogcHVibGljIGFic3RyYWN0IGNs
+YXNzIEFic3RyYWN0TW9kZWxNYW5hZ2VyIHsNCiANCi0JcHJpdmF0ZSBBcnJheUxpc3QgZkxpc3Rl
+bmVycyA9IG5ldyBBcnJheUxpc3QoKTsNCisJcHJpdmF0ZSBMaXN0ZW5lckxpc3QgZkxpc3RlbmVy
+cyA9IG5ldyBMaXN0ZW5lckxpc3QoKTsNCiANCiAJcHVibGljIHN5bmNocm9uaXplZCB2b2lkIHJl
+bW92ZU1vZGVsUHJvdmlkZXJMaXN0ZW5lcihJTW9kZWxQcm92aWRlckxpc3RlbmVyIGxpc3RlbmVy
+KSB7DQogCQlmTGlzdGVuZXJzLnJlbW92ZShsaXN0ZW5lcik7DQogCX0NCiANCiAJcHVibGljIHN5
+bmNocm9uaXplZCB2b2lkIGFkZE1vZGVsUHJvdmlkZXJMaXN0ZW5lcihJTW9kZWxQcm92aWRlckxp
+c3RlbmVyIGxpc3RlbmVyKSB7DQotCQlpZiAoIWZMaXN0ZW5lcnMuY29udGFpbnMobGlzdGVuZXIp
+KQ0KLQkJCWZMaXN0ZW5lcnMuYWRkKGxpc3RlbmVyKTsNCisJCWZMaXN0ZW5lcnMuYWRkKGxpc3Rl
+bmVyKTsNCiAJfQ0KIA0KIAlwdWJsaWMgdm9pZCBmaXJlTW9kZWxQcm92aWRlckV2ZW50KElNb2Rl
+bFByb3ZpZGVyRXZlbnQgZXZlbnQpIHsNCi0JCWZvciAoSXRlcmF0b3IgaXRlciA9IGZMaXN0ZW5l
+cnMuaXRlcmF0b3IoKTsgaXRlci5oYXNOZXh0KCk7KSB7DQotCQkJKChJTW9kZWxQcm92aWRlckxp
+c3RlbmVyKSBpdGVyLm5leHQoKSkubW9kZWxzQ2hhbmdlZChldmVudCk7DQorCQlPYmplY3RbXSBs
+aXN0ZW5lcnMgPSBmTGlzdGVuZXJzLmdldExpc3RlbmVycygpOw0KKwkJZm9yIChpbnQgaSA9IDA7
+IGkgPCBsaXN0ZW5lcnMubGVuZ3RoOyBpKyspIHsNCisJCQkoKElNb2RlbFByb3ZpZGVyTGlzdGVu
+ZXIpIGxpc3RlbmVyc1tpXSkubW9kZWxzQ2hhbmdlZChldmVudCk7DQogCQl9DQogCX0NCiANCkBA
+IC00MCw5ICszOCw3IEBADQogCX0NCiANCiAJcHJvdGVjdGVkIHZvaWQgcmVtb3ZlTGlzdGVuZXJz
+KCkgew0KLQkJaWYgKGZMaXN0ZW5lcnMuc2l6ZSgpID4gMCkgew0KLQkJCWZMaXN0ZW5lcnMuY2xl
+YXIoKTsNCi0JCX0NCisJCWZMaXN0ZW5lcnMuY2xlYXIoKTsNCiAJfQ0KIA0KIH0NCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>94273</attachid>
+            <date>2008-03-31 14:48:00 -0400</date>
+            <delta_ts>2008-03-31 14:48:47 -0400</delta_ts>
+            <desc>patch</desc>
+            <filename>listener-list3.patch</filename>
+            <type>text/plain</type>
+            <size>2454</size>
+            <attacher name="Darin Wright">darin.eclipse</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLmNvcmUN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvcGRlL2ludGVybmFsL2NvcmUvQWJzdHJhY3RNb2RlbE1h
+bmFnZXIuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVj
+bGlwc2UucGRlLmNvcmUvc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC9jb3JlL0Fic3RyYWN0
+TW9kZWxNYW5hZ2VyLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjUNCmRpZmYgLXUgLXIx
+LjUgQWJzdHJhY3RNb2RlbE1hbmFnZXIuamF2YQ0KLS0tIHNyYy9vcmcvZWNsaXBzZS9wZGUvaW50
+ZXJuYWwvY29yZS9BYnN0cmFjdE1vZGVsTWFuYWdlci5qYXZhCTIgSmFuIDIwMDggMTU6NTY6MTgg
+LTAwMDAJMS41DQorKysgc3JjL29yZy9lY2xpcHNlL3BkZS9pbnRlcm5hbC9jb3JlL0Fic3RyYWN0
+TW9kZWxNYW5hZ2VyLmphdmEJMzEgTWFyIDIwMDggMTg6NDg6MDYgLTAwMDANCkBAIC0xLDUgKzEs
+NSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDA2LCAy
+MDA3IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAwNiwg
+MjAwOCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVk
+LiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1h
+ZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5z
+ZSB2MS4wDQogICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBh
+dmFpbGFibGUgYXQNCkBAIC0xMCwyOCArMTAsMjggQEANCiAgKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+Ki8NCiBwYWNrYWdlIG9yZy5lY2xpcHNlLnBkZS5pbnRlcm5hbC5jb3JlOw0KIA0KLWltcG9ydCBq
+YXZhLnV0aWwuQXJyYXlMaXN0Ow0KLWltcG9ydCBqYXZhLnV0aWwuSXRlcmF0b3I7DQotDQoraW1w
+b3J0IG9yZy5lY2xpcHNlLmNvcmUucnVudGltZS5MaXN0ZW5lckxpc3Q7DQogaW1wb3J0IG9yZy5l
+Y2xpcHNlLnBkZS5jb3JlLklNb2RlbFByb3ZpZGVyRXZlbnQ7DQogaW1wb3J0IG9yZy5lY2xpcHNl
+LnBkZS5jb3JlLklNb2RlbFByb3ZpZGVyTGlzdGVuZXI7DQogDQogcHVibGljIGFic3RyYWN0IGNs
+YXNzIEFic3RyYWN0TW9kZWxNYW5hZ2VyIHsNCiANCi0JcHJpdmF0ZSBBcnJheUxpc3QgZkxpc3Rl
+bmVycyA9IG5ldyBBcnJheUxpc3QoKTsNCisJcHJpdmF0ZSBMaXN0ZW5lckxpc3QgZkxpc3RlbmVy
+cyA9IG5ldyBMaXN0ZW5lckxpc3QoKTsNCiANCiAJcHVibGljIHN5bmNocm9uaXplZCB2b2lkIHJl
+bW92ZU1vZGVsUHJvdmlkZXJMaXN0ZW5lcihJTW9kZWxQcm92aWRlckxpc3RlbmVyIGxpc3RlbmVy
+KSB7DQotCQlmTGlzdGVuZXJzLnJlbW92ZShsaXN0ZW5lcik7DQorCQlpZiAobGlzdGVuZXIgIT0g
+bnVsbCkgew0KKwkJCWZMaXN0ZW5lcnMucmVtb3ZlKGxpc3RlbmVyKTsNCisJCX0NCiAJfQ0KIA0K
+IAlwdWJsaWMgc3luY2hyb25pemVkIHZvaWQgYWRkTW9kZWxQcm92aWRlckxpc3RlbmVyKElNb2Rl
+bFByb3ZpZGVyTGlzdGVuZXIgbGlzdGVuZXIpIHsNCi0JCWlmICghZkxpc3RlbmVycy5jb250YWlu
+cyhsaXN0ZW5lcikpDQotCQkJZkxpc3RlbmVycy5hZGQobGlzdGVuZXIpOw0KKwkJZkxpc3RlbmVy
+cy5hZGQobGlzdGVuZXIpOw0KIAl9DQogDQogCXB1YmxpYyB2b2lkIGZpcmVNb2RlbFByb3ZpZGVy
+RXZlbnQoSU1vZGVsUHJvdmlkZXJFdmVudCBldmVudCkgew0KLQkJZm9yIChJdGVyYXRvciBpdGVy
+ID0gZkxpc3RlbmVycy5pdGVyYXRvcigpOyBpdGVyLmhhc05leHQoKTspIHsNCi0JCQkoKElNb2Rl
+bFByb3ZpZGVyTGlzdGVuZXIpIGl0ZXIubmV4dCgpKS5tb2RlbHNDaGFuZ2VkKGV2ZW50KTsNCisJ
+CU9iamVjdFtdIGxpc3RlbmVycyA9IGZMaXN0ZW5lcnMuZ2V0TGlzdGVuZXJzKCk7DQorCQlmb3Ig
+KGludCBpID0gMDsgaSA8IGxpc3RlbmVycy5sZW5ndGg7IGkrKykgew0KKwkJCSgoSU1vZGVsUHJv
+dmlkZXJMaXN0ZW5lcikgbGlzdGVuZXJzW2ldKS5tb2RlbHNDaGFuZ2VkKGV2ZW50KTsNCiAJCX0N
+CiAJfQ0KIA0KQEAgLTQwLDkgKzQwLDcgQEANCiAJfQ0KIA0KIAlwcm90ZWN0ZWQgdm9pZCByZW1v
+dmVMaXN0ZW5lcnMoKSB7DQotCQlpZiAoZkxpc3RlbmVycy5zaXplKCkgPiAwKSB7DQotCQkJZkxp
+c3RlbmVycy5jbGVhcigpOw0KLQkJfQ0KKwkJZkxpc3RlbmVycy5jbGVhcigpOw0KIAl9DQogDQog
+fQ0K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>95314</attachid>
+            <date>2008-04-08 23:54:00 -0400</date>
+            <delta_ts>2008-04-08 23:54:48 -0400</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>813</size>
+            <attacher name="Chris Aniszczyk">caniszczyk</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIAAq4iDgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQ2MTMueG1s7Vldb5swFP0rlh/2Fsc2hEBSWk1NpkZb96G2e9mTCxZzZQwy
+Bi2a1N8+Q9Y0TdNs3SKapOEJXVu+x+eee2zE0cmPVIKK60JkKoQEYQi4irJYqCSEV5fvOj48OT6a
+KMM1i4yddCYKk+kpmMQh/G5MXgy63esyKRCPpMgLjjKdNIEOJa5HHAi+zleHD1YaV1wZMOLSsBCq
+UkoIxioeMcNDSDH2O9jtYB9QZ4DxgGLkUx+cji4haNbghQlhByOKXWwfAsF7oSymlCmRl5LVGSD4
+yCqRNO93KT5pkQhVo7dA56DTqZwqFGXavmYxl0j8zoFiHrEpBBeGafMX2C6MLiNTan7GVCzt7IXQ
+DOANqxjs/hMTdNALBm6AAmeZCMfGeoF97mjIdZazZAULa3fN44QXNqAMEyq1oJ7P14PET7DW7AMT
+5GKvBdbW64c43rZKJ1xMk8e8SdItdPSGpflQmuHyeJNZMdlMbEt4vte3uvN3R3gOQQ6hW8/5/sn2
+oMiNKvIgtqfYOQhtY0I7iOy/D4Wfb68LU1N1XqM6Z4olXKOGx03rtK5vL1gml9a3+lmCgksePY/W
+m9igUqDTLM3FrCRXSphxLOxnwIsdtC1yurL3ie39Hep7lyK35+xwJf5gHZjW34D41RnIt1Ujm3cV
+F/W93uMWmLsKt2bQiqEsANk3jiki6yhu17jvwewZzSvN3O7WcXbsIuejgJJ9K9F6l8f3J+6r9vdb
+zdOs4k3os84qEXP9QRSGKzv2ZbIyPmynk9wXOBO2phO2oy6Oh/o+2ZqTZAHNPlWn+/iPyPEvUEsH
+CFNWc/xbAgAATBkAAFBLAQIUABQACAAIAAq4iDhTVnP8WwIAAEwZAAAwAAAAAAAAAAAAAAAAAAAA
+AABodHRwcyUzQSUyRiUyRmJ1Z3MuZWNsaXBzZS5vcmclMkZidWdzLTIxNDYxMy54bWxQSwUGAAAA
+AAEAAQBeAAAAuQIAAAAA
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

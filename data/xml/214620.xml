@@ -1,0 +1,839 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214620</bug_id>
+          
+          <creation_ts>2008-01-08 10:22:00 -0500</creation_ts>
+          <short_desc>[api tooling] comments from Eugene</short_desc>
+          <delta_ts>2008-05-01 11:28:11 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>API Tools</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Chris Aniszczyk">caniszczyk</reporter>
+          <assigned_to name="Darin Wright">darin.eclipse</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>ekuleshov</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127313</commentid>
+    <comment_count>0</comment_count>
+    <who name="Chris Aniszczyk">caniszczyk</who>
+    <bug_when>2008-01-08 10:22:12 -0500</bug_when>
+    <thetext>For reference:
+
+Chris Aniszczyk/Austin/IBM@IBMUS 
+2008-01-08 08:36	
+	To
+	Darin Wright/Ottawa/IBM@IBMCA
+	cc
+	Olivier Thomann/Ottawa/IBM@IBMCA, Michael Rennie/Ottawa/IBM@IBMCA, Jeff McAffer/Ottawa/IBM@IBMCA
+	Subject
+	Fw: PDE API tools and ASM bytecode manipulation framework
+	
+	
+	
+	
+
+FYI, I asked my friend Eugene (author of ASM) for some comments about PDE API Tools usage of ASM. Here they are:
+
+I&apos;d recommend possibly opening bugs for the issues that you think are relevant.
+
+Cheers,
+
+---
+Chris Aniszczyk | IBM Lotus | Eclipse Committer | http://mea-bloga.blogspot.com | +1.860.839.2465
+----- Forwarded by Chris Aniszczyk/Austin/IBM on 01/08/2008 07:34 AM -----
+From:	Eugene Kuleshov &lt;eu@md.pp.ru&gt;
+To:	pde-ui-dev@eclipse.org
+Cc:	Chris Aniszczyk/Austin/IBM@IBMUS
+Date:	01/07/2008 11:59 PM
+Subject:	PDE API tools and ASM bytecode manipulation framework
+
+
+
+Hi everyone,
+
+  Chris Aniszczyk mentioned another day that PDE API tools are using ASM 
+framework. Since I am one of the developers of ASM, I thought it would 
+be useful to share my thoughts and comments about PDE usage of ASM as 
+well as few questions that could help me to get better understanding of 
+your implementation and use cases. My observations are more or less 
+random and mostly based on a quick scanning trough ASM API calls and 
+don&apos;t assume deep analysis of the PDE implementation. Please don&apos;t take 
+those notes as criticism, those simply suggestions for better usage of 
+the ASM API that could help to improve performance and memory usage for 
+your application. I think it is really great application for ASM library 
+and I am very excited about it.
+
+  First of all I see that PDE API tools is using &quot;asm&quot; and &quot;asm-tree&quot; 
+jars. However &quot;asm-tree&quot; jar is usually used for complex in-memory class 
+transformations and method analysis, which doesn&apos;t seem the case for PDE 
+API tools. I found two uses of the &quot;tree&quot; classes and they both can be 
+removed: org.eclipse.pde.api.tools.internal.comparator.TypeDescriptor 
+and org.eclipse.pde.api.tools.internal.search.ClassFileVisitor
+  Basically those classes are making inefficient use of ClassNode, where 
+it can be replaced either with org.objectweb.asm.commons.EmptyVisitor 
+from &quot;asm-commons&quot; jar or your own dummy implementation of all ASM&apos;s 
+visitor interfaces, like the 
+org.eclipse.pde.api.tools.internal.util.ClassVisitorAdapter you have. 
+That would improve processing performance and eliminate unnecessary 
+memory allocation.
+
+  If I understood TypeDescriptor.initialize() method correctly, it is 
+not interested in the method code, so you could use 
+classReader.accept(visitor, ClassReader.SKIP_CODE); to completely skip 
+all methods code from visiting. Same applies to implementation of 
+SearchEngine.getExtraction(..) and TagScanner.Visitor.getMethods(..) 
+methods, where you also can add ClassReader.SKIP_CODE to avoid visiting 
+method code.
+
+  There is a feature in ASM that allows to skip unneeded methods and 
+other class artifacts. So you can return a null from visitMethod() call, 
+then method code will be also skipped (that also happens when you visit 
+an abstract or native method). For example, in 
+Converter.MyClassFileAdapter.visitMethod() you could rewrite the 
+following code:
+
+            MethodVisitor visitor = super.visitMethod(accessFlags, 
+methodName, desc, signature, exceptions);
+            if (visitor != null) {
+                if (reportRefs) {
+                    visitor = new MyMethodAdapter(visitor);
+                } else {
+                    visitor = new ClearCodeAttributeMethodAdapter(visitor);
+                }
+            }
+            return visitor;
+
+  like this :
+
+            MethodVisitor visitor = super.visitMethod(accessFlags, 
+methodName, desc, signature, exceptions);
+            if (visitor != null) {
+                if (reportRefs) {
+                    visitor = new MyMethodAdapter(visitor);
+                } else {
+                    visitor.visitEnd();  // for safety
+                    visitor = null;
+                }
+            }
+            return visitor;
+
+  The above essentially eliminating ClearCodeAttributeMethodAdapter, 
+which should probably have been implementing MethodVisitor directly 
+instead of extending MethodAdapter, or 
+org.objectweb.asm.commons.EmptyVisitor should have been used instead of it.
+
+  If none of your visitors actually cares about StackMap information, 
+you may as well add ClassReader.SKIP_FRAMES flag to 
+ClassReader.accept(..) call when reading or transforming classes.
+
+  It is better to not extend ClassAdapter when visitor doesn&apos;t do any 
+transformations and it is used only to collect data, like 
+ClassFileDescriptorBuilder does. I would suggest to use something like 
+EmptyVisitor for that. Though it is worth to mention that 
+org.objectweb.asm.commons.EmptyVisitor is flattening the visiting 
+events, i.e. it don&apos;t make difference between method and fields 
+annotations, but you can return new instance of the EmptyVisitor 
+subclass if you need to keep hierarchy.
+  Also, code in ClassFileDescriptorBuilder.visitMethod() that extracts 
+value for default annotation look fairly similar to the code in  
+org.objectweb.asm.util.TraceAnnotationVisitor class from ASM&apos;s 
+&quot;asm-util&quot; jar, but your version doesn&apos;t seem add separator between 
+array entries.
+ 
+  In ClassFileVisitor.visitMethod(..) method. The following code:
+    switch(type.getSort()) {
+      case Type.LONG :
+      case Type.DOUBLE :
+        argumentcount += 2;
+     default:
+        argumentcount++;
+    }
+
+  can be replaced with: argumentcount += type.getSize();
+
+  The state machine used in Converter.MyMethodAdapter (passing 
+stringLiteral between visitLdcInsn() and visitMethodInsn() methods) is 
+probably going to work for classes compiled by javac or JDT, but there 
+could be legal bytecode that won&apos;t fit into that pattern, but I am not 
+sure what is the implication of that for PDE API tools.
+
+  I think I understand what MyMethodAdapter does about reference types 
+(which seem very neat idea), but I&apos;d be interested to learn why you have 
+special processing for ASTORE, IRETURN, RETURN, ATHROW and POP opcodes 
+and not all INVOKE* opcodes?
+
+  In Converter.MyClassFileAdapter.visit(..) it is better to use 
+Opcodes.V1_5 instead of magic number &quot;49&quot;. Though I wonder why you need 
+to use that version instead of version from the original class?
+  In the same method, it might be better to use annotation instead of 
+custom attribute. Annotations are usually easier to access (in the 
+bytecode as well as trough reflectio API) and you can still store them 
+into classes with version &lt;49. Though that is obviously matter of 
+personal preferences.
+  I also curious what Converter.MyMethodWriter is used for? I don&apos;t see 
+any use of collected lastOffset value.
+
+  Hope you would find these notes somehow useful. Please let me know if 
+I could be at any help in regards to ASM framework and thanks again for 
+using it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127322</commentid>
+    <comment_count>1</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-01-08 10:39:39 -0500</bug_when>
+    <thetext>&gt; don&apos;t assume deep analysis of the PDE implementation. Please don&apos;t take 
+&gt; those notes as criticism, those simply suggestions for better usage of 
+&gt; the ASM API that could help to improve performance and memory usage for 
+&gt; your application. I think it is really great application for ASM library 
+&gt; and I am very excited about it.
+Thanks for spending some time to review what we have done.
+
+&gt;   If I understood TypeDescriptor.initialize() method correctly, it is 
+&gt; not interested in the method code, so you could use 
+&gt; classReader.accept(visitor, ClassReader.SKIP_CODE); to completely skip 
+&gt; all methods code from visiting. Same applies to implementation of 
+&gt; SearchEngine.getExtraction(..) and TagScanner.Visitor.getMethods(..) 
+&gt; methods, where you also can add ClassReader.SKIP_CODE to avoid visiting 
+&gt; method code.
+Will do.
+
+&gt;   Also, code in ClassFileDescriptorBuilder.visitMethod() that extracts 
+&gt; value for default annotation look fairly similar to the code in  
+&gt; org.objectweb.asm.util.TraceAnnotationVisitor class from ASM&apos;s 
+&gt; &quot;asm-util&quot; jar, but your version doesn&apos;t seem add separator between 
+&gt; array entries.
+In this case we don&apos;t really care about getting a separator between array entries, but we could reuse your code to prevent duplications.
+
+&gt;   In ClassFileVisitor.visitMethod(..) method. The following code:
+&gt;     switch(type.getSort()) {
+&gt;       case Type.LONG :
+&gt;       case Type.DOUBLE :
+&gt;         argumentcount += 2;
+&gt;      default:
+&gt;         argumentcount++;
+&gt;     }
+&gt; 
+&gt;   can be replaced with: argumentcount += type.getSize();
+Fixed.
+
+&gt;   The state machine used in Converter.MyMethodAdapter (passing 
+&gt; stringLiteral between visitLdcInsn() and visitMethodInsn() methods) is 
+&gt; probably going to work for classes compiled by javac or JDT, but there 
+&gt; could be legal bytecode that won&apos;t fit into that pattern, but I am not 
+&gt; sure what is the implication of that for PDE API tools.
+This is actually a trick to try to preserve references to type for the usage of the type literal.
+
+&gt;   I think I understand what MyMethodAdapter does about reference types 
+&gt; (which seem very neat idea), but I&apos;d be interested to learn why you have 
+&gt; special processing for ASTORE, IRETURN, RETURN, ATHROW and POP opcodes 
+&gt; and not all INVOKE* opcodes?
+My goal was to preverve at least one bytecode for a method that not a native or a abstract method if case the references have to be preserved. Ideally when no references are found inside a method, I would like to &quot;convert&quot; the method to be a native method, but I didn&apos;t find a way to do this. I am sure this is doable.
+
+&gt;   In Converter.MyClassFileAdapter.visit(..) it is better to use 
+&gt; Opcodes.V1_5 instead of magic number &quot;49&quot;. Though I wonder why you need 
+&gt; to use that version instead of version from the original class?
+I don&apos;t want to preserve stack frames. So if the original version of the class is 1.6, I want to put 1.5. I could preserve the original version of the class is lower or equals to 1.5. I&apos;ll fix this.
+
+&gt;   In the same method, it might be better to use annotation instead of 
+&gt; custom attribute. Annotations are usually easier to access (in the 
+&gt; bytecode as well as trough reflectio API) and you can still store them 
+&gt; into classes with version &lt;49. Though that is obviously matter of 
+&gt; personal preferences.
+I wanted to use the smallest possible solution.
+
+&gt;   I also curious what Converter.MyMethodWriter is used for? I don&apos;t see 
+&gt; any use of collected lastOffset value.
+I use it to remove entries in the line number table that has the same offset of the previous entry. Do you see a better way to do this ?
+
+&gt;   Hope you would find these notes somehow useful. Please let me know if 
+&gt; I could be at any help in regards to ASM framework and thanks again for 
+&gt; using it.
+Thanks a lot for your comments. I&apos;ll try to clean up the code as much as possible.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127767</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 17:16:29 -0500</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; Thanks for spending some time to review what we have done.
+
+My pleasure :-)
+
+By the way, I am wondering if this tooling should be available not only to the PDE projects but to all regular JDT Java projects. There isn&apos;t really much specific to the PDE and can be useful to all Java developers.
+
+&gt; &gt;   The state machine used in Converter.MyMethodAdapter (passing 
+&gt; &gt; stringLiteral between visitLdcInsn() and visitMethodInsn() methods) is 
+&gt; &gt; probably going to work for classes compiled by javac or JDT, but there 
+&gt; &gt; could be legal bytecode that won&apos;t fit into that pattern, but I am not 
+&gt; &gt; sure what is the implication of that for PDE API tools.
+&gt; This is actually a trick to try to preserve references to type for the usage of
+&gt; the type literal.
+
+Yes, I understand that. My concern is that you are trying to process the following pattern (basically that is what javac creates for AA.class with -target 1.4 or earlier):
+
+  LDC &quot;AA&quot;
+  INVOKESTATIC java/lang/Class.forName(Ljava/lang/String;)Ljava/lang/Class;
+
+However, if you&apos;d get an invalid result on bytecode like this:
+
+  LDC &quot;AA&quot;
+  ASTORE 1
+  ALOAD 2
+  INVOKESTATIC java/lang/Class.forName(Ljava/lang/String;)Ljava/lang/Class;
+
+So, I think you may want to make sure that there is no other opcodes between LDC and INVOKE* opcodes. Also it may make sense to only enable this pattern when bytecode version for the processed class is less then Opcodes.V1_5.
+
+&gt; &gt;   I think I understand what MyMethodAdapter does about reference types 
+&gt; &gt; (which seem very neat idea), but I&apos;d be interested to learn why you have 
+&gt; &gt; special processing for ASTORE, IRETURN, RETURN, ATHROW and POP opcodes 
+&gt; &gt; and not all INVOKE* opcodes?
+&gt; My goal was to preverve at least one bytecode for a method that not a native or
+&gt; a abstract method if case the references have to be preserved. 
+
+Yes, I understood that, but it is not quite clear why do you need at least one instruction? BTW, you can add it in visitMaxs() or visitCode() of yours MethodVisitor subclass.
+
+Also, you don&apos;t collect references from INVOKE* opcodes and try/catch blocks, though those probably are &quot;soft&quot; references that don&apos;t affect backward compatibility.
+
+&gt; Ideally when no
+&gt; references are found inside a method, I would like to &quot;convert&quot; the method to
+&gt; be a native method, but I didn&apos;t find a way to do this. I am sure this is
+&gt; doable.
+
+One option for converting methods to native in one pass is to create something similar to MethodNode (better to create your own class instead of MethodNode, but it may still make sense to use AbstractInsnNode hierarchy from &quot;asm-tree&quot; to record captured references), so you would not call visiMethod() on the next ClassVisitor in the chain but collect all the references in memory and then can decide what method signature and method body would look like when visitEnd() is called on your MethodVisitor. Something like this:
+
+public MethodVisitor visitMethod(int access, String methodName,
+    String desc, String signature, String[] exceptions) {
+
+  ... implement required visit*() to capture references
+
+  return new MethodVisitor() {
+      public void visitEnd() {
+        if(something) {
+          MethodVisitor mv = cv.visitMethod(newAccess, methodName, desc, signature, exceptions);
+          ... replay mv.visit*() calls recorded for required refs
+          mv.visitEnd();
+        } else {
+          ...
+        }
+      }
+    };
+}
+
+&gt; I don&apos;t want to preserve stack frames. So if the original version of the class
+&gt; is 1.6, I want to put 1.5. I could preserve the original version of the class
+&gt; is lower or equals to 1.5. I&apos;ll fix this.
+
+But you are still cleaning up method code and result methods are invalid from the bytecode verifier point of view, so I don&apos;t really see why you need to change the bytecode level? Also, if I recall correctly, the StackMap data is not required for 1.6 classes, though future bytecode versions could imply other differences in bytecode, so maybe it is not a good idea to change the version.
+
+&gt; &gt;   I also curious what Converter.MyMethodWriter is used for? I don&apos;t see 
+&gt; &gt; any use of collected lastOffset value.
+&gt; I use it to remove entries in the line number table that has the same offset of
+&gt; the previous entry. Do you see a better way to do this ?
+
+Ah I see. It seem like you are only using that for the stubs, but then you could do that cleanup when stugs are created (probably in the MyMethodAdapter)
+
+I couldn&apos;t see where the line numbers are being used. Can you explain that part a bit?
+
+BTW, it would help readability if those Adapter subclasses named according to their purpose, something like ReferencesStubMethodAdapter, LineNumberMergerMethodAdapter.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127771</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86435</attachid>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 17:18:47 -0500</bug_when>
+    <thetext>Created attachment 86435
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1147400</commentid>
+    <comment_count>4</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-02-01 09:34:53 -0500</bug_when>
+    <thetext>&gt; By the way, I am wondering if this tooling should be available not only to the
+&gt; PDE projects but to all regular JDT Java projects. There isn&apos;t really much
+&gt; specific to the PDE and can be useful to all Java developers.
+We intend to extend the API check to java projects for future version, but for 3.4 we target bundles.
+ 
+&gt; So, I think you may want to make sure that there is no other opcodes between
+&gt; LDC and INVOKE* opcodes. Also it may make sense to only enable this pattern
+&gt; when bytecode version for the processed class is less then Opcodes.V1_5.
+This is a good idea. I&apos;ll add this check.
+ 
+&gt; Yes, I understood that, but it is not quite clear why do you need at least one
+&gt; instruction? BTW, you can add it in visitMaxs() or visitCode() of yours
+&gt; MethodVisitor subclass.
+&gt; 
+&gt; Also, you don&apos;t collect references from INVOKE* opcodes and try/catch blocks,
+&gt; though those probably are &quot;soft&quot; references that don&apos;t affect backward
+&gt; compatibility.
+I thought I did. I preserve all invoke references. And since I don&apos;t override the visit for catch block I thought I just preserve them.
+
+&gt; public MethodVisitor visitMethod(int access, String methodName,
+&gt;     String desc, String signature, String[] exceptions) {
+&gt; 
+&gt;   ... implement required visit*() to capture references
+&gt; 
+&gt;   return new MethodVisitor() {
+&gt;       public void visitEnd() {
+&gt;         if(something) {
+&gt;           MethodVisitor mv = cv.visitMethod(newAccess, methodName, desc,
+&gt; signature, exceptions);
+&gt;           ... replay mv.visit*() calls recorded for required refs
+&gt;           mv.visitEnd();
+&gt;         } else {
+&gt;           ...
+&gt;         }
+&gt;       }
+&gt;     };
+&gt; }
+You put this code in the org.eclipse.pde.api.tools.stubs.Converter.MyClassFileAdapter.visitMethod(int, String, String, String, String[]) ?
+
+&gt; But you are still cleaning up method code and result methods are invalid from
+&gt; the bytecode verifier point of view, so I don&apos;t really see why you need to
+&gt; change the bytecode level? Also, if I recall correctly, the StackMap data is
+&gt; not required for 1.6 classes, though future bytecode versions could imply other
+&gt; differences in bytecode, so maybe it is not a good idea to change the version.
+I won&apos;t change the version anymore.
+ 
+&gt; Ah I see. It seem like you are only using that for the stubs, but then you
+&gt; could do that cleanup when stubs are created (probably in the MyMethodAdapter)
+I have to see how to do this.
+
+&gt; I couldn&apos;t see where the line numbers are being used. Can you explain that part
+&gt; a bit?
+The line number are used in the reference scanner to locate the matches to a line if available.
+
+&gt; BTW, it would help readability if those Adapter subclasses named according to
+&gt; their purpose, something like ReferencesStubMethodAdapter,
+&gt; LineNumberMergerMethodAdapter.
+I&apos;ll rename them.
+
+I&apos;ll try to use your attachment. I need to install Mylyn first.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148982</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-02-04 12:51:14 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; We intend to extend the API check to java projects for future version, but for
+&gt; 3.4 we target bundles.
+
+Hmm. I thought code is rather generic and should work with arbitrary libraries. Are you aware of any particular challenges?
+
+One of the most interesting use cases is to detect use of JRE API not supported by chosen target. I.e. when developer only have Java 6 installed but need to develop for JRE 1.4 or something like that.
+
+&gt; &gt; Also, you don&apos;t collect references from INVOKE* opcodes and try/catch blocks,
+&gt; &gt; though those probably are &quot;soft&quot; references that don&apos;t affect backward
+&gt; &gt; compatibility.
+&gt; I thought I did. I preserve all invoke references. And since I don&apos;t override
+&gt; the visit for catch block I thought I just preserve them.
+
+You are right, they all preserved. Though it seem like you are loosing line numbers for catch blocks in Converter.MyMethodAdapter class, though I am not sure if they are needed.
+
+&gt; &gt; public MethodVisitor visitMethod(int access, String methodName,
+&gt; &gt;     String desc, String signature, String[] exceptions) {
+&gt; &gt;  ...
+&gt; &gt; }
+&gt; You put this code in the
+&gt; org.eclipse.pde.api.tools.stubs.Converter.MyClassFileAdapter.visitMethod(int,
+&gt; String, String, String, String[]) ?
+
+That&apos;s the idea. Yes.
+
+&gt; I&apos;ll try to use your attachment. I need to install Mylyn first.
+
+Oh, sorry. I didn&apos;t meant that you have to and submitted task context on pure reflex. Though it could be useful to Mylyn users. :-)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1185172</commentid>
+    <comment_count>6</comment_count>
+      <attachid>93673</attachid>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-03-26 15:35:40 -0400</bug_when>
+    <thetext>Created attachment 93673
+Proposed fix
+
+Code from Eclipsecon. Needs to be reviewed and tested.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1185567</commentid>
+    <comment_count>7</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-03-26 21:38:59 -0400</bug_when>
+    <thetext>Released for 3.4M6.
+Darin, please verify.
+
+These are the changes we made with Eugene at Eclipsecon.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1198663</commentid>
+    <comment_count>8</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-04-09 20:14:35 -0400</bug_when>
+    <thetext>Reopen to assign to Darin.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1198664</commentid>
+    <comment_count>9</comment_count>
+    <who name="Olivier Thomann">Olivier_Thomann</who>
+    <bug_when>2008-04-09 20:14:56 -0400</bug_when>
+    <thetext>Fixed.
+Darin, please verify.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220427</commentid>
+    <comment_count>10</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-05-01 11:28:11 -0400</bug_when>
+    <thetext>Verified.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86435</attachid>
+            <date>2008-01-08 17:18:00 -0500</date>
+            <delta_ts>2008-01-08 17:18:47 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>9827</size>
+            <attacher name="Eugene Kuleshov">ekuleshov</attacher>
+            
+              <data encoding="base64">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
+bFBLBQYAAAAAAQABAF4AAADvJQAAAAA=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>93673</attachid>
+            <date>2008-03-26 15:35:00 -0400</date>
+            <delta_ts>2008-03-26 15:35:40 -0400</delta_ts>
+            <desc>Proposed fix</desc>
+            <filename>patch_214620.txt</filename>
+            <type>text/plain</type>
+            <size>5723</size>
+            <attacher name="Olivier Thomann">Olivier_Thomann</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UucGRlLmFwaS50
+b29scw0KSW5kZXg6IHNyYy9vcmcvZWNsaXBzZS9wZGUvYXBpL3Rvb2xzL2ludGVybmFsL3Byb3Zp
+c2lvbmFsL3N0dWJzL0NvbnZlcnRlci5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jv
+b3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5wZGUuYXBpLnRvb2xzL3NyYy9vcmcvZWNsaXBzZS9wZGUv
+YXBpL3Rvb2xzL2ludGVybmFsL3Byb3Zpc2lvbmFsL3N0dWJzL0NvbnZlcnRlci5qYXZhLHYNCnJl
+dHJpZXZpbmcgcmV2aXNpb24gMS4yDQpkaWZmIC11IC1yMS4yIENvbnZlcnRlci5qYXZhDQotLS0g
+c3JjL29yZy9lY2xpcHNlL3BkZS9hcGkvdG9vbHMvaW50ZXJuYWwvcHJvdmlzaW9uYWwvc3R1YnMv
+Q29udmVydGVyLmphdmEJMjEgRmViIDIwMDggMjA6NDA6MzggLTAwMDAJMS4yDQorKysgc3JjL29y
+Zy9lY2xpcHNlL3BkZS9hcGkvdG9vbHMvaW50ZXJuYWwvcHJvdmlzaW9uYWwvc3R1YnMvQ29udmVy
+dGVyLmphdmEJMjYgTWFyIDIwMDggMTY6Mjk6MzggLTAwMDANCkBAIC00NCw2ICs0NCw3IEBADQog
+aW1wb3J0IG9yZy5vYmplY3R3ZWIuYXNtLk1ldGhvZFZpc2l0b3I7DQogaW1wb3J0IG9yZy5vYmpl
+Y3R3ZWIuYXNtLk9wY29kZXM7DQogaW1wb3J0IG9yZy5vYmplY3R3ZWIuYXNtLlR5cGU7DQoraW1w
+b3J0IG9yZy5vYmplY3R3ZWIuYXNtLnRyZWUuTWV0aG9kTm9kZTsNCiANCiAvKioNCiAgKiBVdGls
+aXR5IHRvIGNvbnZlcnQgJ25vcm1hbCcgY2xhc3MgZmlsZXMgaW50byAnc3R1YnMnLCByZW1vdmlu
+ZyB0aGUgYm9keSBkZWNsYXJhdGlvbnMNCkBAIC0xNDEsMTYgKzE0MiwxNiBAQA0KIAkJCWlmICgo
+dGhpcy5mbGFncyAmIE1PRElGSUVSX1NZTlRIRVRJQykgPT0gMCAmJiAoYWNjZXNzICYgT3Bjb2Rl
+cy5BQ0NfU1lOVEhFVElDKSAhPSAwKSB7DQogCQkJCXJldHVybiBudWxsOw0KIAkJCX0NCi0JCQlN
+ZXRob2RWaXNpdG9yIHZpc2l0b3IgPSBzdXBlci52aXNpdE1ldGhvZChhY2Nlc3NGbGFncywgbWV0
+aG9kTmFtZSwgZGVzYywgc2lnbmF0dXJlLCBleGNlcHRpb25zKTsNCisJCQkNCisJCQlpZiAocmVw
+b3J0UmVmcykgew0KKwkJCQlyZXR1cm4gbmV3IFJlZmVyZW5jZXNTdHViTWV0aG9kQWRhcHRlcihj
+diwgYWNjZXNzRmxhZ3MsIG1ldGhvZE5hbWUsIGRlc2MsIHNpZ25hdHVyZSwgZXhjZXB0aW9ucyk7
+DQorCQkgICAgfQ0KKwkJCQ0KKwkgICAgCU1ldGhvZFZpc2l0b3IgdmlzaXRvciA9IHN1cGVyLnZp
+c2l0TWV0aG9kKGFjY2Vzc0ZsYWdzLCBtZXRob2ROYW1lLCBkZXNjLCBzaWduYXR1cmUsIGV4Y2Vw
+dGlvbnMpOw0KIAkJCWlmICh2aXNpdG9yICE9IG51bGwpIHsNCi0JCQkJaWYgKHJlcG9ydFJlZnMp
+IHsNCi0JCQkJCXZpc2l0b3IgPSBuZXcgUmVmZXJlbmNlc1N0dWJNZXRob2RBZGFwdGVyKHZpc2l0
+b3IpOw0KLQkJCQl9IGVsc2Ugew0KLQkJCQkJdmlzaXRvci52aXNpdEVuZCgpOyAvLyBmb3Igc2Fm
+ZXR5DQotCQkJCQl2aXNpdG9yID0gbnVsbDsNCi0JCQkJfQ0KKwkJCQl2aXNpdG9yLnZpc2l0RW5k
+KCk7IC8vIGZvciBzYWZldHkNCiAJCQl9DQotCQkJcmV0dXJuIHZpc2l0b3I7DQorCQkJcmV0dXJu
+IG51bGw7DQogCQl9DQogDQogCQkvKiAobm9uLUphdmFkb2MpDQpAQCAtMTk5LDE4ICsyMDAsMjgg
+QEANCiAJLyoqDQogCSAqIE1ldGhvZCBhZGFwdGVyIGZvciBjcmVhdGluZyBzdHViIG1ldGhvZHMN
+CiAJICovDQotCXN0YXRpYyBjbGFzcyBSZWZlcmVuY2VzU3R1Yk1ldGhvZEFkYXB0ZXIgZXh0ZW5k
+cyBNZXRob2RBZGFwdGVyIHsNCisJc3RhdGljIGNsYXNzIFJlZmVyZW5jZXNTdHViTWV0aG9kQWRh
+cHRlciBleHRlbmRzIE1ldGhvZE5vZGUgew0KKwkJcHJpdmF0ZSBmaW5hbCBDbGFzc1Zpc2l0b3Ig
+Y3Y7DQogCQlTdHJpbmcgc3RyaW5nTGl0ZXJhbDsNCiAJCWludCBsaW5lOw0KIAkJTGFiZWwgbGFi
+ZWw7DQogCQlpbnQgbGFzdExpbmUgPSAtMTsNCisJCWJvb2xlYW4gaGFzUmVmczsgDQogDQogCQkv
+KioNCiAJCSAqIENvbnN0cnVjdG9yDQorCQkgKiBAcGFyYW0gZXhjZXB0aW9ucyANCisJCSAqIEBw
+YXJhbSBzaWduYXR1cmUgDQorCQkgKiBAcGFyYW0gZGVzYyANCisJCSAqIEBwYXJhbSBtZXRob2RO
+YW1lIA0KKwkJICogQHBhcmFtIGFjY2Vzc0ZsYWdzIA0KKwkJICogQHBhcmFtIGN2IA0KIAkJICog
+QHBhcmFtIHZpc2l0b3INCiAJCSAqLw0KLQkJcHVibGljIFJlZmVyZW5jZXNTdHViTWV0aG9kQWRh
+cHRlcihNZXRob2RWaXNpdG9yIHZpc2l0b3IpIHsNCi0JCQlzdXBlcih2aXNpdG9yKTsNCisJCXB1
+YmxpYyBSZWZlcmVuY2VzU3R1Yk1ldGhvZEFkYXB0ZXIoQ2xhc3NWaXNpdG9yIGN2LCBpbnQgYWNj
+ZXNzRmxhZ3MsIFN0cmluZyBtZXRob2ROYW1lLCBTdHJpbmcgZGVzYywgU3RyaW5nIHNpZ25hdHVy
+ZSwgU3RyaW5nW10gZXhjZXB0aW9ucykgew0KKwkJCXN1cGVyKGFjY2Vzc0ZsYWdzLCBtZXRob2RO
+YW1lLCBkZXNjLCBzaWduYXR1cmUsIGV4Y2VwdGlvbnMpOw0KKwkJCXRoaXMuY3YgPSBjdjsNCisJ
+CQl0aGlzLmhhc1JlZnMgPSBmYWxzZTsNCiAJCX0NCiANCiAJCS8qIChub24tSmF2YWRvYykNCkBA
+IC0yMjUsMTkgKzIzNiwxNSBAQA0KIAkJICovDQogCQlwdWJsaWMgdm9pZCB2aXNpdE11bHRpQU5l
+d0FycmF5SW5zbihTdHJpbmcgZGVzYywgaW50IGRpbXMpIHsNCiAJCQl0aGlzLmluc2VydExpbmVF
+bnRyeSgpOw0KLQkJCW12LnZpc2l0TXVsdGlBTmV3QXJyYXlJbnNuKGRlc2MsIGRpbXMpOw0KKwkJ
+CXN1cGVyLnZpc2l0TXVsdGlBTmV3QXJyYXlJbnNuKGRlc2MsIGRpbXMpOw0KKwkJCXRoaXMuaGFz
+UmVmcyA9IHRydWU7DQogCQl9DQogDQogCQkvKiAobm9uLUphdmFkb2MpDQogCQkgKiBAc2VlIG9y
+Zy5vYmplY3R3ZWIuYXNtLk1ldGhvZEFkYXB0ZXIjdmlzaXRJbnNuKGludCkNCiAJCSAqLw0KIAkJ
+cHVibGljIHZvaWQgdmlzaXRJbnNuKGludCBvcGNvZGUpIHsNCi0JCQlpZiAoKG9wY29kZSA+PSBP
+cGNvZGVzLklSRVRVUk4gJiYgb3Bjb2RlIDw9IE9wY29kZXMuUkVUVVJOKQ0KLQkJCQkJfHwgb3Bj
+b2RlID09IE9wY29kZXMuQVRIUk9XDQotCQkJCQl8fCBvcGNvZGUgPT0gT3Bjb2Rlcy5QT1ApIHsN
+Ci0JCQkJdGhpcy5pbnNlcnRMaW5lRW50cnkoKTsNCi0JCQkJbXYudmlzaXRJbnNuKG9wY29kZSk7
+DQotCQkJfQ0KKwkJCS8vIG5vdGhpbmcgdG8gZG8NCiAJCX0NCiANCiAJCS8qIChub24tSmF2YWRv
+YykNCkBAIC0yNDUsMTQgKzI1MiwxNiBAQA0KIAkJICovDQogCQlwdWJsaWMgdm9pZCB2aXNpdEZp
+ZWxkSW5zbihpbnQgb3Bjb2RlLCBTdHJpbmcgb3duZXIsIFN0cmluZyBuYW1lLCBTdHJpbmcgZGVz
+Yykgew0KIAkJCXRoaXMuaW5zZXJ0TGluZUVudHJ5KCk7DQotCQkJbXYudmlzaXRGaWVsZEluc24o
+b3Bjb2RlLCBvd25lciwgbmFtZSwgZGVzYyk7DQorCQkJc3VwZXIudmlzaXRGaWVsZEluc24ob3Bj
+b2RlLCBvd25lciwgbmFtZSwgZGVzYyk7DQorCQkJdGhpcy5oYXNSZWZzID0gdHJ1ZTsNCiAJCX0N
+CiAJCS8qIChub24tSmF2YWRvYykNCiAJCSAqIEBzZWUgb3JnLm9iamVjdHdlYi5hc20uTWV0aG9k
+QWRhcHRlciN2aXNpdFR5cGVJbnNuKGludCwgU3RyaW5nKQ0KIAkJICovDQogCQlwdWJsaWMgdm9p
+ZCB2aXNpdFR5cGVJbnNuKGludCBvcGNvZGUsIFN0cmluZyBkZXNjKSB7DQogCQkJdGhpcy5pbnNl
+cnRMaW5lRW50cnkoKTsNCi0JCQltdi52aXNpdFR5cGVJbnNuKG9wY29kZSwgZGVzYyk7DQorCQkJ
+c3VwZXIudmlzaXRUeXBlSW5zbihvcGNvZGUsIGRlc2MpOw0KKwkJCXRoaXMuaGFzUmVmcyA9IHRy
+dWU7DQogCQl9DQogDQogCQkvKiAobm9uLUphdmFkb2MpDQpAQCAtMjc1LDcgKzI4NCw4IEBADQog
+CQlwdWJsaWMgdm9pZCB2aXNpdExkY0luc24oT2JqZWN0IGNzdCkgew0KIAkJCWlmIChjc3QgaW5z
+dGFuY2VvZiBUeXBlKSB7DQogCQkJCXRoaXMuaW5zZXJ0TGluZUVudHJ5KCk7DQotCQkJCW12LnZp
+c2l0TGRjSW5zbihjc3QpOw0KKwkJCQlzdXBlci52aXNpdExkY0luc24oY3N0KTsNCisJCQkJdGhp
+cy5oYXNSZWZzID0gdHJ1ZTsNCiAJCQl9IGVsc2UgaWYgKGNzdCBpbnN0YW5jZW9mIFN0cmluZykg
+ew0KIAkJCQlzdHJpbmdMaXRlcmFsID0gKFN0cmluZykgY3N0Ow0KIAkJCX0NCkBAIC0zMDIsNyAr
+MzEyLDggQEANCiAJCQlzd2l0Y2gob3Bjb2RlKSB7DQogCQkJCWNhc2UgT3Bjb2Rlcy5BU1RPUkUg
+Og0KIAkJCQkJdGhpcy5pbnNlcnRMaW5lRW50cnkoKTsNCi0JCQkJCW12LnZpc2l0VmFySW5zbihv
+cGNvZGUsIHZhcik7DQorCQkJCQlzdXBlci52aXNpdFZhckluc24ob3Bjb2RlLCB2YXIpOw0KKwkJ
+CQkJdGhpcy5oYXNSZWZzID0gdHJ1ZTsNCiAJCQl9DQogCQl9DQogDQpAQCAtMzM4LDcgKzM0OSw3
+IEBADQogCQkJCQlpZiAobmFtZS5lcXVhbHMoImZvck5hbWUiKSkgeyAvLyROT04tTkxTLTEkDQog
+CQkJCQkJaWYgKHByb2Nlc3NOYW1lKG93bmVyKS5lcXVhbHMoImphdmEubGFuZy5DbGFzcyIpKSB7
+IC8vJE5PTi1OTFMtMSQNCiAJCQkJCQkJaWYgKHN0cmluZ0xpdGVyYWwgIT0gbnVsbCkgew0KLQkJ
+CQkJCQkJbXYudmlzaXRMZGNJbnNuKHRoaXMuc3RyaW5nTGl0ZXJhbCk7DQorCQkJCQkJCQlzdXBl
+ci52aXNpdExkY0luc24odGhpcy5zdHJpbmdMaXRlcmFsKTsNCiAJCQkJCQkJfQ0KIAkJCQkJCX0N
+CiAJCQkJCX0NCkBAIC0zNDcsMTIgKzM1OCwxMyBAQA0KIAkJCX0NCiAJCQlzdHJpbmdMaXRlcmFs
+ID0gbnVsbDsNCiAJCQl0aGlzLmluc2VydExpbmVFbnRyeSgpOw0KLQkJCW12LnZpc2l0TWV0aG9k
+SW5zbihvcGNvZGUsIG93bmVyLCBuYW1lLCBkZXNjKTsNCisJCQlzdXBlci52aXNpdE1ldGhvZElu
+c24ob3Bjb2RlLCBvd25lciwgbmFtZSwgZGVzYyk7DQorCQkJdGhpcy5oYXNSZWZzID0gdHJ1ZTsN
+CiAJCX0NCiANCiAJCXByaXZhdGUgdm9pZCBpbnNlcnRMaW5lRW50cnkoKSB7DQogCQkJaWYgKHRo
+aXMubGFzdExpbmUgIT0gdGhpcy5saW5lICYmIHRoaXMubGFiZWwgIT0gbnVsbCkgew0KLQkJCQlt
+di52aXNpdExpbmVOdW1iZXIodGhpcy5saW5lLCB0aGlzLmxhYmVsKTsNCisJCQkJc3VwZXIudmlz
+aXRMaW5lTnVtYmVyKHRoaXMubGluZSwgdGhpcy5sYWJlbCk7DQogCQkJCXRoaXMubGFzdExpbmUg
+PSB0aGlzLmxpbmU7DQogCQkJfQ0KIAkJfQ0KQEAgLTM2MSw2ICszNzMsMjAgQEANCiAJCQl0aGlz
+LmxpbmUgPSBsaW5lOw0KIAkJCXRoaXMubGFiZWwgPSBzdGFydDsNCiAJCX0NCisJCQ0KKwkJcHVi
+bGljIHZvaWQgdmlzaXRFbmQoKSB7DQorCQkJaWYgKGhhc1JlZnMpIHsNCisJCQkJTWV0aG9kVmlz
+aXRvciBtdiA9IGN2LnZpc2l0TWV0aG9kKGFjY2VzcywgbmFtZSwgZGVzYywgc2lnbmF0dXJlLCAo
+U3RyaW5nW10pIGV4Y2VwdGlvbnMudG9BcnJheShuZXcgU3RyaW5nW2V4Y2VwdGlvbnMuc2l6ZSgp
+XSkpOw0KKwkJCQlpZiAobXYgIT0gbnVsbCkgew0KKwkJCQkJYWNjZXB0KG12KTsNCisJCQkJfQ0K
+KwkJCX0gZWxzZSB7DQorCQkJCU1ldGhvZFZpc2l0b3IgbXYgPSBjdi52aXNpdE1ldGhvZChhY2Nl
+c3MgfCBPcGNvZGVzLkFDQ19OQVRJVkUsIG5hbWUsIGRlc2MsIHNpZ25hdHVyZSwgKFN0cmluZ1td
+KSBleGNlcHRpb25zLnRvQXJyYXkobmV3IFN0cmluZ1tleGNlcHRpb25zLnNpemUoKV0pKTsNCisJ
+CQkJaWYgKG12ICE9IG51bGwpIHsNCisJCQkJCW12LnZpc2l0RW5kKCk7DQorCQkJCX0NCisJCQl9
+DQorCQl9DQogCX0NCiANCiAJLyoqDQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

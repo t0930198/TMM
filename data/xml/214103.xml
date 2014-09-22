@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214103</bug_id>
+          
+          <creation_ts>2008-01-02 08:02:00 -0500</creation_ts>
+          <short_desc>Add support for TriMedia cores in ELF parser</short_desc>
+          <delta_ts>2008-01-02 08:02:59 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.2</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Philippe Coucaud">phil_fj12</reporter>
+          <assigned_to name="Project Inbox">cdt-core-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124081</commentid>
+    <comment_count>0</comment_count>
+    <who name="Philippe Coucaud">phil_fj12</who>
+    <bug_when>2008-01-02 08:02:59 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+TriMedia cores are registered with symbol EM_TRIMEDIA (decimal value 163). Can you please add support for this value in the ELF reader ?
+
+Proposed patch:
+
+### Eclipse Workspace Patch 1.0
+#P org.eclipse.cdt-core
+Index: org.eclipse.cdt.core/utils/org/eclipse/cdt/utils/elf/Elf.java
+===================================================================
+RCS file: /cvsroot/tools/org.eclipse.cdt-core/org.eclipse.cdt.core/utils/org/eclipse/cdt/utils/elf/Elf.java,v
+retrieving revision 1.52
+diff -u -r1.52 Elf.java
+--- org.eclipse.cdt.core/utils/org/eclipse/cdt/utils/elf/Elf.java	7 Nov 2007 09:35:38 -0000	1.52
++++ org.eclipse.cdt.core/utils/org/eclipse/cdt/utils/elf/Elf.java	2 Jan 2008 12:53:38 -0000
+@@ -124,6 +124,7 @@
+ 		public final static int EM_C166 = 116;
+ 		public final static int EM_M16C = 117;
+ 		public final static int EM_MMDSP = 160;
++		public final static int EM_TRIMEDIA = 163;
+ 		public final static int EM_NIOS = 0xFEBB;
+ 		public final static int EM_CYGNUS_POWERPC = 0x9025;
+ 		public final static int EM_CYGNUS_M32R = 0x9041;
+@@ -865,6 +866,9 @@
+ 			case Elf.ELFhdr.EM_MMDSP:
+ 				attrib.cpu = &quot;mmdsp&quot;; //$NON-NLS-1$
+ 				break;
++			case Elf.ELFhdr.EM_TRIMEDIA:
++				attrib.cpu = &quot;TriMedia&quot;; //$NON-NLS-1$
++				break;
+ 			case Elf.ELFhdr.EM_NONE :
+ 			default :
+ 				attrib.cpu = &quot;none&quot;; //$NON-NLS-1$</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

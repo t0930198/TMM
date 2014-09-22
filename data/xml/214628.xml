@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214628</bug_id>
+          
+          <creation_ts>2008-01-08 11:32:00 -0500</creation_ts>
+          <short_desc>Disable PHP&apos;s allow_url_fopen globally, enable it only for portal</short_desc>
+          <delta_ts>2011-11-14 14:06:02 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Project Management &amp; Portal</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>REOPENED</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Denis Roy">denis.roy</reporter>
+          <assigned_to name="Portal Bugzilla Dummy Inbox">portal-inbox</assigned_to>
+          <cc>david_williams</cc>
+    
+    <cc>gabe.obrien</cc>
+    
+    <cc>karl.matthias</cc>
+    
+    <cc>webmaster</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127446</commentid>
+    <comment_count>0</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-01-08 11:32:26 -0500</bug_when>
+    <thetext>The portal can talk to IPZilla via an fopen(url) call.  Prior to this, fopen()&apos;ing URLs was prohibited on the eclipse.org cluster for security reasons.
+
+I&apos;d like to set allow_url_fopen = Off globally in php.ini, and enable it in the Apache &lt;Directory&gt; directive that defines the portal location.  The net result should be that no eclipse.org website can fopen a URL except the Portal.
+
+Can this configuration be mimicked on the Portal staging/test area to make sure it won&apos;t cause breakage?  The proposed Apache configuration is as follows
+
+# MyFoundation Portal
+Alias /portal &quot;/path/to/portal&quot;
+&lt;Directory &quot;/path/to/portal&quot;&gt;
+    php_admin_flag allow_url_fopen on
+    [snip]
+&lt;/Directory&gt;
+
+And the php.ini:
+allow_url_fopen = Off</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1176505</commentid>
+    <comment_count>1</comment_count>
+    <who name="Gabe O&apos;Brien">gabe.obrien</who>
+    <bug_when>2008-03-12 18:35:23 -0400</bug_when>
+    <thetext>The webmasters are working on a solution that will include this as a subset, so I am closing a &apos;wontfix&apos;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1176854</commentid>
+    <comment_count>2</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-03-13 08:43:19 -0400</bug_when>
+    <thetext>&quot;are working on&quot;  ... do you have a reference somewhere?  I don&apos;t want to lose track of this issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1177516</commentid>
+    <comment_count>3</comment_count>
+    <who name="Karl Matthias">karl.matthias</who>
+    <bug_when>2008-03-13 18:10:22 -0400</bug_when>
+    <thetext>Released or closed for STAGING_176</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1177586</commentid>
+    <comment_count>4</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2008-03-13 21:20:03 -0400</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; Released or closed for STAGING_176
+&gt; 
+
+Does that mean we can disable allow_url_fopen on eclipse.org servers now?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1193773</commentid>
+    <comment_count>5</comment_count>
+    <who name="Karl Matthias">karl.matthias</who>
+    <bug_when>2008-04-03 19:22:44 -0400</bug_when>
+    <thetext>Hmm this was closed WONTFIX but it seems that allow_url_fopen was disabled anyway and now the portal is busted.  I&apos;m re-opening and re-enabling allow_url_fopen until this is really fixed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1193786</commentid>
+    <comment_count>6</comment_count>
+    <who name="Karl Matthias">karl.matthias</who>
+    <bug_when>2008-04-03 19:39:12 -0400</bug_when>
+    <thetext>I re-enabled allow_url_fopen for apache-hosted php but it doesn&apos;t seem to be taking effect.  I will follow up with Denis in the morning.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1195856</commentid>
+    <comment_count>7</comment_count>
+    <who name="Karl Matthias">karl.matthias</who>
+    <bug_when>2008-04-07 13:15:16 -0400</bug_when>
+    <thetext>The portal is working, but this bug needs to remain open until this problem is actually fixed.  Either with Suhosin or otherwise.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2025309</commentid>
+    <comment_count>8</comment_count>
+    <who name="Wayne Beaton">wayne</who>
+    <bug_when>2011-11-11 14:15:38 -0500</bug_when>
+    <thetext>Denis, we have a functional portal now that we are no longer doing new work on. We have ongoing work on a new project management infrastructure that will replace the portal. It strikes me that we can resolve this as WONTFIX. Do you agree?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>2026185</commentid>
+    <comment_count>9</comment_count>
+    <who name="Denis Roy">denis.roy</who>
+    <bug_when>2011-11-14 14:06:02 -0500</bug_when>
+    <thetext>Wayne, the portal is currently working with a setting that I consider insecure, but I cannot turn it off until the portal is out of commission.  I&apos;d like to keep this open as a reminder.
+
+Thanks</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

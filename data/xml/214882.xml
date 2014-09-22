@@ -1,0 +1,220 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214882</bug_id>
+          
+          <creation_ts>2008-01-10 07:14:00 -0500</creation_ts>
+          <short_desc>Eclipse crashes when opening a ticket with a large number of comments</short_desc>
+          <delta_ts>2009-08-17 01:47:31 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>UI</component>
+          <version>2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux-GTK</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter>magic.bitbucket</reporter>
+          <assigned_to name="Project Inbox">mylyn-triaged</assigned_to>
+          <cc>birdo</cc>
+    
+    <cc>robert.elves</cc>
+    
+    <cc>shawn.minto</cc>
+    
+    <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128810</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86550</attachid>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-10 07:14:46 -0500</bug_when>
+    <thetext>Created attachment 86550
+Eclipse log
+
+env:
+jdk 1.6.0_02
+Eclipse 3.3.1.1
+Trac 0.10.4 (tracd standalone, tried with --auth and --basic-auth)
+Using XML-RPC for the mylyn trac connector.
+
+When opening a ticket with 1000+ comments Eclipse first hangs for ~15+ minutes and then crashes. I can open other tickets without problems.
+
+stderr output:
+The program &apos;Eclipse&apos; received an X Window System error.
+This probably reflects a bug in the program.
+The error was &apos;BadAlloc (insufficient resources for operation)&apos;.
+  (Details: serial 377387 error_code 11 request_code 53 minor_code 0)
+  (Note to programmers: normally, X errors are reported asynchronously;
+   that is, you will receive the error a while after causing it.
+   To debug your program, run it with the --sync command line
+   option to change this behavior. You can then get a meaningful
+   backtrace from your debugger if you break on the gdk_x_error() function.)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129070</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-10 13:15:18 -0500</bug_when>
+    <thetext>I have seen similar crashes when using many task editors: bug 214832 .
+
+Which Linux distribution / GTK version are you using? Have you seen these crashes with Mylyn versions earlier than 2.2?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129107</commentid>
+    <comment_count>2</comment_count>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-10 13:58:28 -0500</bug_when>
+    <thetext>I&apos;m  using slackware-current, gtk+2-2.12.4.
+I&apos;ve seen the same error with Mylyn 2.1, also only with this one ticket with 1000+ comments. I didn&apos;t use Eclipse before so I can&apos;t say anything about previous versions.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129261</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-10 15:57:45 -0500</bug_when>
+    <thetext>Thanks. The recent weekly build has performance improvements for rendering tasks with many comments by delaying creation of a comment widgets until a comment is expanded. The implementation in version 2.2 created all comment widgets once the task editor was opened.
+
+It would be great if you could try the latest build available from the weekly update site and report back if that enables you to open the task in the editor:
+
+ http://www.eclipse.org/mylyn/downloads/</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129545</commentid>
+    <comment_count>4</comment_count>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-11 06:35:18 -0500</bug_when>
+    <thetext>Now tried with 3.3 weekly build. Same problem. 
+Maybe the performance improvement is useless because all comments are expanded when the ticket gets loaded? It seems this is what happens by default and I haven&apos;t found a configuration option for it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129551</commentid>
+    <comment_count>5</comment_count>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-11 06:54:04 -0500</bug_when>
+    <thetext>Sorry, that was 2.3 not 3.3 ^^</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129863</commentid>
+    <comment_count>6</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-11 14:41:49 -0500</bug_when>
+    <thetext>That&apos;s right, all unread comments are expanded automatically. To prevent comments from expanding you can use &quot;Mark &gt; Read&quot; from the context menu in the task list. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130766</commentid>
+    <comment_count>7</comment_count>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-14 11:45:11 -0500</bug_when>
+    <thetext>Sorry, still crashes when the ticket is marked as read.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144770</commentid>
+    <comment_count>8</comment_count>
+    <who name="">magic.bitbucket</who>
+    <bug_when>2008-01-29 16:13:41 -0500</bug_when>
+    <thetext>It seems there were more improvements in the latest weekly build - 20081025?
+I can now open the ticket, and even open the comments. Now it just crashes when expanding all comments ^^</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144798</commentid>
+    <comment_count>9</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-29 16:44:33 -0500</bug_when>
+    <thetext>I am not sure that any of changes made to the editor would have fixed that. Maybe the Mylyn code has developed self-healing capabilities ;). It could be that the OS is running out of handles/resources and it depends on how many other task editors and other applications are running when the ticket is opened.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1479542</commentid>
+    <comment_count>10</comment_count>
+    <who name="Roberto Scaramuzzi">birdo</who>
+    <bug_when>2009-04-22 15:03:57 -0400</bug_when>
+    <thetext>The same happens for me too (doesn&apos;t hang for 15 minutes, but crashes eclipse with the same stderr output as the bug report), starting at about 30 comments. 
+
+I&apos;m using Eclipse 3.4.2 with Mylyn 3.1.0.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86550</attachid>
+            <date>2008-01-10 07:14:00 -0500</date>
+            <delta_ts>2008-01-10 07:14:46 -0500</delta_ts>
+            <desc>Eclipse log</desc>
+            <filename>.log.gz</filename>
+            <type>application/gzip</type>
+            <size>2339</size>
+            <attacher>magic.bitbucket</attacher>
+            
+              <data encoding="base64">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
+AAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

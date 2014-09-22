@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214636</bug_id>
+          
+          <creation_ts>2008-01-08 11:59:00 -0500</creation_ts>
+          <short_desc>IndexOutOfBoundsException thrown when running BVT junit test</short_desc>
+          <delta_ts>2008-02-11 09:14:25 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>TPTP Testing</product>
+          <component>Test.Execution</component>
+          <version>4.5</version>
+          <rep_platform>Other</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P1</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>4.5i5</target_milestone>
+          <dependson>214637</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Joel Cayne">jcayne</reporter>
+          <assigned_to name="Paul Slauenwhite">paules</assigned_to>
+          <cc>jptoomey</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127493</commentid>
+    <comment_count>0</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-01-08 11:59:09 -0500</bug_when>
+    <thetext>When running the BVT AllBVTJunitTests.testsuite the following exception is thrown multiple times:
+
+java.lang.IndexOutOfBoundsException: Index: 0, Size: 0
+        at java.util.LinkedList.entry(LinkedList.java:383)
+        at java.util.LinkedList.get(LinkedList.java:328)
+        at org.eclipse.hyades.execution.core.file.IFileManagerExtended$FileIdentifierList.get(IFileManagerExtended.java:278)
+        at org.eclipse.hyades.test.core.testservices.resources.FilesystemResourceProviderService.getTempFile(FilesystemResourceProviderService.java:122)
+        at sun.reflect.GeneratedMethodAccessor21.invoke(Unknown Source)
+        at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+        at java.lang.reflect.Method.invoke(Method.java:618)
+        at org.eclipse.hyades.execution.local.testservices.AbstractTestService.run(AbstractTestService.java:51)
+        at org.eclipse.hyades.execution.local.testservices.TestServiceAgentListener.handleCommand(TestServiceAgentListener.java:78)
+        at org.eclipse.hyades.internal.execution.local.control.AgentImpl.handleCommand(AgentImpl.java:648)
+        at org.eclipse.hyades.internal.execution.local.control.AgentImpl$2.incommingCommand(AgentImpl.java:180)
+        at org.eclipse.hyades.internal.execution.local.control.ConnectionImpl$1.incommingCommand(ConnectionImpl.java:128)
+        at org.eclipse.hyades.internal.execution.local.control.ConnectionImpl.processControlMessage(ConnectionImpl.java:346)
+        at org.eclipse.hyades.internal.execution.local.control.ConnectionImpl$SocketReaderThread.run(ConnectionImpl.java:473)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128929</commentid>
+    <comment_count>1</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-10 10:54:24 -0500</bug_when>
+    <thetext>This exception is caused by the failing test caused by defect #214637 since the expected file is not present on the workbench machine.  That said, the code requires better error handling for this case.   </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129433</commentid>
+    <comment_count>2</comment_count>
+    <who name="Paul Slauenwhite">paules</who>
+    <bug_when>2008-01-10 23:01:44 -0500</bug_when>
+    <thetext>Exception caused when attempting to fetch a directory (e.g. C:\temp or /tmp/) from the org.eclipse.hyades.test.core.testservices.resources.FilesystemResourceProviderService.java or it subclasses (e.g. org.eclipse.hyades.test.core.testservices.resources.WorkspaceResourceProviderService.java).  The service provider was not throwing an IO exception when attempting to fetch a directory.
+
+New test cases were added to the Test Services test suites to verify this fix and the updated class was checked into CVS (HEAD). 
+
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154077</commentid>
+    <comment_count>3</comment_count>
+    <who name="Joel Cayne">jcayne</who>
+    <bug_when>2008-02-11 09:14:25 -0500</bug_when>
+    <thetext>Closing.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

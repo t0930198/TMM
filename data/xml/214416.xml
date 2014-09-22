@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214416</bug_id>
+          
+          <creation_ts>2008-01-05 00:24:00 -0500</creation_ts>
+          <short_desc>Dot char is not escaped in XML10Names.jFlex</short_desc>
+          <delta_ts>2008-02-25 20:07:03 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Source Editing</product>
+          <component>wst.xml</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="kb.huang">nanhuan5525</reporter>
+          <assigned_to name="David Williams">david_williams</assigned_to>
+          <cc>david_williams</cc>
+    
+    <cc>for.work.things</cc>
+    
+    <cc>nitind</cc>
+          <qa_contact name="Nitin Dahyabhai">nitind</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126167</commentid>
+    <comment_count>0</comment_count>
+    <who name="kb.huang">nanhuan5525</who>
+    <bug_when>2008-01-05 00:24:45 -0500</bug_when>
+    <thetext>In the XML10Names.jFlex file under org.eclipse.wst.xml.core plugin,the dot character in &apos;NameChar&apos; rule is not escaped,as below:
+NameChar = ({Letter} | {Digit} | . | - | _ | : | {CombiningChar} | {Extender})
+
+The correct rule must be:
+NameChar = ({Letter} | {Digit} | \. | - | _ | : | {CombiningChar} | {Extender})</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126176</commentid>
+    <comment_count>1</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-01-05 03:14:18 -0500</bug_when>
+    <thetext>good catch. 
+
+It might be a &quot;best practice&quot; to quote each character where we intend the literal character. Making 
+NameChar = ({Letter} | {Digit} | &apos;.&apos; | &apos;-&apos; | &apos;_&apos; | &apos;:&apos; | {CombiningChar} | {Extender})
+
+
+It would be helpful to us if you could provide a test case, or use case, that shows the problem. 
+
+Also, did you find this in use, or ... just browsing our grammar files? 
+
+Thanks again! 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126279</commentid>
+    <comment_count>2</comment_count>
+    <who name="kb.huang">nanhuan5525</who>
+    <bug_when>2008-01-06 00:02:23 -0500</bug_when>
+    <thetext>The grammar file is used for validating an xml name.
+I found this when renaming an element name in the wtp xsd editor.In the rename wizard page,for the input such as &quot;name&lt;&quot;,there is no error message being validated,but for the input that starts with a &apos;&lt;&apos; character such as &quot;&lt;name&quot;,there comes the error message.So I debug the source and found the problem in he XML10Names.jFlex file.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163571</commentid>
+    <comment_count>3</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-02-25 10:42:43 -0500</bug_when>
+    <thetext>Mind if I take this one, Nitin? 
+
+I worked some on it over the weekend. 
+
+Found that more than the escape character is needed. 
+
+Another part of the logic was that once name was matched, 
+it would return &quot;true&quot;, without necessarily checking whole string. 
+
+	// don&apos;t match if contains trailing or embedded space
+	{Name} {S}+         {return false;}
+	{Name} {S}+ {Name}  {return false;}
+
+	{Name}              {return true;}
+
+	// match anything should come last
+	.                   {return false;}
+
+should be changed to 
+        // name must be whole line (input), not partial
+        // see https://bugs.eclipse.org/bugs/show_bug.cgi?id=214416
+        {Name}            {return true; /* exact name */}
+        {Name}.+          {return false; /* more than name */}
+
+        // match anything (else) should normally come last
+        .                 {return false; /* matched wild */}
+
+I&apos;ve added more unit tests to NameValidatorTests, 
+including the ones mentioned &quot;&lt;bracket&quot;, &quot;bracket&lt;&quot;
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163622</commentid>
+    <comment_count>4</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-02-25 11:17:35 -0500</bug_when>
+    <thetext>I&apos;ve committed and released this fix (and updated jflex files)
+
+All the SSE tests pass in my dev. env. (including new ones) except for testSelector02 in CSSSelectorTest. Offhand, I don&apos;t see how could be related to this fix. 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1164102</commentid>
+    <comment_count>5</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-02-25 18:38:57 -0500</bug_when>
+    <thetext>That CSSSelector JUnit test failure is the fault of this fix, after all .. I set some breakpoints, and can see where, at time, the CSS code is doing a check to see if the css selector is a valid name. 
+
+Apparently it used to say that H\\1 and H\1 were valid Names ... now, with the changes I&apos;ve just made, says those two are invalid. 
+
+My guess is they are really not valid, and the test just has been wrong ... but, I need to check the technical definitions closely to know if valid or not, so will reopen this bug for now. 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1164150</commentid>
+    <comment_count>6</comment_count>
+    <who name="David Williams">david_williams</who>
+    <bug_when>2008-02-25 20:07:03 -0500</bug_when>
+    <thetext>I looked a little and tried &apos;validating&apos; those funny names e.g. H///1 
+and convinced myself they are not valid, hence the css test has just been wrong all this time. 
+
+So, I fixed the test to it now expects the number of errors it gets. 
+
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

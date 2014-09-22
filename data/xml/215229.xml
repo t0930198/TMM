@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215229</bug_id>
+          
+          <creation_ts>2008-01-14 11:00:00 -0500</creation_ts>
+          <short_desc>DwarfReader problem when stmt_list uses relative compilation directories</short_desc>
+          <delta_ts>2009-05-26 16:05:23 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux-GTK</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>253170</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="James Blackburn">jamesblackburn+eclipse</reporter>
+          <assigned_to name="Project Inbox">cdt-core-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130704</commentid>
+    <comment_count>0</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-01-14 11:00:43 -0500</bug_when>
+    <thetext>Build ID: 3.3.1.1
+
+CDT_4_0_2
+
+Steps To Reproduce:
+Expanding a binary in the C/C++ projects view, in some cases gives the compiler relative source files as relative to the Eclipse workspace -- and therefore unable to be resolved when double clicking.
+
+Tracing through DwarfReader, it seems to occur because in some cases the compilation directories found by parseSourceInCULineInfo(cuCompDir, stmtList) are themselves relative.
+
+Proposed patch attached.
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130706</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86840</attachid>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-01-14 11:01:48 -0500</bug_when>
+    <thetext>Created attachment 86840
+Proposed Patch
+
+attachment didn&apos;t work when creating bug?!</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1262799</commentid>
+    <comment_count>2</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-06-06 12:02:02 -0400</bug_when>
+    <thetext>Just a quick note for this patch:
+Dwarf Spec v3 (6.2.4.10) states:
+&quot;... Each path entry is either a full path name or is relative to the current directory of the compilation...&quot;
+
+This bug still seems to exist in CDT 5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1262881</commentid>
+    <comment_count>3</comment_count>
+      <attachid>103986</attachid>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-06-06 12:51:45 -0400</bug_when>
+    <thetext>Created attachment 103986
+Corrected patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1503741</commentid>
+    <comment_count>4</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2009-05-18 16:06:33 -0400</bug_when>
+    <thetext>Looks like Ken&apos;s committed a fix for this.
+
+*** This bug has been marked as a duplicate of bug 253170 ***</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86840</attachid>
+            <date>2008-01-14 11:01:00 -0500</date>
+            <delta_ts>2008-06-06 12:51:45 -0400</delta_ts>
+            <desc>Proposed Patch</desc>
+            <filename>dwarfreader.patch</filename>
+            <type>text/plain</type>
+            <size>789</size>
+            <attacher name="James Blackburn">jamesblackburn+eclipse</attacher>
+            
+              <data encoding="base64">SW5kZXg6IER3YXJmUmVhZGVyLmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2cy9kZXYvdG9v
+bHMvc3JjL2VjbGlwc2Uvb3JnLmVjbGlwc2UuY2R0L29yZy5lY2xpcHNlLmNkdC5jb3JlL3V0aWxz
+L29yZy9lY2xpcHNlL2NkdC91dGlscy9kZWJ1Zy9kd2FyZi9Ed2FyZlJlYWRlci5qYXZhLHYKcmV0
+cmlldmluZyByZXZpc2lvbiAxLjUKcmV0cmlldmluZyByZXZpc2lvbiAxLjYKZGlmZiAtLXVuaWZp
+ZWQgLXIxLjUgLXIxLjYKLS0tIER3YXJmUmVhZGVyLmphdmEJMjYgTm92IDIwMDcgMTU6NTI6MDkg
+LTAwMDAJMS41CisrKyBEd2FyZlJlYWRlci5qYXZhCTE0IEphbiAyMDA4IDE1OjQyOjE4IC0wMDAw
+CTEuNgpAQCAtMTQ0LDggKzE0NCwxMyBAQAogCQkJCQlzdHIgPSByZWFkU3RyaW5nKGRhdGEsIG9m
+ZnNldCk7CiAJCQkJCWlmIChzdHIubGVuZ3RoKCkgPT0gMCkKIAkJCQkJCWJyZWFrOwotCQkJCQlk
+aXJMaXN0LmFkZChzdHIpOwogCQkJCQlvZmZzZXQgKz0gc3RyLmxlbmd0aCgpKzE7CisJCQkJCS8v
+IGhhbmRsZSByZWxhdGl2ZSBwYXRoCisJCQkJCWlmIChzdHIuc3RhcnRzV2l0aCgiLiIpKSB7CisJ
+CQkJCQlJUGF0aCBjdUNvbXBQYXRoID0gbmV3IFBhdGgoKFN0cmluZylkaXJMaXN0LmdldCgwKSk7
+CisJCQkJCQlzdHIgPSBjdUNvbXBQYXRoLmFwcGVuZChzdHIpLnRvT1NTdHJpbmcoKTsKKwkJCQkJ
+fQorCQkJCQlkaXJMaXN0LmFkZChzdHIpOwogCQkJCX0KIAkJCQlvZmZzZXQrKzsK
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>103986</attachid>
+            <date>2008-06-06 12:51:00 -0400</date>
+            <delta_ts>2009-05-26 16:05:23 -0400</delta_ts>
+            <desc>Corrected patch</desc>
+            <filename>bug215229.patch</filename>
+            <type>text/plain</type>
+            <size>880</size>
+            <attacher name="James Blackburn">jamesblackburn+eclipse</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5jZHQuY29yZQpJ
+bmRleDogdXRpbHMvb3JnL2VjbGlwc2UvY2R0L3V0aWxzL2RlYnVnL2R3YXJmL0R3YXJmUmVhZGVy
+LmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2c3Jvb3QvdG9vbHMvb3JnLmVjbGlwc2UuY2R0
+L2FsbC9vcmcuZWNsaXBzZS5jZHQuY29yZS91dGlscy9vcmcvZWNsaXBzZS9jZHQvdXRpbHMvZGVi
+dWcvZHdhcmYvRHdhcmZSZWFkZXIuamF2YSx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS4xMQpkaWZm
+IC11IC1yMS4xMSBEd2FyZlJlYWRlci5qYXZhCi0tLSB1dGlscy9vcmcvZWNsaXBzZS9jZHQvdXRp
+bHMvZGVidWcvZHdhcmYvRHdhcmZSZWFkZXIuamF2YQkyOCBNYXkgMjAwOCAyMDo1MjoxNiAtMDAw
+MAkxLjExCisrKyB1dGlscy9vcmcvZWNsaXBzZS9jZHQvdXRpbHMvZGVidWcvZHdhcmYvRHdhcmZS
+ZWFkZXIuamF2YQk2IEp1biAyMDA4IDE2OjUwOjQ4IC0wMDAwCkBAIC0xNTUsOCArMTU1LDExIEBA
+CiAJCQkJCXN0ciA9IHJlYWRTdHJpbmcoZGF0YSwgb2Zmc2V0KTsKIAkJCQkJaWYgKHN0ci5sZW5n
+dGgoKSA9PSAwKQogCQkJCQkJYnJlYWs7Ci0JCQkJCWRpckxpc3QuYWRkKHN0cik7CiAJCQkJCW9m
+ZnNldCArPSBzdHIubGVuZ3RoKCkrMTsKKwkJCQkJLy8gaGFuZGxlIHJlbGF0aXZlIHBhdGgKKwkJ
+CQkJaWYgKHN0ci5zdGFydHNXaXRoKCIuIikpCisJCQkJCQlzdHIgPSBuZXcgUGF0aChjdUNvbXBE
+aXIpLmFwcGVuZChzdHIpLnRvT1NTdHJpbmcoKTsKKwkJCQkJZGlyTGlzdC5hZGQoc3RyKTsKIAkJ
+CQl9CiAJCQkJb2Zmc2V0Kys7CiAJCQkJCg==
+</data>
+<flag name="iplog"
+          id="18902"
+          type_id="7"
+          status="-"
+          setter="jamesblackburn+eclipse"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

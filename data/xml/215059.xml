@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215059</bug_id>
+          
+          <creation_ts>2008-01-11 12:41:00 -0500</creation_ts>
+          <short_desc>[ssh] NPE when target is restarted between two SSH sessions</short_desc>
+          <delta_ts>2012-11-19 04:56:50 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Target Management</product>
+          <component>RSE</component>
+          <version>2.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          <dependson>226301</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Petr Novicky">petr.novicky</reporter>
+          <assigned_to name="dsdp.tm.rse-inbox">tm.rse-inbox</assigned_to>
+          
+          <qa_contact name="Martin Oberhuber">martin.oberhuber</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129794</commentid>
+    <comment_count>0</comment_count>
+    <who name="Petr Novicky">petr.novicky</who>
+    <bug_when>2008-01-11 12:41:03 -0500</bug_when>
+    <thetext>Build ID: I20070625-1500
+
+Steps To Reproduce:
+1. Use org.eclipse.rse.internal.services.ssh.shell.SshHostShell to connect to the target, then exit the shell, preferably with execution of &quot;exit&quot; command on target.
+2. Restart the target.
+3. Try to connect to the target with SSH again and write some commands to the shell.
+
+You&apos;ll get NullPointerException then.
+
+
+More information:
+The described problems is caused by the fact that RSE SSH connection is never closed even if the ssh shell exits. The debug session is still running and only related Channel connects again.
+
+This approach works if the session is really connected all the time, but when you restart the target where you remotely debug your application, the session is broken and when JSCH want&apos;s to connect the Channel, JSchException (with &quot;session is down&quot; message) is thrown 
+
+Thread [Worker-6] (Suspended (exception JSchException))	
+	ChannelShell(Channel).connect(int) line: 172	
+	ChannelShell(Channel).connect() line: 132	
+	SshHostShell.&lt;init&gt;(ISshSessionProvider, String, String, String, String[]) line: 93	
+	SshShellService.launchShell(String, String, String[], IProgressMonitor) line: 52	
+	SshShellService.launchShell(String, String[], IProgressMonitor) line: 46	
+	RemoteCLaunchConfigurationDelegate.remoteShellExec(ILaunchConfiguration, ILaunch, String, String, boolean) line: 403	
+	.........
+
+Now the RSE should update information about connection status of the SSH shell, but it does not do that. In the SshHostShell.&lt;init&gt; constructor is only prints the stack trace and assign fShellWriter null value.
+
+Now the SshHostShell still appears to be connected, but when you invoke its writeToShell method, you get NullPointerException, because fShellWriter has been assigned null value previously. See the second stack trace.
+
+java.lang.NullPointerException
+	at org.eclipse.rse.internal.services.ssh.shell.SshHostShell.writeToShell(SshHostShell.java:154)
+	at com.sysgo.elinos.tools.remote.launcher.core.RemoteCLaunchConfigurationDelegate.remoteShellExec(RemoteCLaunchConfigurationDelegate.java:417)
+.............
+
+
+So RSE should be fixed so that if it receives the JSchException saying that &quot;session is down&quot;, it should properly disconnect the SshHostShell or maybe reconnect the SSH session if it&apos;s possible.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136318</commentid>
+    <comment_count>1</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-22 18:13:24 -0500</bug_when>
+    <thetext>Nice catch. We have another bug open for automatic reconnect, for now I think we&apos;ll just close the session when we detect it&apos;s beeen lost.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1198510</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-04-09 17:28:20 -0400</bug_when>
+    <thetext>I think we&apos;ll be able to fix this properly with the fix for bug 226301.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1223883</commentid>
+    <comment_count>3</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-05-05 17:29:10 -0400</bug_when>
+    <thetext>Not for M7</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1241943</commentid>
+    <comment_count>4</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-05-20 17:45:00 -0400</bug_when>
+    <thetext>Bulk update of target milestone</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1264848</commentid>
+    <comment_count>5</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-06-09 19:54:40 -0400</bug_when>
+    <thetext>Will need to look at this in 3.0.1</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1340740</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-09-30 09:04:35 -0400</bug_when>
+    <thetext>bulk update of target milestone</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1683849</commentid>
+    <comment_count>7</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2010-02-26 19:09:18 -0500</bug_when>
+    <thetext>Bulk update of target milestones to 3.2</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1866194</commentid>
+    <comment_count>8</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2011-01-12 15:33:53 -0500</bug_when>
+    <thetext>Check for 3.2.2</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

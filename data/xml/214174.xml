@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214174</bug_id>
+          
+          <creation_ts>2008-01-02 19:55:00 -0500</creation_ts>
+          <short_desc>First time to create a sampldDB datasource will take more than 10 seconds</short_desc>
+          <delta_ts>2008-08-21 21:59:17 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Data</component>
+          <version>2.3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Tianli Zhang">tzhang</reporter>
+          <assigned_to name="Lin Zhu">lzhu</assigned_to>
+          <cc>lzhu</cc>
+    
+    <cc>wenfeng.fwd</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124644</commentid>
+    <comment_count>0</comment_count>
+    <who name="Tianli Zhang">tzhang</who>
+    <bug_when>2008-01-02 19:55:45 -0500</bug_when>
+    <thetext>Description:
+First time to create a sampldDB datasource will take more than 10 seconds
+
+Build number: 
+2.3.0.v20080102-1531
+
+Steps to reproduce:
+1, Download a all in one build
+2, Open the BIRT and new a report
+3, Create a sampleDB datasource
+
+The first time will take more than 10 seconds, and the eclipse is hung on. I think it is very slow, but the second time is very fast.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124701</commentid>
+    <comment_count>1</comment_count>
+    <who name="Lin Zhu">lzhu</who>
+    <bug_when>2008-01-02 21:46:57 -0500</bug_when>
+    <thetext>The sample db is a lazy-load plugin. When it is initialized it needs to create temp dir/files so that Derby driver can consume its data. So it is reasonable for it has a warm up time when being firstly launched.
+
+However, the warming up should by no means take more than 10 seconds, as in most of cases it should only take 2-3 seconds.
+
+The bug is only reproducible in Report&apos;s machine.We will defer the bug to see whether it is a machine specific issue.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1315603</commentid>
+    <comment_count>2</comment_count>
+    <who name="Lin Zhu">lzhu</who>
+    <bug_when>2008-08-20 03:11:44 -0400</bug_when>
+    <thetext>Cannot reproduce the problem even in original reporter&apos;s machine. Mark as worksforme.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1317127</commentid>
+    <comment_count>3</comment_count>
+    <who name="Tianli Zhang">tzhang</who>
+    <bug_when>2008-08-21 21:59:17 -0400</bug_when>
+    <thetext>Can not reproduce, verified.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

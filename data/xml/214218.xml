@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214218</bug_id>
+          
+          <creation_ts>2008-01-03 07:19:00 -0500</creation_ts>
+          <short_desc>[API] [cdt.make.core, cdt.managedbuilder.core] remove dead classes MakeProject and ManagedMakeProject</short_desc>
+          <delta_ts>2010-02-17 14:43:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-build</component>
+          <version>4.0.1</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          <blocked>296406</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andras Varga">andras</reporter>
+          <assigned_to name="Andrew Gvozdev">angvoz.dev</assigned_to>
+          <cc>dschaefer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124873</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-03 07:19:49 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145, CDT 4.0.1
+
+MakeProject and ManagedMakeProject are not referenced anywhere in the whole CDT. They seem to be dead classes left over from CDT2/3. Would be best to remove them (they cause confusion for readers).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125816</commentid>
+    <comment_count>1</comment_count>
+    <who name="Doug Schaefer">dschaefer</who>
+    <bug_when>2008-01-04 10:59:21 -0500</bug_when>
+    <thetext>I do believe these are there for backwards compatability. There are some ISVs in the community using these. I think...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126178</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andras Varga">andras</who>
+    <bug_when>2008-01-05 04:49:06 -0500</bug_when>
+    <thetext>What can these classes be possibly used for, if they have absolutely no connection to the rest of the CDT? If any ISV code ever relied on them, it&apos;s no longer functional I&apos;m sure...
+
+As for backwards compatibility: I may be wrong, but isn&apos;t it the official policy that minor releases have to be backward compatible, but major releases may break APIs? Like all Eclipse 3.x must be backward compatible with 3.0, but Eclipse 4.0 is allowed to be totally different (in theory). So changing things from CDT 4.x to 5.0 is supposed to be OK.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1673656</commentid>
+    <comment_count>3</comment_count>
+    <who name="Andrew Gvozdev">angvoz.dev</who>
+    <bug_when>2010-02-10 12:39:10 -0500</bug_when>
+    <thetext>MakeProject and ManagedMakeProject are included as extensions in plugin.xml (extension point org.eclipse.cdt.core.CProject). These extensions are used in CConfigBasedDescriptorManager. I suppose it might be possible to use them somehow. I added comments to get the readers hopefully less confused.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

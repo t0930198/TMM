@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214192</bug_id>
+          
+          <creation_ts>2008-01-02 22:52:00 -0500</creation_ts>
+          <short_desc>[api] provide common mapping for project component</short_desc>
+          <delta_ts>2008-02-11 18:09:36 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eugene Kuleshov">ekuleshov</reporter>
+          <assigned_to name="Steffen Pingel">steffen.pingel</assigned_to>
+          <cc>robert.elves</cc>
+    
+    <cc>steffen.pingel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124742</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-02 22:52:48 -0500</bug_when>
+    <thetext>Common mapping for project component should be available for connectors that have notion od components (i.e. JIRA and Bugzilla) and 3rd party integration working with tasks.
+
+The most common use cases is to be able to pickup or directly pass component when creating new issue, for example component can be configured in projects settings along with repository, or picked up from 3rd party metadata.
+
+Another use case is connector neutral reporting feature that would allow to group or filter tasks or search results by component (similar to the current grouping by owner in task search).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127497</commentid>
+    <comment_count>1</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-08 12:03:58 -0500</bug_when>
+    <thetext>Eugene: please mark enhancements requests as such.  Also, are your main drivers for this Bugzilla and JIRA?  If so, should product/project be considered as part of the common mapping?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127567</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 12:57:27 -0500</bug_when>
+    <thetext>Yes, I suppose product/project should be part of that too</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127719</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-08 16:10:52 -0500</bug_when>
+    <thetext>Making project and component part of the common schema would not solve the problem of knowing which of these are actually supported by the connector and can be specified for task creation. Currently the TaskSelection class is used to pre-select certain attributes in the task editor. TaskSelections can be created from RepositoryTaskData and have arbitrary attributes supporting this use-case already.
+
+Concerning filtering and grouping the same argument could be made for version, severity or milestone. 
+
+-1 for extending the common task model further unless there is a very specific use-case where this is needed. I would prefer to spend resources on more flexible solutions (e.g. bug 210814) that allow dynamic mapping of additional attributes.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127739</commentid>
+    <comment_count>4</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 16:24:36 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; Making project and component part of the common schema would not solve the
+&gt; problem of knowing which of these are actually supported by the connector and
+&gt; can be specified for task creation. 
+
+I would say that this is separate issue and would require to standardize repository configuration data across connectors, which if I am not mistaken already been considered useful thing to do.
+
+Besides, when you create TaskData instance it is initialized with all supported attributes, so we just need to make sure that the same key is used for project and component attributes.
+
+&gt; Currently the TaskSelection class is used
+&gt; to pre-select certain attributes in the task editor. TaskSelections can be
+&gt; created from RepositoryTaskData and have arbitrary attributes supporting this
+&gt; use-case already.
+
+One of the use cases that been driving this enhancement request is linking projects with issue trackers. There are repository 3rd party metadata that have enough information to get issue tracking system type, url, project and component for any given project. That information allows to create TaskSelection instance pre-populated with proper attributes.
+
+As for bug 210814, it will be an enabler for actually using these common attributes in the task list, but this enhancement request would provide data to  be read trough functionality provided by the bug 210814 without additional mapping layers or APIs.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127742</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-08 16:29:15 -0500</bug_when>
+    <thetext>One more clarification. This enhancement request is suggestion to add component and project to the AbstractTask (though I do see how that could be useful). This request is about standardizing on the keys used in the TaskData. So in my estimate this should be quite small effort.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127753</commentid>
+    <comment_count>6</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-08 16:53:32 -0500</bug_when>
+    <thetext>Sorry I completely misunderstood the request. RepositoryTaskAttribute.PRODUCT is already part of the common mapping.
+
++1 for adding a key for mapping the component attribute</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131601</commentid>
+    <comment_count>7</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-15 12:02:29 -0500</bug_when>
+    <thetext> (In reply to comment #5)
+&gt; One more clarification. This enhancement request is suggestion to add component
+&gt; and project to the AbstractTask (though I do see how that could be useful). 
+
+I assume this meant to say &quot;is not a suggestion to add&quot;.  
+
++1 for supporting such mappings at the RepositoryTaskAttribute level only.  Is there a 3.0 driver for this?  Depending on how its implemented, bug 212209 is a possible driver (i.e. instead of the generic attribute list I suggest in bug 150278 comment#7 we could have a product/project mapping, but notably this would not support all bug trackers).
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131683</commentid>
+    <comment_count>8</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-15 13:37:41 -0500</bug_when>
+    <thetext>(In reply to comment #7)
+&gt; I assume this meant to say &quot;is not a suggestion to add&quot;.
+
+Yes
+
+&gt; Is there a 3.0 driver for this?
+
+AbstractTaskRepositoryLinkProvider could be extended to support linking workspace projects with projects and components in the issue tracker. Then this information can be picked up from the selection when creating new tasks.
+
+My other use cases are out of scope of Mylyn, but this feature together with bug 210814 and bug 199818 are critical for the tools I am working on.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131940</commentid>
+    <comment_count>9</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-15 20:03:37 -0500</bug_when>
+    <thetext>Steffen: could we take a patch for this for 2.3 or 3.0 if it was well tested?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132023</commentid>
+    <comment_count>10</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-16 00:00:30 -0500</bug_when>
+    <thetext>If this only involves defining a key for components to RepositoryTaskAttribute and adding the respective mapping to the connectors I don&apos;t see any reason why we couldn&apos;t do it. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132039</commentid>
+    <comment_count>11</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-16 00:47:37 -0500</bug_when>
+    <thetext>If there are no 3.0 drivers it should come as a patch with test coverage.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132531</commentid>
+    <comment_count>12</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-16 12:56:38 -0500</bug_when>
+    <thetext>Mik, can you please put together a definition of &quot;3.0 drivers&quot; somewhere. I am somehow puzzled by your last comment, especially after my comment #8.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136021</commentid>
+    <comment_count>13</comment_count>
+    <who name="Mik Kersten">mik.kersten</who>
+    <bug_when>2008-01-22 12:54:06 -0500</bug_when>
+    <thetext>To elaborate on my comment: Mylyn committers should not be working on items that are not part of the 3.0 plan (combo of things with a target milestone of 3.0 and a listing in he 3.0 Plan wiki page, which is in need of update).  So if an integrator or contributor wants something done in the 3.0 timeframe they should provide a complete solution that&apos;s as self-maintaining (i.e. covered by tests) as possible.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136394</commentid>
+    <comment_count>14</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-22 20:45:14 -0500</bug_when>
+    <thetext>*** Bug 175082 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144927</commentid>
+    <comment_count>15</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-29 20:04:11 -0500</bug_when>
+    <thetext>We have a 2.3 driver for this now: a mapping for components will most likely be needed for bug 212209.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152537</commentid>
+    <comment_count>16</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-02-07 20:36:17 -0500</bug_when>
+    <thetext>Added a RepositoryTaskAttribute.COMPONENT key and implemented mapping support for JIRA. 
+
+Rob, could you do the same for Bugzilla?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152538</commentid>
+    <comment_count>17</comment_count>
+      <attachid>89223</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-02-07 20:36:20 -0500</bug_when>
+    <thetext>Created attachment 89223
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154645</commentid>
+    <comment_count>18</comment_count>
+      <attachid>89466</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-02-11 18:04:29 -0500</bug_when>
+    <thetext>Created attachment 89466
+patch for Bugzilla</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154650</commentid>
+    <comment_count>19</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-02-11 18:08:28 -0500</bug_when>
+    <thetext>Patch applied.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154652</commentid>
+    <comment_count>20</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-02-11 18:09:20 -0500</bug_when>
+    <thetext>Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154653</commentid>
+    <comment_count>21</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-02-11 18:09:36 -0500</bug_when>
+    <thetext>Resolved.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>89223</attachid>
+            <date>2008-02-07 20:36:00 -0500</date>
+            <delta_ts>2008-02-07 20:36:20 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>3956</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">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
+bFBLBQYAAAAAAQABAF4AAAAADwAAAAA=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89466</attachid>
+            <date>2008-02-11 18:04:00 -0500</date>
+            <delta_ts>2008-02-11 18:04:29 -0500</delta_ts>
+            <desc>patch for Bugzilla</desc>
+            <filename>clipboard.txt</filename>
+            <type>text/plain</type>
+            <size>1011</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5teWx5bi5idWd6
+aWxsYS5jb3JlCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvbXlseW4vaW50ZXJuYWwvYnVnemlsbGEv
+Y29yZS9CdWd6aWxsYUF0dHJpYnV0ZUZhY3RvcnkuamF2YQo9PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAv
+Y3Zzcm9vdC90b29scy9vcmcuZWNsaXBzZS5teWx5bi9vcmcuZWNsaXBzZS5teWx5bi5idWd6aWxs
+YS5jb3JlL3NyYy9vcmcvZWNsaXBzZS9teWx5bi9pbnRlcm5hbC9idWd6aWxsYS9jb3JlL0J1Z3pp
+bGxhQXR0cmlidXRlRmFjdG9yeS5qYXZhLHYKcmV0cmlldmluZyByZXZpc2lvbiAxLjIxCmRpZmYg
+LXUgLXIxLjIxIEJ1Z3ppbGxhQXR0cmlidXRlRmFjdG9yeS5qYXZhCi0tLSBzcmMvb3JnL2VjbGlw
+c2UvbXlseW4vaW50ZXJuYWwvYnVnemlsbGEvY29yZS9CdWd6aWxsYUF0dHJpYnV0ZUZhY3Rvcnku
+amF2YQk3IEZlYiAyMDA4IDAxOjUzOjQ5IC0wMDAwCTEuMjEKKysrIHNyYy9vcmcvZWNsaXBzZS9t
+eWx5bi9pbnRlcm5hbC9idWd6aWxsYS9jb3JlL0J1Z3ppbGxhQXR0cmlidXRlRmFjdG9yeS5qYXZh
+CTExIEZlYiAyMDA4IDIzOjA0OjA1IC0wMDAwCkBAIC05Myw2ICs5Myw4IEBACiAJCQlyZXR1cm4g
+QnVnemlsbGFSZXBvcnRFbGVtZW50LlBSSU9SSVRZLmdldEtleVN0cmluZygpOwogCQl9IGVsc2Ug
+aWYgKGtleS5lcXVhbHMoUmVwb3NpdG9yeVRhc2tBdHRyaWJ1dGUuQ09NTUVOVF9ORVcpKSB7CiAJ
+CQlyZXR1cm4gQnVnemlsbGFSZXBvcnRFbGVtZW50Lk5FV19DT01NRU5ULmdldEtleVN0cmluZygp
+OworCQl9IGVsc2UgaWYgKGtleS5lcXVhbHMoUmVwb3NpdG9yeVRhc2tBdHRyaWJ1dGUuQ09NUE9O
+RU5UKSkgeworCQkJcmV0dXJuIEJ1Z3ppbGxhUmVwb3J0RWxlbWVudC5DT01QT05FTlQuZ2V0S2V5
+U3RyaW5nKCk7CiAJCX0gZWxzZSB7CiAJCQlyZXR1cm4ga2V5OwogCQl9
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

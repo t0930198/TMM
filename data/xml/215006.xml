@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215006</bug_id>
+          
+          <creation_ts>2008-01-11 06:38:00 -0500</creation_ts>
+          <short_desc>Settings for build configuration discarded</short_desc>
+          <delta_ts>2008-01-23 12:22:41 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter>locklear</reporter>
+          <assigned_to name="Oleg Krasilnikov">oleg.krasilnikov</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129546</commentid>
+    <comment_count>0</comment_count>
+    <who name="">locklear</who>
+    <bug_when>2008-01-11 06:38:39 -0500</bug_when>
+    <thetext>Build ID: I20070625-1500
+
+Steps To Reproduce:
+1. 
+Create a new C++ project. e.g. Executable/Empty Project. Let&apos;s call the project &quot;test&quot;. Afterwards there are 2 build configurations by default: Debug, Release
+
+2. 
+Share project via &quot;Team/Share project&quot; with SVN repository. Now there are two files in the repository: .cproject, .project
+
+3.
+Create a new Build configuration via Project/Properties. Therefore click on &quot;C/C++ Build&quot; and then &quot;Manage configurations&quot;. Finally create a new config e.g. &quot;Test&quot;. Before you press OK to create the new config, select &quot;Debug&quot; for &quot;Existing configuration&quot; from the radio button field
+&quot;Copy settings from&quot;
+
+4. 
+Go to Project/Properties/&quot;C/C++ Build&quot;/Settings. Select the configuration &quot;Debug&quot;. Open the list for GCC C++ Compiler and then click on Preprocessor and add a defined symbol, e.g. &quot;DBG&quot;. Press OK.
+
+5. 
+Commit the project via Team/Commit. Only the .cproject has changed and will be comitted.
+
+6.
+Delete the whole project from system
+
+7. 
+Checkout our project &quot;test&quot; from repository via the perspective &quot;SVN Repository Exploring&quot;.
+
+8. 
+Go back to perspective &quot;C/C++&quot;. CLick on &quot;Project/Properties/&quot;C/C++ Build&quot;/Settings&quot;. Select the configuration &quot;Debug&quot;. Open the list for &quot;GCC C++ Compiler&quot; and then click on &quot;Preprocessor&quot;. The previously created defined symbol &quot;DBG&quot; doesn&apos;t exist. Let&apos;s take a look in the
+file .cproject. When you search for the string &quot;Debug&quot;, the first hit will be at the beginning of the file in a line with the content
+&quot;moduleId=&quot;org.eclipse.cdt.core.settings&quot; name=&quot;Debug&quot;&gt;&quot;. Some lines below there is a line with the content 
+&quot;&lt;listOptionValue builtIn=&quot;false&quot; value=&quot;DBG&quot;/&gt;&quot;. When you search for &quot;Debug&quot; again, you will find a second line with the content
+&quot;moduleId=&quot;org.eclipse.cdt.core.settings&quot; name=&quot;Debug&quot;&gt;&quot;. So it seems, that the settings for build configuration &quot;Debug&quot; is saved two times. In the second case there is no entry for defined symbol &quot;DBG&quot; available. Obviously, the second entry is taken by the parser for project-settings. A refresh of the project does not help. The same for restarting eclipse.
+
+More information:
+Arch: X86
+OS: Linux Open Suse
+Eclipse: Version: 3.3.0
+CDT: Version: 4.0.0.200709221016
+
+Note:
+When I follow the steps above with leaving out step 3, everything works fine. This means that after step 7, the defined symbol &quot;DBG&quot; is still available and there is only one entry for build configuration &quot;Debug&quot; in file .cproject.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129553</commentid>
+    <comment_count>1</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-01-11 06:54:52 -0500</bug_when>
+    <thetext>
+I&apos;ll see.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129580</commentid>
+    <comment_count>2</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-01-11 08:28:04 -0500</bug_when>
+    <thetext>
+Hello.
+
+Could you please try with CDT 4.0.2 ?
+
+There were some CVS-related problems in 4.0.0, 
+they were fixed in later releases.
+So it&apos;s very probable that your problem has 
+the same origin.
+
+Thanks.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130804</commentid>
+    <comment_count>3</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-01-14 12:26:08 -0500</bug_when>
+    <thetext>
+Hello.
+I still cannot reproduce the problem with CDT 4.0.2 and our CVS.
+CVN is not accessible here. 
+So have you tried to work with 4.0.2 ?
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132375</commentid>
+    <comment_count>4</comment_count>
+    <who name="">locklear</who>
+    <bug_when>2008-01-16 10:47:54 -0500</bug_when>
+    <thetext>Hello,
+
+I hope I will find time to test CDT 4.0.2 the next days...
+
+After that I will add my results</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135914</commentid>
+    <comment_count>5</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-01-22 11:19:30 -0500</bug_when>
+    <thetext>
+Any update ? Is bug so critical ?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136967</commentid>
+    <comment_count>6</comment_count>
+    <who name="Oleg Krasilnikov">oleg.krasilnikov</who>
+    <bug_when>2008-01-23 12:22:41 -0500</bug_when>
+    <thetext>
+Closing this bug, because it&apos;s not reproducible with Eclipse 4.0.2.
+Please reopen it if the problem would re-occur with later CDT releases.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

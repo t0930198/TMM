@@ -1,0 +1,135 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214557</bug_id>
+          
+          <creation_ts>2008-01-07 18:22:00 -0500</creation_ts>
+          <short_desc>Combo#add(String,int) does update selection-index</short_desc>
+          <delta_ts>2008-02-13 11:11:39 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          <blocked>214522</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Schindl">tom.schindl</reporter>
+          <assigned_to name="Kevin Barnes">cocoakevin</assigned_to>
+          <cc>bokowski</cc>
+    
+    <cc>cocoakevin</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127033</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86364</attachid>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2008-01-07 18:22:57 -0500</bug_when>
+    <thetext>Created attachment 86364
+Snippet to reproduce
+
+When e.g. the first item is selected and you call Combo#add(&quot;a1&quot;,0) the index is not shifted to 1 and the widget still displays the old-item. CCombo behaves correctly. This leads to undesired effects in JFace-ComboViewer.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127257</commentid>
+    <comment_count>1</comment_count>
+    <who name="Boris Bokowski">bokowski</who>
+    <bug_when>2008-01-08 08:43:45 -0500</bug_when>
+    <thetext>The snippet seems to work fine on Windows XP.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154899</commentid>
+    <comment_count>2</comment_count>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2008-02-12 09:35:22 -0500</bug_when>
+    <thetext>just a ping to see that this hasn&apos;t fallen off the SWT-radar because this is serious problem IMHO.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1156009</commentid>
+    <comment_count>3</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-02-13 11:11:39 -0500</bug_when>
+    <thetext>fixed &gt; 20080213</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86364</attachid>
+            <date>2008-01-07 18:22:00 -0500</date>
+            <delta_ts>2008-01-07 18:22:57 -0500</delta_ts>
+            <desc>Snippet to reproduce</desc>
+            <filename>Snippet.java</filename>
+            <type>text/x-java</type>
+            <size>1737</size>
+            <attacher name="Thomas Schindl">tom.schindl</attacher>
+            
+              <data encoding="base64">aW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5TV1Q7CmltcG9ydCBvcmcuZWNsaXBzZS5zd3QuY3VzdG9t
+LkNDb21ibzsKaW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5ldmVudHMuU2VsZWN0aW9uQWRhcHRlcjsK
+aW1wb3J0IG9yZy5lY2xpcHNlLnN3dC5ldmVudHMuU2VsZWN0aW9uRXZlbnQ7CmltcG9ydCBvcmcu
+ZWNsaXBzZS5zd3QubGF5b3V0LkdyaWRMYXlvdXQ7CmltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lk
+Z2V0cy5CdXR0b247CmltcG9ydCBvcmcuZWNsaXBzZS5zd3Qud2lkZ2V0cy5Db21ibzsKaW1wb3J0
+IG9yZy5lY2xpcHNlLnN3dC53aWRnZXRzLkRpc3BsYXk7CmltcG9ydCBvcmcuZWNsaXBzZS5zd3Qu
+d2lkZ2V0cy5TaGVsbDsKCgpwdWJsaWMgY2xhc3MgU25pcHBldCB7CgkvKioKCSAqIEBwYXJhbSBh
+cmdzCgkgKi8KCXB1YmxpYyBzdGF0aWMgdm9pZCBtYWluKFN0cmluZ1tdIGFyZ3MpIHsKCQlEaXNw
+bGF5IGRpc3BsYXkgPSBuZXcgRGlzcGxheSAoKTsKCQlTaGVsbCBzaGVsbCA9IG5ldyBTaGVsbChk
+aXNwbGF5KTsKCQlzaGVsbC5zZXRMYXlvdXQobmV3IEdyaWRMYXlvdXQoMix0cnVlKSk7CgoJCWZp
+bmFsIENvbWJvIGNvbWJvID0gbmV3IENvbWJvKHNoZWxsLFNXVC5SRUFEX09OTFkpOwoJCWNvbWJv
+LnNldEl0ZW1zKG5ldyBTdHJpbmdbXSB7ICJhIiwgImIiLCAiYyIsICJkIiB9KTsKCQljb21iby5z
+ZWxlY3QoMCk7CgoJCUJ1dHRvbiBiID0gbmV3IEJ1dHRvbihzaGVsbCxTV1QuUFVTSCk7CgkJYi5z
+ZXRUZXh0KCJBZGQgaXRlbSIpOwoJCWIuYWRkU2VsZWN0aW9uTGlzdGVuZXIobmV3IFNlbGVjdGlv
+bkFkYXB0ZXIoKSB7CgoJCQkvKiAobm9uLUphdmFkb2MpCgkJCSAqIEBzZWUgb3JnLmVjbGlwc2Uu
+c3d0LmV2ZW50cy5TZWxlY3Rpb25BZGFwdGVyI3dpZGdldFNlbGVjdGVkKG9yZy5lY2xpcHNlLnN3
+dC5ldmVudHMuU2VsZWN0aW9uRXZlbnQpCgkJCSAqLwoJCQlwdWJsaWMgdm9pZCB3aWRnZXRTZWxl
+Y3RlZChTZWxlY3Rpb25FdmVudCBlKSB7CgkJCQljb21iby5hZGQoImExIiwgMCk7CgkJCQlTeXN0
+ZW0uZXJyLnByaW50bG4oY29tYm8uZ2V0U2VsZWN0aW9uSW5kZXgoKSk7CgkJCX0KCQl9KTsKCgkJ
+ZmluYWwgQ0NvbWJvIGNjb21ibyA9IG5ldyBDQ29tYm8oc2hlbGwsU1dULlJFQURfT05MWSk7CgkJ
+Y2NvbWJvLnNldEl0ZW1zKG5ldyBTdHJpbmdbXSB7ICJhIiwgImIiLCAiYyIsICJkIiB9KTsKCQlj
+Y29tYm8uc2VsZWN0KDApOwoKCQliID0gbmV3IEJ1dHRvbihzaGVsbCxTV1QuUFVTSCk7CgkJYi5z
+ZXRUZXh0KCJBZGQgaXRlbSIpOwoJCWIuYWRkU2VsZWN0aW9uTGlzdGVuZXIobmV3IFNlbGVjdGlv
+bkFkYXB0ZXIoKSB7CgoJCQkvKiAobm9uLUphdmFkb2MpCgkJCSAqIEBzZWUgb3JnLmVjbGlwc2Uu
+c3d0LmV2ZW50cy5TZWxlY3Rpb25BZGFwdGVyI3dpZGdldFNlbGVjdGVkKG9yZy5lY2xpcHNlLnN3
+dC5ldmVudHMuU2VsZWN0aW9uRXZlbnQpCgkJCSAqLwoJCQlwdWJsaWMgdm9pZCB3aWRnZXRTZWxl
+Y3RlZChTZWxlY3Rpb25FdmVudCBlKSB7CgkJCQljY29tYm8uYWRkKCJhMSIsIDApOwoJCQkJU3lz
+dGVtLmVyci5wcmludGxuKGNjb21iby5nZXRTZWxlY3Rpb25JbmRleCgpKTsKCQkJfQoKCQl9KTsK
+CgoJCXNoZWxsLm9wZW4gKCk7CgoJCXdoaWxlICghc2hlbGwuaXNEaXNwb3NlZCAoKSkgewoJCQlp
+ZiAoIWRpc3BsYXkucmVhZEFuZERpc3BhdGNoICgpKSBkaXNwbGF5LnNsZWVwICgpOwoJCX0KCgkJ
+ZGlzcGxheS5kaXNwb3NlICgpOwoKCX0KCn0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

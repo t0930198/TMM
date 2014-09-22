@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215162</bug_id>
+          
+          <creation_ts>2008-01-13 20:38:00 -0500</creation_ts>
+          <short_desc>[EMF-Databinding] build.properties not working</short_desc>
+          <delta_ts>2008-01-24 09:17:41 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>Edit</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Schindl">tom.schindl</reporter>
+          <assigned_to name="Dave Steinberg">davidms</assigned_to>
+          <cc>bugs.eclipse.org</cc>
+    
+    <cc>Ed.Merks</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130347</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86786</attachid>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2008-01-13 20:38:44 -0500</bug_when>
+    <thetext>Created attachment 86786
+fix
+
+... there are some problems with the build.properties</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130503</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ed Merks">Ed.Merks</who>
+    <bug_when>2008-01-14 06:24:37 -0500</bug_when>
+    <thetext>Sorry, I hate to be the bearer of bad news, but this is actually intentional.  Our build of org.eclipse.emf* bundles removes the *.jar from the bundle classpath and replaces it with &quot;.&quot; and thereby builds a properly jared bundle.  We put the *.jar on the bundle classpath so that for bootstrap purposes we build a jar; this jar allows us to generate code that can compile against that jar.  See http://wiki.eclipse.org/EMF/Getting_Source_NEW#The_notorious_bug_109137 for why we do this kind of stupid thing as a workaround for an extremely annoying bug that&apos;s been around for years.  I&apos;ve been lead to believe that someone is working on this bug (supporting JDT&apos;s the ability to compile against external folders) and when that&apos;s done, we&apos;ll fix all our plugins to use &quot;.&quot; rather than *.jar as the classpath.  Sorry.  :-( </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130572</commentid>
+    <comment_count>2</comment_count>
+    <who name="Thomas Schindl">tom.schindl</who>
+    <bug_when>2008-01-14 08:37:12 -0500</bug_when>
+    <thetext>My problem was I checked it out from cvs and added it as dependency on one my bundles and when exporting the product I got errors.
+
+So I&apos;ll keep my patched build.properties :-)</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86786</attachid>
+            <date>2008-01-13 20:38:00 -0500</date>
+            <delta_ts>2008-01-13 20:38:44 -0500</delta_ts>
+            <desc>fix</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>731</size>
+            <attacher name="Thomas Schindl">tom.schindl</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZW1mLmRhdGFi
+aW5kaW5nDQpJbmRleDogYnVpbGQucHJvcGVydGllcw0KPT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9j
+dnNyb290L21vZGVsaW5nL29yZy5lY2xpcHNlLmVtZi9vcmcuZWNsaXBzZS5lbWYvcGx1Z2lucy9v
+cmcuZWNsaXBzZS5lbWYuZGF0YWJpbmRpbmcvYnVpbGQucHJvcGVydGllcyx2DQpyZXRyaWV2aW5n
+IHJldmlzaW9uIDEuMg0KZGlmZiAtdSAtcjEuMiBidWlsZC5wcm9wZXJ0aWVzDQotLS0gYnVpbGQu
+cHJvcGVydGllcwkxOCBOb3YgMjAwNyAwNToxODowNSAtMDAwMAkxLjINCisrKyBidWlsZC5wcm9w
+ZXJ0aWVzCTE0IEphbiAyMDA4IDAxOjM3OjU0IC0wMDAwDQpAQCAtMiw3ICsyLDkgQEANCiAgICAg
+ICAgICAgICAgICBNRVRBLUlORi8sXA0KICAgICAgICAgICAgICAgIHBsdWdpbi54bWwsXA0KICAg
+ICAgICAgICAgICAgIHBsdWdpbi5wcm9wZXJ0aWVzLFwNCi0gICAgICAgICAgICAgICBhYm91dC5o
+dG1sDQorICAgICAgICAgICAgICAgYWJvdXQuaHRtbCxcDQorICAgICAgICAgICAgICAgZGF0YWJp
+bmRpbmcuamFyDQogamFycy5jb21waWxlLm9yZGVyID0gLg0KIHNvdXJjZS4uID0gc3JjLw0KIG91
+dHB1dC4uID0gYmluLw0KK3NvdXJjZS5kYXRhYmluZGluZy5qYXIgPSBzcmMvDQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

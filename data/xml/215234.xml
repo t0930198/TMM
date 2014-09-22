@@ -1,0 +1,453 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215234</bug_id>
+          
+          <creation_ts>2008-01-14 11:21:00 -0500</creation_ts>
+          <short_desc>Investigate enumeratePrinters hang on GTK</short_desc>
+          <delta_ts>2012-12-13 10:10:05 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Bogdan Gheorghe">gheorghe</reporter>
+          <assigned_to name="Bogdan Gheorghe">gheorghe</assigned_to>
+          <cc>alf.felis</cc>
+    
+    <cc>anton.leherbauer</cc>
+    
+    <cc>benderamp</cc>
+    
+    <cc>benjamin</cc>
+    
+    <cc>damien.cassou</cc>
+    
+    <cc>daniel_megert</cc>
+    
+    <cc>eclipse.sprigogin</cc>
+    
+    <cc>greenrd</cc>
+    
+    <cc>horn</cc>
+    
+    <cc>HRogge</cc>
+    
+    <cc>jamesblackburn+eclipse</cc>
+    
+    <cc>john.c.cartwright</cc>
+    
+    <cc>ktk</cc>
+    
+    <cc>leachbj</cc>
+    
+    <cc>lykoyanov</cc>
+    
+    <cc>matt.deighton</cc>
+    
+    <cc>overholt</cc>
+    
+    <cc>radim.kubacki</cc>
+    
+    <cc>remysuen</cc>
+    
+    <cc>robert</cc>
+    
+    <cc>spam123</cc>
+    
+    <cc>thomas</cc>
+    
+    <cc>Tobias.Richter</cc>
+    
+    <cc>yevshif</cc>
+    
+    <cc>zephyrgong</cc>
+    
+    <cc>zerocaronte</cc>
+          
+          <votes>1</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130733</commentid>
+    <comment_count>0</comment_count>
+    <who name="Bogdan Gheorghe">gheorghe</who>
+    <bug_when>2008-01-14 11:21:21 -0500</bug_when>
+    <thetext>A fix was proposed to GTK to prevent an infinite loop while enumerating printers and it was put in for the 2.10.12 release. Unfortunately, this does not solve the problem for all people (example bug 213487) - and it also seems to be present in the 2.12 stream.
+
+We should take a look and see what else could be triggering an infinite loop.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153661</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Van Parys">thomas</who>
+    <bug_when>2008-02-09 09:58:46 -0500</bug_when>
+    <thetext>Version: 3.3.1.1
+Build id: M20071023-1652
+gtk2-2.12.5-1.fc8
+
+Opening a new editor window indeed makes eclipse hang.
+
+Starting with
+/usr/local/eclipse/eclipse -vmargs -Dorg.eclipse.swt.internal.gtk.disablePrinting
+
+eliminates the problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1188676</commentid>
+    <comment_count>2</comment_count>
+    <who name="Henning Rogge">HRogge</who>
+    <bug_when>2008-03-30 10:44:26 -0400</bug_when>
+    <thetext>Eclipse (both 3.3.1.1 and 3.4M5) crashes as soon as an editor wirndow is opened.
+
+It seems that there is a problem with SWT with gtk+ 2.12.9, the problem is not happening with gtk+ 2.12.8.
+
+The suggestion in comment #1 of this bugreport suppress the problem.
+
+( See https://bugs.eclipse.org/bugs/show_bug.cgi?id=223070 )</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1191457</commentid>
+    <comment_count>3</comment_count>
+    <who name="Vasilii Lukoyanov">lykoyanov</who>
+    <bug_when>2008-04-02 03:10:03 -0400</bug_when>
+    <thetext>Version: 3.3.1.1
+Build id: M20071023-1652
+gtk2-2.12.0-5
+
+Problem exists in gtk2-2.12.0-5, but solution &apos;./eclipse -vmargs
+-Dorg.eclipse.swt.internal.gtk.disablePrinting&apos; worked for me.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1196026</commentid>
+    <comment_count>4</comment_count>
+    <who name="Adrian Gschwend">ktk</who>
+    <bug_when>2008-04-07 15:40:02 -0400</bug_when>
+    <thetext>I have the same problem on Ubuntu 7.10 (Gutsy) with GTK 2.12.0. disablePrinting worked just fine for me too so I tried to figure out what causes the hang.
+
+I realized that I am using a client.conf file for CUPS, this file is only needed if one wants to get all printers listed on a CUPS server. Most of the time I can&apos;t reach the server listed there because I&apos;m on the road so I checked lpstat -a and realized that this hangs as well in that case.
+
+Eliminating client.conf solves the problem with Eclipse directly, I don&apos;t have to specify the disablePrinting option anymore.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1196031</commentid>
+    <comment_count>5</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-04-07 15:46:57 -0400</bug_when>
+    <thetext>Hi Bogdan, I&apos;ve directed several users on IRC to the SWT FAQ but the first thing they say is &quot;I&apos;m not on 2.10 so I don&apos;t think this applies.&quot;. Of course, after I suggest that they should try appending the VM argument anyway, it does fix the problem for them.
+
+Could you update the FAQ so that it notes that the problem is also on gtk+ 2.12? Thanks. :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1242039</commentid>
+    <comment_count>6</comment_count>
+    <who name="James A. Shepherd">spam123</who>
+    <bug_when>2008-05-20 18:50:27 -0400</bug_when>
+    <thetext>On Gentoo with:
+
+*  x11-libs/gtk+
+      Latest version available: 2.12.8
+
+using 32bit and 64bit versions of eclipse I get a consistent 20sec pause when opening any file in eclipse 3.3
+
+-vmargs -Dorg.eclipse.swt.internal.gtk.disablePrinting
+
+fixed this problem, though I don&apos;t know what triggered it, as I haven&apos;t updated eclipse or gtk+ recently.
+
+Note: eclipse doesn&apos;t hang or crash, every editor window or tab is just very slow to open.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1242091</commentid>
+    <comment_count>7</comment_count>
+    <who name="James A. Shepherd">spam123</who>
+    <bug_when>2008-05-20 20:11:19 -0400</bug_when>
+    <thetext>on gentoo run
+
+    /etc/init.d/avahi-daemon stop
+
+    and you can see the editor open as the service stops.
+
+    The above is a fix that allows printing. (if you don&apos;t use a zeroconf printer, I guess :-)
+
+     net-dns/avahi-0.6.22-r1
+
+    was the only printing relevant thing that my logs say I upgraded lately.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1242116</commentid>
+    <comment_count>8</comment_count>
+    <who name="James A. Shepherd">spam123</who>
+    <bug_when>2008-05-20 20:59:05 -0400</bug_when>
+    <thetext>Actually I think its cups-1.3.7, as uninstalling avahi doesn&apos;t do the trick.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1251103</commentid>
+    <comment_count>9</comment_count>
+    <who name="Paul Webster">pwebster</who>
+    <bug_when>2008-05-28 12:14:58 -0400</bug_when>
+    <thetext>*** Bug 234403 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1251925</commentid>
+    <comment_count>10</comment_count>
+    <who name="Renan Teston Inácio">zerocaronte</who>
+    <bug_when>2008-05-28 20:28:16 -0400</bug_when>
+    <thetext>I am on Gentoo amd64 with the following versions:
+- eclipse 3.3.2 (manual install, x86_64)
+- gtk+ 2.12.9-r2
+- cups 1.3.7-r1
+- avahi 0.6.22-r1
+- swt 3.3.1.1 (not sure if manual install of eclipse uses this)
+
+Stopping avahi daemon (and cups daemon together) does not help. strace shows about 12 connection retries to the IP configured in clients.conf from cups.
+Work around on comment 1 works.
+Basically confirming what everyone already said.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1252129</commentid>
+    <comment_count>11</comment_count>
+    <who name="Thomas Van Parys">thomas</who>
+    <bug_when>2008-05-29 02:22:13 -0400</bug_when>
+    <thetext>I noticed that this bug only occurs when I&apos;m not connected to the local network of my office.
+
+Seems the problem is that I edited my /etc/cups/client.conf to look for our local cups server at work (ServerName auth.fvms.ugent.be).
+
+So while disabling printing in Eclipse works (see comment 1), I could also solve the problem by commenting out the ServerName line in the cups config and restarting CUPS. This way Eclipse doesn&apos;t hang anymore while looking for printers that aren&apos;t there.
+
+
+I had similar behaviour in OpenOffice, but then only when actually entering the Print dialog.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1279638</commentid>
+    <comment_count>12</comment_count>
+    <who name="Tassilo Horn">horn</who>
+    <bug_when>2008-06-27 10:03:43 -0400</bug_when>
+    <thetext>I had the same problems and the -Dorg.eclipse.swt.internal.gtk.disablePrinting did work, too.
+
+The problem occured cause in /etc/cups/client.conf I had set up the printserver at work, which is not reachable from outside.  Since with zeroconf (avahi) you don&apos;t have to set the server explicitly anyway, setting it to the default value of localhost made the problem vanish.
+
+Just for the completness, here are my specs:
+
+Linux thinkpad 2.6.25-gentoo-r5 #2 SMP PREEMPT Fri Jun 20 10:18:09 CEST 2008 x86_64 Intel(R) Core(TM)2 Duo CPU T8100 @ 2.10GHz GenuineIntel GNU/Linux
+
+[I] net-dns/avahi (0.6.23@06/26/2008)
+[I] net-print/cups (1.3.7-r2@06/27/2008)
+[I] x11-libs/gtk+ (2.12.10-r1(2)@06/20/2008)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1287162</commentid>
+    <comment_count>13</comment_count>
+    <who name="Alf Felis">alf.felis</who>
+    <bug_when>2008-07-08 13:40:40 -0400</bug_when>
+    <thetext>For me the workaround does not (!) work :(
+
+My system:
+Eclipse 3.3.0 (Build id: I20070625-1500)
+SuSE 10.3
+gtk 2.12.0
+cups 1.2.12
+
+If the cups client.conf points to a remote server which is turned off or is unreachable, opening a file takes about 20-30 seconds.
+
+But if I edit the cups client.conf to point to the local machine or turn on the remote printserver it works fine :)
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1287164</commentid>
+    <comment_count>14</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-07-08 13:43:08 -0400</bug_when>
+    <thetext>(In reply to comment #13)
+&gt; For me the workaround does not (!) work :(
+&gt; 
+&gt; My system:
+&gt; Eclipse 3.3.0 (Build id: I20070625-1500)
+
+Quoting from the FAQ (http://www.eclipse.org/swt/faq.php#printOnGTKHangs):
+If you do not want to upgrade your GTK to a fixed version, you can make use of the org.eclipse.swt.internal.gtk.disablePrinting flag available in Eclipse 3.3.1 maintenance builds as well as 3.4 M1 and later. To use this, you must pass the flag to eclipse on startup:
+./eclipse -vmargs -Dorg.eclipse.swt.internal.gtk.disablePrinting 
+
+So it sounds like that yes, it&apos;s not going to work on 3.3.0.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1287224</commentid>
+    <comment_count>15</comment_count>
+    <who name="Alf Felis">alf.felis</who>
+    <bug_when>2008-07-08 14:33:28 -0400</bug_when>
+    <thetext>Oops... I only read the headline
+&quot;Why does Eclipse 3.3 freeze when I open an editor on GTK 2.10 and GTK 2.12 (Linux, UNIX)?&quot;.
+
+I overlook the &quot;3.3.1&quot; within the text. Sorry for my mistake :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1302028</commentid>
+    <comment_count>16</comment_count>
+    <who name="Robert Strind">robert</who>
+    <bug_when>2008-07-31 08:01:28 -0400</bug_when>
+    <thetext>Version: 3.4
+R-3.4-200806172000
+gtk: 2.12.9-3ubuntu4
+Linux 2.6.24-19-generic and Kubuntu Hardy
+
+The -Dorg.eclipse.swt.internal.gtk.disablePrinting works for me. Same does removing cups server from client.conf.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1302328</commentid>
+    <comment_count>17</comment_count>
+    <who name="Grant Gayed">grant_gayed</who>
+    <bug_when>2008-07-31 12:13:59 -0400</bug_when>
+    <thetext>*** Bug 242677 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1309116</commentid>
+    <comment_count>18</comment_count>
+    <who name="Robin Green">greenrd</who>
+    <bug_when>2008-08-12 16:58:27 -0400</bug_when>
+    <thetext>*** Bug 243887 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1313181</commentid>
+    <comment_count>19</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-08-15 10:35:56 -0400</bug_when>
+    <thetext>Does someone have a bugzilla.gnome.org bug # for the gtk issue?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1313189</commentid>
+    <comment_count>20</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2008-08-15 10:41:33 -0400</bug_when>
+    <thetext>(In reply to comment #19)
+&gt; Does someone have a bugzilla.gnome.org bug # for the gtk issue?
+
+The original one is this one I believe.
+http://bugzilla.gnome.org/show_bug.cgi?id=346903
+
+The bug&apos;s c7 is particularly disconcerting since it&apos;s as if neither party ever figured out the problem or a proper fix. :|
+
+I am not sure if SWT ever opened a new bug for the 2.12.x (and up?) issue, Bogdan?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1336348</commentid>
+    <comment_count>21</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-09-23 08:31:43 -0400</bug_when>
+    <thetext>I just saw this one in 3.4 with gtk+-2.12.11: 
+&quot;main&quot; prio=1 tid=0x0000000040117100 nid=0x7e72 runnable [0x0000007fbfffa000..0x0000007fbfffc840]
+        at org.eclipse.swt.internal.gtk.OS._gtk_enumerate_printers(Native Method)
+        at org.eclipse.swt.internal.gtk.OS.gtk_enumerate_printers(OS.java:6459)
+        at org.eclipse.swt.printing.Printer.getPrinterList(Printer.java:88)
+        at org.eclipse.jface.text.TextViewer.isPrintable(TextViewer.java:4160)
+        at org.eclipse.jface.text.TextViewer.canDoOperation(TextViewer.java:3697)
+        at org.eclipse.jface.text.source.SourceViewer.canDoOperation(SourceViewer.java:701)
+
+Eclipse appeared to freeze but eventually returned to life...
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1336359</commentid>
+    <comment_count>22</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-09-23 08:52:58 -0400</bug_when>
+    <thetext>(In reply to comment #20)
+&gt; (In reply to comment #19)
+&gt; &gt; Does someone have a bugzilla.gnome.org bug # for the gtk issue?
+&gt; 
+&gt; The bug&apos;s c7 is particularly disconcerting since it&apos;s as if neither party ever
+&gt; figured out the problem or a proper fix. :|
+
+The bug appears to have been closed upstream in gtk.  However it&apos;s a bit disconcerting that the TextViewer queries getPrinterList() for every file that is opened (and this isn&apos;t cached...). 
+
+On GTK if this operation is blocking, possibly dependent on Network IO and printers responding in a timely manner, then surely this call shouldn&apos;t be on the critical path for opening an editor?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1336363</commentid>
+    <comment_count>23</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-09-23 09:02:18 -0400</bug_when>
+    <thetext>If a cache, then in Printer.getPrinterList().
+Maybe there&apos;s a cheaper way/API to check whether printing is possible?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1347983</commentid>
+    <comment_count>24</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-10-10 17:15:11 -0400</bug_when>
+    <thetext>(In reply to comment #22)
+On a network with a lot of printers opening an editor is always slow even when the network is in perfect shape.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1347987</commentid>
+    <comment_count>25</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-10-10 17:21:23 -0400</bug_when>
+    <thetext>Changed the title to reflect the root cause of the problem.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1348089</commentid>
+    <comment_count>26</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-10-11 03:27:33 -0400</bug_when>
+    <thetext>&gt;Changed the title to reflect the root cause of the problem.
+Please file a separate bug report against Platform Text. The hang should still be investigated.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1348220</commentid>
+    <comment_count>27</comment_count>
+    <who name="Sergey Prigogin">eclipse.sprigogin</who>
+    <bug_when>2008-10-11 23:40:29 -0400</bug_when>
+    <thetext>(In reply to comment #26)
+&gt; Please file a separate bug report against Platform Text. The hang should still
+&gt; be investigated.
+
+Filed bug 250528.
+
+Javadoc of Printer.getPrinterList has to mention that this method be pretty expensive.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1441344</commentid>
+    <comment_count>28</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2009-03-02 12:48:13 -0500</bug_when>
+    <thetext>*** Bug 266670 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1458035</commentid>
+    <comment_count>29</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2009-03-23 12:21:08 -0400</bug_when>
+    <thetext>*** Bug 269663 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1492616</commentid>
+    <comment_count>30</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2009-05-06 08:37:13 -0400</bug_when>
+    <thetext>*** Bug 275072 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1496064</commentid>
+    <comment_count>31</comment_count>
+    <who name="Remy Suen">remysuen</who>
+    <bug_when>2009-05-09 08:10:05 -0400</bug_when>
+    <thetext>*** Bug 275534 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1812904</commentid>
+    <comment_count>32</comment_count>
+    <who name="Bernard Leach">leachbj</who>
+    <bug_when>2010-09-12 22:33:20 -0400</bug_when>
+    <thetext>I had a similar issue where every time I saved a file there was a 20 second busy cursor delay.  Adding -Dorg.eclipse.swt.internal.gtk.disablePrinting to eclipse.ini resolved the problem.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

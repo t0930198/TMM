@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214431</bug_id>
+          
+          <creation_ts>2008-01-05 15:23:00 -0500</creation_ts>
+          <short_desc>CDOView.getRevision() does not work for transactions/dirty objects</short_desc>
+          <delta_ts>2010-06-29 09:22:09 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>EMF</product>
+          <component>cdo.core</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eike Stepper">stepper</reporter>
+          <assigned_to name="Eike Stepper">stepper</assigned_to>
+          <cc>smcduff</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126259</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-05 15:23:14 -0500</bug_when>
+    <thetext>// CDORevisionImpl revision = transaction.getRevision(revisionDelta.getID());
+      // The above is buggy!
+      CDOObject object = transaction.getDirtyObjects().get(revisionDelta.getID());
+      CDORevisionImpl revision = (CDORevisionImpl)object.cdoRevision();
+      revisionAdjuster.adjustRevision(revision, revisionDelta);</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126261</commentid>
+    <comment_count>1</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-01-05 15:38:52 -0500</bug_when>
+    <thetext>I tried to overwrite getRevision() in CDOTransactionImpl:
+
+  @Override
+  public CDORevisionImpl getRevision(CDOID id)
+  {
+    CDOObject object = dirtyObjects.get(id);
+    if (object != null)
+    {
+      return (CDORevisionImpl)object.cdoRevision();
+    }
+
+    return super.getRevision(id);
+  }
+
+BUT 3 other locations call getRevision() and seem to expect to receive the *base* revision!
+
+I&apos;ll remove the override, add JavaDoc to CDOView.getRevision and mark the bug as INVALID.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1265146</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2008-06-10 02:29:21 -0400</bug_when>
+    <thetext>Reversioned due to graduation</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1769021</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eike Stepper">stepper</who>
+    <bug_when>2010-06-29 04:44:01 -0400</bug_when>
+    <thetext>Closing</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

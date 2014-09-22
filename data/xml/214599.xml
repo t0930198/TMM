@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214599</bug_id>
+          
+          <creation_ts>2008-01-08 05:49:00 -0500</creation_ts>
+          <short_desc>Link Widget: hyperlink parsing mangles certain input strings</short_desc>
+          <delta_ts>2008-03-26 14:18:50 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux-GTK</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          <blocked>206449</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ralf Sternberg">rsternberg</reporter>
+          <assigned_to name="Felipe Heidrich">eclipse.felipe</assigned_to>
+          <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127212</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ralf Sternberg">rsternberg</who>
+    <bug_when>2008-01-08 05:49:01 -0500</bug_when>
+    <thetext>The Link widget parses its text for embedded hyperlinks. The parser code mangles certain input strings.
+Code to reproduce:
+
+  Link link = new Link( parent, SWT.NONE );
+  link.setText( &quot;&gt;test&lt;&quot; );
+
+displays as &quot;&gt;test&gt;test&lt;&quot; in GTK (not reproducible with Windows, the win32 code doesn&apos;t use the parser output).
+Expected: The link should show as &quot;&gt;test&lt;&quot; without any hyperlinks. I agree that this is a rare use case, I only found it while unit-testing RAP. However, it&apos;s a valid input string and should render as expected.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1165931</commentid>
+    <comment_count>1</comment_count>
+    <who name="Felipe Heidrich">eclipse.felipe</who>
+    <bug_when>2008-02-27 14:54:14 -0500</bug_when>
+    <thetext>fixed in HEAD &gt; 20080227</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

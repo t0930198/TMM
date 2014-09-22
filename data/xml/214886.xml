@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214886</bug_id>
+          
+          <creation_ts>2008-01-10 08:18:00 -0500</creation_ts>
+          <short_desc>[apidoc] Add Class Javadoc for SystemRemoteFileDialog and related</short_desc>
+          <delta_ts>2011-05-31 17:38:36 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Target Management</product>
+          <component>RSE</component>
+          <version>2.0</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>3.3.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Martin Oberhuber">martin.oberhuber</reporter>
+          <assigned_to name="David McKnight">dmcknigh</assigned_to>
+          
+          <qa_contact name="Martin Oberhuber">martin.oberhuber</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128832</commentid>
+    <comment_count>0</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2008-01-10 08:18:31 -0500</bug_when>
+    <thetext>The newsgroup message on
+   http://dev.eclipse.org/newslists/news.eclipse.dsdp.tm/msg00295.html
+shows that people have difficulties understanding how to use SystemRemoteFolderDialog, SystemRemoteFileDialog, SystemRemoteResourceDialog properly.
+
+In particular, it&apos;s important for users to know that for SystemRemoteFileDialog the getOutputObject() method will return an IRemoteFile object. Example code like the following (which is from our EclipseCon07 Tutorial) could be added to the class javadoc:
+
+IRemoteFile chooseFolder(Shell shell, IFileServiceSubSystem fss)
+   IRemoteFile result = null;
+   SystemRemoteFolderDialog dlg = new SystemRemoteFolderDialog(
+     	    		shell, &quot;Pick a Folder&quot;, fss.getHost());
+   IRemoteFile defaultDir = fss.getRemoteFileObject(defaultPath, null);
+   dlg.setPreSelection(defaultDir);
+   int dlgResult = dlg.open();
+   if (dlgResult==Window.OK) {
+      Object output = dlg.getOutputObject();
+      if (output instanceof IRemoteFile) {
+         result = (IRemoteFile)output;
+      }
+   }
+   return result;
+}
+
+There might be other aspects of the ...Dialog classes that should be mentioned in the class Javadoc.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1748056</commentid>
+    <comment_count>1</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2010-05-27 08:24:35 -0400</bug_when>
+    <thetext>Reassigning all API related to 3.3</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1941871</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Oberhuber">martin.oberhuber</who>
+    <bug_when>2011-05-31 17:38:36 -0400</bug_when>
+    <thetext>Moving 3.3 cleanup items to 3.3.1</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

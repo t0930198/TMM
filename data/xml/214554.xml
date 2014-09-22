@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214554</bug_id>
+          
+          <creation_ts>2008-01-07 17:45:00 -0500</creation_ts>
+          <short_desc>jira connector should ignore missing project configuration when checking for changed tasks</short_desc>
+          <delta_ts>2008-01-12 00:38:08 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Jira</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eugene Kuleshov">ekuleshov</reporter>
+          <assigned_to name="Steffen Pingel">steffen.pingel</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127012</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-07 17:45:41 -0500</bug_when>
+    <thetext>When checking for changed tasks jira connector can fail on missing project configuration for tasks that are not in the task list and it require to manually update server attributes before any synchronization would succeed. In result, user may not notice tiny warning icon and will miss incoming changes. I think it would make sense to ignore missing server configuration when checking for changed tasks, for example, skip tasks from unknown projects or create project stub that would have project key.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128472</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-09 16:15:14 -0500</bug_when>
+    <thetext>Related: Make sure the repository configuration is downloaded after creating/updating a task repository.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128481</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-09 16:24:37 -0500</bug_when>
+    <thetext>The major problem with the issue that synchronization is silently stopping working, after new project is added on server and any tasks been created under that project. Not sure if such failure will make such failed query to popup out of filtering when task list is in focused mode, but I have missed bunch new tasks for several days because of that and only accidentally noticed the warning decoration.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130117</commentid>
+    <comment_count>3</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-12 00:13:34 -0500</bug_when>
+    <thetext>Done. When checking for changed tasks and an issue is returned by the server that can not be mapped to a project but is part of the task list an error is displayed. The same error is displayed when running a query or search and an issue with an unknown project is returned:
+
+ The repository returned an unknown project. Please update the repository attributes.
+ 
+Suggestions for a better error message?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130119</commentid>
+    <comment_count>4</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-12 00:31:16 -0500</bug_when>
+    <thetext>Marking as resolved.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130123</commentid>
+    <comment_count>5</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-12 00:38:08 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt;  The repository returned an unknown project. Please update the repository
+&gt; attributes.
+&gt; Suggestions for a better error message?
+
+No project data for key XXX found. Please update repository attributes.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

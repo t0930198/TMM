@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215156</bug_id>
+          
+          <creation_ts>2008-01-13 15:17:00 -0500</creation_ts>
+          <short_desc>update bugzilla client to use post for queries so we are not restricted by query url length</short_desc>
+          <delta_ts>2008-01-14 12:49:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Bugzilla</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          <blocked>215100</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Robert Elves">robert.elves</reporter>
+          <assigned_to name="Robert Elves">robert.elves</assigned_to>
+          <cc>mm105</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130318</commentid>
+    <comment_count>0</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-13 15:17:42 -0500</bug_when>
+    <thetext>Currently BugzillaClient performs multiple http requests when retrieving changed tasks due to url length restrictions. By updating the query code to use http POST, changed tasks could be retrieved with a single request.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130319</commentid>
+    <comment_count>1</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-13 15:38:42 -0500</bug_when>
+    <thetext>Fixed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130320</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86777</attachid>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-13 15:38:44 -0500</bug_when>
+    <thetext>Created attachment 86777
+mylyn/context/zip</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130338</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eugene Kuleshov">ekuleshov</who>
+    <bug_when>2008-01-13 18:57:08 -0500</bug_when>
+    <thetext>I wonder if there is a hard limit for number of tasks to search like this in MySQL... it may worth to check that.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130439</commentid>
+    <comment_count>4</comment_count>
+    <who name="maarten meijer">mm105</who>
+    <bug_when>2008-01-14 03:59:05 -0500</bug_when>
+    <thetext>I coiuldn&apos;t locate exactly where you made changes for this bug.
+Are you sure you used GzipPostMethod to do this POST request?
+If not we loose the potential bandwidth savings again...
+see bug 205708</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130821</commentid>
+    <comment_count>5</comment_count>
+    <who name="Robert Elves">robert.elves</who>
+    <bug_when>2008-01-14 12:49:47 -0500</bug_when>
+    <thetext>(In reply to comment #3)
+&gt; I wonder if there is a hard limit for number of tasks to search like this in
+&gt; MySQL... it may worth to check that.
+
+Yes this would be very valuable information.  We&apos;d have to look at the sql executed by Bugzilla&apos;s buglist.cgi script.
+
+ (In reply to comment #4)
+&gt; I coiuldn&apos;t locate exactly where you made changes for this bug.
+&gt; Are you sure you used GzipPostMethod to do this POST request?
+&gt; If not we loose the potential bandwidth savings again...
+&gt; see bug 205708
+GzipPostMethod is used (See bugzillaClient.getSearchHits(...))
+ </thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86777</attachid>
+            <date>2008-01-13 15:38:00 -0500</date>
+            <delta_ts>2008-01-13 15:38:44 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>1726</size>
+            <attacher name="Robert Elves">robert.elves</attacher>
+            
+              <data encoding="base64">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
+AAABAAEAXgAAAEoGAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214731</bug_id>
+          
+          <creation_ts>2008-01-09 05:27:00 -0500</creation_ts>
+          <short_desc>[batch][compiler] ClasspathJar#getPath does not honor its contract</short_desc>
+          <delta_ts>2008-02-04 07:36:17 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Maxime Daniel">maxime_daniel</reporter>
+          <assigned_to name="Maxime Daniel">maxime_daniel</assigned_to>
+          <cc>eric_jodet</cc>
+    
+    <cc>jerome_lanneluc</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      <flag name="review"
+          id="5115"
+          type_id="1"
+          status="+"
+          setter="kent_johnson"
+    />
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127975</commentid>
+    <comment_count>0</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-09 05:27:28 -0500</bug_when>
+    <thetext>Source based, circa v_831 (present since mid 2005 at least)
+
+ClasspathJar#getPath overrides FileSystem#getPath which is expected to return an absolute path. Not so. Running the batch compiler with parameters &apos;-cp lib.jar X.java&apos; leads to getPath returning &apos;lib.jar&apos;.
+
+Found this out while investigating bug 97332. While the fastest cure would probably be to fix the comment (this is an internal package anyway), I believe we should examine carefully whether we want to respect the contract or to amend it, and to examine the implications in other parts of the code. Hence this bug.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129509</commentid>
+    <comment_count>1</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 04:49:13 -0500</bug_when>
+    <thetext>First exploration raises the following comments:
+- ClasspathDirectory, a sibling class of ClasspathJar, honors the contract; this would support aligning the implementation with the API;
+- the same class caches the path, whereas ClasspathJar only caches the normalized path; for reasons of homogeneity, I&apos;d rather cache both in all cases (the impact does not seem too heavy);
+- ClasspathJar#normalizedPath suffers the same bug as ClasspathJar#getPath.
+
+Will craft a fix that caches path and normalizedPath as absolute paths in all cases.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129522</commentid>
+    <comment_count>2</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 05:29:15 -0500</bug_when>
+    <thetext>Note also that:
+- we use absolute paths, which may be different from canonical paths on certain
+  platforms; but this is what is documented, hence it should be fine;
+- ClasspathJar is more prone to white-box testing than ClasspathDirectory, which
+  constructor is not public; I won&apos;t change the visibility for the sole benefit of
+  whitebox testing though;
+- normalizedPath also replaces exotic File separator by &apos;/&apos; for all 
+  implementations, which is not clear from the doc; my patch refines the doc in
+  this respect.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129532</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86658</attachid>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 05:43:32 -0500</bug_when>
+    <thetext>Created attachment 86658
+Fix + test cases</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129548</commentid>
+    <comment_count>4</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-11 06:47:28 -0500</bug_when>
+    <thetext>Kent, would you please tell me what you think?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129813</commentid>
+    <comment_count>5</comment_count>
+    <who name="Kent Johnson">kent_johnson</who>
+    <bug_when>2008-01-11 13:11:23 -0500</bug_when>
+    <thetext>looks simple enough</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130424</commentid>
+    <comment_count>6</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-01-14 03:27:47 -0500</bug_when>
+    <thetext>Released for 3.4 M5.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148669</commentid>
+    <comment_count>7</comment_count>
+    <who name="Eric Jodet">eric_jodet</who>
+    <bug_when>2008-02-04 07:36:17 -0500</bug_when>
+    <thetext>Verified for 3.4M5 using build I20080204-0010</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86658</attachid>
+            <date>2008-01-11 05:43:00 -0500</date>
+            <delta_ts>2008-01-11 05:43:32 -0500</delta_ts>
+            <desc>Fix + test cases</desc>
+            <filename>patch.txt</filename>
+            <type>text/plain</type>
+            <size>8427</size>
+            <attacher name="Maxime Daniel">maxime_daniel</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUu
+dGVzdHMuY29tcGlsZXINCkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvY29t
+cGlsZXIvcmVncmVzc2lvbi9CYXRjaENvbXBpbGVyVGVzdC5qYXZhDQo9PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1Mg
+ZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5qZHQuY29yZS50ZXN0cy5jb21waWxl
+ci9zcmMvb3JnL2VjbGlwc2UvamR0L2NvcmUvdGVzdHMvY29tcGlsZXIvcmVncmVzc2lvbi9CYXRj
+aENvbXBpbGVyVGVzdC5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS4xNDENCmRpZmYgLXUg
+LXIxLjE0MSBCYXRjaENvbXBpbGVyVGVzdC5qYXZhDQotLS0gc3JjL29yZy9lY2xpcHNlL2pkdC9j
+b3JlL3Rlc3RzL2NvbXBpbGVyL3JlZ3Jlc3Npb24vQmF0Y2hDb21waWxlclRlc3QuamF2YQkzIEph
+biAyMDA4IDA4OjM0OjEzIC0wMDAwCTEuMTQxDQorKysgc3JjL29yZy9lY2xpcHNlL2pkdC9jb3Jl
+L3Rlc3RzL2NvbXBpbGVyL3JlZ3Jlc3Npb24vQmF0Y2hDb21waWxlclRlc3QuamF2YQkxMSBKYW4g
+MjAwOCAxMDo0MToyOSAtMDAwMA0KQEAgLTEsNSArMSw1IEBADQogLyoqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioNCi0gKiBDb3B5cmlnaHQgKGMpIDIwMDAsIDIwMDcgSUJNIENvcnBvcmF0aW9uIGFuZCBv
+dGhlcnMuDQorICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA4IElCTSBDb3Jwb3JhdGlvbiBhbmQg
+b3RoZXJzLg0KICAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuIFRoaXMgcHJvZ3JhbSBhbmQgdGhlIGFj
+Y29tcGFueWluZyBtYXRlcmlhbHMNCiAgKiBhcmUgbWFkZSBhdmFpbGFibGUgdW5kZXIgdGhlIHRl
+cm1zIG9mIHRoZSBFY2xpcHNlIFB1YmxpYyBMaWNlbnNlIHYxLjANCiAgKiB3aGljaCBhY2NvbXBh
+bmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdA0KQEAgLTI0LDggKzI0
+LDEwIEBADQogDQogaW1wb3J0IG9yZy5lY2xpcHNlLmNvcmUucmVzb3VyY2VzLlJlc291cmNlc1Bs
+dWdpbjsNCiBpbXBvcnQgb3JnLmVjbGlwc2UuamR0LmNvcmUuSmF2YUNvcmU7DQoraW1wb3J0IG9y
+Zy5lY2xpcHNlLmpkdC5jb3JlLmNvbXBpbGVyLkNoYXJPcGVyYXRpb247DQogaW1wb3J0IG9yZy5l
+Y2xpcHNlLmpkdC5jb3JlLmNvbXBpbGVyLkludmFsaWRJbnB1dEV4Y2VwdGlvbjsNCiBpbXBvcnQg
+b3JnLmVjbGlwc2UuamR0LmNvcmUudGVzdHMudXRpbC5VdGlsOw0KK2ltcG9ydCBvcmcuZWNsaXBz
+ZS5qZHQuaW50ZXJuYWwuY29tcGlsZXIuYmF0Y2guQ2xhc3NwYXRoSmFyOw0KIGltcG9ydCBvcmcu
+ZWNsaXBzZS5qZHQuaW50ZXJuYWwuY29tcGlsZXIuYmF0Y2guQ2xhc3NwYXRoTG9jYXRpb247DQog
+aW1wb3J0IG9yZy5lY2xpcHNlLmpkdC5pbnRlcm5hbC5jb21waWxlci5iYXRjaC5NYWluOw0KIGlt
+cG9ydCBvcmcuZWNsaXBzZS5qZHQuaW50ZXJuYWwuY29tcGlsZXIuY2xhc3NmbXQuQ2xhc3NGaWxl
+Q29uc3RhbnRzOw0KQEAgLTc4NTcsNiArNzg1OSwyMSBAQA0KIAkJImludmFsaWQgd2FybmluZyBv
+cHRpb246IC13YXJuOm51bGwsK3VudXNlZC4gTXVzdCBzcGVjaWZ5IGEgd2FybmluZyB0b2tlblxu
+IiwNCiAJCXRydWUpOw0KIH0NCisvLyBodHRwczovL2J1Z3MuZWNsaXBzZS5vcmcvYnVncy9zaG93
+X2J1Zy5jZ2k/aWQ9MjE0NzMxDQorLy8gd2hpdGUtYm94IHRlc3QgZm9yIGludGVybmFsIEFQSQ0K
+K3B1YmxpYyB2b2lkIHRlc3QyMTZfYmF0Y2hfY2xhc3NwYXRoX2FwaXMoKSB7DQorCWFzc2VydEZh
+bHNlKCJwYXRoIHNob3VsZCBiZSBhYnNvbHV0ZSIsIA0KKwkJbmV3IENsYXNzcGF0aEphcihuZXcg
+RmlsZSgicmVsYXRpdmUuamFyIiksIHRydWUsIG51bGwsIG51bGwpLg0KKwkJZ2V0UGF0aCgpLmlu
+ZGV4T2YoRmlsZS5zZXBhcmF0b3IpID09IC0xKTsNCit9DQorLy8gaHR0cHM6Ly9idWdzLmVjbGlw
+c2Uub3JnL2J1Z3Mvc2hvd19idWcuY2dpP2lkPTIxNDczMQ0KKy8vIHdoaXRlLWJveCB0ZXN0IGZv
+ciBpbnRlcm5hbCBBUEkNCitwdWJsaWMgdm9pZCB0ZXN0MjE3X2JhdGNoX2NsYXNzcGF0aF9hcGlz
+KCkgew0KKwlhc3NlcnRGYWxzZSgicGF0aCBzaG91bGQgYmUgYWJzb2x1dGUiLCANCisJCUNoYXJP
+cGVyYXRpb24uaW5kZXhPZignLycsIA0KKwkJCW5ldyBDbGFzc3BhdGhKYXIobmV3IEZpbGUoInJl
+bGF0aXZlLmphciIpLCB0cnVlLCBudWxsLCBudWxsKS4NCisJCQlub3JtYWxpemVkUGF0aCgpKSA9
+PSAtMSk7DQorfQ0KIHB1YmxpYyBzdGF0aWMgQ2xhc3MgdGVzdENsYXNzKCkgew0KIAlyZXR1cm4g
+QmF0Y2hDb21waWxlclRlc3QuY2xhc3M7DQogfQ0KI1Agb3JnLmVjbGlwc2UuamR0LmNvcmUNCklu
+ZGV4OiBiYXRjaC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvYmF0Y2gvQ2xhc3Nw
+YXRoSmFyLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5l
+Y2xpcHNlLmpkdC5jb3JlL2JhdGNoL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9i
+YXRjaC9DbGFzc3BhdGhKYXIuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuNDMNCmRpZmYg
+LXUgLXIxLjQzIENsYXNzcGF0aEphci5qYXZhDQotLS0gYmF0Y2gvb3JnL2VjbGlwc2UvamR0L2lu
+dGVybmFsL2NvbXBpbGVyL2JhdGNoL0NsYXNzcGF0aEphci5qYXZhCTI3IEFwciAyMDA3IDE1OjUx
+OjM4IC0wMDAwCTEuNDMNCisrKyBiYXRjaC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGls
+ZXIvYmF0Y2gvQ2xhc3NwYXRoSmFyLmphdmEJMTEgSmFuIDIwMDggMTA6NDE6MzQgLTAwMDANCkBA
+IC0xLDUgKzEsNSBAQA0KIC8qKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqDQotICogQ29weXJpZ2h0IChj
+KSAyMDAwLCAyMDA3IElCTSBDb3Jwb3JhdGlvbiBhbmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAo
+YykgMjAwMCwgMjAwOCBJQk0gQ29ycG9yYXRpb24gYW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRz
+IHJlc2VydmVkLiBUaGlzIHByb2dyYW0gYW5kIHRoZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQog
+ICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRoZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJs
+aWMgTGljZW5zZSB2MS4wDQogICogd2hpY2ggYWNjb21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24s
+IGFuZCBpcyBhdmFpbGFibGUgYXQNCkBAIC0zMSw3ICszMSw2IEBADQogcHJvdGVjdGVkIFppcEZp
+bGUgemlwRmlsZTsNCiBwcm90ZWN0ZWQgYm9vbGVhbiBjbG9zZVppcEZpbGVBdEVuZDsNCiBwcm90
+ZWN0ZWQgSGFzaHRhYmxlIHBhY2thZ2VDYWNoZTsNCi1wcm90ZWN0ZWQgY2hhcltdIG5vcm1hbGl6
+ZWRQYXRoOw0KIA0KIHB1YmxpYyBDbGFzc3BhdGhKYXIoRmlsZSBmaWxlLCBib29sZWFuIGNsb3Nl
+WmlwRmlsZUF0RW5kLCANCiAJCUFjY2Vzc1J1bGVTZXQgYWNjZXNzUnVsZVNldCwgU3RyaW5nIGRl
+c3RpbmF0aW9uUGF0aCkgew0KQEAgLTEzMyw3ICsxMzIsNyBAQA0KIH0NCiBwdWJsaWMgY2hhcltd
+IG5vcm1hbGl6ZWRQYXRoKCkgew0KIAlpZiAodGhpcy5ub3JtYWxpemVkUGF0aCA9PSBudWxsKSB7
+DQotCQljaGFyW10gcmF3TmFtZSA9IHRoaXMuZmlsZS5nZXRQYXRoKCkudG9DaGFyQXJyYXkoKTsN
+CisJCWNoYXJbXSByYXdOYW1lID0gdGhpcy5maWxlLmdldEFic29sdXRlUGF0aCgpLnRvQ2hhckFy
+cmF5KCk7DQogCQlpZiAoRmlsZS5zZXBhcmF0b3JDaGFyID09ICdcXCcpIHsNCiAJCQlDaGFyT3Bl
+cmF0aW9uLnJlcGxhY2UocmF3TmFtZSwgJ1xcJywgJy8nKTsNCiAJCX0NCkBAIC0xNDIsNiArMTQx
+LDkgQEANCiAJcmV0dXJuIHRoaXMubm9ybWFsaXplZFBhdGg7DQogfQ0KIHB1YmxpYyBTdHJpbmcg
+Z2V0UGF0aCgpew0KLQlyZXR1cm4gdGhpcy5maWxlLmdldFBhdGgoKTsNCisJaWYgKHRoaXMucGF0
+aCA9PSBudWxsKSB7DQorCQl0aGlzLnBhdGggPSB0aGlzLmZpbGUuZ2V0QWJzb2x1dGVQYXRoKCk7
+DQorCX0NCisJcmV0dXJuIHRoaXMucGF0aDsNCiB9DQogfQ0KSW5kZXg6IGJhdGNoL29yZy9lY2xp
+cHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9GaWxlU3lzdGVtLmphdmENCj09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xpcHNlLmpkdC5jb3JlL2JhdGNo
+L29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9GaWxlU3lzdGVtLmphdmEs
+dg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjQ4DQpkaWZmIC11IC1yMS40OCBGaWxlU3lzdGVtLmph
+dmENCi0tLSBiYXRjaC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvYmF0Y2gvRmls
+ZVN5c3RlbS5qYXZhCTUgSnVsIDIwMDcgMTM6NTI6NTAgLTAwMDAJMS40OA0KKysrIGJhdGNoL29y
+Zy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9GaWxlU3lzdGVtLmphdmEJMTEg
+SmFuIDIwMDggMTA6NDE6MzQgLTAwMDANCkBAIC0xLDUgKzEsNSBAQA0KIC8qKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqDQotICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA3IElCTSBDb3Jwb3JhdGlvbiBh
+bmQgb3RoZXJzLg0KKyAqIENvcHlyaWdodCAoYykgMjAwMCwgMjAwOCBJQk0gQ29ycG9yYXRpb24g
+YW5kIG90aGVycy4NCiAgKiBBbGwgcmlnaHRzIHJlc2VydmVkLiBUaGlzIHByb2dyYW0gYW5kIHRo
+ZSBhY2NvbXBhbnlpbmcgbWF0ZXJpYWxzDQogICogYXJlIG1hZGUgYXZhaWxhYmxlIHVuZGVyIHRo
+ZSB0ZXJtcyBvZiB0aGUgRWNsaXBzZSBQdWJsaWMgTGljZW5zZSB2MS4wDQogICogd2hpY2ggYWNj
+b21wYW5pZXMgdGhpcyBkaXN0cmlidXRpb24sIGFuZCBpcyBhdmFpbGFibGUgYXQNCkBAIC0zNiw5
+ICszNiwxMiBAQA0KIAkJICovDQogCQl2b2lkIHJlc2V0KCk7DQogCQkvKioNCi0JCSAqIFJldHVy
+biBhIG5vcm1hbGl6ZWQgcGF0aCBmb3IgZmlsZSBiYXNlZCBjbGFzc3BhdGggZW50cmllcy4gVGhp
+cyBpcyBhbiBhYnNvbHV0ZSBwYXRoDQotCQkgKiBlbmRpbmcgd2l0aCBhIGZpbGUgc2VwYXJhdG9y
+IGZvciBkaXJlY3RvcmllcywgYW4gYWJzb2x1dGUgcGF0aCBkZXByaXZlZCBmcm9tIHRoZSAnLmph
+cicNCi0JCSAqIChyZXNwLiAnLnppcCcpIGV4dGVuc2lvbiBmb3IgamFyIChyZXNwLiB6aXApIGZp
+bGVzLg0KKwkJICogUmV0dXJuIGEgbm9ybWFsaXplZCBwYXRoIGZvciBmaWxlIGJhc2VkIGNsYXNz
+cGF0aCBlbnRyaWVzLiBUaGlzIGlzIGFuDQorCQkgKiBhYnNvbHV0ZSBwYXRoIGluIHdoaWNoIGZp
+bGUgc2VwYXJhdG9ycyBhcmUgdHJhbnNmb3JtZWQgdG8gdGhlDQorCQkgKiBwbGF0Zm9ybS1hZ25v
+c3RpYyAnLycsIGVuZGluZyB3aXRoIGEgJy8nIGZvciBkaXJlY3Rvcmllcy4gVGhpcyBpcyBhbiAN
+CisJCSAqIGFic29sdXRlIHBhdGggaW4gd2hpY2ggZmlsZSBzZXBhcmF0b3JzIGFyZSB0cmFuc2Zv
+cm1lZCB0byB0aGUNCisJCSAqIHBsYXRmb3JtLWFnbm9zdGljICcvJywgZGVwcml2ZWQgZnJvbSB0
+aGUgJy5qYXInIChyZXNwLiAnLnppcCcpIA0KKwkJICogZXh0ZW5zaW9uIGZvciBqYXIgKHJlc3Au
+IHppcCkgZmlsZXMuDQogCQkgKiBAcmV0dXJuIGEgbm9ybWFsaXplZCBwYXRoIGZvciBmaWxlIGJh
+c2VkIGNsYXNzcGF0aCBlbnRyaWVzDQogCQkgKi8NCiAJCWNoYXJbXSBub3JtYWxpemVkUGF0aCgp
+Ow0KSW5kZXg6IGJhdGNoL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9D
+bGFzc3BhdGhMb2NhdGlvbi5qYXZhDQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09DQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNs
+aXBzZS9vcmcuZWNsaXBzZS5qZHQuY29yZS9iYXRjaC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwv
+Y29tcGlsZXIvYmF0Y2gvQ2xhc3NwYXRoTG9jYXRpb24uamF2YSx2DQpyZXRyaWV2aW5nIHJldmlz
+aW9uIDEuMTANCmRpZmYgLXUgLXIxLjEwIENsYXNzcGF0aExvY2F0aW9uLmphdmENCi0tLSBiYXRj
+aC9vcmcvZWNsaXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvYmF0Y2gvQ2xhc3NwYXRoTG9jYXRp
+b24uamF2YQk2IE1hciAyMDA3IDAyOjM4OjUxIC0wMDAwCTEuMTANCisrKyBiYXRjaC9vcmcvZWNs
+aXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvYmF0Y2gvQ2xhc3NwYXRoTG9jYXRpb24uamF2YQkx
+MSBKYW4gMjAwOCAxMDo0MTozNCAtMDAwMA0KQEAgLTEsNSArMSw1IEBADQogLyoqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioNCi0gKiBDb3B5cmlnaHQgKGMpIDIwMDAsIDIwMDcgSUJNIENvcnBvcmF0aW9u
+IGFuZCBvdGhlcnMuDQorICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA4IElCTSBDb3Jwb3JhdGlv
+biBhbmQgb3RoZXJzLg0KICAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuIFRoaXMgcHJvZ3JhbSBhbmQg
+dGhlIGFjY29tcGFueWluZyBtYXRlcmlhbHMNCiAgKiBhcmUgbWFkZSBhdmFpbGFibGUgdW5kZXIg
+dGhlIHRlcm1zIG9mIHRoZSBFY2xpcHNlIFB1YmxpYyBMaWNlbnNlIHYxLjANCiAgKiB3aGljaCBh
+Y2NvbXBhbmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdA0KQEAgLTIy
+LDcgKzIyLDkgQEANCiANCiAJcHVibGljIHN0YXRpYyBmaW5hbCBpbnQgU09VUkNFID0gMTsNCiAJ
+cHVibGljIHN0YXRpYyBmaW5hbCBpbnQgQklOQVJZID0gMjsNCi0JDQorDQorCVN0cmluZyBwYXRo
+Ow0KKwljaGFyW10gbm9ybWFsaXplZFBhdGg7DQogCXB1YmxpYyBBY2Nlc3NSdWxlU2V0IGFjY2Vz
+c1J1bGVTZXQ7DQogDQogCXB1YmxpYyBTdHJpbmcgZGVzdGluYXRpb25QYXRoOw0KSW5kZXg6IGJh
+dGNoL29yZy9lY2xpcHNlL2pkdC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9DbGFzc3BhdGhEaXJl
+Y3RvcnkuamF2YQ0KPT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PQ0KUkNTIGZpbGU6IC9jdnNyb290L2VjbGlwc2Uvb3JnLmVj
+bGlwc2UuamR0LmNvcmUvYmF0Y2gvb3JnL2VjbGlwc2UvamR0L2ludGVybmFsL2NvbXBpbGVyL2Jh
+dGNoL0NsYXNzcGF0aERpcmVjdG9yeS5qYXZhLHYNCnJldHJpZXZpbmcgcmV2aXNpb24gMS40Nw0K
+ZGlmZiAtdSAtcjEuNDcgQ2xhc3NwYXRoRGlyZWN0b3J5LmphdmENCi0tLSBiYXRjaC9vcmcvZWNs
+aXBzZS9qZHQvaW50ZXJuYWwvY29tcGlsZXIvYmF0Y2gvQ2xhc3NwYXRoRGlyZWN0b3J5LmphdmEJ
+MjQgQXByIDIwMDcgMDQ6MzY6MTAgLTAwMDAJMS40Nw0KKysrIGJhdGNoL29yZy9lY2xpcHNlL2pk
+dC9pbnRlcm5hbC9jb21waWxlci9iYXRjaC9DbGFzc3BhdGhEaXJlY3RvcnkuamF2YQkxMSBKYW4g
+MjAwOCAxMDo0MTozNCAtMDAwMA0KQEAgLTEsNSArMSw1IEBADQogLyoqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioNCi0gKiBDb3B5cmlnaHQgKGMpIDIwMDAsIDIwMDcgSUJNIENvcnBvcmF0aW9uIGFuZCBv
+dGhlcnMuDQorICogQ29weXJpZ2h0IChjKSAyMDAwLCAyMDA4IElCTSBDb3Jwb3JhdGlvbiBhbmQg
+b3RoZXJzLg0KICAqIEFsbCByaWdodHMgcmVzZXJ2ZWQuIFRoaXMgcHJvZ3JhbSBhbmQgdGhlIGFj
+Y29tcGFueWluZyBtYXRlcmlhbHMNCiAgKiBhcmUgbWFkZSBhdmFpbGFibGUgdW5kZXIgdGhlIHRl
+cm1zIG9mIHRoZSBFY2xpcHNlIFB1YmxpYyBMaWNlbnNlIHYxLjANCiAgKiB3aGljaCBhY2NvbXBh
+bmllcyB0aGlzIGRpc3RyaWJ1dGlvbiwgYW5kIGlzIGF2YWlsYWJsZSBhdA0KQEAgLTI0LDggKzI0
+LDYgQEANCiANCiBwdWJsaWMgY2xhc3MgQ2xhc3NwYXRoRGlyZWN0b3J5IGV4dGVuZHMgQ2xhc3Nw
+YXRoTG9jYXRpb24gew0KIA0KLXByaXZhdGUgY2hhcltdIG5vcm1hbGl6ZWRQYXRoOw0KLXByaXZh
+dGUgU3RyaW5nIHBhdGg7DQogcHJpdmF0ZSBIYXNodGFibGUgZGlyZWN0b3J5Q2FjaGU7DQogcHJp
+dmF0ZSBTdHJpbmdbXSBtaXNzaW5nUGFja2FnZUhvbGRlciA9IG5ldyBTdHJpbmdbMV07DQogcHJp
+dmF0ZSBpbnQgbW9kZTsgLy8gYWJpbGl0eSB0byBvbmx5IGNvbnNpZGVyIG9uZSBraW5kIG9mIGZp
+bGVzIChzb3VyY2UgdnMuIGJpbmFyaWVzKSwgYnkgZGVmYXVsdCB1c2UgYm90aA0K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

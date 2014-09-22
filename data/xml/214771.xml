@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214771</bug_id>
+          
+          <creation_ts>2008-01-09 11:50:00 -0500</creation_ts>
+          <short_desc>activity meter on buckminster project page shows invalid data</short_desc>
+          <delta_ts>2008-01-20 21:31:10 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>Community</product>
+          <component>Process</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc>http://www.eclipse.org/projects/project_summary.php?projectid=technology.buckminster</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Henrik Lindberg">henrik.lindberg</reporter>
+          <assigned_to name="Eclipse Management Organization">emo</assigned_to>
+          <cc>anne.jacko</cc>
+    
+    <cc>bjorn.freeman-benson</cc>
+    
+    <cc>thomas</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128240</commentid>
+    <comment_count>0</comment_count>
+    <who name="Henrik Lindberg">henrik.lindberg</who>
+    <bug_when>2008-01-09 11:50:40 -0500</bug_when>
+    <thetext>On this page: http://www.eclipse.org/projects/project_summary.php?projectid=technology.buckminster
+The commit activity meter (graph) shows old activity in our (now obsolete) CVS. When doing  drill down the statistics look ok though. 
+
+The color scheme on the page puts a hurt on my eyes :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131214</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-15 02:37:12 -0500</bug_when>
+    <thetext>Is there anyway to turn this activity meter off until this bug has been fixed? It makes the project look deserted.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134555</commentid>
+    <comment_count>2</comment_count>
+    <who name="Bjorn Freeman-Benson">bjorn.freeman-benson</who>
+    <bug_when>2008-01-20 13:22:55 -0500</bug_when>
+    <thetext>It&apos;s an interesting quirk of the different implementations of the CVS log and the SVN log: the CVS log tells us the number of lines of change, but the SVN one does not. The dashboard was using the number of lines of change. I&apos;ve changed it to the number of changed files instead: hopefully the result is better for you. It&apos;s different, but not a lot different, for all the projects; it&apos;s very different for projects that have transitioned from CVS to SVN.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134593</commentid>
+    <comment_count>3</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-20 16:45:01 -0500</bug_when>
+    <thetext>Now the non-graphic statistics still looks very off. More so now then they did previously.
+
+I&apos;m looking at these statistics: http://dash.eclipse.org/dash/commits/web-app/summary.cgi?login=y&amp;month=x&amp;project=technology.buckminster&amp;company=CloudsmithInc.
+
+According to that, I&apos;ve changed seven files in January while Karel has changed 2785. I know Karel to be a very hard-working man but this just doesn&apos;t make sense. Also, I&apos;m pretty sure that my work on Buckminster this month has affected way more then seven files. The other months looks OK though, considering the huge initial commit into SVN in February 2007.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134637</commentid>
+    <comment_count>4</comment_count>
+    <who name="Bjorn Freeman-Benson">bjorn.freeman-benson</who>
+    <bug_when>2008-01-20 21:31:10 -0500</bug_when>
+    <thetext>Interesting indeed. So it turns out that the svn log command returns people&apos;s full names some of the time and logins some of the time. Unfortunately our parser only handled logins. I have modified our parser to handle full names. Let&apos;s wait for the next full data run (should be tonight) to see if this helps.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

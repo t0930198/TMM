@@ -1,0 +1,245 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214686</bug_id>
+          
+          <creation_ts>2008-01-08 17:26:00 -0500</creation_ts>
+          <short_desc>if one closes a freshly &quot;prepared&quot; ChangeLog, it should not exist</short_desc>
+          <delta_ts>2009-11-02 16:05:27 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Linux Tools</product>
+          <component>ChangeLog</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>helpwanted</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.4</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andrew Overholt">overholt</reporter>
+          <assigned_to name="Jeff Johnston">jjohnstn</assigned_to>
+          <cc>linux.changelog-inbox</cc>
+    
+    <cc>rgrunber</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127777</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-01-08 17:26:29 -0500</bug_when>
+    <thetext>SSIA</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1341073</commentid>
+    <comment_count>1</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2008-09-30 14:13:05 -0400</bug_when>
+    <thetext>Tentatively setting 1.0 target.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1406503</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-01-13 16:05:23 -0500</bug_when>
+    <thetext>The file seems to be getting created.  Perhaps we can temporarily create a buffer and not a file?  Let&apos;s try to get this fixed for 0.2.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1612327</commentid>
+    <comment_count>3</comment_count>
+      <attachid>149796</attachid>
+    <who name="Roland Grunberg">rgrunber</who>
+    <bug_when>2009-10-16 17:03:54 -0400</bug_when>
+    <thetext>Created attachment 149796
+proposed patch for bug
+
+- Keeps track of when a fresh ChangeLog has been created.
+- Keeps track of when a ChangeLog is saved.
+
+Listens for a ChangeLog file being closed, and if the file is newly created, and has not been saved, then it is deleted.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1613762</commentid>
+    <comment_count>4</comment_count>
+      <attachid>150018</attachid>
+    <who name="Roland Grunberg">rgrunber</who>
+    <bug_when>2009-10-20 15:09:25 -0400</bug_when>
+    <thetext>Created attachment 150018
+revised patch
+
+A ChangeLog that is retrieved has been saved before. Therefore closing one where recent changes have not been saved should not cause it to be deleted.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1618227</commentid>
+    <comment_count>5</comment_count>
+    <who name="Roland Grunberg">rgrunber</who>
+    <bug_when>2009-10-28 12:13:48 -0400</bug_when>
+    <thetext>I&apos;ve looked over how other wizards or file creation processes deal with new files, and it seems they create a new file and have it saved with some basic content (comments/imports), or just empty. I guess the ChangeLog plugin should try to mimic that type of functionality, so in this case, a newly created ChangeLog when closed without saving should remain.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1618312</commentid>
+    <comment_count>6</comment_count>
+    <who name="Andrew Overholt">overholt</who>
+    <bug_when>2009-10-28 14:26:02 -0400</bug_when>
+    <thetext>If that&apos;s how other editors and wizards work, I&apos;m cool with the behaviour as it is.  I&apos;ll let you (Roland) and Jeff decide.  Feel free to close the bug as INVALID if that&apos;s the way you decide to go.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1620998</commentid>
+    <comment_count>7</comment_count>
+    <who name="Jeff Johnston">jjohnstn</who>
+    <bug_when>2009-11-02 16:05:27 -0500</bug_when>
+    <thetext>(In reply to comment #6)
+&gt; If that&apos;s how other editors and wizards work, I&apos;m cool with the behaviour as it
+&gt; is.  I&apos;ll let you (Roland) and Jeff decide.  Feel free to close the bug as
+&gt; INVALID if that&apos;s the way you decide to go.
+
+I am closing as INVALID.  This matches the behaviour of other tools which will still end up creating a file.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>149796</attachid>
+            <date>2009-10-16 17:03:00 -0400</date>
+            <delta_ts>2009-10-20 15:09:25 -0400</delta_ts>
+            <desc>proposed patch for bug</desc>
+            <filename>InsertChangeLogKeyHandler.patch</filename>
+            <type>text/plain</type>
+            <size>2459</size>
+            <attacher name="Roland Grunberg">rgrunber</attacher>
+            
+              <data encoding="base64">SW5kZXg6IEluc2VydENoYW5nZUxvZ0tleUhhbmRsZXIuamF2YQo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBJbnNl
+cnRDaGFuZ2VMb2dLZXlIYW5kbGVyLmphdmEJKHJldmlzaW9uIDIzMjczKQorKysgSW5zZXJ0Q2hh
+bmdlTG9nS2V5SGFuZGxlci5qYXZhCSh3b3JraW5nIGNvcHkpCkBAIC0xMSw2ICsxMSw4IEBACiAg
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKi8KIHBhY2thZ2Ugb3JnLmVjbGlwc2UubGludXh0b29scy5j
+aGFuZ2Vsb2cuY29yZS5hY3Rpb25zOwogCitpbXBvcnQgamF2YS5pby5GaWxlOworCiBpbXBvcnQg
+b3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5FeGVjdXRpb25FdmVudDsKIGltcG9ydCBvcmcuZWNs
+aXBzZS5jb3JlLmNvbW1hbmRzLkV4ZWN1dGlvbkV4Y2VwdGlvbjsKIGltcG9ydCBvcmcuZWNsaXBz
+ZS5jb3JlLmNvbW1hbmRzLklIYW5kbGVyOwpAQCAtMjIsNiArMjQsOSBAQAogaW1wb3J0IG9yZy5l
+Y2xpcHNlLmxpbnV4dG9vbHMuY2hhbmdlbG9nLmNvcmUuQ2hhbmdlTG9nV3JpdGVyOwogaW1wb3J0
+IG9yZy5lY2xpcHNlLmxpbnV4dG9vbHMuY2hhbmdlbG9nLmNvcmUuSVBhcnNlckNoYW5nZUxvZ0Nv
+bnRyaWI7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuSUVkaXRvclBhcnQ7CitpbXBvcnQgb3JnLmVj
+bGlwc2UudWkuSVBhcnRMaXN0ZW5lcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5JUHJvcGVydHlM
+aXN0ZW5lcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5JV29ya2JlbmNoUGFydDsKIGltcG9ydCBv
+cmcuZWNsaXBzZS51aS5JV29ya2JlbmNoV2luZG93OwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLklX
+b3JrYmVuY2hXaW5kb3dBY3Rpb25EZWxlZ2F0ZTsKIApAQCAtMzMsNiArMzgsNyBAQAogCQlJSGFu
+ZGxlciwgSVdvcmtiZW5jaFdpbmRvd0FjdGlvbkRlbGVnYXRlIHsKIAogCXByaXZhdGUgSUVkaXRv
+clBhcnQgY3VycmVudEVkaXRvcjsKKwlwcml2YXRlIGJvb2xlYW4gd2FzU2F2ZWQ7CiAKIAlwdWJs
+aWMgSW5zZXJ0Q2hhbmdlTG9nS2V5SGFuZGxlcigpIHsKIAkJc3VwZXIoKTsKQEAgLTc1LDEwICs4
+MSwxMSBAQAogCQkJCQkJZmFsc2UpKTsKIAogCQkJCWlmIChjaGFuZ2Vsb2cgPT0gbnVsbCkgewor
+CQkJCQl3YXNTYXZlZCA9IGZhbHNlOwogCQkJCQljaGFuZ2Vsb2cgPSBhc2tDaGFuZ2VMb2dMb2Nh
+dGlvbihnZXREb2N1bWVudExvY2F0aW9uKAogCQkJCQkJCWN1cnJlbnRFZGl0b3IsIGZhbHNlKSk7
+CiAJCQkJfQotCisJCQkJCiAJCQkJcmV0dXJuIGNoYW5nZWxvZzsKIAkJCX0KIAkJfQpAQCAtMTU2
+LDYgKzE2Myw0NCBAQAogCiAJCWNsdy53cml0ZUNoYW5nZUxvZygpOwogCisJCWZpbmFsIElFZGl0
+b3JQYXJ0IGNoYW5nZUxvZ0VkaXRvciA9IGNsdy5nZXRDaGFuZ2Vsb2coKTsgCisJCWZpbmFsIFN0
+cmluZyBjaGFuZ2VMb2dMb2NhdGlvbiA9IGNsdy5nZXRDaGFuZ2Vsb2dMb2NhdGlvbigpOworCQkK
+KwkJY2hhbmdlTG9nRWRpdG9yLmFkZFByb3BlcnR5TGlzdGVuZXIobmV3IElQcm9wZXJ0eUxpc3Rl
+bmVyKCkgeworCQkJCisJCQlwdWJsaWMgdm9pZCBwcm9wZXJ0eUNoYW5nZWQoT2JqZWN0IHNvdXJj
+ZSwgaW50IHByb3BJZCkgeworCQkJCS8vIGxpc3RlbiBmb3Igc2F2ZSBldmVudAorCQkJCWlmIChw
+cm9wSWQgPT0gMjU3KSB7CisJCQkJCXdhc1NhdmVkID0gdHJ1ZTsKKwkJCQkJY2hhbmdlTG9nRWRp
+dG9yLnJlbW92ZVByb3BlcnR5TGlzdGVuZXIodGhpcyk7CisJCQkJfQorCQkJfQorCQl9KTsKKwor
+CQljaGFuZ2VMb2dFZGl0b3IuZ2V0U2l0ZSgpLmdldFBhZ2UoKS5hZGRQYXJ0TGlzdGVuZXIobmV3
+IElQYXJ0TGlzdGVuZXIoKSB7CisJCQlwdWJsaWMgdm9pZCBwYXJ0QWN0aXZhdGVkKElXb3JrYmVu
+Y2hQYXJ0IHBhcnQpIHsKKwkJCX0KKworCQkJcHVibGljIHZvaWQgcGFydEJyb3VnaHRUb1RvcChJ
+V29ya2JlbmNoUGFydCBwYXJ0KSB7CisJCQl9CisKKwkJCS8vIGxpc3RlbiBmb3IgY2xvc2VkIGV2
+ZW50CisJCQlwdWJsaWMgdm9pZCBwYXJ0Q2xvc2VkKElXb3JrYmVuY2hQYXJ0IHBhcnQpIHsKKwkJ
+CQlpZiAoY2hhbmdlTG9nRWRpdG9yLmlzRGlydHkoKSAmJiAhd2FzU2F2ZWQpIHsKKwkJCQkJRmls
+ZSBmaWxlID0gbmV3IEZpbGUoY2hhbmdlTG9nTG9jYXRpb24pOworCQkJCQlmaWxlLmRlbGV0ZSgp
+OworCQkJCX0KKwkJCQljaGFuZ2VMb2dFZGl0b3IuZ2V0U2l0ZSgpLmdldFBhZ2UoKS5yZW1vdmVQ
+YXJ0TGlzdGVuZXIodGhpcyk7CisJCQl9CisKKwkJCXB1YmxpYyB2b2lkIHBhcnREZWFjdGl2YXRl
+ZChJV29ya2JlbmNoUGFydCBwYXJ0KSB7CisJCQl9CisKKwkJCXB1YmxpYyB2b2lkIHBhcnRPcGVu
+ZWQoSVdvcmtiZW5jaFBhcnQgcGFydCkgeworCQkJfQorCisJCX0pOworCiAJCXJldHVybiBudWxs
+OwogCX0KIAo=
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>150018</attachid>
+            <date>2009-10-20 15:09:00 -0400</date>
+            <delta_ts>2009-10-20 15:09:25 -0400</delta_ts>
+            <desc>revised patch</desc>
+            <filename>InsertChangeLogKeyHandler.patch</filename>
+            <type>text/plain</type>
+            <size>2494</size>
+            <attacher name="Roland Grunberg">rgrunber</attacher>
+            
+              <data encoding="base64">SW5kZXg6IEluc2VydENoYW5nZUxvZ0tleUhhbmRsZXIuamF2YQo9PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09Ci0tLSBJbnNl
+cnRDaGFuZ2VMb2dLZXlIYW5kbGVyLmphdmEJKHJldmlzaW9uIDIzMjczKQorKysgSW5zZXJ0Q2hh
+bmdlTG9nS2V5SGFuZGxlci5qYXZhCSh3b3JraW5nIGNvcHkpCkBAIC0xMSw2ICsxMSw4IEBACiAg
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKi8KIHBhY2thZ2Ugb3JnLmVjbGlwc2UubGludXh0b29scy5j
+aGFuZ2Vsb2cuY29yZS5hY3Rpb25zOwogCitpbXBvcnQgamF2YS5pby5GaWxlOworCiBpbXBvcnQg
+b3JnLmVjbGlwc2UuY29yZS5jb21tYW5kcy5FeGVjdXRpb25FdmVudDsKIGltcG9ydCBvcmcuZWNs
+aXBzZS5jb3JlLmNvbW1hbmRzLkV4ZWN1dGlvbkV4Y2VwdGlvbjsKIGltcG9ydCBvcmcuZWNsaXBz
+ZS5jb3JlLmNvbW1hbmRzLklIYW5kbGVyOwpAQCAtMjIsNiArMjQsOSBAQAogaW1wb3J0IG9yZy5l
+Y2xpcHNlLmxpbnV4dG9vbHMuY2hhbmdlbG9nLmNvcmUuQ2hhbmdlTG9nV3JpdGVyOwogaW1wb3J0
+IG9yZy5lY2xpcHNlLmxpbnV4dG9vbHMuY2hhbmdlbG9nLmNvcmUuSVBhcnNlckNoYW5nZUxvZ0Nv
+bnRyaWI7CiBpbXBvcnQgb3JnLmVjbGlwc2UudWkuSUVkaXRvclBhcnQ7CitpbXBvcnQgb3JnLmVj
+bGlwc2UudWkuSVBhcnRMaXN0ZW5lcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5JUHJvcGVydHlM
+aXN0ZW5lcjsKK2ltcG9ydCBvcmcuZWNsaXBzZS51aS5JV29ya2JlbmNoUGFydDsKIGltcG9ydCBv
+cmcuZWNsaXBzZS51aS5JV29ya2JlbmNoV2luZG93OwogaW1wb3J0IG9yZy5lY2xpcHNlLnVpLklX
+b3JrYmVuY2hXaW5kb3dBY3Rpb25EZWxlZ2F0ZTsKIApAQCAtMzMsNiArMzgsNyBAQAogCQlJSGFu
+ZGxlciwgSVdvcmtiZW5jaFdpbmRvd0FjdGlvbkRlbGVnYXRlIHsKIAogCXByaXZhdGUgSUVkaXRv
+clBhcnQgY3VycmVudEVkaXRvcjsKKwlwcml2YXRlIGJvb2xlYW4gd2FzU2F2ZWQ7CiAKIAlwdWJs
+aWMgSW5zZXJ0Q2hhbmdlTG9nS2V5SGFuZGxlcigpIHsKIAkJc3VwZXIoKTsKQEAgLTc1LDEwICs4
+MSwxMyBAQAogCQkJCQkJZmFsc2UpKTsKIAogCQkJCWlmIChjaGFuZ2Vsb2cgPT0gbnVsbCkgewor
+CQkJCQl3YXNTYXZlZCA9IGZhbHNlOwogCQkJCQljaGFuZ2Vsb2cgPSBhc2tDaGFuZ2VMb2dMb2Nh
+dGlvbihnZXREb2N1bWVudExvY2F0aW9uKAogCQkJCQkJCWN1cnJlbnRFZGl0b3IsIGZhbHNlKSk7
+CisJCQkJfWVsc2V7CisJCQkJCXdhc1NhdmVkID0gdHJ1ZTsKIAkJCQl9Ci0KKwkJCQkKIAkJCQly
+ZXR1cm4gY2hhbmdlbG9nOwogCQkJfQogCQl9CkBAIC0xNTYsNiArMTY1LDQ0IEBACiAKIAkJY2x3
+LndyaXRlQ2hhbmdlTG9nKCk7CiAKKwkJZmluYWwgSUVkaXRvclBhcnQgY2hhbmdlTG9nRWRpdG9y
+ID0gY2x3LmdldENoYW5nZWxvZygpOyAKKwkJZmluYWwgU3RyaW5nIGNoYW5nZUxvZ0xvY2F0aW9u
+ID0gY2x3LmdldENoYW5nZWxvZ0xvY2F0aW9uKCk7CisJCQorCQljaGFuZ2VMb2dFZGl0b3IuYWRk
+UHJvcGVydHlMaXN0ZW5lcihuZXcgSVByb3BlcnR5TGlzdGVuZXIoKSB7CisJCQkKKwkJCXB1Ymxp
+YyB2b2lkIHByb3BlcnR5Q2hhbmdlZChPYmplY3Qgc291cmNlLCBpbnQgcHJvcElkKSB7CisJCQkJ
+Ly8gbGlzdGVuIGZvciBzYXZlIGV2ZW50CisJCQkJaWYgKHByb3BJZCA9PSAyNTcpIHsKKwkJCQkJ
+d2FzU2F2ZWQgPSB0cnVlOworCQkJCQljaGFuZ2VMb2dFZGl0b3IucmVtb3ZlUHJvcGVydHlMaXN0
+ZW5lcih0aGlzKTsKKwkJCQl9CisJCQl9CisJCX0pOworCisJCWNoYW5nZUxvZ0VkaXRvci5nZXRT
+aXRlKCkuZ2V0UGFnZSgpLmFkZFBhcnRMaXN0ZW5lcihuZXcgSVBhcnRMaXN0ZW5lcigpIHsKKwkJ
+CXB1YmxpYyB2b2lkIHBhcnRBY3RpdmF0ZWQoSVdvcmtiZW5jaFBhcnQgcGFydCkgeworCQkJfQor
+CisJCQlwdWJsaWMgdm9pZCBwYXJ0QnJvdWdodFRvVG9wKElXb3JrYmVuY2hQYXJ0IHBhcnQpIHsK
+KwkJCX0KKworCQkJLy8gbGlzdGVuIGZvciBjbG9zZWQgZXZlbnQKKwkJCXB1YmxpYyB2b2lkIHBh
+cnRDbG9zZWQoSVdvcmtiZW5jaFBhcnQgcGFydCkgeworCQkJCWlmIChjaGFuZ2VMb2dFZGl0b3Iu
+aXNEaXJ0eSgpICYmICF3YXNTYXZlZCkgeworCQkJCQlGaWxlIGZpbGUgPSBuZXcgRmlsZShjaGFu
+Z2VMb2dMb2NhdGlvbik7CisJCQkJCWZpbGUuZGVsZXRlKCk7CisJCQkJfQorCQkJCWNoYW5nZUxv
+Z0VkaXRvci5nZXRTaXRlKCkuZ2V0UGFnZSgpLnJlbW92ZVBhcnRMaXN0ZW5lcih0aGlzKTsKKwkJ
+CX0KKworCQkJcHVibGljIHZvaWQgcGFydERlYWN0aXZhdGVkKElXb3JrYmVuY2hQYXJ0IHBhcnQp
+IHsKKwkJCX0KKworCQkJcHVibGljIHZvaWQgcGFydE9wZW5lZChJV29ya2JlbmNoUGFydCBwYXJ0
+KSB7CisJCQl9CisKKwkJfSk7CisKIAkJcmV0dXJuIG51bGw7CiAJfQogCg==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

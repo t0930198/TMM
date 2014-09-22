@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214839</bug_id>
+          
+          <creation_ts>2008-01-09 20:36:00 -0500</creation_ts>
+          <short_desc>Initial project share to a new repository URL is shared to path &quot;null&quot; under certain circumstances</short_desc>
+          <delta_ts>2008-01-12 06:10:48 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Subversive</product>
+          <component>UI</component>
+          <version>0.7</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Daniel M. Zimmerman">dmz</reporter>
+          <assigned_to name="Alexander Gurov">alexander.gurov</assigned_to>
+          <cc>alexei.goncharov</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128654</commentid>
+    <comment_count>0</comment_count>
+    <who name="Daniel M. Zimmerman">dmz</who>
+    <bug_when>2008-01-09 20:36:31 -0500</bug_when>
+    <thetext>Build ID: M20071023-1652
+
+Steps To Reproduce:
+1. Create a project.
+2. &quot;Share Project&quot;, and create a new repository location.
+3. Type in all the information for the new repository location (URL, username, password) and click &quot;Finish&quot;, rather than &quot;Next &gt;&quot;.
+
+The project will be committed, but will be committed at path &quot;null&quot; on the trunk of the repository, rather than at a path with its project name (as should be the default). This can be verified by performing an update and observing that the location is listed as &quot;trunk: null&quot;. 
+
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129589</commentid>
+    <comment_count>1</comment_count>
+    <who name="Alexei Goncharov">alexei.goncharov</who>
+    <bug_when>2008-01-11 08:42:33 -0500</bug_when>
+    <thetext>Dear Daniel,
+unfortunately we can not reproduce the situation.
+
+Can you, please, provide us with the properties of the location to be created and check, if default repository root names on the &quot;Window&gt;Preferences&gt;SVN&quot; preference page in the &quot;Repository&quot; tab group are not empty.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129882</commentid>
+    <comment_count>2</comment_count>
+    <who name="Daniel M. Zimmerman">dmz</who>
+    <bug_when>2008-01-11 14:57:06 -0500</bug_when>
+    <thetext>OK. Additional criteria to reproduce:
+
+- there should not be any existing repository locations when you share the project
+- the Subversion repository should be freshly-created
+
+I&apos;ve been able to reproduce it literally 100% of the time in this fashion. Sorry about not realizing the other two criteria were important. 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129952</commentid>
+    <comment_count>3</comment_count>
+    <who name="Daniel M. Zimmerman">dmz</who>
+    <bug_when>2008-01-11 16:12:22 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+&gt; OK. Additional criteria to reproduce:
+&gt; 
+&gt; - there should not be any existing repository locations when you share the
+&gt; project
+&gt; - the Subversion repository should be freshly-created
+&gt; 
+&gt; I&apos;ve been able to reproduce it literally 100% of the time in this fashion.
+&gt; Sorry about not realizing the other two criteria were important. 
+
+Oh, and one more thing I neglected to mention (sigh): the Subversion repository location should be an &quot;svn+ssh&quot; location. I don&apos;t actually know whether that&apos;s important or not but that&apos;s what I&apos;ve been reproducing it with.
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130144</commentid>
+    <comment_count>4</comment_count>
+    <who name="Alexei Goncharov">alexei.goncharov</who>
+    <bug_when>2008-01-12 06:10:48 -0500</bug_when>
+    <thetext>Dear Daniel,
+
+thank you very much for your help. We managed to reproduce the situation and the problem was found and fixed.
+It really happens only when no locations are registered.
+
+The fix for the problem will be available in the next Subversive build.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

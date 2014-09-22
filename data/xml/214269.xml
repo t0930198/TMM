@@ -1,0 +1,421 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214269</bug_id>
+          
+          <creation_ts>2008-01-03 15:34:00 -0500</creation_ts>
+          <short_desc>Allow order to be preserved in search result when using AbstractTextSearchViewPage</short_desc>
+          <delta_ts>2008-02-11 07:34:01 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Search</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>pending Martin</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Francis Upton IV">francisu</reporter>
+          <assigned_to name="Platform-Search-Inbox">platform-search-inbox</assigned_to>
+          <cc>aeschli</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125256</commentid>
+    <comment_count>0</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-03 15:34:54 -0500</bug_when>
+    <thetext>Currently the order of the items found is lost inside of AbstractTextSearchViewPage because a Set is used to stored the batched updates before sending to elementsChanged (and thus the content provider).
+
+I changed the fBatchedUpdates field to a List and it works fine.  I understand the use of a Set in suppressing duplicates, but that&apos;s not reliable since there can be duplicates that span updates, so if the content provider cares about duplicate removals, it also needs to handle that.
+
+Another approach would be to make the methods that update and use fBatchedUpdates protected so the subclass can handle it as it likes.  Currently, I have to copy the entire class just for this one change.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139100</commentid>
+    <comment_count>1</comment_count>
+      <attachid>87941</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-26 03:25:18 -0500</bug_when>
+    <thetext>Created attachment 87941
+Patch to HEAD (26 Jan 08) for change from Set -&gt; List</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139760</commentid>
+    <comment_count>2</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-01-28 13:02:53 -0500</bug_when>
+    <thetext>Can you explain why the order is important? It normally doesn&apos;t matter in what order elements are changed. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139773</commentid>
+    <comment_count>3</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-28 13:19:52 -0500</bug_when>
+    <thetext>My search results present the order of objects within an editor (in contrast to text based search results where they only have a count of the matches).  My editor  shows object data definitions, which have elements (objects) in a particular order.  The order in which the search results appear should match the order in which the elements appear in the editor, otherwise it&apos;s pretty incomprehensible.
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144584</commentid>
+    <comment_count>4</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-01-29 13:30:34 -0500</bug_when>
+    <thetext>My understanding of evaluateChangedElements is that it is only used to notify changed elements and for this, the order shouldn&apos;t matter.
+
+The order of elements is normally defined by sorters that for example look at source locations of the elements.
+
+I&apos;m hesitating adding more constraints to the API here. Changed elements can happen in various situations, for example when the user is deleting one or more matches.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1144609</commentid>
+    <comment_count>5</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-29 13:52:12 -0500</bug_when>
+    <thetext>I&apos;m not sure I understand your concern about constraining the API.  It&apos;s an implementation change that happens to preserve the order, rather than destroy it (as is guaranteed with the current implementation).  I don&apos;t think this is placing an additional burden on the API, but maybe I&apos;m missing the point.  I&apos;m not advocating that the API guarantee the order, just not destroy it.
+
+If you are still uncomfortable with my proposal, would you be comfortable with my other alternative of allowing a subclass to do this by making the methods to allocate/manipulate fBatchedUpdates protected?  That would work fine for me as well.
+
+In the absence of either of these solutions, I will need to artificially tag each of my elements with an order number so that they can be sorted in the correct order.
+
+It also seems counter-intuitive that the search display would deliberately destroy the order; preserving the order in which the events were added seems more natural to me, and I think there would be other users that would expect the same thing, particularly related to elements that are shown within resources.
+
+(In reply to comment #4)
+&gt; My understanding of evaluateChangedElements is that it is only used to notify
+&gt; changed elements and for this, the order shouldn&apos;t matter.
+&gt; 
+&gt; The order of elements is normally defined by sorters that for example look at
+&gt; source locations of the elements.
+&gt; 
+&gt; I&apos;m hesitating adding more constraints to the API here. Changed elements can
+&gt; happen in various situations, for example when the user is deleting one or more
+&gt; matches.
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145140</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-01-30 05:10:13 -0500</bug_when>
+    <thetext>Of course I could change the HashSet to a LinkedHashSet which preserves the insertion order. But as a client, you can&apos;t depend on that order. Changes can happen in any order. For example, the user can do a mutli selection of elements and delete them. The order is undefined.
+Same when adding extra elements. The text search engine, for example, is replacable and can send add events in any order. It&apos;s also up to the search view to decide how to batch the elements.
+These are all things that are undefined and I don&apos;t want to spec.
+It&apos;s the search result view needs to know how it presents the elements and how they are ordered. Typically search views offer different ways of ordering element. Even if the result happen to come in the &apos;right&apos; order, you must to rely on this.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1145374</commentid>
+    <comment_count>7</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-30 11:07:24 -0500</bug_when>
+    <thetext>Ok, I understand.  Would you agree change the methods that affect the updating of the fBatchUpdates to be subclasses to provide more flexibility in the implementation?
+
+(In reply to comment #6)
+&gt; Of course I could change the HashSet to a LinkedHashSet which preserves the
+&gt; insertion order. But as a client, you can&apos;t depend on that order. Changes can
+&gt; happen in any order. For example, the user can do a mutli selection of elements
+&gt; and delete them. The order is undefined.
+&gt; Same when adding extra elements. The text search engine, for example, is
+&gt; replacable and can send add events in any order. It&apos;s also up to the search
+&gt; view to decide how to batch the elements.
+&gt; These are all things that are undefined and I don&apos;t want to spec.
+&gt; It&apos;s the search result view needs to know how it presents the elements and how
+&gt; they are ordered. Typically search views offer different ways of ordering
+&gt; element. Even if the result happen to come in the &apos;right&apos; order, you must to
+&gt; rely on this.
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146087</commentid>
+    <comment_count>8</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-01-31 01:27:15 -0500</bug_when>
+    <thetext>On further reflection, I still have a question about this.  
+
+If you consider other types of Viewers, when you add items to the view, the order is preserved.  Of course if you have sorting and filtering you can change the order, and if the user moves or copies items the order can change.  But in the absence of that, a reasonable semantic is to have the order that the items appear in the view the same as how they were reported to the view.  Certainly to have the order deliberately scrambled (as it is now) and thus have to depend on sorters is not desirable in some cases.
+
+I think you are arguing that the view would have to *maintain* the order of the items to be in the order inserted regardless of what clients do.  I don&apos;t think this is necessary or desirable, and if you consider other types of viewers they don&apos;t have similar functionality.  Like now, if the user cares about the *maintenance* of a particular order, they must provide a sorter.
+
+You can easily have a weaker guarantee (which is what I&apos;m requesting) is that the order in which the items are added (by whatever means) is the order in which they are initially presented.  I think this is simplest.  More importantly, I think this is what people programming against the search APIs will expect (rather than some random order which is the way is it now).
+
+(In reply to comment #6)
+&gt; Of course I could change the HashSet to a LinkedHashSet which preserves the
+&gt; insertion order. But as a client, you can&apos;t depend on that order. Changes can
+&gt; happen in any order. For example, the user can do a mutli selection of elements
+&gt; and delete them. The order is undefined.
+&gt; Same when adding extra elements. The text search engine, for example, is
+&gt; replacable and can send add events in any order. It&apos;s also up to the search
+&gt; view to decide how to batch the elements.
+&gt; These are all things that are undefined and I don&apos;t want to spec.
+&gt; It&apos;s the search result view needs to know how it presents the elements and how
+&gt; they are ordered. Typically search views offer different ways of ordering
+&gt; element. Even if the result happen to come in the &apos;right&apos; order, you must to
+&gt; rely on this.
+&gt; 
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146186</commentid>
+    <comment_count>9</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-01-31 04:51:27 -0500</bug_when>
+    <thetext>We&apos;re talking here about the API &apos;evaluateChangedElements&apos;. This is only an notification APU. It doesn&apos;t even specify if the element are added, removed or changed. As a user first have to compare with the model (getInput().getElements()) to find out what change this was.
+
+I think it&apos;s wrong to make any assumptions about the order.
+That&apos;s the same with other notification API like resource change listeners.
+In this case it&apos;s also wrong to assume that all changes are insertions.
+
+You can make assumptions about the order of the element returned by the model (getInput().getElements()).
+
+
+fBatchUpdates and the way elements are batched is also rather kept internal. 
+
+Maybe I&apos;m missing an important point here...? We can&apos;t just tune the implementation. The only thing that counts are the API and the API specs. The only promise from our side is that they don&apos;t change.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153599</commentid>
+    <comment_count>10</comment_count>
+      <attachid>89329</attachid>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-09 00:24:04 -0500</bug_when>
+    <thetext>Created attachment 89329
+Patch for 3.4M5
+
+I&apos;m submitting another patch to clarify the API changes.  
+
+In short, what I&apos;m proposing is that the order be preserved through the APIs being presented to the AbstractTextSearchViewPage.  This is of course a further restriction on the API, but it provides no restriction on the order in which matches are presented to the AbstractTextSearchViewPage, or what the Viewer (as provided by the subclass) does with the matches.
+
+You argue the following:
+&gt; But as a client, you can&apos;t depend on that order. Changes can
+&gt; happen in any order. For example, the user can do a mutli selection of elements
+&gt; and delete them. The order is undefined.
+&gt; Same when adding extra elements. The text search engine, for example, is
+&gt; replacable and can send add events in any order. It&apos;s also up to the search
+&gt; view to decide how to batch the elements.
+
+The order of the search results could be a collaboration of the engine and the view.  In some implementations the view may control the entire order by sorting.  However, we should have the flexibility of presenting the matches in the order provided by the engine if that&apos;s also desired.  The current implementation does not have that flexibility.
+
+I don&apos;t see any downside to these API changes (I have not seen an argument that this prevents future extensibility, a better implementation, constrains the implementation unnecessarily, etc).  And the upside is that is makes the search support much easier to implement if you want the engine (ISearchResult) to control the order.  Even in the current API definition, it states that the AbstractTextSearchResult provides its results as a list, which is ordered.  Why not carry this through to the view?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153600</commentid>
+    <comment_count>11</comment_count>
+    <who name="Francis Upton IV">francisu</who>
+    <bug_when>2008-02-09 00:26:04 -0500</bug_when>
+    <thetext>Reopening.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1154015</commentid>
+    <comment_count>12</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-02-11 07:34:01 -0500</bug_when>
+    <thetext>In a &apos;Set&apos;, the client can expect that each element is only in there once. That&apos;s not the case in a Collection.
+Also, Collection.toArray doesn&apos;t guarantee to be in the order they have been added to the Collection.
+An ArrayList would also be less efficient when elements are removed.
+
+But then the question is, in what order are they added? Match change events can arrive in any order. This will never be specified and can change any time.
+As I wrote:
+&gt; For example, the user can do a multi selection of elements
+&gt; and delete them. The order is undefined.
+
+It makes no sense to make this single API more specific if this doesn&apos;t fit the story. Users should expect changes to ome in any order, and &apos;elementsChanged&apos; is even called asynchronously.
+We don&apos;t change the implementation just to fit one use case where this would be handy and happens to work at the moment. With the next change in the event notification or how async executables are run you are broken again.
+</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>87941</attachid>
+            <date>2008-01-26 03:25:00 -0500</date>
+            <delta_ts>2008-02-09 00:24:04 -0500</delta_ts>
+            <desc>Patch to HEAD (26 Jan 08) for change from Set -&gt; List</desc>
+            <filename>214269.patch</filename>
+            <type>text/plain</type>
+            <size>3318</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5zZWFyY2gKSW5k
+ZXg6IG5ldyBzZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL3VpL3RleHQvQWJzdHJhY3RUZXh0U2Vh
+cmNoVmlld1BhZ2UuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29y
+Zy5lY2xpcHNlLnNlYXJjaC9uZXcgc2VhcmNoL29yZy9lY2xpcHNlL3NlYXJjaC91aS90ZXh0L0Fi
+c3RyYWN0VGV4dFNlYXJjaFZpZXdQYWdlLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEuODcK
+ZGlmZiAtdSAtcjEuODcgQWJzdHJhY3RUZXh0U2VhcmNoVmlld1BhZ2UuamF2YQotLS0gbmV3IHNl
+YXJjaC9vcmcvZWNsaXBzZS9zZWFyY2gvdWkvdGV4dC9BYnN0cmFjdFRleHRTZWFyY2hWaWV3UGFn
+ZS5qYXZhCTEzIERlYyAyMDA3IDEyOjA2OjI1IC0wMDAwCTEuODcKKysrIG5ldyBzZWFyY2gvb3Jn
+L2VjbGlwc2Uvc2VhcmNoL3VpL3RleHQvQWJzdHJhY3RUZXh0U2VhcmNoVmlld1BhZ2UuamF2YQky
+NiBKYW4gMjAwOCAwODoyMzo1MyAtMDAwMApAQCAtMTMsNiArMTMsNyBAQAogaW1wb3J0IGphdmEu
+dXRpbC5BcnJheUxpc3Q7CiBpbXBvcnQgamF2YS51dGlsLkhhc2hTZXQ7CiBpbXBvcnQgamF2YS51
+dGlsLkl0ZXJhdG9yOworaW1wb3J0IGphdmEudXRpbC5MaXN0OwogaW1wb3J0IGphdmEudXRpbC5T
+ZXQ7CiAKIGltcG9ydCBvcmcuZWNsaXBzZS5jb3JlLnJ1bnRpbWUuQXNzZXJ0OwpAQCAtMjA5LDcg
+KzIxMCw3IEBACiAJcHJpdmF0ZSBQYWdlQm9vayBmUGFnZWJvb2s7CiAJcHJpdmF0ZSBib29sZWFu
+IGZJc0J1c3lTaG93bjsKIAlwcml2YXRlIElTZWFyY2hSZXN1bHRWaWV3UGFydCBmVmlld1BhcnQ7
+Ci0JcHJpdmF0ZSBTZXQgZkJhdGNoZWRVcGRhdGVzOworCXByaXZhdGUgTGlzdCBmQmF0Y2hlZFVw
+ZGF0ZXM7CiAJcHJpdmF0ZSBib29sZWFuIGZCYXRjaGVkQ2xlYXJBbGw7CiAJCiAJcHJpdmF0ZSBJ
+U2VhcmNoUmVzdWx0TGlzdGVuZXIgZkxpc3RlbmVyOwpAQCAtMjc2LDcgKzI3Nyw3IEBACiAJCQog
+CQlmU2VsZWN0QWxsQWN0aW9uPSBuZXcgU2VsZWN0QWxsQWN0aW9uKCk7CiAJCWNyZWF0ZUxheW91
+dEFjdGlvbnMoKTsKLQkJZkJhdGNoZWRVcGRhdGVzID0gbmV3IEhhc2hTZXQoKTsKKwkJZkJhdGNo
+ZWRVcGRhdGVzID0gbmV3IEFycmF5TGlzdCgpOwogCQlmQmF0Y2hlZENsZWFyQWxsPSBmYWxzZTsK
+IAkJCiAJCWZMaXN0ZW5lciA9IG5ldyBJU2VhcmNoUmVzdWx0TGlzdGVuZXIoKSB7CkBAIC00MjEs
+NyArNDIyLDcgQEAKIAkgKiB0aGF0IHRoaXMgbm90aWZpY2F0aW9uIGlzIGFzeW5jaHJvbm91cy4g
+aS5lLiBmdXJ0aGVyIGNoYW5nZXMgbWF5IGhhdmUKIAkgKiBvY2N1cnJlZCBieSB0aGUgdGltZSB0
+aGlzIG1ldGhvZCBpcyBjYWxsZWQuIFRoZXkgd2lsbCBiZSBkZXNjcmliZWQgaW4gYQogCSAqIGZ1
+dHVyZSBjYWxsLgotCSAqIDxwPlRoZSBjaGFuZ2VkIGVsZW1lbnRzIGFyZSBldmFsdWF0ZWQgYnkg
+e0BsaW5rICNldmFsdWF0ZUNoYW5nZWRFbGVtZW50cyhNYXRjaFtdLCBTZXQpfS48L3A+CisJICog
+PHA+VGhlIGNoYW5nZWQgZWxlbWVudHMgYXJlIGV2YWx1YXRlZCBieSB7QGxpbmsgI2V2YWx1YXRl
+Q2hhbmdlZEVsZW1lbnRzKE1hdGNoW10sIExpc3QpfS48L3A+CiAJICogCiAJICogQHBhcmFtIG9i
+amVjdHMKIAkgKiAgICAgICAgICAgIGFycmF5IG9mIG9iamVjdHMgdGhhdCBoYXMgdG8gYmUgcmVm
+cmVzaGVkCkBAIC0xMTcyLDcgKzExNzMsNyBAQAogCSAqIEBwYXJhbSBjaGFuZ2VkRWxlbWVudHMg
+dGhlIHNldCB0aGF0IGNvbGxlY3RzIHRoZSBlbGVtZW50cyB0byBjaGFuZ2UuIENsaWVudHMgc2hv
+dWxkIG9ubHkgYWRkIGVsZW1lbnRzIHRvIHRoZSBzZXQuCiAJICogQHNpbmNlIDMuNAogCSAqLwot
+CXByb3RlY3RlZCB2b2lkIGV2YWx1YXRlQ2hhbmdlZEVsZW1lbnRzKE1hdGNoW10gbWF0Y2hlcywg
+U2V0IGNoYW5nZWRFbGVtZW50cykgeworCXByb3RlY3RlZCB2b2lkIGV2YWx1YXRlQ2hhbmdlZEVs
+ZW1lbnRzKE1hdGNoW10gbWF0Y2hlcywgTGlzdCBjaGFuZ2VkRWxlbWVudHMpIHsKIAkJZm9yIChp
+bnQgaSA9IDA7IGkgPCBtYXRjaGVzLmxlbmd0aDsgaSsrKSB7CiAJCQljaGFuZ2VkRWxlbWVudHMu
+YWRkKG1hdGNoZXNbaV0uZ2V0RWxlbWVudCgpKTsKIAkJfQpJbmRleDogc2VhcmNoL29yZy9lY2xp
+cHNlL3NlYXJjaC9pbnRlcm5hbC91aS90ZXh0L0ZpbGVTZWFyY2hQYWdlLmphdmEKPT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PQpSQ1MgZmlsZTogL2N2c3Jvb3QvZWNsaXBzZS9vcmcuZWNsaXBzZS5zZWFyY2gvc2VhcmNoL29y
+Zy9lY2xpcHNlL3NlYXJjaC9pbnRlcm5hbC91aS90ZXh0L0ZpbGVTZWFyY2hQYWdlLmphdmEsdgpy
+ZXRyaWV2aW5nIHJldmlzaW9uIDEuNDkKZGlmZiAtdSAtcjEuNDkgRmlsZVNlYXJjaFBhZ2UuamF2
+YQotLS0gc2VhcmNoL29yZy9lY2xpcHNlL3NlYXJjaC9pbnRlcm5hbC91aS90ZXh0L0ZpbGVTZWFy
+Y2hQYWdlLmphdmEJMjYgT2N0IDIwMDcgMTM6MzE6MDAgLTAwMDAJMS40OQorKysgc2VhcmNoL29y
+Zy9lY2xpcHNlL3NlYXJjaC9pbnRlcm5hbC91aS90ZXh0L0ZpbGVTZWFyY2hQYWdlLmphdmEJMjYg
+SmFuIDIwMDggMDg6MjM6NTMgLTAwMDAKQEAgLTE0LDcgKzE0LDcgQEAKIHBhY2thZ2Ugb3JnLmVj
+bGlwc2Uuc2VhcmNoLmludGVybmFsLnVpLnRleHQ7CiAKIGltcG9ydCBqYXZhLnV0aWwuSGFzaE1h
+cDsKLWltcG9ydCBqYXZhLnV0aWwuU2V0OworaW1wb3J0IGphdmEudXRpbC5MaXN0OwogCiBpbXBv
+cnQgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1lLkNvcmVFeGNlcHRpb247CiBpbXBvcnQgb3JnLmVj
+bGlwc2UuY29yZS5ydW50aW1lLklBZGFwdGFibGU7CkBAIC0zNzYsNyArMzc2LDcgQEAKIAkJcmV0
+dXJuIHN1cGVyLmdldERpc3BsYXllZE1hdGNoZXMoZWxlbWVudCk7CiAJfQogCQotCXByb3RlY3Rl
+ZCB2b2lkIGV2YWx1YXRlQ2hhbmdlZEVsZW1lbnRzKE1hdGNoW10gbWF0Y2hlcywgU2V0IGNoYW5n
+ZWRFbGVtZW50cykgeworCXByb3RlY3RlZCB2b2lkIGV2YWx1YXRlQ2hhbmdlZEVsZW1lbnRzKE1h
+dGNoW10gbWF0Y2hlcywgTGlzdCBjaGFuZ2VkRWxlbWVudHMpIHsKIAkJaWYgKHNob3dMaW5lTWF0
+Y2hlcygpKSB7CiAJCQlmb3IgKGludCBpID0gMDsgaSA8IG1hdGNoZXMubGVuZ3RoOyBpKyspIHsK
+IAkJCQljaGFuZ2VkRWxlbWVudHMuYWRkKCgoRmlsZU1hdGNoKSBtYXRjaGVzW2ldKS5nZXRMaW5l
+RWxlbWVudCgpKTsK
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>89329</attachid>
+            <date>2008-02-09 00:24:00 -0500</date>
+            <delta_ts>2008-02-09 00:24:04 -0500</delta_ts>
+            <desc>Patch for 3.4M5</desc>
+            <filename>214269a.patch</filename>
+            <type>text/plain</type>
+            <size>4385</size>
+            <attacher name="Francis Upton IV">francisu</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMAojUCBvcmcuZWNsaXBzZS5zZWFyY2gKSW5k
+ZXg6IG5ldyBzZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL3VpL3RleHQvQWJzdHJhY3RUZXh0U2Vh
+cmNoVmlld1BhZ2UuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29y
+Zy5lY2xpcHNlLnNlYXJjaC9uZXcgc2VhcmNoL29yZy9lY2xpcHNlL3NlYXJjaC91aS90ZXh0L0Fi
+c3RyYWN0VGV4dFNlYXJjaFZpZXdQYWdlLmphdmEsdgpyZXRyaWV2aW5nIHJldmlzaW9uIDEuODcK
+ZGlmZiAtdSAtcjEuODcgQWJzdHJhY3RUZXh0U2VhcmNoVmlld1BhZ2UuamF2YQotLS0gbmV3IHNl
+YXJjaC9vcmcvZWNsaXBzZS9zZWFyY2gvdWkvdGV4dC9BYnN0cmFjdFRleHRTZWFyY2hWaWV3UGFn
+ZS5qYXZhCTEzIERlYyAyMDA3IDEyOjA2OjI1IC0wMDAwCTEuODcKKysrIG5ldyBzZWFyY2gvb3Jn
+L2VjbGlwc2Uvc2VhcmNoL3VpL3RleHQvQWJzdHJhY3RUZXh0U2VhcmNoVmlld1BhZ2UuamF2YQk5
+IEZlYiAyMDA4IDA1OjA3OjU4IC0wMDAwCkBAIC0xMSw2ICsxMSw3IEBACiBwYWNrYWdlIG9yZy5l
+Y2xpcHNlLnNlYXJjaC51aS50ZXh0OwogCiBpbXBvcnQgamF2YS51dGlsLkFycmF5TGlzdDsKK2lt
+cG9ydCBqYXZhLnV0aWwuQ29sbGVjdGlvbjsKIGltcG9ydCBqYXZhLnV0aWwuSGFzaFNldDsKIGlt
+cG9ydCBqYXZhLnV0aWwuSXRlcmF0b3I7CiBpbXBvcnQgamF2YS51dGlsLlNldDsKQEAgLTIwOSw3
+ICsyMTAsNyBAQAogCXByaXZhdGUgUGFnZUJvb2sgZlBhZ2Vib29rOwogCXByaXZhdGUgYm9vbGVh
+biBmSXNCdXN5U2hvd247CiAJcHJpdmF0ZSBJU2VhcmNoUmVzdWx0Vmlld1BhcnQgZlZpZXdQYXJ0
+OwotCXByaXZhdGUgU2V0IGZCYXRjaGVkVXBkYXRlczsKKwlwcml2YXRlIEFycmF5TGlzdCBmQmF0
+Y2hlZFVwZGF0ZXM7CiAJcHJpdmF0ZSBib29sZWFuIGZCYXRjaGVkQ2xlYXJBbGw7CiAJCiAJcHJp
+dmF0ZSBJU2VhcmNoUmVzdWx0TGlzdGVuZXIgZkxpc3RlbmVyOwpAQCAtMjc2LDcgKzI3Nyw3IEBA
+CiAJCQogCQlmU2VsZWN0QWxsQWN0aW9uPSBuZXcgU2VsZWN0QWxsQWN0aW9uKCk7CiAJCWNyZWF0
+ZUxheW91dEFjdGlvbnMoKTsKLQkJZkJhdGNoZWRVcGRhdGVzID0gbmV3IEhhc2hTZXQoKTsKKwkJ
+ZkJhdGNoZWRVcGRhdGVzID0gbmV3IEFycmF5TGlzdCgpOwogCQlmQmF0Y2hlZENsZWFyQWxsPSBm
+YWxzZTsKIAkJCiAJCWZMaXN0ZW5lciA9IG5ldyBJU2VhcmNoUmVzdWx0TGlzdGVuZXIoKSB7CkBA
+IC00MjEsNyArNDIyLDcgQEAKIAkgKiB0aGF0IHRoaXMgbm90aWZpY2F0aW9uIGlzIGFzeW5jaHJv
+bm91cy4gaS5lLiBmdXJ0aGVyIGNoYW5nZXMgbWF5IGhhdmUKIAkgKiBvY2N1cnJlZCBieSB0aGUg
+dGltZSB0aGlzIG1ldGhvZCBpcyBjYWxsZWQuIFRoZXkgd2lsbCBiZSBkZXNjcmliZWQgaW4gYQog
+CSAqIGZ1dHVyZSBjYWxsLgotCSAqIDxwPlRoZSBjaGFuZ2VkIGVsZW1lbnRzIGFyZSBldmFsdWF0
+ZWQgYnkge0BsaW5rICNldmFsdWF0ZUNoYW5nZWRFbGVtZW50cyhNYXRjaFtdLCBTZXQpfS48L3A+
+CisJICogPHA+VGhlIGNoYW5nZWQgZWxlbWVudHMgYXJlIGV2YWx1YXRlZCBieSB7QGxpbmsgI2V2
+YWx1YXRlQ2hhbmdlZEVsZW1lbnRzKE1hdGNoW10sIENvbGxlY3Rpb24pfS48L3A+CiAJICogCiAJ
+ICogQHBhcmFtIG9iamVjdHMKIAkgKiAgICAgICAgICAgIGFycmF5IG9mIG9iamVjdHMgdGhhdCBo
+YXMgdG8gYmUgcmVmcmVzaGVkCkBAIC0xMTQ4LDYgKzExNDksOCBAQAogCQogCS8qKgogCSAqIEhh
+bmRsZXMgYSBzZWFyY2ggcmVzdWx0IGV2ZW50IGZvciB0aGUgY3VycmVudCBzZWFyY2ggcmVzdWx0
+LgorCSAqIFRoZSBNYXRjaGVzIGFyZSBwcmVzZW50ZWQgdG8ge0BsaW5rICNldmFsdWF0ZUNoYW5n
+ZWRFbGVtZW50cyhNYXRjaFtdLCBDb2xsZWN0aW9uKX0gCisJICogaW4gdGhlIG9yZGVyIGluIHdo
+aWNoIHRoZXkgYXJlIHJlY2VpdmVkIGhlcmUuCiAJICogQHBhcmFtIGUgdGhlIGV2ZW50IHRvIGhh
+bmRsZQogCSAqIAogCSAqIEBzaW5jZSAzLjIKQEAgLTExNjQsMTUgKzExNjcsMTcgQEAKIAl9CiAJ
+CiAJLyoqCi0JICogRXZhbHVhdGVzIHRoZSBlbGVtZW50cyB0byB0aGF0IGFyZSBsYXRlciBwYXNz
+ZWQgdG8ge0BsaW5rICNlbGVtZW50c0NoYW5nZWQoT2JqZWN0W10pfS4gQnkgZGVmYXVsdAotCSAq
+IHRoZSBlbGVtZW50IHRvIGNoYW5nZSBhcmUgdGhlIGVsZW1lbnRzIHJlY2VpdmVkIGJ5ICh7QGxp
+bmsgTWF0Y2gjZ2V0RWxlbWVudCgpfSkuIENsaWVudCBpbXBsZW1lbnRhdGlvbnMKKwkgKiBFdmFs
+dWF0ZXMgdGhlIGVsZW1lbnRzIHRoYXQgYXJlIGxhdGVyIHBhc3NlZCB0byB7QGxpbmsgI2VsZW1l
+bnRzQ2hhbmdlZChPYmplY3RbXSl9LiBCeSBkZWZhdWx0CisJICogdGhlIGVsZW1lbnRzIHRvIGNo
+YW5nZSBhcmUgdGhvc2UgcmVjZWl2ZWQgYnkgKHtAbGluayBNYXRjaCNnZXRFbGVtZW50KCl9KS4g
+Q2xpZW50IGltcGxlbWVudGF0aW9ucwogCSAqIGNhbiBtb2RpZnkgdGhpcyBiZWhhdmlvci4KIAkg
+KiAgCiAJICogQHBhcmFtIG1hdGNoZXMgdGhlIG1hdGNoZXMgdGhhdCB3ZXJlIGFkZGVkIG9yIHJl
+bW92ZWQKLQkgKiBAcGFyYW0gY2hhbmdlZEVsZW1lbnRzIHRoZSBzZXQgdGhhdCBjb2xsZWN0cyB0
+aGUgZWxlbWVudHMgdG8gY2hhbmdlLiBDbGllbnRzIHNob3VsZCBvbmx5IGFkZCBlbGVtZW50cyB0
+byB0aGUgc2V0LgorCSAqIEBwYXJhbSBjaGFuZ2VkRWxlbWVudHMgdGhlIGFkZGVkL3JlbW92ZWQg
+ZWxlbWVudHMgdG8gYmUgcHJlc2VudGVkIHRoZSBWaWV3ZXIgCisJICogCQl1c2luZyB7QGxpbmsg
+I2VsZW1lbnRzQ2hhbmdlZChPYmplY3RbXSl9OyAKKwkgKgkJdGhleSB3aWxsIGJlIHByZXNlbnRl
+ZCBpbiB0aGUgb3JkZXIgb2Yge0BsaW5rIENvbGxlY3Rpb24jdG9BcnJheSgpfS4KIAkgKiBAc2lu
+Y2UgMy40CiAJICovCi0JcHJvdGVjdGVkIHZvaWQgZXZhbHVhdGVDaGFuZ2VkRWxlbWVudHMoTWF0
+Y2hbXSBtYXRjaGVzLCBTZXQgY2hhbmdlZEVsZW1lbnRzKSB7CisJcHJvdGVjdGVkIHZvaWQgZXZh
+bHVhdGVDaGFuZ2VkRWxlbWVudHMoTWF0Y2hbXSBtYXRjaGVzLCBDb2xsZWN0aW9uIGNoYW5nZWRF
+bGVtZW50cykgewogCQlmb3IgKGludCBpID0gMDsgaSA8IG1hdGNoZXMubGVuZ3RoOyBpKyspIHsK
+IAkJCWNoYW5nZWRFbGVtZW50cy5hZGQobWF0Y2hlc1tpXS5nZXRFbGVtZW50KCkpOwogCQl9Cklu
+ZGV4OiBzZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL2ludGVybmFsL3VpL3RleHQvRmlsZVNlYXJj
+aFBhZ2UuamF2YQo9PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09ClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xp
+cHNlLnNlYXJjaC9zZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL2ludGVybmFsL3VpL3RleHQvRmls
+ZVNlYXJjaFBhZ2UuamF2YSx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS41MApkaWZmIC11IC1yMS41
+MCBGaWxlU2VhcmNoUGFnZS5qYXZhCi0tLSBzZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL2ludGVy
+bmFsL3VpL3RleHQvRmlsZVNlYXJjaFBhZ2UuamF2YQkyOSBKYW4gMjAwOCAxNzozNjo0MCAtMDAw
+MAkxLjUwCisrKyBzZWFyY2gvb3JnL2VjbGlwc2Uvc2VhcmNoL2ludGVybmFsL3VpL3RleHQvRmls
+ZVNlYXJjaFBhZ2UuamF2YQk5IEZlYiAyMDA4IDA1OjA3OjU4IC0wMDAwCkBAIC0xMyw3ICsxMyw3
+IEBACiAgKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioqKioq
+KioqKioqKioqKioqKioqKioqKioqKioqKioqKi8KIHBhY2thZ2Ugb3JnLmVjbGlwc2Uuc2VhcmNo
+LmludGVybmFsLnVpLnRleHQ7CiAKLWltcG9ydCBqYXZhLnV0aWwuU2V0OworaW1wb3J0IGphdmEu
+dXRpbC5Db2xsZWN0aW9uOwogCiBpbXBvcnQgb3JnLmVjbGlwc2UuY29yZS5ydW50aW1lLklBZGFw
+dGFibGU7CiAKQEAgLTM0Niw3ICszNDYsNyBAQAogCQlyZXR1cm4gc3VwZXIuZ2V0RGlzcGxheWVk
+TWF0Y2hlcyhlbGVtZW50KTsKIAl9CiAJCi0JcHJvdGVjdGVkIHZvaWQgZXZhbHVhdGVDaGFuZ2Vk
+RWxlbWVudHMoTWF0Y2hbXSBtYXRjaGVzLCBTZXQgY2hhbmdlZEVsZW1lbnRzKSB7CisJcHJvdGVj
+dGVkIHZvaWQgZXZhbHVhdGVDaGFuZ2VkRWxlbWVudHMoTWF0Y2hbXSBtYXRjaGVzLCBDb2xsZWN0
+aW9uIGNoYW5nZWRFbGVtZW50cykgewogCQlpZiAoc2hvd0xpbmVNYXRjaGVzKCkpIHsKIAkJCWZv
+ciAoaW50IGkgPSAwOyBpIDwgbWF0Y2hlcy5sZW5ndGg7IGkrKykgewogCQkJCWNoYW5nZWRFbGVt
+ZW50cy5hZGQoKChGaWxlTWF0Y2gpIG1hdGNoZXNbaV0pLmdldExpbmVFbGVtZW50KCkpOwo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

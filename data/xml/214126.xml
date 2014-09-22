@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214126</bug_id>
+          
+          <creation_ts>2008-01-02 11:27:00 -0500</creation_ts>
+          <short_desc>Null Pointer Exception caused by the GraphicalViewerImpl</short_desc>
+          <delta_ts>2008-09-18 13:48:54 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>GEF</product>
+          <component>GEF (MVC) [GEF 3.x / Zest 1.x]</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>contributed</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.3.2</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Mohammed Mostafa">mmostafa</reporter>
+          <assigned_to name="Mohammed Mostafa">mmostafa</assigned_to>
+          <cc>anthonyh</cc>
+    
+    <cc>jkubasta</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124215</commentid>
+    <comment_count>0</comment_count>
+    <who name="Mohammed Mostafa">mmostafa</who>
+    <bug_when>2008-01-02 11:27:48 -0500</bug_when>
+    <thetext>The implementation of registerAccessibleEditPart and unregisterAccessibleEditPart uses the return of getEventDispatcher without checking if it is null or not
+
+This cause null pointer exception in some cases, for example is my edit part classes return an accessible edit part and i&apos;m hosting them in a viewer that had no editDomain set on it (the set edit domain method had not been called on the Viewer instance). Then we will get a null pointer exception
+
+this should be a trivial change to just add the null value check in both methods before calling removeAccessible and putAccessible</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124310</commentid>
+    <comment_count>1</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-02 13:12:42 -0500</bug_when>
+    <thetext>Can you create a quick patch for this issue?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124392</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86012</attachid>
+    <who name="Mohammed Mostafa">mmostafa</who>
+    <bug_when>2008-01-02 13:51:54 -0500</bug_when>
+    <thetext>Created attachment 86012
+patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124408</commentid>
+    <comment_count>3</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-02 14:16:54 -0500</bug_when>
+    <thetext>Committed the patch to HEAD.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131846</commentid>
+    <comment_count>4</comment_count>
+    <who name="Mohammed Mostafa">mmostafa</who>
+    <bug_when>2008-01-15 16:56:35 -0500</bug_when>
+    <thetext>*** Bug 210204 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132542</commentid>
+    <comment_count>5</comment_count>
+    <who name="Anthony Hunter">anthonyh</who>
+    <bug_when>2008-01-16 13:09:10 -0500</bug_when>
+    <thetext>Also committed to R33_Maintenance</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86012</attachid>
+            <date>2008-01-02 13:51:00 -0500</date>
+            <delta_ts>2008-09-18 13:48:54 -0400</delta_ts>
+            <desc>patch</desc>
+            <filename>dispatcher.txt</filename>
+            <type>text/plain</type>
+            <size>1274</size>
+            <attacher name="Mohammed Mostafa">mmostafa</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UuZ2VmDQpJbmRl
+eDogc3JjL29yZy9lY2xpcHNlL2dlZi91aS9wYXJ0cy9HcmFwaGljYWxWaWV3ZXJJbXBsLmphdmEN
+Cj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC90b29scy9vcmcuZWNsaXBzZS5nZWYvcGx1
+Z2lucy9vcmcuZWNsaXBzZS5nZWYvc3JjL29yZy9lY2xpcHNlL2dlZi91aS9wYXJ0cy9HcmFwaGlj
+YWxWaWV3ZXJJbXBsLmphdmEsdg0KcmV0cmlldmluZyByZXZpc2lvbiAxLjM0DQpkaWZmIC11IC1y
+MS4zNCBHcmFwaGljYWxWaWV3ZXJJbXBsLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvZ2VmL3Vp
+L3BhcnRzL0dyYXBoaWNhbFZpZXdlckltcGwuamF2YQkxNyBPY3QgMjAwNyAxNzo1Njo1MSAtMDAw
+MAkxLjM0DQorKysgc3JjL29yZy9lY2xpcHNlL2dlZi91aS9wYXJ0cy9HcmFwaGljYWxWaWV3ZXJJ
+bXBsLmphdmEJMiBKYW4gMjAwOCAxODo0MzowNyAtMDAwMA0KQEAgLTI3MCw3ICsyNzAsMTAgQEAN
+CiAgKi8NCiBwdWJsaWMgdm9pZCByZWdpc3RlckFjY2Vzc2libGVFZGl0UGFydChBY2Nlc3NpYmxl
+RWRpdFBhcnQgYWNjKSB7DQogCUFzc2VydC5pc05vdE51bGwoYWNjKTsNCi0JZ2V0RXZlbnREaXNw
+YXRjaGVyKCkucHV0QWNjZXNzaWJsZShhY2MpOw0KKwlEb21haW5FdmVudERpc3BhdGNoZXIgZG9t
+YWluRXZlbnREaXNwYXRjaGVyID0gZ2V0RXZlbnREaXNwYXRjaGVyKCk7DQorCWlmIChkb21haW5F
+dmVudERpc3BhdGNoZXIhPW51bGwpew0KKwkJZG9tYWluRXZlbnREaXNwYXRjaGVyLnB1dEFjY2Vz
+c2libGUoYWNjKTsNCisJfQ0KIH0NCiANCiAvKioNCkBAIC00MDcsNyArNDEwLDEwIEBADQogICov
+DQogcHVibGljIHZvaWQgdW5yZWdpc3RlckFjY2Vzc2libGVFZGl0UGFydChBY2Nlc3NpYmxlRWRp
+dFBhcnQgYWNjKSB7DQogCUFzc2VydC5pc05vdE51bGwoYWNjKTsNCi0JZ2V0RXZlbnREaXNwYXRj
+aGVyKCkucmVtb3ZlQWNjZXNzaWJsZShhY2MpOw0KKwlEb21haW5FdmVudERpc3BhdGNoZXIgZG9t
+YWluRXZlbnREaXNwYXRjaGVyID0gZ2V0RXZlbnREaXNwYXRjaGVyKCk7DQorCWlmIChkb21haW5F
+dmVudERpc3BhdGNoZXIhPW51bGwpew0KKwkJZG9tYWluRXZlbnREaXNwYXRjaGVyLnJlbW92ZUFj
+Y2Vzc2libGUoYWNjKTsNCisJfQ0KIH0NCiANCiBwcml2YXRlIHN0YXRpYyBjbGFzcyBNb3VzZVdo
+ZWVsRGVsZWdhdGVIYW5kbGVyDQo=
+</data>
+<flag name="iplog"
+          id="12119"
+          type_id="7"
+          status="+"
+          setter="anthonyh"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

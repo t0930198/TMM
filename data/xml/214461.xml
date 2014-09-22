@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214461</bug_id>
+          
+          <creation_ts>2008-01-07 05:02:00 -0500</creation_ts>
+          <short_desc>Base URL issue when set to other BIRT Web Project [0603]</short_desc>
+          <delta_ts>2008-01-11 05:04:10 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Report Viewer</component>
+          <version>2.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3.0 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Xiaodan Wang">xwang</reporter>
+          <assigned_to name="Jerry Cheng">cyfgod</assigned_to>
+          <cc>yli</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126420</commentid>
+    <comment_count>0</comment_count>
+    <who name="Xiaodan Wang">xwang</who>
+    <bug_when>2008-01-07 05:02:20 -0500</bug_when>
+    <thetext>Description:
+Base URL issue when set to other BIRT Web Project.
+
+Build number:
+2.2.2.v20071218-1951
+
+Steps to reproduce:
+1. New two BIRT Web Project wtp1 and wtp2.
+2. New a jsp file in wtp1 project.
+3. New jsp file viewer.jsp based on (html,BIRT tag) template, input content
+like:
+&lt;birt:viewer id=&quot;0&quot;
+             title=&quot;contextRoot&quot;
+             baseURL=&quot;wtp2&quot;
+             reportDesign=&quot;birt_tag_sample.rptdesign&quot;&gt;
+&lt;/birt:viewer&gt;.
+Note that birt_tag_sample.rptdesign only exists in wtp2 project.
+4.New jsp file report.jsp based on (html,BIRT tag) template, input content
+like:
+&lt;birt:report id=&quot;0&quot;
+             baseURL=&quot;wtp2&quot;
+             reportDesign=&quot;birt_tag_sample.rptdesign&quot;&gt;
+&lt;/birt:viewer&gt;.
+5. Run the two jsp files on Server and select wtp1 and wtp2 as configured,
+input url as http://host:port/wtp1/viewer.jsp
+       http://host:port/wtp1/report.jsp
+
+Expected result:
+Two jsp files can display report contents.
+
+Actual result:
+Both Viewer.jsp and report.jsp will throw errors.
+
+Error log:
+For report.jsp:
++ The report file : D:\workspaces\2.2.2_regression\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\web\birt_tag_sample.rptdesign does not exist or contains errors.
+
+For Viewer.jsp:
+HTTP Status 404 - /web/wtp2/frameset</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127111</commentid>
+    <comment_count>1</comment_count>
+    <who name="Jerry Cheng">cyfgod</who>
+    <bug_when>2008-01-08 01:23:57 -0500</bug_when>
+    <thetext>Miss &quot;/&quot; in front of web app context name.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129514</commentid>
+    <comment_count>2</comment_count>
+    <who name="Xiaodan Wang">xwang</who>
+    <bug_when>2008-01-11 05:04:10 -0500</bug_when>
+    <thetext>Verified, closed.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

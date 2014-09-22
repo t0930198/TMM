@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214772</bug_id>
+          
+          <creation_ts>2008-01-09 11:51:00 -0500</creation_ts>
+          <short_desc>variable used in for loop within try warns of using global variable when it shouldn&apos;t</short_desc>
+          <delta_ts>2010-03-03 11:18:48 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>JSDT</product>
+          <component>General</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.0.1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="David Thompson">dthompson</reporter>
+          <assigned_to name="Phil Berkland">berkland</assigned_to>
+          <cc>simon_kaegi</cc>
+          <qa_contact name="Phil Berkland">berkland</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128242</commentid>
+    <comment_count>0</comment_count>
+    <who name="David Thompson">dthompson</who>
+    <bug_when>2008-01-09 11:51:23 -0500</bug_when>
+    <thetext>The following code shows the problem:
+
+function debug1() { 
+    var i;
+    try {
+        if (false) {
+            for(i = 0; i &lt; 10; i++) {
+                // Loop 1
+            }
+        }
+    } catch (e) {
+        
+    }
+    for (i=0; i&lt; 12; i++) {
+        // Loop 2
+    }
+}
+
+The local variable i for Loop 1 will warn that it is in the global scope (which is wrong).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1274522</commentid>
+    <comment_count>1</comment_count>
+    <who name="Phil Berkland">berkland</who>
+    <bug_when>2008-06-19 12:29:22 -0400</bug_when>
+    <thetext>Sorry for ignoring this for so long, I didn&apos;t notice the var within the function and thought it was working correctly.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

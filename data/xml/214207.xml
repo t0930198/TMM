@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214207</bug_id>
+          
+          <creation_ts>2008-01-03 03:47:00 -0500</creation_ts>
+          <short_desc>project conversion is not run</short_desc>
+          <delta_ts>2008-11-13 16:44:35 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Irit Belezko">Irit.Belezko</reporter>
+          <assigned_to name="Project Inbox">cdt-core-inbox</assigned_to>
+          <cc>freidin.alex</cc>
+    
+    <cc>jamesblackburn+eclipse</cc>
+    
+    <cc>torkildr</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124825</commentid>
+    <comment_count>0</comment_count>
+    <who name="Irit Belezko">Irit.Belezko</who>
+    <bug_when>2008-01-03 03:47:15 -0500</bug_when>
+    <thetext>Build ID: M20071205-0800
+
+Steps To Reproduce:
+1. define convertToId field in &quot;source&quot; projectType as &quot;target&quot; projectType Id
+2. define converter with extension point org.eclipse.cdt.managedbuilder.core.projectConverter
+ - set mbsVersion field for the converter to 4.0.0
+
+==&gt; as a result when project with mbsVersion 3.1.0 is imported, the converter is run. However, when project with mbsVersion 4.0.0 is imported, the converter is not run.
+
+I have observed that converter is correctly extracted from ProjectType.getConverter(String convertToId) in both cases, but the conversion is not triggered for project with mbsVersion 4.0.0.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1205736</commentid>
+    <comment_count>1</comment_count>
+    <who name="Torkild U. Resheim">torkildr</who>
+    <bug_when>2008-04-17 02:57:16 -0400</bug_when>
+    <thetext>I can confirm this issue. Did you find a workaround Irit?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1205743</commentid>
+    <comment_count>2</comment_count>
+    <who name="Irit Belezko">Irit.Belezko</who>
+    <bug_when>2008-04-17 03:13:31 -0400</bug_when>
+    <thetext>No, I didn&apos;t.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1371207</commentid>
+    <comment_count>3</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-11-13 05:13:03 -0500</bug_when>
+    <thetext>(In reply to comment #0)
+&gt; Build ID: M20071205-0800
+&gt; 
+&gt; Steps To Reproduce:
+&gt; 1. define convertToId field in &quot;source&quot; projectType as &quot;target&quot; projectType Id
+&gt; 2. define converter with extension point
+&gt; org.eclipse.cdt.managedbuilder.core.projectConverter
+&gt;  - set mbsVersion field for the converter to 4.0.0
+&gt; 
+&gt; ==&gt; as a result when project with mbsVersion 3.1.0 is imported, the converter
+&gt; is run. However, when project with mbsVersion 4.0.0 is imported, the converter
+&gt; is not run.
+
+Why would you expect the converter defined for mbsVersion 4.0.0 to be run when a project with version already set to 4.0.0 is opened?  As I understand it the converter is defined to convert old versions of the toolchain to newer versions, as well as allow converting between toolchain types.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1371830</commentid>
+    <comment_count>4</comment_count>
+    <who name="Torkild U. Resheim">torkildr</who>
+    <bug_when>2008-11-13 16:05:44 -0500</bug_when>
+    <thetext>I gather that the mbsVersion is the version of the build system (framework), not the toolchain. The toolchain version is specified using the project type identifier by appending &quot;_&lt;major&gt;.&lt;minor&gt;.&lt;patch&gt;&quot;. For instance:
+
+		&lt;projectType buildArtefactType=&quot;org.eclipse.cdt.build.core.buildArtefactType.exe&quot;
+			id=&quot;avr32linux.managedbuild.target.gnu.exe_2.1.0&quot; isAbstract=&quot;false&quot;
+			isTest=&quot;false&quot; name=&quot;AVR32 Linux Executable&quot;&gt;
+			....
+		&lt;/projectType&gt;
+		
+So when I want to deprecate for instance 2.0.0 and replace it with 2.1.0 I also declare the 2.0.0. toolchain as:
+
+		&lt;projectType convertToId=&quot;avr32linux.managedbuild.target.gnu.exe_2.1.0&quot;
+			id=&quot;avr32linux.managedbuild.target.gnu.exe_2.0.0&quot; isAbstract=&quot;true&quot;
+			name=&quot;AVR32 Linux Executable 2.0.0 [Obsolete]&quot;&gt;
+		&lt;/projectType&gt;
+
+Then I add a project converter using the &quot;org.eclipse.cdt.managedbuilder.core.projectConverter&quot; that does the actual conversion. This is automatically executed when converting from an older MBS version but has to be called manually when the MBS version is the same.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1371869</commentid>
+    <comment_count>5</comment_count>
+    <who name="Torkild U. Resheim">torkildr</who>
+    <bug_when>2008-11-13 16:44:35 -0500</bug_when>
+    <thetext>As a side note: The &quot;funny&quot; version number specification is not our invention. It&apos;s designed into the MBS.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

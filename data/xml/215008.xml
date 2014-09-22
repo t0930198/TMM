@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215008</bug_id>
+          
+          <creation_ts>2008-01-11 07:19:00 -0500</creation_ts>
+          <short_desc>PDE feature editor should convert special XML characters in Optional URL.</short_desc>
+          <delta_ts>2008-01-11 11:54:41 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>UI</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WORKSFORME</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Vlad Protasov">tovlad</reporter>
+          <assigned_to name="PDE-UI-Inbox">pde-ui-inbox</assigned_to>
+          <cc>baumanbr</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129559</commentid>
+    <comment_count>0</comment_count>
+    <who name="Vlad Protasov">tovlad</who>
+    <bug_when>2008-01-11 07:19:03 -0500</bug_when>
+    <thetext>PDE feature editor should convert special XML characters in Optional URL (Information / Feature Description tab).
+
+i.e. URL like this http://company.com?abc&amp;efg
+produce exception while accessing feature info via Help/ Software Updates -&gt; Manage configuration.
+
+Workaround: replace &amp; with &amp;amp;   http://company.com?abc&amp;amp;efg
+
+
+java.lang.IllegalArgumentException: Argument not valid
+at org.eclipse.swt.SWT.error(SWT.java:3547)
+at org.eclipse.swt.SWT.error(SWT.java:3481)
+at org.eclipse.ui.internal.forms.widgets.FormTextModel.parseInputStream(FormTextModel.java:114)
+at org.eclipse.ui.internal.forms.widgets.FormTextModel.parseTaggedText(FormTextModel.java:93)
+at org.eclipse.ui.forms.widgets.FormText.setText(FormText.java:668)
+at org.eclipse.update.internal.ui.views.ConfigurationPreview.setSelection(ConfigurationPreview.java:110)
+at org.eclipse.update.internal.ui.views.ConfigurationView.handleSelectionChanged(ConfigurationView.java:1174)
+at org.eclipse.update.internal.ui.views.ConfigurationView.handleSelectionChanged(ConfigurationView.java:1178)
+at org.eclipse.update.internal.ui.views.ConfigurationView$11.selectionChanged(ConfigurationView.java:975)
+at org.eclipse.jface.viewers.Viewer$2.run(Viewer.java:162)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+at org.eclipse.jface.viewers.Viewer.fireSelectionChanged(Viewer.java:160)
+at org.eclipse.jface.viewers.StructuredViewer.updateSelection(StructuredViewer.java:2047)
+at org.eclipse.jface.viewers.StructuredViewer.handleSelect(StructuredViewer.java:1138)
+at org.eclipse.jface.viewers.StructuredViewer$4.widgetSelected(StructuredViewer.java:1168)
+at org.eclipse.jface.util.OpenStrategy.fireSelectionEvent(OpenStrategy.java:227)
+at org.eclipse.jface.util.OpenStrategy.access$3(OpenStrategy.java:221)
+at org.eclipse.jface.util.OpenStrategy$1.handleEvent(OpenStrategy.java:388)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:1101)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3319)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:2971)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:39)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:25)
+at java.lang.reflect.Method.invoke(Method.java:597)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1173)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129758</commentid>
+    <comment_count>1</comment_count>
+    <who name="Brian Bauman">baumanbr</who>
+    <bug_when>2008-01-11 11:54:41 -0500</bug_when>
+    <thetext>This must have been fixed some where along the way because in 3.4M4, this case is handled correctly.  If you find this is not the case, please reopen the bug.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

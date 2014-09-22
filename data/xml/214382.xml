@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214382</bug_id>
+          
+          <creation_ts>2008-01-04 14:15:00 -0500</creation_ts>
+          <short_desc>[api tooling] tag scanner silently fails without class files</short_desc>
+          <delta_ts>2008-02-25 16:29:05 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>PDE</product>
+          <component>API Tools</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Rennie">Michael_Rennie</reporter>
+          <assigned_to name="Michael Rennie">Michael_Rennie</assigned_to>
+          <cc>darin.eclipse</cc>
+    
+    <cc>Olivier_Thomann</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125972</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-01-04 14:15:52 -0500</bug_when>
+    <thetext>When we are scanning source files for javadoc tags we try to resolve methods using their associated .class files. 
+
+Scanning will fail silently if there are no class files for the source we are scanning. This case can happen if you turn off autobuild and add source tags to a method. The scanner silently fails with an NPE that is never exposed...
+
+There are a few things we could do here:
+
+1. we could queue up the unresolvable methods in the api tool builder and the next time a build is activated we could try again to resolve them.
+
+2. we could try to resolve using the java model if no class file are available</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1159450</commentid>
+    <comment_count>1</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-19 11:49:06 -0500</bug_when>
+    <thetext>Since the API builder has to run after the Java builder, this is only an issue when the Java build fails to produce class files, or if the user re-orders the builders (moves the API builder before the Java builder).
+
+The tag scanner could throw an exception if if is given a class file container but cannot find the associated class file. Still, this is only a problem when trying to create a method signature.
+
+Updated TagScanner to throw an exception when missing a required class file and added a test to TagScanner tests for this condition.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1159451</commentid>
+    <comment_count>2</comment_count>
+    <who name="Darin Wright">darin.eclipse</who>
+    <bug_when>2008-02-19 11:49:23 -0500</bug_when>
+    <thetext>Fixed. Please verify, Mike.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1163993</commentid>
+    <comment_count>3</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-02-25 16:29:05 -0500</bug_when>
+    <thetext>verified.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

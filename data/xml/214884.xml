@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214884</bug_id>
+          
+          <creation_ts>2008-01-10 07:58:00 -0500</creation_ts>
+          <short_desc>Problems starting JBoss server with minimal configuration</short_desc>
+          <delta_ts>2008-05-17 11:00:29 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP ServerTools</product>
+          <component>jst.server</component>
+          <version>3.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Grzegorz Grzybek">gr.grzybek</reporter>
+          <assigned_to name="Naci Dai">naci.dai</assigned_to>
+          <cc>naci.dai</cc>
+          <qa_contact name="Tim deBoer">deboer</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128829</commentid>
+    <comment_count>0</comment_count>
+    <who name="Grzegorz Grzybek">gr.grzybek</who>
+    <bug_when>2008-01-10 07:58:19 -0500</bug_when>
+    <thetext>I try tu start servers configured for JBoss runtime (4.2.x and 5.0.0-betaX).
+In console, everything is fine, JBoss starts and prints &apos;JBoss (Microcontainer) [5.0.0.Beta3 (build: SVNTag=JBoss_5_0_0_Beta3 date=200712210026)] Started in 4s:860ms&apos;, but Eclipse still says &quot;Starting JBoss server&quot;.
+
+After short analysis, I&apos;ve found that there is &apos;org.eclipse.jst.server.generic.core.internal.PingThread&apos; waiting for connection on http://localhost:8080, but JBoss in minimal configuration doesn&apos;t start any server at this port (only on JNDI/RMI 1099/1098 ports).
+
+The problem is (propably) in GenericServerBehaviour#startPingThread(), which gets some http://localhost:8080 (ServerPort[] ports = getServer().getServerPorts(null)) from my JBoss server definition - but how does it know it&apos;s http://?
+
+I tried to delete &quot;8080&quot; from JBoss server configuration page, but all I get is NPE...
+
+Please do not assume, that server (GenericServer?) starts listening on HTTP:8080.
+
+With best regards
+Grzegorz Grzybek</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1158338</commentid>
+    <comment_count>1</comment_count>
+    <who name="Gorkem Ercan">gorkem.ercan</who>
+    <bug_when>2008-02-17 17:18:27 -0500</bug_when>
+    <thetext>We assume that Java EE servers always have the Http service on (I know it is not the perfect assumption) This is one of the cases where it fails. I do not think we can resolve this issue without allowing some sort of custom ping implementation for generic servers especially JBoss. 
+
+Adding Naci since he is the owner of JBoss server drivers</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

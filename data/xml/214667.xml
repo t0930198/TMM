@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214667</bug_id>
+          
+          <creation_ts>2008-01-08 15:20:00 -0500</creation_ts>
+          <short_desc>StackOverflowError in PluginProperties</short_desc>
+          <delta_ts>2008-01-17 02:33:07 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>13</classification_id>
+          <classification>SOA</classification>
+          <product>JWT</product>
+          <component>WE</component>
+          <version>0.4.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc>https://sourceforge.net/forum/forum.php?thread_id=1907551&amp;forum_id=625104</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Florian Lautenbacher">lautenbacher</reporter>
+          <assigned_to name="Project Inbox">jwt.we-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127671</commentid>
+    <comment_count>0</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-08 15:20:12 -0500</bug_when>
+    <thetext>I got the following error when I tried to run the app. 
+ 
+~/AgilPro/LiMo$ ./LiMo  
+Exception in thread &quot;Thread-2&quot; java.lang.StackOverflowError 
+at java.lang.Exception.&lt;init&gt;(Exception.java:41) 
+at java.lang.RuntimeException.&lt;init&gt;(RuntimeException.java:43) 
+at java.util.MissingResourceException.&lt;init&gt;(MissingResourceException.java:44) 
+at java.util.ResourceBundle.getObject(ResourceBundle.java:386) 
+at java.util.ResourceBundle.getObject(ResourceBundle.java:383) 
+at java.util.ResourceBundle.getObject(ResourceBundle.java:383) 
+at java.util.ResourceBundle.getString(ResourceBundle.java:346) 
+at org.eclipse.emf.common.EMFPlugin$InternalHelper.getString(EMFPlugin.java:725) 
+at org.eclipse.emf.common.EMFPlugin$InternalHelper.getString(EMFPlugin.java:730) 
+at org.eclipse.emf.common.ui.EclipseUIPlugin.getString(EclipseUIPlugin.java:116) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:165) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:117) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.editor_MissingResource_message(AgilProPluginProperties.java:228) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:169) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:117) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.editor_MissingResource_message(AgilProPluginProperties.java:228) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:169) 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:117) 
+... 
+
+I suspect that the StackOverflowError is related to the fact the the lines 
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:165)  
+at de.uniAugsburg.agilPro.AgilProPluginProperties.getString(AgilProPluginProperties.java:117)  
+at de.uniAugsburg.agilPro.AgilProPluginProperties.editor_MissingResource_message(AgilProPluginProperties.java:228) 
+seem to be stuck in an infinite loop (I cut the output of the stacktrace above), but I&apos;ve seen nothing of it in the plugin-version so far.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127705</commentid>
+    <comment_count>1</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-08 15:54:59 -0500</bug_when>
+    <thetext>It works for me in Windows. Is this related to the Linux version?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127730</commentid>
+    <comment_count>2</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-08 16:17:07 -0500</bug_when>
+    <thetext>Yes, does work in Windows, but as it seems not in the Ubuntu Linux version described above.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128442</commentid>
+    <comment_count>3</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-09 15:49:33 -0500</bug_when>
+    <thetext>It seems the pluginproperties file cannot be accessed at all which results in an infinite loop because the error message is also read from the pluginproperties which causes another error message.
+
+While so far I have no idea what the cause of the general problem may be, it would probably be a good idea to hard-code the error message (pluginproperties not found) into the java file instead of trying to read it from the pluginproperties</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128874</commentid>
+    <comment_count>4</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-10 09:46:40 -0500</bug_when>
+    <thetext>Hardcoded message has been implemented by Chr. Saad.
+However, we need to have a closer look at this issue in the upcoming version again, too.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130463</commentid>
+    <comment_count>5</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-14 04:52:44 -0500</bug_when>
+    <thetext>I didn&apos;t get this error on Ubuntu 7.10 with the current version from CVS. However, it should probably be tested again with the release of 0.4.0.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130565</commentid>
+    <comment_count>6</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-14 08:25:53 -0500</bug_when>
+    <thetext>Probably also related to Eclipse 3.2 as bug 214665. I asked the user to specify more of the system properties and exception messages. If I receive no more detailed information in due course, this bug can be closed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132956</commentid>
+    <comment_count>7</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-17 02:33:07 -0500</bug_when>
+    <thetext>Resolved, doesn&apos;t appear in Eclipse 3.3</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214189</bug_id>
+          
+          <creation_ts>2008-01-02 22:36:00 -0500</creation_ts>
+          <short_desc>Jetty BREE needs updating</short_desc>
+          <delta_ts>2008-12-01 10:57:19 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Orbit</product>
+          <component>bundles</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Jeff McAffer">jeffmcaffer</reporter>
+          <assigned_to name="Simon Kaegi">simon_kaegi</assigned_to>
+          <cc>simon_kaegi</cc>
+    
+    <cc>tjwatson</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124733</commentid>
+    <comment_count>0</comment_count>
+    <who name="Jeff McAffer">jeffmcaffer</who>
+    <bug_when>2008-01-02 22:36:59 -0500</bug_when>
+    <thetext>The current Jetty 5.11 bundle lists J2SE1.4, Foundation 1.0 and J2SE 1.3 on the BREE line.  If the latter two entries are correct then the first one is not needed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124967</commentid>
+    <comment_count>1</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-03 10:21:21 -0500</bug_when>
+    <thetext>The Jetty bundle lists Java 1.4 at the top of the BREE because it needs to be compiled with Java 1.4 for NIO support. At runtime it can downgrade gracefully to Foundation 1.0. The Execution Environment is clearly not the best place to put a build time dependency. Is there a better way we can do this?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124993</commentid>
+    <comment_count>2</comment_count>
+    <who name="Thomas Watson">tjwatson</who>
+    <bug_when>2008-01-03 10:49:50 -0500</bug_when>
+    <thetext>Do we actually compile the java files in jetty?  I thought the class files were just checked into CVS.
+
+I think there is a build.properties option to override the JRE profile which you compile against.  But I think this still conflicts with the resolver if you are using Import-Package to access packages (in this case you would not since java.nio is in a java.* package which cannot be imported with Import-Package).  The problem is the resolver will only allow you to import packages from the left most EE you specify in the BREE header.  See bug 186437 for more information on a similar issue.  But all this is moot because I do not think we actually compile the classes in jetty anyway.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1125000</commentid>
+    <comment_count>3</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-01-03 10:56:31 -0500</bug_when>
+    <thetext>Yep you&apos;re right. The class files are stored directly.
+I still compile Jetty in my own environment however there is no good reason why we need this in Orbit. I&apos;ll try it out and update the bundle.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1204333</commentid>
+    <comment_count>4</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-04-15 23:55:23 -0400</bug_when>
+    <thetext>Fixed in HEAD</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1206834</commentid>
+    <comment_count>5</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-04-17 20:38:59 -0400</bug_when>
+    <thetext>Re-opening.
+When running a test build today there were dependency problems matching the various security related imports for org.mortbay.jetty that are available in java 1.4. I&apos;m going to revert to the previous BREE until we figure out why this is causing problems in the build.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220614</commentid>
+    <comment_count>6</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-05-01 13:21:32 -0400</bug_when>
+    <thetext>I&apos;ll leave this bug open however I&apos;m not planning on making a change here for the Ganymede release.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1381370</commentid>
+    <comment_count>7</comment_count>
+    <who name="Simon Kaegi">simon_kaegi</who>
+    <bug_when>2008-12-01 10:57:19 -0500</bug_when>
+    <thetext>I&apos;m not going to fix this. The BREE indeed does containe a slight redundancy however I can live with that as this is not causing problems for anyone and the platform will shortly be pushing up to a newer version of Jetty anyway.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

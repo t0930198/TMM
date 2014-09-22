@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214153</bug_id>
+          
+          <creation_ts>2008-01-02 15:57:00 -0500</creation_ts>
+          <short_desc>Data Visualization Customization - Customized CMDBf Query Builder</short_desc>
+          <delta_ts>2012-01-03 13:54:27 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Cosmos</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc>http://wiki.eclipse.org/COSMOS_Design_214153</bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          <blocked>214143</blocked>
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Sheldon Lee-Loy">sleeloy</reporter>
+          <assigned_to name="Sheldon Lee-Loy">sleeloy</assigned_to>
+          <cc>dlwhiteman</cc>
+    
+    <cc>sleeloy</cc>
+    
+    <cc>weitzelm</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124515</commentid>
+    <comment_count>0</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-01-02 15:57:40 -0500</bug_when>
+    <thetext>The COSMOS UI should provide the ability to create custom filter user interfaces.    These interfaces can be in the form of a dialog box or wizard.  
+
+A strategy is needed to determine how exploiters can contribute their own customized filter user interfaces to the COSMOS ui.  Note that these filter user interfaces can be initiated by selecting a menu item, selecting a node, etc.
+
+These customized user interfaces will be dojo widgets that are binded using query objects.  
+
+The above points describe the user interface customization.  The last part of this feature involves customizing the CMDBf query.  
+
+It should be possible to create &quot;CMDBf query templates&quot; that uses some form of macro language to define input parameters for the query.  For example, consider the following CDMBf query:
+
+&lt;registerResponse xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+	&lt;instanceResponse&gt;
+		&lt;instanceId&gt;
+			&lt;mdrId&gt;http://testSystem.com/DiscoveryMdr&lt;/mdrId&gt;
+			&lt;localId&gt;http://my.computer&lt;/localId&gt;
+		&lt;/instanceId&gt;
+		&lt;accepted&gt;
+		&lt;/accepted&gt;
+	&lt;/instanceResponse&gt;
+&lt;/registerResponse&gt;
+
+Note that the above CDMBf query has a hard coded localId set to &quot;http://mycomputer&quot;.  If we use some form of macro language we can create a more dynamic query as follows:
+
+&lt;registerResponse xmlns=&quot;http://cmdbf.org/schema/1-0-0/datamodel&quot;&gt;
+	&lt;instanceResponse&gt;
+		&lt;instanceId&gt;
+			&lt;mdrId&gt;http://testSystem.com/DiscoveryMdr&lt;/mdrId&gt;
+			&lt;localId&gt;$localId&lt;/localId&gt;
+		&lt;/instanceId&gt;
+		&lt;accepted&gt;
+		&lt;/accepted&gt;
+	&lt;/instanceResponse&gt;
+&lt;/registerResponse&gt;
+
+The above query defines a $localId input parameter that a user interface can bind to.  
+
+The value of the $localId parameter can be provided by the user interface via a data feed.  The following url can be used to execute the data feed:
+
+http://localhost:8080/COSMOSUI/json?service=org.eclipse.comos.dr.service.handler.query&amp;template=mytemplate&amp;localId=http://my.computer
+
+note that the template variable signifies the query template file that is defined above.
+
+Some investigation is needed to determine the query file registration service.  Also note that a macro language is required for this feature.  
+
+Design note:  Should cosmos make use of an opensource macro language processor or make up its own.   Apache has a template engine called &quot;Velocity&quot; http://velocity.apache.org/engine/index.html that can be used.  However ip approval is required.  If this is an issue we can add extension points to &quot;plug-in&quot; a template engine and by default COSMOS can provide a simple template engine that defines simple parameter substitution.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132395</commentid>
+    <comment_count>1</comment_count>
+    <who name="">amehrega</who>
+    <bug_when>2008-01-16 10:59:13 -0500</bug_when>
+    <thetext>Targeting this to i9 based on the AG call on Jan 16/08</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138878</commentid>
+    <comment_count>2</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-01-25 15:41:32 -0500</bug_when>
+    <thetext>Reassigning to Bill as per our meeting</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1169496</commentid>
+    <comment_count>3</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-03-03 13:35:43 -0500</bug_when>
+    <thetext>Reassigning to Sheldon since he owns the query component.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1184157</commentid>
+    <comment_count>4</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-03-25 22:55:50 -0400</bug_when>
+    <thetext>The macro language uses the dojo string substitution mechanism.  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220144</commentid>
+    <comment_count>5</comment_count>
+    <who name="Srinivas Reddy">domsr01</who>
+    <bug_when>2008-05-01 05:25:00 -0400</bug_when>
+    <thetext>QA Review for JUnits/Manual tests:
+- Found Manual tests provided as part of End2End testing at http://wiki.eclipse.org/COSMOS_DEMO_i10</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1220470</commentid>
+    <comment_count>6</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-05-01 11:38:11 -0400</bug_when>
+    <thetext>Verified with build COSMOS-1.0.0-200804301610</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1299598</commentid>
+    <comment_count>7</comment_count>
+    <who name="Sheldon Lee-Loy">sleeloy</who>
+    <bug_when>2008-07-28 13:09:51 -0400</bug_when>
+    <thetext>Marked as closed based on previous comments.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

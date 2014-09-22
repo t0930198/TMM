@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214284</bug_id>
+          
+          <creation_ts>2008-01-03 17:49:00 -0500</creation_ts>
+          <short_desc>ISourceRange or IMethod save is wrong</short_desc>
+          <delta_ts>2008-02-06 01:32:22 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.3.1</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows Vista</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>critical</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Bruno Braga">bgbraga</reporter>
+          <assigned_to name="JDT-Core-Inbox">jdt-core-inbox</assigned_to>
+          <cc>maxime_daniel</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125372</commentid>
+    <comment_count>0</comment_count>
+    <who name="Bruno Braga">bgbraga</who>
+    <bug_when>2008-01-03 17:49:18 -0500</bug_when>
+    <thetext>Build ID: M20070921-1145
+
+Steps To Reproduce:
+1. Add comment (javadoc) any method
+2. Change this method (IMethod) using ISourceRange 
+3. Javadoc is deleted :/
+
+
+More information:
+I&apos;m using this code (see below) to change a method in a class.
+It works perfectly.
+But if before the method I put any comment (javadoc) it is deleted :/ 
+
+------------
+IBuffer buffer = imethod.getOpenable().getBuffer();
+ISourceRange sourceRange = imethod.getSourceRange(); 
+
+StringBuffer sourceMethod = new StringBuffer();
+//sourceMethod = new method source
+
+buffer.replace(sourceRange.getOffset(), sourceRange.getLength(), sourceMethod.toString());
+imethod.getOpenable().save(null, true);
+------------
+
+In debug IMethod source does not have the javadoc comment (correct), but at the time of saving it&apos;s deleted and certainly would change only the source of the method, not the comment.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126186</commentid>
+    <comment_count>1</comment_count>
+    <who name="Frederic Fusier">frederic_fusier</who>
+    <bug_when>2008-01-05 07:24:13 -0500</bug_when>
+    <thetext>The javadoc comment is a part of the IMember when the element was got from source (see IMember#getJavadocRange()). So, if you replace the entire method source, then you have to include the new javadoc comment in it. If you do not want to change it then get it from the existing method first and add it at the beginning of the new source method before.
+
+So, close as INVALID.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126277</commentid>
+    <comment_count>2</comment_count>
+    <who name="Bruno Braga">bgbraga</who>
+    <bug_when>2008-01-05 21:56:57 -0500</bug_when>
+    <thetext>hmmmm, ok.
+
+Sorry for the issue. I didn&apos;t know if it was a bug or if works differently. I asked in 2 places and nobody answered. Then I had to open an issue to make sure that it was not a bug :)
+
+http://www.eclipse.org/newsportal/article.php?id=22009&amp;group=eclipse.tools.jdt#22009
+http://www.eclipsezone.com/eclipse/forums/t105082.html
+
+Thanks a lot!
+
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1148673</commentid>
+    <comment_count>3</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-02-04 07:45:25 -0500</bug_when>
+    <thetext>Beyond the fact that the documentation of IMember#getJavadocRange could certainly bear some polishing (since it returns a range, why would we extract a javadoc from attached sources?), I don&apos;t quite see where it explains the relationships of the javadoc range to the source range (which according to comment #1 should, at least it case of source files, be an inclusion of the former into the latter). Hence if the behavior is the intended one, I would suggest that it be made more immediately understandable from the API.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149763</commentid>
+    <comment_count>4</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-02-05 09:18:54 -0500</bug_when>
+    <thetext>Discussed with Frédéric and Jérôme and we agreed to open a fup bug to take care of documentation improvements. The behavior described in this bug is the expected one, hence:
+
+Verified for 3.4M5 using I20080204-0010 build.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150412</commentid>
+    <comment_count>5</comment_count>
+    <who name="Bruno Braga">bgbraga</who>
+    <bug_when>2008-02-05 16:01:47 -0500</bug_when>
+    <thetext>hmmmm... good :)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1150617</commentid>
+    <comment_count>6</comment_count>
+    <who name="Maxime Daniel">maxime_daniel</who>
+    <bug_when>2008-02-06 01:32:22 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+&gt; Discussed with Frédéric and Jérôme and we agreed to open a fup bug to take care
+&gt; of documentation improvements.
+This is bug 217837.
+</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

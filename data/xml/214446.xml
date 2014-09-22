@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214446</bug_id>
+          
+          <creation_ts>2008-01-06 22:51:00 -0500</creation_ts>
+          <short_desc>Indexer gets confused by sizeof() in template parameter</short_desc>
+          <delta_ts>2008-04-15 09:15:24 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-parser</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Alan">myzipis02139</reporter>
+          <assigned_to name="Project Inbox">cdt-core-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126347</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86280</attachid>
+    <who name="Alan">myzipis02139</who>
+    <bug_when>2008-01-06 22:51:03 -0500</bug_when>
+    <thetext>Created attachment 86280
+source file that shows the problem
+
+For example:
+
+  typedef MyClass&lt;sizeof(int)&gt;::type Foo;
+
+This results in indexer failures. The attached file reproduces the problem, and indicates which parts are flagged in red as &quot;problems&quot; by the syntax colorer. This is a simplified version of real code in our project.
+
+Thanks!
+Alan</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1203346</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-04-15 09:15:24 -0400</bug_when>
+    <thetext>works with 5.0.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86280</attachid>
+            <date>2008-01-06 22:51:00 -0500</date>
+            <delta_ts>2008-01-06 22:51:03 -0500</delta_ts>
+            <desc>source file that shows the problem</desc>
+            <filename>test.cpp</filename>
+            <type>text/plain</type>
+            <size>1136</size>
+            <attacher name="Alan">myzipis02139</attacher>
+            
+              <data encoding="base64">I2luY2x1ZGUgPGlvc3RyZWFtPgoKLy8gPT09PT09PT0gQSBmZXcgcmFuZG9tIGNsYXNzZXMgPT09
+PT09PT0gCgpzdHJ1Y3QgRGVmYXVsdFR5cGUge307CnN0cnVjdCBUeXBlNCB7fTsKc3RydWN0IFR5
+cGU4IHt9OwoKLy8gPT09PT09PT0gTXkgdGVtcGxhdGUgY2xhc3MsIGFuZCBzb21lIHNwZWNpYWxp
+emF0aW9ucyA9PT09PT09PSAKCnRlbXBsYXRlIDxpbnQgc2l6ZT4Kc3RydWN0IE15Q2xhc3MgewoJ
+dHlwZWRlZiBEZWZhdWx0VHlwZSB0eXBlOwp9OwoKdGVtcGxhdGUgPD4Kc3RydWN0IE15Q2xhc3M8
+ND4gewoJdHlwZWRlZiBUeXBlNCB0eXBlOwp9OwoKdGVtcGxhdGUgPD4Kc3RydWN0IE15Q2xhc3M8
+OD4gewoJdHlwZWRlZiBUeXBlOCB0eXBlOwp9OwoKLy8gPT09PT09PT0gU29tZSB0eXBlZGVmcyA9
+PT09PT09PSAKCnR5cGVkZWYgTXlDbGFzczw0Pjo6dHlwZSBNeUZpcnN0VHlwZTsKCnR5cGVkZWYg
+TXlDbGFzczxzaXplb2YoaW50KT46OnR5cGUgTXlTZWNvbmRUeXBlOwoKLy8gPT09PT09PT0gTXkg
+ZnVuY3Rpb25zID09PT09PT09IAoKdm9pZCBmb28oTXlGaXJzdFR5cGUgeCkgewoJc3RkOjpjb3V0
+IDw8ICJmb28iIDw8IHN0ZDo6ZW5kbDsKfQoKLy8gaGVyZSwgIk15U2Vjb25kVHlwZSIgc2hvd3Mg
+dXAgaW4gcmVkIGFzIGEgInByb2JsZW0iCnZvaWQgYmFyKE15U2Vjb25kVHlwZSB4KSB7CglzdGQ6
+OmNvdXQgPDwgImJhciIgPDwgc3RkOjplbmRsOwp9Cgp2b2lkIGJheihNeUNsYXNzPHNpemVvZihp
+bnQpPjo6dHlwZSB4KSB7CglzdGQ6OmNvdXQgPDwgImJheiIgPDwgc3RkOjplbmRsOwp9CgovLyA9
+PT09PT09PSBtYWluID09PT09PT09IAoKLy8gSW4gaGVyZSwgIk15U2Vjb25kVHlwZSIsICJiYXIi
+LCAiYmF6IiwgYW5kICJ6IiBhbGwgc2hvdyB1cCBpbiByZWQuCi8vIEludGVyZXN0aW5nbHksIGlm
+IEkgdHJ5IHRvIGF1dG9jb21wbGV0ZSAiYmEiLCBpdCBhdXRvLWNvbXBsZXRlcwovLyBvbmx5IHRv
+IGJhcigpLiBJdCBkb2Vzbid0IGdpdmUgYmF6KCkgYXMgYW4gb3B0aW9uLgppbnQgbWFpbigpIHsK
+CU15Rmlyc3RUeXBlIHg7Cglmb28oeCk7CgkKCU15U2Vjb25kVHlwZSB5OwoJYmFyKHkpOwoJCglN
+eUNsYXNzPHNpemVvZihpbnQpPjo6dHlwZSB6OwoJYmF6KHopOwoJCglyZXR1cm4gMDsKfQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

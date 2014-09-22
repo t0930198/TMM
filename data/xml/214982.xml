@@ -1,0 +1,144 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214982</bug_id>
+          
+          <creation_ts>2008-01-10 22:10:00 -0500</creation_ts>
+          <short_desc>WebServicesNavigatorSynchronizer should not make refresh call from non-UI thread</short_desc>
+          <delta_ts>2010-07-21 08:39:49 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>WTP Java EE Tools</product>
+          <component>jst.j2ee</component>
+          <version>1.5.5</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>Future</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Shane Cartledge">shanec</reporter>
+          <assigned_to name="Carl Anderson">ccc</assigned_to>
+          <cc>ccc</cc>
+    
+    <cc>ellia</cc>
+          <qa_contact name="Chuck Bridgham">cbridgha</qa_contact>
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1129420</commentid>
+    <comment_count>0</comment_count>
+    <who name="Shane Cartledge">shanec</who>
+    <bug_when>2008-01-10 22:10:13 -0500</bug_when>
+    <thetext>Build ID: 3.2.2
+
+Steps To Reproduce:
+Problem can not be recreated on demand.
+
+More information:
+WTP 1.5.5 (plugin: org.eclipse.jst.j2ee.webservice.ui_1.1.4.v200708011330)
+
+The &apos;org.eclipse.jst.j2ee.internal.webservice.WebServicesNavigatorSynchronizer.notifyChanged(Notification)&apos; method can make a call to the &apos;org.eclipse.jface.viewers.TreeViewer.refresh()&apos; method.
+
+The problem is that the refresh() call can be made from a non-UI thread that can cause the following exception:
+
+org.eclipse.swt.SWTException: Invalid thread access
+at org.eclipse.swt.SWT.error(SWT.java:3374)
+at org.eclipse.swt.SWT.error(SWT.java:3297)
+at org.eclipse.swt.SWT.error(SWT.java:3268)
+at org.eclipse.swt.widgets.Widget.error(Widget.java:435)
+at org.eclipse.swt.widgets.Widget.checkWidget(Widget.java:331)
+at org.eclipse.swt.widgets.Tree.getItems(Tree.java:2784)
+at org.eclipse.jface.viewers.TreeViewer.getChildren(TreeViewer.java:388)
+at org.eclipse.jface.viewers.AbstractTreeViewer.internalCollectExpandedItems(AbstractTreeViewer.java:1340)
+at org.eclipse.jface.viewers.AbstractTreeViewer.getExpandedElements(AbstractTreeViewer.java:991)
+at com.ibm.wbit.ui.internal.logicalview.WBILogicalView$1.refresh(WBILogicalView.java:270)
+at org.eclipse.jst.j2ee.internal.webservice.WebServicesNavigatorSynchronizer.notifyChanged(WebServicesNavigatorSynchronizer.java:110)
+at org.eclipse.emf.edit.provider.ChangeNotifier.fireNotifyChanged(ChangeNotifier.java:45)
+at org.eclipse.jst.j2ee.internal.webservice.provider.WsddItemProviderAdapterFactory.fireNotifyChanged(WsddItemProviderAdapterFactory.java:367)
+at org.eclipse.emf.edit.provider.ItemProviderAdapter.fireNotifyChanged(ItemProviderAdapter.java:218)
+at org.eclipse.jst.j2ee.internal.webservice.provider.PortComponentItemProvider.notifyChanged(PortComponentItemProvider.java:261)
+at org.eclipse.emf.common.notify.impl.BasicNotifierImpl.eNotify(BasicNotifierImpl.java:230)
+at org.eclipse.emf.ecore.util.EcoreEList.dispatchNotification(EcoreEList.java:234)
+at org.eclipse.emf.common.notify.impl.NotifyingListImpl.clear(NotifyingListImpl.java:1072)
+at com.ibm.ws.sca.deploy.scaj2ee.DescriptorAugmentCommand.augmentWSServerExtensions(DescriptorAugmentCommand.java:858)
+at com.ibm.ws.sca.deploy.scaj2ee.DescriptorAugmentCommand.augment(DescriptorAugmentCommand.java:310)
+at com.ibm.ws.sca.deploy.scaj2ee.DescriptorAugmentCommand.execute(DescriptorAugmentCommand.java:247)
+at com.ibm.wbit.command.internal.LazyCommandProxy.execute(LazyCommandProxy.java:113)
+at com.ibm.wbit.command.internal.CommandVisitAdapter.doVisit(CommandVisitAdapter.java:140)
+at com.ibm.wbit.command.internal.CommandVisitAdapter.visit(CommandVisitAdapter.java:71)
+at com.ibm.wbit.command.internal.resource.ResourceDeltaMask.accept(ResourceDeltaMask.java:261)
+at com.ibm.wbit.command.internal.resource.ResourceDeltaMask.accept(ResourceDeltaMask.java:285)
+at com.ibm.wbit.command.internal.resource.ResourceDeltaMask.accept(ResourceDeltaMask.java:225)
+at com.ibm.wbit.command.impl.CompositeCommand.doResourceOrResourceDeltaVisit(CompositeCommand.java:128)
+at com.ibm.wbit.command.impl.CompositeCommand.execute(CompositeCommand.java:499)
+at com.ibm.wbit.command.builder.CommandBuilder.doBuild(CommandBuilder.java:382)
+at com.ibm.wbit.command.builder.CommandBuilder.build(CommandBuilder.java:185)
+at org.eclipse.core.internal.events.BuildManager$2.run(BuildManager.java:603)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:167)
+at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:201)
+at org.eclipse.core.internal.events.BuildManager$1.run(BuildManager.java:230)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.internal.events.BuildManager.basicBuild(BuildManager.java:233)
+at org.eclipse.core.internal.events.BuildManager.basicBuildLoop(BuildManager.java:252)
+at org.eclipse.core.internal.events.BuildManager.build(BuildManager.java:285)
+at org.eclipse.core.internal.events.AutoBuildJob.doBuild(AutoBuildJob.java:154)
+at org.eclipse.core.internal.events.AutoBuildJob.run(AutoBuildJob.java:217)
+at org.eclipse.core.internal.jobs.Worker.run(Worker.java:58)
+
+I believe it should be the caller&apos;s responsiblity (e.g. in this case WebServicesNavigatorSynchronizer.notifyChanged) to ensure that refresh() is called in a UI thread.
+
+This problem occurs intermittently during builds in IBM WebSphere Integration Developer v6.1.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129621</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kathy Chan">kathy</who>
+    <bug_when>2008-01-11 09:30:44 -0500</bug_when>
+    <thetext>The WebServicesNavigatorSynchronizer belongs to the jst.j2ee component.  Routing over to J2EE team.
+
+Please elaborate on what exact impact the user would see when this problem occurs and how often does this intermittent problem shows up.  Are you aware of any known workaround when the problem occurs?  
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131078</commentid>
+    <comment_count>2</comment_count>
+    <who name="Shane Cartledge">shanec</who>
+    <bug_when>2008-01-14 18:29:47 -0500</bug_when>
+    <thetext>The impact of the problem is that build failures occur when a user saves a particular editor. The code generated by the build is then not in a consistent state.
+
+A Clean build appears to workaround the problem, and gets the generated code back into a consistent state.
+
+In terms of frequency, I made about six saves in the editor today and saw the problem once. So the problem occurs enough to be very annoying, but not enough that it renders the editor unusable.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

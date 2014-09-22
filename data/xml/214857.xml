@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214857</bug_id>
+          
+          <creation_ts>2008-01-10 01:40:00 -0500</creation_ts>
+          <short_desc>Dali should use the DTP &quot;Java class name&quot; when generating entity fields</short_desc>
+          <delta_ts>2008-03-10 15:39:47 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>8</classification_id>
+          <classification>WebTools</classification>
+          <product>Dali JPA Tools</product>
+          <component>General</component>
+          <version>1.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>enhancement</bug_severity>
+          <target_milestone>2.0 M6</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Brian Vosburgh">brian.vosburgh</reporter>
+          <assigned_to name="Brian Vosburgh">brian.vosburgh</assigned_to>
+          <cc>gasrios</cc>
+    
+    <cc>Juergen.Zimmermann</cc>
+    
+    <cc>neil.hauge</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128712</commentid>
+    <comment_count>0</comment_count>
+    <who name="Brian Vosburgh">brian.vosburgh</who>
+    <bug_when>2008-01-10 01:40:51 -0500</bug_when>
+    <thetext>Currently, when generating entities, Dali determines the Java type for a generated field by getting the corresponding column&apos;s &quot;primitive type&quot; and mapping it to an appropriate Java type. e.g.
+    Oracle &quot;VARCHAR2&quot; -&gt;
+    PrimitiveType &quot;CHARACTER_VARYING&quot; -&gt;
+    JDBC &quot;VARCHAR&quot; -&gt;
+    Java &quot;String&quot;
+See org.eclipse.jpt.db.internal.Column#javaType().
+
+DTP&apos;s PredefinedDataTypeDefinition maps a datatype directly to a Java type. Dali should be using this mapping.
+See RDBCorePlugin
+    .getDefault()
+    .getDatabaseDefinitionRegistry()
+    .getDefinition(database)
+    .getPredefinedDataTypeDefinition(dataType.getName())
+    .getJavaClassName()</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129205</commentid>
+    <comment_count>1</comment_count>
+    <who name="Guilherme Rios">gasrios</who>
+    <bug_when>2008-01-10 14:59:15 -0500</bug_when>
+    <thetext>Dali currently uses settings in DTP to determine an appropriate Java type for a generated field/property. Mappings are in the file postgresql_8.x.xmi. This file is in
+
+./plugins/org.eclipse.datatools.enablement.postgresql.dbdefinition_1.0.0.200706071.jar
+
+It has been verified that on at least one situation using these mappings results in the generation of broken code, for Postgre SQL BOOL, defined as
+
+&lt;predefinedDataTypeDefinitions xmi:id=&quot;BOOL&quot;
+	keyConstraintSupported=&quot;false&quot; identitySupported=&quot;false&quot;
+	nullableSupported=&quot;false&quot; primitiveType=&quot;SMALLINT&quot; 
+	jdbcEnumType=&quot;-7&quot; javaClassName=&quot;java.lang.Boolean&quot;&gt;
+
+	&lt;defaultValueTypes/&gt;
+	&lt;name&gt;BOOL&lt;/name&gt;
+
+&lt;/predefinedDataTypeDefinitions&gt;
+
+The use of SMALLINT as primitiveType will generate an attribute of java primitive type int. Trying to load data using code generated this way will cause the following exception:
+
+org.postgresql.util.PSQLException: Bad value for type int : t
+
+It is possible a similar problem could happen with other databases as well. The following workaround should help while this bug is open.
+
+WORKAROUND
+
+The exact problem described above can be fixed by manually editing the file postgresql_8.x.xmi and changing the above xml element to
+
+&lt;predefinedDataTypeDefinitions xmi:id=&quot;BOOL&quot;
+	keyConstraintSupported=&quot;false&quot; identitySupported=&quot;false&quot;
+	nullableSupported=&quot;false&quot; primitiveType=&quot;BOOLEAN&quot;
+	jdbcEnumType=&quot;-7&quot; javaClassName=&quot;java.lang.Boolean&quot;&gt;
+
+	&lt;defaultValueTypes/&gt;
+	&lt;name&gt;BOOL&lt;/name&gt;
+
+&lt;/predefinedDataTypeDefinitions&gt;
+
+Similar changes to other mappings would correct similar mistakes, should any other exist. However, caution is recommended when making changes to this file, as it is part of DTP and not Dali, and such changes might have unforeseen effects in other Eclipse plugins.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1143911</commentid>
+    <comment_count>2</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2008-01-28 17:57:10 -0500</bug_when>
+    <thetext>This change is currently in the 2.0 experimental branch and will be coming soon to Head with the rest of the code in exp.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1174255</commentid>
+    <comment_count>3</comment_count>
+    <who name="Neil Hauge">neil.hauge</who>
+    <bug_when>2008-03-10 15:39:32 -0400</bug_when>
+    <thetext>This fix is available in recent WTP 3.0 I-Builds.  The code was merged to Head.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

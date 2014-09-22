@@ -1,0 +1,206 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214123</bug_id>
+          
+          <creation_ts>2008-01-02 11:02:00 -0500</creation_ts>
+          <short_desc>AIOB searching for references to java type</short_desc>
+          <delta_ts>2008-02-05 09:52:32 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>Search</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>VERIFIED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P2</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Rennie">Michael_Rennie</reporter>
+          <assigned_to name="Martin Aeschlimann">aeschli</assigned_to>
+          <cc>benno.baumgartner</cc>
+    
+    <cc>daniel_megert</cc>
+    
+    <cc>markus_keller</cc>
+    
+    <cc>peeman</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124188</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Rennie">Michael_Rennie</who>
+    <bug_when>2008-01-02 11:02:03 -0500</bug_when>
+    <thetext>using I20071218-0800
+
+I performed a search for all references of WorkspacePluginModelBase from my java source editor and when the search was completed I got the following error:
+
+java.lang.StringIndexOutOfBoundsException: String index out of range: 828
+at java.lang.String.substring(Unknown Source)
+at org.eclipse.search.internal.ui.text.FileLabelProvider.getLineElementLabel(FileLabelProvider.java:135)
+at org.eclipse.search.internal.ui.text.FileLabelProvider.getRichTextLabel(FileLabelProvider.java:87)
+at org.eclipse.search.internal.ui.text.FileLabelProvider.getText(FileLabelProvider.java:79)
+at org.eclipse.jface.viewers.DecoratingLabelProvider.getText(DecoratingLabelProvider.java:129)
+at org.eclipse.jface.viewers.DecoratingLabelProvider.updateLabel(DecoratingLabelProvider.java:351)
+at org.eclipse.jface.viewers.WrappedViewerLabelProvider.update(WrappedViewerLabelProvider.java:183)
+at org.eclipse.jface.viewers.ViewerColumn.refresh(ViewerColumn.java:142)
+at org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem(AbstractTreeViewer.java:929)
+at org.eclipse.jface.viewers.AbstractTreeViewer$UpdateItemSafeRunnable.run(AbstractTreeViewer.java:99)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+at org.eclipse.jface.viewers.AbstractTreeViewer.doUpdateItem(AbstractTreeViewer.java:1009)
+at org.eclipse.jface.viewers.StructuredViewer$UpdateItemSafeRunnable.run(StructuredViewer.java:466)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.JFaceUtil$1.run(JFaceUtil.java:46)
+at org.eclipse.jface.util.SafeRunnable.run(SafeRunnable.java:199)
+at org.eclipse.jface.viewers.StructuredViewer.updateItem(StructuredViewer.java:2023)
+at org.eclipse.jface.viewers.StructuredViewer.internalUpdate(StructuredViewer.java:2006)
+at org.eclipse.jface.viewers.StructuredViewer.update(StructuredViewer.java:1950)
+at org.eclipse.jface.viewers.ColumnViewer.update(ColumnViewer.java:543)
+at org.eclipse.jface.viewers.StructuredViewer.update(StructuredViewer.java:1902)
+at org.eclipse.jface.viewers.StructuredViewer.handleLabelProviderChanged(StructuredViewer.java:1118)
+at org.eclipse.jface.viewers.ContentViewer$1.labelProviderChanged(ContentViewer.java:74)
+at org.eclipse.ui.internal.decorators.DecoratorManager$1.run(DecoratorManager.java:239)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.runtime.Platform.run(Platform.java:857)
+at org.eclipse.ui.internal.decorators.DecoratorManager.fireListener(DecoratorManager.java:237)
+at org.eclipse.ui.internal.decorators.DecorationScheduler$3.runInUIThread(DecorationScheduler.java:529)
+at org.eclipse.ui.progress.UIJob$1.run(UIJob.java:94)
+at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:130)
+at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3735)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3372)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2381)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2345)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2211)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:473)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:468)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:561)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:501)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1239)
+
+More Info:
+
+1. The editor was saved and did not contain any errors
+2. subsequent tries could not reproduce the error</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126607</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-07 10:15:58 -0500</bug_when>
+    <thetext>Cannot reproduce using I20071218-0800.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131352</commentid>
+    <comment_count>2</comment_count>
+    <who name="Markus Keller">markus_keller</who>
+    <bug_when>2008-01-15 06:25:05 -0500</bug_when>
+    <thetext>Steps in I20080108-1320 with ZRH plugins from 20080115_1128:
+
+- new workspace with JUnit 3.8.1 source (smoke test)
+- open type &quot;Test&quot;
+- file search for &quot;TestCase&quot; in &quot;*.java&quot; files
+- select JUnit project
+- Source &gt; Clean Up
+- custom profile &gt; Configure...
+- check all checkboxes on last tab
+- Finish</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133302</commentid>
+    <comment_count>3</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-17 12:07:39 -0500</bug_when>
+    <thetext>*** Bug 215632 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1135172</commentid>
+    <comment_count>4</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-21 12:43:06 -0500</bug_when>
+    <thetext>I see two bugs here:
+1. it looks like not all changes are detected and then reported to
+   FileTreeContentProvider.elementsChanged(Object[])
+2. if FileTreeContentProvider.elementsChanged(Object[]) decides to refresh
+   the whole viewer it might update a (not yet) removed element
+
+
+The line match updating seems quite fragile: if I e.g. have
+foo
+bar
+MATCH HERE
+
+and search for HERE and then delete line foo and bar then the line number in the search view is still 3.
+  </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1136552</commentid>
+    <comment_count>5</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-23 03:27:28 -0500</bug_when>
+    <thetext>Simpler test case (less changes/events):
+1. import JUnit
+2. search for &quot;testresult&quot; in TestResult.java (don&apos;t even open it)
+3. select junit.awtui.TestRunner.java in Package Explorer
+4. run clean up on with all checkboxes on &apos;Code Organizing&apos; tab checked
+==&gt; exceptions
+
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1139757</commentid>
+    <comment_count>6</comment_count>
+    <who name="Martin Aeschlimann">aeschli</who>
+    <bug_when>2008-01-28 12:47:51 -0500</bug_when>
+    <thetext>fixed &gt; 20080128</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1149806</commentid>
+    <comment_count>7</comment_count>
+    <who name="Benno Baumgartner">benno.baumgartner</who>
+    <bug_when>2008-02-05 09:52:32 -0500</bug_when>
+    <thetext>verified in I20080205-0010</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

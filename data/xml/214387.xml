@@ -1,0 +1,204 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214387</bug_id>
+          
+          <creation_ts>2008-01-04 14:41:00 -0500</creation_ts>
+          <short_desc>[Forms] FormImages#drawTextGradient is broken</short_desc>
+          <delta_ts>2008-01-25 12:04:37 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>User Assistance</component>
+          <version>3.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Eric Moffatt">emoffatt</reporter>
+          <assigned_to name="Adam Archer">agarcher</assigned_to>
+          <cc>dejan</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125987</commentid>
+    <comment_count>0</comment_count>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-04 14:41:18 -0500</bug_when>
+    <thetext>The code here has an error in its calculation loop that prevents its being used for multi-part gradients (i.e. any more than 2 colors / 1 pct). The problem is in the calculation of the &apos;gradientHeight&apos; which is incorrectly subtracting &apos;pos&apos; as part of the calculation. This leads to each successive gradient &apos;part&apos; being too small (and, eventually, negative).
+
+I found this using the following snippet:
+
+			FormToolkit toolkit = new FormToolkit(parent.getDisplay());
+			FormColors colors = toolkit.getColors();
+			Color top = parent.getDisplay().getSystemColor(SWT.COLOR_DARK_RED);
+			Color mid = parent.getDisplay().getSystemColor(SWT.COLOR_RED);
+			Color bot = parent.getDisplay().getSystemColor(SWT.COLOR_DARK_RED);
+			//Color bot = colors.getColor(IFormColors.H_GRADIENT_START);
+
+			// create the base form
+			Form form = toolkit.createForm(parent);
+			form.setText(&quot;Snippet8&quot;);
+			form.setTextBackground(new Color[] { top, mid, bot }, new int[] { 50,50 }, true);
+
+This code was throwing an &apos;Illegal Argument Exception&apos; in this method because the background color &apos;bg&apos; was null and the calculations lead to having left-over space.
+
+I&apos;ll add an attachment that works for multi-parts. Note that the patch presumes that the sum of the percentages add up to 100 so you may have to &apos;tweak&apos; it if that isn&apos;t correct...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126005</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86221</attachid>
+    <who name="Eric Moffatt">emoffatt</who>
+    <bug_when>2008-01-04 14:54:26 -0500</bug_when>
+    <thetext>Created attachment 86221
+Patch to allow multi-part gradients
+
+
+Hmmm, didn&apos;t seem to add the attachment the first time...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138729</commentid>
+    <comment_count>2</comment_count>
+      <attachid>87879</attachid>
+    <who name="Adam Archer">agarcher</who>
+    <bug_when>2008-01-25 11:59:14 -0500</bug_when>
+    <thetext>Created attachment 87879
+modified patch
+
+The patch tested well. Thanks Eric!
+
+I modified the logic slightly before committing to HEAD. When the segments total less than 100%, instead of giving the last gradient segment any leftover area the remaining space will be painted solid with the last color specified.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138736</commentid>
+    <comment_count>3</comment_count>
+    <who name="Adam Archer">agarcher</who>
+    <bug_when>2008-01-25 12:04:37 -0500</bug_when>
+    <thetext>Resolving as fixed.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86221</attachid>
+            <date>2008-01-04 14:54:00 -0500</date>
+            <delta_ts>2008-01-25 11:59:14 -0500</delta_ts>
+            <desc>Patch to allow multi-part gradients</desc>
+            <filename>patch(FormImages).txt</filename>
+            <type>text/plain</type>
+            <size>1774</size>
+            <attacher name="Eric Moffatt">emoffatt</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UudWkuZm9ybXMN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvZm9ybXMvd2lkZ2V0cy9Gb3JtSW1h
+Z2VzLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xp
+cHNlLnVpLmZvcm1zL3NyYy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9mb3Jtcy93aWRnZXRzL0Zv
+cm1JbWFnZXMuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMg0KZGlmZiAtdSAtcjEuMiBG
+b3JtSW1hZ2VzLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvZm9ybXMvd2lk
+Z2V0cy9Gb3JtSW1hZ2VzLmphdmEJMTAgU2VwIDIwMDcgMTg6MDk6NDkgLTAwMDAJMS4yDQorKysg
+c3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL2Zvcm1zL3dpZGdldHMvRm9ybUltYWdlcy5qYXZh
+CTQgSmFuIDIwMDggMTk6NDA6NDQgLTAwMDANCkBAIC0yNzAsMjggKzI3MCwyNyBAQA0KIAkJCQkJ
+bGFzdENvbG9yID0gb2xkQmFja2dyb3VuZDsNCiAJCQkJZ2Muc2V0QmFja2dyb3VuZChsYXN0Q29s
+b3IpOw0KIAkJCQlpZiAodmVydGljYWwpIHsNCi0JCQkJCWZpbmFsIGludCBncmFkaWVudEhlaWdo
+dCA9IChwZXJjZW50c1tpXQ0KLQkJCQkJCQkqIGhlaWdodCAvIDEwMCkNCi0JCQkJCQkJLSBwb3M7
+DQorCQkJCQlpbnQgZ3JhZGllbnRIZWlnaHQgPSBwZXJjZW50c1tpXSAqIGhlaWdodCAvIDEwMDsN
+CisJCQkJCQ0KKwkJCQkJLy8gVXNlIGFsbCB0aGUgcmVtYWluaW5nIHNwYWNlIGlmIGl0J3MgdGhl
+IGxhc3Qgb25lDQorCQkJCQlpZiAoaSA9PSBwZXJjZW50cy5sZW5ndGgtMSkNCisJCQkJCQlncmFk
+aWVudEhlaWdodCA9IGhlaWdodCAtIHBvczsNCisJCQkJCQ0KIAkJCQkJZ2MuZmlsbEdyYWRpZW50
+UmVjdGFuZ2xlKDAsIHBvcywgd2lkdGgsIGdyYWRpZW50SGVpZ2h0LA0KIAkJCQkJCQl0cnVlKTsN
+CiAJCQkJCXBvcyArPSBncmFkaWVudEhlaWdodDsNCiAJCQkJfSBlbHNlIHsNCi0JCQkJCWZpbmFs
+IGludCBncmFkaWVudFdpZHRoID0gKHBlcmNlbnRzW2ldICogd2lkdGggLyAxMDApDQotCQkJCQkJ
+CS0gcG9zOw0KKwkJCQkJaW50IGdyYWRpZW50V2lkdGggPSBwZXJjZW50c1tpXSAqIGhlaWdodCAv
+IDEwMDsNCisJCQkJCQ0KKwkJCQkJLy8gVXNlIGFsbCB0aGUgcmVtYWluaW5nIHNwYWNlIGlmIGl0
+J3MgdGhlIGxhc3Qgb25lDQorCQkJCQlpZiAoaSA9PSBwZXJjZW50cy5sZW5ndGgtMSkNCisJCQkJ
+CQlncmFkaWVudFdpZHRoID0gd2lkdGggLSBwb3M7DQorCQkJCQkNCiAJCQkJCWdjLmZpbGxHcmFk
+aWVudFJlY3RhbmdsZShwb3MsIDAsIGdyYWRpZW50V2lkdGgsIGhlaWdodCwNCiAJCQkJCQkJZmFs
+c2UpOw0KIAkJCQkJcG9zICs9IGdyYWRpZW50V2lkdGg7DQogCQkJCX0NCiAJCQl9DQotCQkJaWYg
+KHZlcnRpY2FsICYmIHBvcyA8IGhlaWdodCkgew0KLQkJCQlnYy5zZXRCYWNrZ3JvdW5kKGJnKTsN
+Ci0JCQkJZ2MuZmlsbFJlY3RhbmdsZSgwLCBwb3MsIHdpZHRoLCBoZWlnaHQgLSBwb3MpOw0KLQkJ
+CX0NCi0JCQlpZiAoIXZlcnRpY2FsICYmIHBvcyA8IHdpZHRoKSB7DQotCQkJCWdjLnNldEJhY2tn
+cm91bmQoYmcpOw0KLQkJCQlnYy5maWxsUmVjdGFuZ2xlKHBvcywgMCwgd2lkdGggLSBwb3MsIGhl
+aWdodCk7DQotCQkJfQ0KIAkJCWdjLnNldEZvcmVncm91bmQob2xkRm9yZWdyb3VuZCk7DQogCQl9
+DQogCX0NCg==
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>87879</attachid>
+            <date>2008-01-25 11:59:00 -0500</date>
+            <delta_ts>2008-01-25 11:59:14 -0500</delta_ts>
+            <desc>modified patch</desc>
+            <filename>patch214387.txt</filename>
+            <type>text/plain</type>
+            <size>1586</size>
+            <attacher name="Adam Archer">agarcher</attacher>
+            
+              <data encoding="base64">IyMjIEVjbGlwc2UgV29ya3NwYWNlIFBhdGNoIDEuMA0KI1Agb3JnLmVjbGlwc2UudWkuZm9ybXMN
+CkluZGV4OiBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvZm9ybXMvd2lkZ2V0cy9Gb3JtSW1h
+Z2VzLmphdmENCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT0NClJDUyBmaWxlOiAvY3Zzcm9vdC9lY2xpcHNlL29yZy5lY2xp
+cHNlLnVpLmZvcm1zL3NyYy9vcmcvZWNsaXBzZS91aS9pbnRlcm5hbC9mb3Jtcy93aWRnZXRzL0Zv
+cm1JbWFnZXMuamF2YSx2DQpyZXRyaWV2aW5nIHJldmlzaW9uIDEuMg0KZGlmZiAtdSAtcjEuMiBG
+b3JtSW1hZ2VzLmphdmENCi0tLSBzcmMvb3JnL2VjbGlwc2UvdWkvaW50ZXJuYWwvZm9ybXMvd2lk
+Z2V0cy9Gb3JtSW1hZ2VzLmphdmEJMTAgU2VwIDIwMDcgMTg6MDk6NDkgLTAwMDAJMS4yDQorKysg
+c3JjL29yZy9lY2xpcHNlL3VpL2ludGVybmFsL2Zvcm1zL3dpZGdldHMvRm9ybUltYWdlcy5qYXZh
+CTI1IEphbiAyMDA4IDE2OjQ4OjQ5IC0wMDAwDQpAQCAtMjcwLDI2ICsyNzAsMjcgQEANCiAJCQkJ
+CWxhc3RDb2xvciA9IG9sZEJhY2tncm91bmQ7DQogCQkJCWdjLnNldEJhY2tncm91bmQobGFzdENv
+bG9yKTsNCiAJCQkJaWYgKHZlcnRpY2FsKSB7DQotCQkJCQlmaW5hbCBpbnQgZ3JhZGllbnRIZWln
+aHQgPSAocGVyY2VudHNbaV0NCi0JCQkJCQkJKiBoZWlnaHQgLyAxMDApDQotCQkJCQkJCS0gcG9z
+Ow0KKwkJCQkJaW50IGdyYWRpZW50SGVpZ2h0ID0gcGVyY2VudHNbaV0gKiBoZWlnaHQgLyAxMDA7
+DQorCQkJCQkNCiAJCQkJCWdjLmZpbGxHcmFkaWVudFJlY3RhbmdsZSgwLCBwb3MsIHdpZHRoLCBn
+cmFkaWVudEhlaWdodCwNCiAJCQkJCQkJdHJ1ZSk7DQogCQkJCQlwb3MgKz0gZ3JhZGllbnRIZWln
+aHQ7DQogCQkJCX0gZWxzZSB7DQotCQkJCQlmaW5hbCBpbnQgZ3JhZGllbnRXaWR0aCA9IChwZXJj
+ZW50c1tpXSAqIHdpZHRoIC8gMTAwKQ0KLQkJCQkJCQktIHBvczsNCisJCQkJCWludCBncmFkaWVu
+dFdpZHRoID0gcGVyY2VudHNbaV0gKiBoZWlnaHQgLyAxMDA7DQorCQkJCQkNCiAJCQkJCWdjLmZp
+bGxHcmFkaWVudFJlY3RhbmdsZShwb3MsIDAsIGdyYWRpZW50V2lkdGgsIGhlaWdodCwNCiAJCQkJ
+CQkJZmFsc2UpOw0KIAkJCQkJcG9zICs9IGdyYWRpZW50V2lkdGg7DQogCQkJCX0NCiAJCQl9DQog
+CQkJaWYgKHZlcnRpY2FsICYmIHBvcyA8IGhlaWdodCkgew0KLQkJCQlnYy5zZXRCYWNrZ3JvdW5k
+KGJnKTsNCisJCQkJaWYgKGJnICE9IG51bGwpDQorCQkJCQlnYy5zZXRCYWNrZ3JvdW5kKGJnKTsN
+CiAJCQkJZ2MuZmlsbFJlY3RhbmdsZSgwLCBwb3MsIHdpZHRoLCBoZWlnaHQgLSBwb3MpOw0KIAkJ
+CX0NCiAJCQlpZiAoIXZlcnRpY2FsICYmIHBvcyA8IHdpZHRoKSB7DQotCQkJCWdjLnNldEJhY2tn
+cm91bmQoYmcpOw0KKwkJCQlpZiAoYmcgIT0gbnVsbCkNCisJCQkJCWdjLnNldEJhY2tncm91bmQo
+YmcpOw0KIAkJCQlnYy5maWxsUmVjdGFuZ2xlKHBvcywgMCwgd2lkdGggLSBwb3MsIGhlaWdodCk7
+DQogCQkJfQ0KIAkJCWdjLnNldEZvcmVncm91bmQob2xkRm9yZWdyb3VuZCk7DQo=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

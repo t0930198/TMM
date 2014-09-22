@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215193</bug_id>
+          
+          <creation_ts>2008-01-14 05:55:00 -0500</creation_ts>
+          <short_desc>[javadoc] {@link} to member type not reported as warning</short_desc>
+          <delta_ts>2008-06-16 11:12:33 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>JDT</product>
+          <component>Core</component>
+          <version>3.4</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>DUPLICATE</resolution>
+          <dup_id>222188</dup_id>
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Dani Megert">daniel_megert</reporter>
+          <assigned_to name="Eric Jodet">eric_jodet</assigned_to>
+          <cc>eric_jodet</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130494</commentid>
+    <comment_count>0</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-14 05:55:10 -0500</bug_when>
+    <thetext>+++ This bug was initially created as a clone of Bug #176027 +++
+
+see bug 175839.
+
+Build ID: I20070220-1330
+
+Steps To Reproduce:
+1. Set compiler default source level to 1.4 (or 1.5 or 1.6)
+2. Enable Pref / Java / Compiler / Javadoc / Report errors in tags
+3. Create package and file:
+
+package otherpkg;
+
+public class C {
+        public static class Inner { }
+}
+
+4. Create second package and file to show the problem:
+
+package somepkg;
+
+import otherpkg.C;
+
+/**
+ * {@link C.Inner} -- error/warning - Tag @link: reference not found: C.Inner
+ */
+public class MemberTypeDocTest {
+      void m() { }
+}
+
+
+NOTE: this is very similar to bug 176027 (just importing C instead of C.Inner). The biggest difference is that this seems to fail in all javadoc tool versions.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130495</commentid>
+    <comment_count>1</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-01-14 05:56:26 -0500</bug_when>
+    <thetext>&gt;Build ID: I20070220-1330
+Build id is I20080108-1320.
+
+In contrast to the javadoc tool Eclipse doesn&apos;t show that warning.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130869</commentid>
+    <comment_count>2</comment_count>
+    <who name="Eric Jodet">eric_jodet</who>
+    <bug_when>2008-01-14 13:43:28 -0500</bug_when>
+    <thetext>To be investigated</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1259391</commentid>
+    <comment_count>3</comment_count>
+    <who name="Eric Jodet">eric_jodet</who>
+    <bug_when>2008-06-04 10:30:29 -0400</bug_when>
+    <thetext>I think bug 222188 and this one are the same bug: references to inner types defined in other packages should be fully qualified.
+
+As a test, I applied the patch I posted for bug 222188 and this made the expected warning to be raised.
+
+Dani, would you agree to close this one as a dup of bug 222188 (though I agree this should be the opposite)?</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1271474</commentid>
+    <comment_count>4</comment_count>
+    <who name="Dani Megert">daniel_megert</who>
+    <bug_when>2008-06-16 11:12:33 -0400</bug_when>
+    <thetext>I agree.
+
+*** This bug has been marked as a duplicate of bug 222188 ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

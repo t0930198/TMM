@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214694</bug_id>
+          
+          <creation_ts>2008-01-08 18:03:00 -0500</creation_ts>
+          <short_desc>[prov] API - Any API that calls loadRepository should include a progress monitor in its signature</short_desc>
+          <delta_ts>2008-02-07 10:59:04 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>Equinox</product>
+          <component>Incubator</component>
+          <version>3.4</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords>api</keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>3.4 M5</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Susan McCourt ">susan</reporter>
+          <assigned_to name="equinox.incubator-inbox">equinox.incubator-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127805</commentid>
+    <comment_count>0</comment_count>
+    <who name="Susan McCourt ">susan</who>
+    <bug_when>2008-01-08 18:03:47 -0500</bug_when>
+    <thetext>Now that repos are loaded lazily by the UI, and soft references are being used, all callers of loadRepository are potentially initiating a (very) long running operation.
+
+We need to ensure that any API code path that calls loadRepository should have a way callers to specify a progress monitor.
+
+Some I noticed right away:
+IPlanner.updatesFor(IInstallableUnit toUpdate, URL[] metadataRepositories);
+MetadataRepositoryElement.getQueryable()
+
+Others that may be a problem, but probably ok because they are operating on local repos anyway:
+FormerState.notify()
+directorywatcher.RepositoryListener.stopPoll()
+
+I already opened bug #214691 for the issue that the repo managers/factories need to honor cancellation in the progress monitors once they are there.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130008</commentid>
+    <comment_count>1</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-01-11 17:33:28 -0500</bug_when>
+    <thetext>I have added a progress monitor to IPlanner.updatesFor, and wired the progress monitors for all methods on SimplePlanner so they are passed through when loading repositories.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1152007</commentid>
+    <comment_count>2</comment_count>
+    <who name="John Arthorne">john_arthorne</who>
+    <bug_when>2008-02-07 10:59:04 -0500</bug_when>
+    <thetext>Marking fixed. We&apos;ll fix up other cases as we come across them.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

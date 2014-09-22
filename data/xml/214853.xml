@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214853</bug_id>
+          
+          <creation_ts>2008-01-10 00:45:00 -0500</creation_ts>
+          <short_desc>Menu bar changes when open a dialog in eclipse</short_desc>
+          <delta_ts>2008-01-23 17:31:42 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>2</classification_id>
+          <classification>Eclipse</classification>
+          <product>Platform</product>
+          <component>SWT</component>
+          <version>3.4</version>
+          <rep_platform>Macintosh</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>WONTFIX</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="linyunzhi">linyunz</reporter>
+          <assigned_to name="Steve Northover">steve_northover</assigned_to>
+          <cc>cocoakevin</cc>
+    
+    <cc>skovatch</cc>
+    
+    <cc>steve_northover</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128700</commentid>
+    <comment_count>0</comment_count>
+    <who name="linyunzhi">linyunz</who>
+    <bug_when>2008-01-10 00:45:54 -0500</bug_when>
+    <thetext>Build ID: 3.4M4
+
+Steps To Reproduce:
+1. run eclipse 3.4M4 on Mac OS X 10.5
+2. open Preference from menu bar
+3. Preference window opens, but the menubar of eclipse is changed
+
+
+More information:</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129034</commentid>
+    <comment_count>1</comment_count>
+    <who name="Kevin Barnes">cocoakevin</who>
+    <bug_when>2008-01-10 12:29:10 -0500</bug_when>
+    <thetext>Note: This is not new to 10.5</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1137253</commentid>
+    <comment_count>2</comment_count>
+    <who name="Steve Northover">steve_northover</who>
+    <bug_when>2008-01-23 17:31:42 -0500</bug_when>
+    <thetext>Unfortunately, we can&apos;t fix this.  Mac applications have a single menu bar that is edited by the application.  Every other platform has a menu bar per window.  In order to write portable applications, SWT hammers the single Mac menu bar to be the menu bar of the active window.  If this window has no menu bar, it is cleared.  If the menu bar was not cleared, users could invoke operations that were not valid for the active window.
+
+There have been some suggestions about leaving the menu bar alone and/or graying the items when the user tries to access it but the right answer is to model the single menu bar in SWT such that applications that want to go the extra mile on the Mac and look golden can program the menu bar the same way that a normal Mac application would do it.
+
+There is no plans to implement this at this time.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

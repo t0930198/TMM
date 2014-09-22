@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214609</bug_id>
+          
+          <creation_ts>2008-01-08 09:12:00 -0500</creation_ts>
+          <short_desc>error when trying to commit with enabled bugtraq properties</short_desc>
+          <delta_ts>2008-01-09 08:12:31 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>5</classification_id>
+          <classification>Technology</classification>
+          <product>Subversive</product>
+          <component>UI</component>
+          <version>0.7</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Steve Ulrich">eclipse</reporter>
+          <assigned_to name="Alexei Goncharov">alexei.goncharov</assigned_to>
+          <cc>ben.turner</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127271</commentid>
+    <comment_count>0</comment_count>
+    <who name="Steve Ulrich">eclipse</who>
+    <bug_when>2008-01-08 09:12:45 -0500</bug_when>
+    <thetext>We got following properties at our svn-folders:
+bugtraq:label   | Issue:
+bugtraq:message | Issue: %BUGID%
+bugtraq:number  | false
+bugtraq:url     | http://...
+
+when I try to commit directly from the project explorer I get an error message, at the synchronize view I get nothing (no commit dialog, no error message, just the log is written).
+both logs refer to CommentComposite:175
+(for stacktrace, see below)
+
+I looked at the code in the repository and saw the following code:
+String logregex = CommentComposite.this.bugtraqModel.isNumber() ? &quot;[0-9]+(,?[0-9]+)*&quot; : CommentComposite.this.bugtraqModel.getLogregex()[0];
+
+I think the logregex-property should be prechecked for null-values. According to the manual (http://tortoisesvn.tigris.org/svn/tortoisesvn/trunk/doc/issuetrackers.txt login with guest, guest), the logregex property is optional - even if number is false.
+
+I set the bug to &quot;major&quot; because commiting is not possible for me at the moment.
+
+regards from Germany,
+
+Steve
+
+stacktrace of the sync view commit try:
+!ENTRY org.eclipse.ui 4 0 2008-01-08 14:25:22.418
+!MESSAGE Unhandled event loop exception
+!STACK 0
+org.eclipse.swt.SWTException: Failed to execute runnable (java.lang.NullPointerException)
+	at org.eclipse.swt.SWT.error(SWT.java:3563)
+	at org.eclipse.swt.SWT.error(SWT.java:3481)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:126)
+	at org.eclipse.swt.widgets.Display.runAsyncMessages(Display.java:3659)
+	at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3296)
+	at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2389)
+	at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2353)
+	at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2219)
+	at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:466)
+	at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:289)
+	at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:461)
+	at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+	at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+	at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:169)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+	at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:363)
+	at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:176)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+	at java.lang.reflect.Method.invoke(Unknown Source)
+	at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:508)
+	at org.eclipse.equinox.launcher.Main.basicRun(Main.java:447)
+	at org.eclipse.equinox.launcher.Main.run(Main.java:1173)
+Caused by: java.lang.NullPointerException
+	at org.eclipse.team.svn.ui.composite.CommentComposite$1.getErrorMessage(CommentComposite.java:175)
+	at org.eclipse.team.svn.ui.verifier.AbstractVerifier.verify(AbstractVerifier.java:61)
+	at org.eclipse.team.svn.ui.verifier.GroupVerifier.verify(GroupVerifier.java:37)
+	at org.eclipse.team.svn.ui.verifier.AbstractVerificationKeyListener.validateContent(AbstractVerificationKeyListener.java:97)
+	at org.eclipse.team.svn.ui.panel.AbstractDialogPanel.validateContent(AbstractDialogPanel.java:136)
+	at org.eclipse.team.svn.ui.panel.AbstractDialogPanel.postInit(AbstractDialogPanel.java:59)
+	at org.eclipse.team.svn.ui.panel.common.CommentPanel.postInit(CommentPanel.java:60)
+	at org.eclipse.team.svn.ui.panel.local.CommitPanel.postInit(CommitPanel.java:237)
+	at org.eclipse.team.svn.ui.dialog.DefaultDialog.createContents(DefaultDialog.java:207)
+	at org.eclipse.jface.window.Window.create(Window.java:426)
+	at org.eclipse.jface.dialogs.Dialog.create(Dialog.java:1081)
+	at org.eclipse.team.svn.ui.dialog.DefaultDialog.create(DefaultDialog.java:218)
+	at org.eclipse.jface.window.Window.open(Window.java:785)
+	at org.eclipse.team.svn.ui.dialog.DefaultDialog.open(DefaultDialog.java:131)
+	at org.eclipse.team.svn.ui.extension.impl.DefaultCommitActionFactory$1.open(DefaultCommitActionFactory.java:42)
+	at org.eclipse.team.svn.ui.synchronize.update.action.CommitAction$2.run(CommitAction.java:69)
+	at org.eclipse.ui.internal.UILockListener.doPendingWork(UILockListener.java:155)
+	at org.eclipse.ui.internal.UISynchronizer$2.run(UISynchronizer.java:126)
+	at org.eclipse.swt.widgets.RunnableLock.run(RunnableLock.java:35)
+	at org.eclipse.swt.widgets.Synchronizer.runAsyncMessages(Synchronizer.java:123)
+	... 22 more</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127524</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ben Turner">ben.turner</who>
+    <bug_when>2008-01-08 12:24:03 -0500</bug_when>
+    <thetext>I am also getting this problem with the new version, having migrated over from the polarian update site to the eclipse one yesterday.
+
+Note that I have successfully commited from other new projects, so perhaps this is a migration issue, at least for me ? I have tried disconnecting and re-sharing the project, but I still cannot commit any changes on the project via eclipse.
+
+I am using the SVNKit 1.1.4 under the hood.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128043</commentid>
+    <comment_count>2</comment_count>
+    <who name="Alexei Goncharov">alexei.goncharov</who>
+    <bug_when>2008-01-09 08:12:31 -0500</bug_when>
+    <thetext>Thanks for your investigation.
+The problem is fixed.
+The resolution will be available in the next build.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

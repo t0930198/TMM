@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214354</bug_id>
+          
+          <creation_ts>2008-01-04 09:41:00 -0500</creation_ts>
+          <short_desc>[code formatter] whitespace removed when declaring a variable and initializing it with a macro</short_desc>
+          <delta_ts>2014-01-29 20:45:42 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>5.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>5.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Herve Poirier">Herve.Poirier</reporter>
+          <assigned_to name="Anton Leherbauer">anton.leherbauer</assigned_to>
+          <cc>dschaefer</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125751</commentid>
+    <comment_count>0</comment_count>
+      <attachid>86191</attachid>
+    <who name="Herve Poirier">Herve.Poirier</who>
+    <bug_when>2008-01-04 09:41:10 -0500</bug_when>
+    <thetext>Created attachment 86191
+Patch to not call format Node() when initializing a variable with a macro.
+
+Build ID: I20071213-1700
+CDT version: 4.0.2 (200711280800) and latest 5.0.0 from repository.
+
+Steps To Reproduce:
+The default formatter deletes the blank between the variable name and the &apos;=&apos; sign when declaring a new variable and initializing it with a macro
+
+before:
+void f() {
+#define I 0
+    int i = I;
+}
+
+after
+void f() {
+#define I 0
+    int i= I;
+}
+
+
+More information:
+
+Patch attached correct the problem but not fully tested on other cases.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126426</commentid>
+    <comment_count>1</comment_count>
+    <who name="Anton Leherbauer">anton.leherbauer</who>
+    <bug_when>2008-01-07 05:07:09 -0500</bug_when>
+    <thetext>Thanks for the patch, I&apos;ll take a look.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126657</commentid>
+    <comment_count>2</comment_count>
+    <who name="Anton Leherbauer">anton.leherbauer</who>
+    <bug_when>2008-01-07 11:13:44 -0500</bug_when>
+    <thetext>Fixed in 5.0 &gt; 20080107.
+I did not apply the patch but used a more generic approach.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86191</attachid>
+            <date>2008-01-04 09:41:00 -0500</date>
+            <delta_ts>2014-01-29 20:45:42 -0500</delta_ts>
+            <desc>Patch to not call format Node() when initializing a variable with a macro.</desc>
+            <filename>CodeFormatterVisitor.java.diff</filename>
+            <type>text/plain</type>
+            <size>768</size>
+            <attacher name="Herve Poirier">Herve.Poirier</attacher>
+            
+              <data encoding="base64">SW5kZXg6IENvZGVGb3JtYXR0ZXJWaXNpdG9yLmphdmEKPT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PQpSQ1MgZmlsZTogL2N2
+c3Jvb3QvdG9vbHMvb3JnLmVjbGlwc2UuY2R0LXJlbGVuZy9hbGwvb3JnLmVjbGlwc2UuY2R0LmNv
+cmUvc3JjL29yZy9lY2xpcHNlL2NkdC9pbnRlcm5hbC9mb3JtYXR0ZXIvQ29kZUZvcm1hdHRlclZp
+c2l0b3IuamF2YSx2CnJldHJpZXZpbmcgcmV2aXNpb24gMS4zMQpkaWZmIC11IC1yMS4zMSBDb2Rl
+Rm9ybWF0dGVyVmlzaXRvci5qYXZhCi0tLSBDb2RlRm9ybWF0dGVyVmlzaXRvci5qYXZhCTIwIERl
+YyAyMDA3IDE1OjM3OjU5IC0wMDAwCTEuMzEKKysrIENvZGVGb3JtYXR0ZXJWaXNpdG9yLmphdmEJ
+NCBKYW4gMjAwOCAxNDoxOTozMCAtMDAwMApAQCAtNDA1LDcgKzQwNSw3IEBACiAJCUlBU1ROb2Rl
+TG9jYXRpb25bXSBsb2NhdGlvbnM9IG5vZGUuZ2V0Tm9kZUxvY2F0aW9ucygpOwogCQlpZiAobG9j
+YXRpb25zLmxlbmd0aCA9PSAwKSB7CiAJCQlyZXR1cm4gUFJPQ0VTU19TS0lQOwotCQl9IGVsc2Ug
+aWYgKGxvY2F0aW9uc1swXSBpbnN0YW5jZW9mIElBU1RNYWNyb0V4cGFuc2lvbikgeworCQl9IGVs
+c2UgaWYgKHBlZWtOZXh0VG9rZW4oKSAhPSBUb2tlbi50QVNTSUdOICYmIGxvY2F0aW9uc1swXSBp
+bnN0YW5jZW9mIElBU1RNYWNyb0V4cGFuc2lvbikgewogCQkJZm9ybWF0Tm9kZShub2RlKTsKIAkJ
+CXJldHVybiBQUk9DRVNTX1NLSVA7CiAJCX0K
+</data>
+<flag name="iplog"
+          id="60955"
+          type_id="7"
+          status="+"
+          setter="dschaefer"
+    />
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

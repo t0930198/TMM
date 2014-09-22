@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215124</bug_id>
+          
+          <creation_ts>2008-01-12 13:33:00 -0500</creation_ts>
+          <short_desc>Candidate hosts get shown multiple times</short_desc>
+          <delta_ts>2014-01-09 16:14:26 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>Geclipse</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>minor</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ariel Garcia">aog-ecl</reporter>
+          <assigned_to name="Nicholas Loulloudes">loulloudes.n</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130188</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ariel Garcia">aog-ecl</who>
+    <bug_when>2008-01-12 13:33:04 -0500</bug_when>
+    <thetext>When selecting &quot;Candidate Hosts&quot; / &quot;Add...&quot; in the JSDL editor, the same host is shown multiple times, as many times as queues the host has. This most probably comes from the info system GlueCEUniqueID, of which there is one per queue (&lt;host&gt;:2119/jobmanager-&lt;jobmanager&gt;-&lt;queue&gt;).
+AND they can be actually added multiple times, the candidate hosts list contains then twice the same host, and the .xml file also.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131321</commentid>
+    <comment_count>1</comment_count>
+    <who name="Nicholas Loulloudes">loulloudes.n</who>
+    <bug_when>2008-01-15 05:39:38 -0500</bug_when>
+    <thetext>Hi Ariel,
+
+can you provide an example set on how to reproduce this.
+
+The dialog get&apos;s the CE list from JSDLJobDescription.getProject().getVO().getComputing() ..
+
+So in essence what ever CE it available in the Grid Project View is shown again in the dialog.
+
+Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132189</commentid>
+    <comment_count>2</comment_count>
+    <who name="Nicholas Loulloudes">loulloudes.n</who>
+    <bug_when>2008-01-16 06:52:43 -0500</bug_when>
+    <thetext>CE&apos;s can be shown in the Info System twice but are not exactly the same. The CE hostname can be the same but the trailing queue will be different.
+
+Since the dialog shows only host names but concatenating the CE name retrieved from the Info System, a patch has been provided so that double entries are now not included.
+
+Marking Bug as FIXED</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132213</commentid>
+    <comment_count>3</comment_count>
+    <who name="Ariel Garcia">aog-ecl</who>
+    <bug_when>2008-01-16 07:52:30 -0500</bug_when>
+    <thetext>Verified that the problem is fixed now, so closing</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

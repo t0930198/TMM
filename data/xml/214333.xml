@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214333</bug_id>
+          
+          <creation_ts>2008-01-04 06:16:00 -0500</creation_ts>
+          <short_desc>NPE while adding a new EClass inside the Compartment of an EPackage</short_desc>
+          <delta_ts>2008-07-30 11:37:32 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>Ecoretools</product>
+          <component>General</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>Past</target_milestone>
+          <dependson>218467</dependson>
+    
+    <dependson>219146</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Jacques LESCOT">jlescot</reporter>
+          <assigned_to name="Project Inbox">ecore-inbox</assigned_to>
+          <cc>ed</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1125622</commentid>
+    <comment_count>0</comment_count>
+    <who name="Jacques LESCOT">jlescot</who>
+    <bug_when>2008-01-04 06:16:12 -0500</bug_when>
+    <thetext>Not that this does not happen when creating an EClass at the diagram level (the operation label is equal to &quot;Undo Enable Canonical Mode&quot; : see bug 214332).
+
+The generated Command has not Label, and this causes a NPE while adding this Command into the Operation History. Here is the error log message :
+
+java.lang.NullPointerException
+at org.eclipse.ui.operations.OperationHistoryActionHandler.shortenText(OperationHistoryActionHandler.java:457)
+at org.eclipse.ui.operations.OperationHistoryActionHandler.update(OperationHistoryActionHandler.java:434)
+at org.eclipse.gmf.runtime.common.ui.action.actions.global.GlobalUndoAction.refresh(GlobalUndoAction.java:258)
+at org.eclipse.gmf.runtime.common.ui.action.AbstractActionHandler.historyNotification(AbstractActionHandler.java:601)
+at org.eclipse.core.commands.operations.DefaultOperationHistory$2.run(DefaultOperationHistory.java:929)
+at org.eclipse.core.runtime.SafeRunner.run(SafeRunner.java:37)
+at org.eclipse.core.commands.operations.DefaultOperationHistory.notifyListeners(DefaultOperationHistory.java:918)
+at org.eclipse.core.commands.operations.DefaultOperationHistory.notifyAdd(DefaultOperationHistory.java:980)
+at org.eclipse.core.commands.operations.DefaultOperationHistory.add(DefaultOperationHistory.java:190)
+at org.eclipse.core.commands.operations.DefaultOperationHistory.execute(DefaultOperationHistory.java:528)
+at org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack.execute(DiagramCommandStack.java:205)
+at org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack.execute(DiagramCommandStack.java:168)
+at org.eclipse.gmf.runtime.diagram.ui.parts.DiagramCommandStack.execute(DiagramCommandStack.java:155)
+at org.eclipse.gef.tools.AbstractTool.executeCommand(AbstractTool.java:388)
+at org.eclipse.gef.tools.AbstractTool.executeCurrentCommand(AbstractTool.java:400)
+at org.eclipse.gmf.runtime.diagram.ui.tools.CreationTool.performCreation(CreationTool.java:133)
+at org.eclipse.gef.tools.CreationTool.handleButtonUp(CreationTool.java:178)
+at org.eclipse.gef.tools.AbstractTool.mouseUp(AbstractTool.java:1053)
+at org.eclipse.gef.EditDomain.mouseUp(EditDomain.java:259)
+at org.eclipse.gef.ui.parts.DomainEventDispatcher.dispatchMouseReleased(DomainEventDispatcher.java:374)
+at org.eclipse.draw2d.LightweightSystem$EventHandler.mouseUp(LightweightSystem.java:538)
+at org.eclipse.swt.widgets.TypedListener.handleEvent(TypedListener.java:206)
+at org.eclipse.swt.widgets.EventTable.sendEvent(EventTable.java:66)
+at org.eclipse.swt.widgets.Widget.sendEvent(Widget.java:947)
+at org.eclipse.swt.widgets.Display.runDeferredEvents(Display.java:3744)
+at org.eclipse.swt.widgets.Display.readAndDispatch(Display.java:3355)
+at org.eclipse.ui.internal.Workbench.runEventLoop(Workbench.java:2395)
+at org.eclipse.ui.internal.Workbench.runUI(Workbench.java:2359)
+at org.eclipse.ui.internal.Workbench.access$4(Workbench.java:2225)
+at org.eclipse.ui.internal.Workbench$4.run(Workbench.java:468)
+at org.eclipse.core.databinding.observable.Realm.runWithDefault(Realm.java:288)
+at org.eclipse.ui.internal.Workbench.createAndRunWorkbench(Workbench.java:463)
+at org.eclipse.ui.PlatformUI.createAndRunWorkbench(PlatformUI.java:149)
+at org.eclipse.ui.internal.ide.application.IDEApplication.start(IDEApplication.java:106)
+at org.eclipse.equinox.internal.app.EclipseAppHandle.run(EclipseAppHandle.java:193)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.runApplication(EclipseAppLauncher.java:106)
+at org.eclipse.core.runtime.internal.adaptor.EclipseAppLauncher.start(EclipseAppLauncher.java:76)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:362)
+at org.eclipse.core.runtime.adaptor.EclipseStarter.run(EclipseStarter.java:175)
+at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+at sun.reflect.NativeMethodAccessorImpl.invoke(Unknown Source)
+at sun.reflect.DelegatingMethodAccessorImpl.invoke(Unknown Source)
+at java.lang.reflect.Method.invoke(Unknown Source)
+at org.eclipse.equinox.launcher.Main.invokeFramework(Main.java:515)
+at org.eclipse.equinox.launcher.Main.basicRun(Main.java:455)
+at org.eclipse.equinox.launcher.Main.run(Main.java:1193)
+at org.eclipse.equinox.launcher.Main.main(Main.java:1169)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1153914</commentid>
+    <comment_count>1</comment_count>
+    <who name="Ed Willink">ed</who>
+    <bug_when>2008-02-11 04:13:06 -0500</bug_when>
+    <thetext>This is not an Ecore Tools problem.
+
+Just possibly a GMF problem.
+
+#218467 raised against OperationHistoryActionHandler.shortenText().</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1157874</commentid>
+    <comment_count>2</comment_count>
+    <who name="Ed Willink">ed</who>
+    <bug_when>2008-02-15 14:47:24 -0500</bug_when>
+    <thetext>219146 raised against GMF generation template.
+
+Simple workaround:
+
+Modify CompositeTransactionalCommand so that each constructor substitutes something for any null label argument to super. e.g.
+
+    public CompositeTransactionalCommand(TransactionalEditingDomain domain,
+            String label) {
+        super(domain, label != null ? label : &quot;&lt;null-label&gt;&quot;);
+    }
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1159118</commentid>
+    <comment_count>3</comment_count>
+    <who name="Jacques LESCOT">jlescot</who>
+    <bug_when>2008-02-19 04:25:59 -0500</bug_when>
+    <thetext>Applied the solution given by Alex Shatalin in bug 219146 :
+&quot;I suggest to generate:
+command = new CompositeTransactionalCommand(editingDomain,
+command.getLabel()).compose(command);&quot;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1301351</commentid>
+    <comment_count>4</comment_count>
+    <who name="Jacques LESCOT">jlescot</who>
+    <bug_when>2008-07-30 11:37:32 -0400</bug_when>
+    <thetext>Close fixed bugs</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

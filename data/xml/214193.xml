@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214193</bug_id>
+          
+          <creation_ts>2008-01-02 23:14:00 -0500</creation_ts>
+          <short_desc>ExceptionInInitializerError when keystore password is incorrect</short_desc>
+          <delta_ts>2008-01-03 02:59:27 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>14</classification_id>
+          <classification>Mylyn</classification>
+          <product>Mylyn</product>
+          <component>Tasks</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Linux</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>2.3</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Steffen Pingel">steffen.pingel</reporter>
+          <assigned_to name="Steffen Pingel">steffen.pingel</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124743</commentid>
+    <comment_count>0</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-02 23:14:28 -0500</bug_when>
+    <thetext>If the certificate keystore can not be loaded an error should be logged instead of throwing an exception.
+
+java.lang.ExceptionInInitializerError
+at org.eclipse.mylyn.internal.web.core.PollingSslProtocolSocketFactory.&lt;init&gt;(PollingSslProtocolSocketFactory.java:35)
+at org.eclipse.mylyn.web.core.WebClientUtil.createHostConfiguration(WebClientUtil.java:539)
+at org.eclipse.mylyn.internal.trac.core.util.TracHttpClientTransportFactory$TracHttpClientTransport.initHttpHeaders(TracHttpClientTransportFactory.java:128)
+at org.apache.xmlrpc.client.XmlRpcHttpTransport.sendRequest(XmlRpcHttpTransport.java:93)
+at org.apache.xmlrpc.client.XmlRpcClientWorker.execute(XmlRpcClientWorker.java:53)
+at org.apache.xmlrpc.client.XmlRpcClient.execute(XmlRpcClient.java:166)
+at org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient$XmlRpcRequest.executeCallInternal(TracXmlRpcClient.java:132)
+at org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient$XmlRpcRequest.execute(TracXmlRpcClient.java:85)
+at org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient.call(TracXmlRpcClient.java:251)
+at org.eclipse.mylyn.internal.trac.core.TracXmlRpcClient.validate(TracXmlRpcClient.java:309)
+at org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage$TracValidator.validate(TracRepositorySettingsPage.java:212)
+at org.eclipse.mylyn.internal.trac.ui.wizard.TracRepositorySettingsPage$TracValidator.run(TracRepositorySettingsPage.java:187)
+at org.eclipse.mylyn.tasks.ui.wizards.AbstractRepositorySettingsPage$22.run(AbstractRepositorySettingsPage.java:1332)
+at org.eclipse.jface.operation.ModalContext$ModalContextThread.run(ModalContext.java:119)
+Caused by: java.lang.RuntimeException: Could not initialize keystore
+at org.eclipse.mylyn.web.core.SslProtocolSocketFactory.&lt;init&gt;(SslProtocolSocketFactory.java:68)
+at org.eclipse.mylyn.web.core.SslProtocolSocketFactory.&lt;clinit&gt;(SslProtocolSocketFactory.java:46)
+... 14 more
+Caused by: java.io.IOException: Keystore was tampered with, or password was incorrect
+at sun.security.provider.JavaKeyStore.engineLoad(JavaKeyStore.java:768)
+at java.security.KeyStore.load(KeyStore.java:1150)
+at org.eclipse.mylyn.web.core.SslProtocolSocketFactory.&lt;init&gt;(SslProtocolSocketFactory.java:63)
+... 15 more</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124807</commentid>
+    <comment_count>1</comment_count>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-03 02:59:24 -0500</bug_when>
+    <thetext>Committed fix to CVS.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1124808</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86076</attachid>
+    <who name="Steffen Pingel">steffen.pingel</who>
+    <bug_when>2008-01-03 02:59:27 -0500</bug_when>
+    <thetext>Created attachment 86076
+mylyn/context/zip</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86076</attachid>
+            <date>2008-01-03 02:59:00 -0500</date>
+            <delta_ts>2008-01-03 02:59:27 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>1499</size>
+            <attacher name="Steffen Pingel">steffen.pingel</attacher>
+            
+              <data encoding="base64">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
+AAAAAQABAF4AAABnBQAAAAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

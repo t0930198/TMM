@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214541</bug_id>
+          
+          <creation_ts>2008-01-07 16:04:00 -0500</creation_ts>
+          <short_desc>[Content Assist] Completions don&apos;t work in macro bodies</short_desc>
+          <delta_ts>2008-01-14 10:18:38 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-parser</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>INVALID</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Tim Kelly">tim.kelly</reporter>
+          <assigned_to name="Project Inbox">cdt-core-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126934</commentid>
+    <comment_count>0</comment_count>
+    <who name="Tim Kelly">tim.kelly</who>
+    <bug_when>2008-01-07 16:04:03 -0500</bug_when>
+    <thetext>Build ID: 4.0.2
+
+Steps To Reproduce:
+Create a .cpp file with the following code and note places where content assist fails (ctrl+SPACE):
+
+
+#define TEST_DECLARATIONS
+#define TEST_CASE_CODE
+#define MY_SETUP_CODE \
+	if (testing)
+
+class CFoo {
+	
+void bar()      {   };
+static void foobar() {   };
+
+};
+
+
+void test(){
+	CFoo foo;
+	//foo.[ctrl+SPACE]  // &lt;-- content assist: OK
+}
+
+#ifdef TEST_DECLARATIONS
+
+	CFoo foo;
+	// foo.[ctrl+SPACE]  // &lt;-- content assist: FAIL
+	
+	//CFoo::[ctrl+SPACE]   // &lt;-- content assist: OK
+	
+#endif
+
+
+#ifdef	TEST_CASE_CODE
+	
+	MY_SETUP_CODE
+	{
+	
+		//foo.bar();   // &lt;-- content assist: FAIL
+		
+		//CFoo::[ctrl+SPACE]  // &lt;-- content assist: FAIL
+	   
+	}
+	//CFoo::[ctrl+SPACE]  // &lt;-- content assist: OK
+#endif
+
+
+
+More information:
+Content assist doesn&apos;t perform well outside a normal function body, such as in a macro body or in global scope.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128143</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-09 10:28:05 -0500</bug_when>
+    <thetext>Your code is not correct, the failures occur in statements that appear outside of a function-body.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128576</commentid>
+    <comment_count>2</comment_count>
+    <who name="Tim Kelly">tim.kelly</who>
+    <bug_when>2008-01-09 18:18:49 -0500</bug_when>
+    <thetext>Sorry, the specific scenario wasn&apos;t clearly explained. The macros are included from other CPP files to construct the code.
+
+For example, if the original example was in a file called &quot;myMacros.cpp&quot; you might use them like:
+
+1) Class declaration:
+
+#define TEST_DECLARATIONS
+#include &quot;./myMacros.cpp&quot;
+#undef TEST_DECLARATIONS
+
+2) In class method:
+
+#define TEST_CASE_CODE
+#include &quot;./myMacros.cpp&quot;
+#undef TEST_CASE_CODE
+
+3) Inside &quot;myMacros.cpp&quot; we acutally have an indexer specific macro so it&apos;s ignored by a normal build:
+
+#ifdef INDEXER_DEFINED
+ #define TEST_DECLARATIONS
+ #define TEST_CASE_CODE
+#define
+
+So I would at least expect global static functions to be found during code completion (e.g. CFoo::foobar()) even outside a function body. Maybe a complete working project would show the problem better?
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128740</commentid>
+    <comment_count>3</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-10 03:23:23 -0500</bug_when>
+    <thetext>(In reply to comment #2)
+A small sample project, or code that actually compiles, would better illustrate the problem. </thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129819</commentid>
+    <comment_count>4</comment_count>
+      <attachid>86704</attachid>
+    <who name="Tim Kelly">tim.kelly</who>
+    <bug_when>2008-01-11 13:16:42 -0500</bug_when>
+    <thetext>Created attachment 86704
+Test to show code completions outside of function body
+
+1) Import project (C++ Standard make). The test classes compile for me.
+2) Open mymacros.cpp. By default notice nothing is defined. We pass a special macro for certain indexer only things so just define MY_INDEXER_MACROS so the indexer will parse everything.
+3) Note comments &quot;NO COMPLETION&quot;.
+
+I would think normal statements may not be expected to work outside of function bodies but global static would. But I&apos;m not totally certain about either.
+
+Thanks.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130489</commentid>
+    <comment_count>5</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-01-14 05:46:03 -0500</bug_when>
+    <thetext>(In reply to comment #4)
+NewClass.cpp in your sample project does not compile:
+
+g++ -O2 -g -Wall -fmessage-length=0   -c -o NewClass.o NewClass.cpp
+In file included from NewClass.h:15,
+                 from NewClass.cpp:11:
+./mymacros.cpp:15: error: ISO C++ forbids declaration of `testStaticFunc&apos; with no type
+./mymacros.cpp:15: error: cannot declare member function `CNewClass::CTestXCase::testStaticFunc&apos; within `CNewClass&apos;
+In file included from NewClass.cpp:22:
+./mymacros.cpp: In member function `void CNewClass::runTest()&apos;:
+./mymacros.cpp:25: error: statement cannot resolve address of overloaded function</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130648</commentid>
+    <comment_count>6</comment_count>
+    <who name="Tim Kelly">tim.kelly</who>
+    <bug_when>2008-01-14 10:18:38 -0500</bug_when>
+    <thetext>Compiles fine on Nokias x86 compiler in Symbian world. So if the project as is doens&apos;t make sense to explain the problem I&apos;ll try to get a standard make project working. Thanks.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86704</attachid>
+            <date>2008-01-11 13:16:00 -0500</date>
+            <delta_ts>2008-01-11 13:16:42 -0500</delta_ts>
+            <desc>Test to show code completions outside of function body</desc>
+            <filename>CodeSenseTest.zip</filename>
+            <type>application/x-zip-compressed</type>
+            <size>4937</size>
+            <attacher name="Tim Kelly">tim.kelly</attacher>
+            
+              <data encoding="base64">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
+J3d1c55r9PoTg2qRC2zvTW0maB13SqCPozFX3ojon/GCVJo2nFgW348VJQRvUEsDBAoAAAAAABJh
+Kzhef79jGQAAABkAAAAdAAAAQ29kZVNlbnNlVGVzdC9pbmRleGVyTWFjcm9zLmgjZGVmaW5lIE1Z
+X0lOREVYRVJfTUFDUk9TUEsDBBQAAAAIAK1gKziWVdgSmAAAAOEAAAAWAAAAQ29kZVNlbnNlVGVz
+dC9NYWtlZmlsZXOOiHDzcXQPVrDl1PU3UtBNV9ANT8zJUdBNy00tLk5MT9XNSc1LL8mwNeDl4uXy
+d/ICqeR0zk9JDU7NK04NSS0u0csHSfl4OgGlQKwQxyB31xCgMlRVqRWpIFkVDYi8phWnigbIPE1e
+LiDLOSJCU0E3XwEurQCVBdIgozVBeoEOA+mCqgCJJOekJuZZAU0oygU6GUkPXA0AUEsDBBQAAAAI
+AGhhKzgiDOGlGgEAAJYCAAAaAAAAQ29kZVNlbnNlVGVzdC9teW1hY3Jvcy5jcHClkVFPgzAQx59H
+wne4bC/ORBb1bUs02HaBDOjSlrg9EQIlkrDOBHgwxu8uMJCqPGmfrvfv/e/uV9NY5FkqMwD/GLkB
+JgfCIt9GjHLTWDRCriQIwkWECfJsZguXBj8lZHMSIYpJk5cqzTPTaKJcJUWdSpgjIcsKxaW0Xuat
+clG7rhPOpgH96eoObSFcn95QEZflZlRXqz5389Df4XYJAQVE/b1HWjcLuENDD4NwXA7PlO2AhoK7
+mMA2DBA8UXx8nOq3XldNyKu4ypNtrZKr5ab1R+fTayGr/KyA7sAhjFhjtR4NFIbMTFv5F7LxWfMF
+nIhw3wtD+l0z+tq5HZDViiqpMZlNQLn7CxT4NrtmrzPq7O//x1xz/xi5fQJQSwMEFAAAAAgAnFwr
+ODZdhJbuAAAAEAIAABoAAABDb2RlU2Vuc2VUZXN0L05ld0NsYXNzLmNwcK1RPWvDMBCdJdB/OJwl
+yWC3q6FDULy6Q0yhUzDytRbYkqqPlhDy33sK1A3tGsEN9967d+9QtRUcnu74yK7tZ2Sshha/5NSH
+UCrnCN6lOFrPAGqg7gV90NYw6h7LBwKkdSev38cIWfFqkwe1QMZGrZBUewzKaxdplFTyZwXo2U04
+o4l9pu5/07YSXPCVNmpKA0Kx3DYWt7DsMETZB7zigi8B6/o363ojODtTVRW09k908PiRtMeB+Eu2
++LR6gBsfn0xest6cM8tWA75pg9A1h+4od4fmKJ/3TSaWUGU1n+ZeeXv9iSJzydDYvxnBL99QSwME
+FAAAAAgAL18rOCnub76vAAAAEgEAABgAAABDb2RlU2Vuc2VUZXN0L05ld0NsYXNzLmhljz0LwjAQ
+hmcD+Q9Hu+jS7jqVWlGQCibgWGqSQqBNS5MoIvrbPVsVVLjh3ue9T0pCXRmpKsizQ7pNGCvWlIQI
+tFFfjBJRl9ZCmqtz+swomVwp6fyx1mKO4mPAdLZAff8BiE6tltB7w5V1Y5F1pdMCBsMhZYNeeSNe
+Pe9TeMZ4sczwnH3CN7ucoaWNqL1UEERxc2lK0bc2El0XoOWHn/6aAFdi3MbRykhdQRx//fkAUEsD
+BAoAAAAAAA5hKzgAAAAAAAAAAAAAAAAOAAAAQ29kZVNlbnNlVGVzdC9QSwECFAAUAAAACADzYCs4
+djqBYsgEAACfKAAAFwAAAAAAAAABACAAAAAAAAAAQ29kZVNlbnNlVGVzdC8uY3Byb2plY3RQSwEC
+FAAUAAAACADzYCs4E//HlPgBAADbCQAAFgAAAAAAAAABACAAAAD9BAAAQ29kZVNlbnNlVGVzdC8u
+cHJvamVjdFBLAQIUAAoAAAAAAPJgKzgAAAAAAAAAAAAAAAAYAAAAAAAAAAAAEAAAACkHAABDb2Rl
+U2Vuc2VUZXN0Ly5zZXR0aW5ncy9QSwECFAAUAAAACAAZYSs4fDMe054AAAD7AAAAMgAAAAAAAAAB
+ACAAAABfBwAAQ29kZVNlbnNlVGVzdC8uc2V0dGluZ3Mvb3JnLmVjbGlwc2UuY2R0LmNvcmUucHJl
+ZnNQSwECFAAUAAAACACtYCs4W+eD8dUAAACvAQAAHwAAAAAAAAABACAAAABNCAAAQ29kZVNlbnNl
+VGVzdC9Db2RlU2Vuc2VUZXN0LmNwcFBLAQIUABQAAAAIAOVdKzigrA4+ZQAAAMYAAAAbAAAAAAAA
+AAEAIAAAAF8JAABDb2RlU2Vuc2VUZXN0L0NUZXN0Q2FzZS5jcHBQSwECFAAUAAAACABwXys4GFjy
+XqkAAAAHAQAAGQAAAAAAAAABACAAAAD9CQAAQ29kZVNlbnNlVGVzdC9DVGVzdENhc2UuaFBLAQIU
+AAoAAAAAABJhKzhef79jGQAAABkAAAAdAAAAAAAAAAEAIAAAAN0KAABDb2RlU2Vuc2VUZXN0L2lu
+ZGV4ZXJNYWNyb3MuaFBLAQIUABQAAAAIAK1gKziWVdgSmAAAAOEAAAAWAAAAAAAAAAEAIAAAADEL
+AABDb2RlU2Vuc2VUZXN0L01ha2VmaWxlUEsBAhQAFAAAAAgAaGErOCIM4aUaAQAAlgIAABoAAAAA
+AAAAAQAgAAAA/QsAAENvZGVTZW5zZVRlc3QvbXltYWNyb3MuY3BwUEsBAhQAFAAAAAgAnFwrODZd
+hJbuAAAAEAIAABoAAAAAAAAAAQAgAAAATw0AAENvZGVTZW5zZVRlc3QvTmV3Q2xhc3MuY3BwUEsB
+AhQAFAAAAAgAL18rOCnub76vAAAAEgEAABgAAAAAAAAAAQAgAAAAdQ4AAENvZGVTZW5zZVRlc3Qv
+TmV3Q2xhc3MuaFBLAQIUAAoAAAAAAA5hKzgAAAAAAAAAAAAAAAAOAAAAAAAAAAAAEAAAAFoPAABD
+b2RlU2Vuc2VUZXN0L1BLBQYAAAAADQANAK0DAACGDwAAAAA=
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

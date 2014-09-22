@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214668</bug_id>
+          
+          <creation_ts>2008-01-08 15:22:00 -0500</creation_ts>
+          <short_desc>preview by Web Viewer failed if the library referenced external .jar file</short_desc>
+          <delta_ts>2009-07-09 22:19:24 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>3</classification_id>
+          <classification>BIRT</classification>
+          <product>BIRT</product>
+          <component>Report</component>
+          <version>2.2.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>Non-Auto</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          <dependson>211770</dependson>
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Ivy Li">yli</reporter>
+          <assigned_to name="Rick Lu">rlu</assigned_to>
+          <cc>rlu</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127674</commentid>
+    <comment_count>0</comment_count>
+    <who name="Ivy Li">yli</who>
+    <bug_when>2008-01-08 15:22:37 -0500</bug_when>
+    <thetext>steps to reproduce:
+
+Create class MyObject and export it to a jar. 
+Create a library, reference to this .jar file. 
+Create a Label in the library, in Label’s script method:  import the necessary package contains MyObject, and declare a variable with the type MyObject. 
+Create a design reference to the library. 
+Create a Label element in design which is referenced from the Label in library. 
+ 
+
+Then preview:
+
+Preview successfully by designer preview tab. 
+Preview failed by web viewer. 
+ 
+
+The reason why it failed preview by Web Viewer is because web viewer preview will create document. So, after the design is serialize to document, from the design Label element, although there is script expression localized from library Label, but the problem is:
+
+The .jar file which includes the MyObject class was referenced by Library root node. 
+There is no .jar file referenced by design, so Engine will not load the class from the .jar.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132081</commentid>
+    <comment_count>1</comment_count>
+    <who name="Rick Lu">rlu</who>
+    <bug_when>2008-01-16 02:21:26 -0500</bug_when>
+    <thetext>Model part have been fixed. 
+
+However, onCreate and onRender run in different phases. So, the user needs to provide readObject/writeObject in MyObject class.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214861</bug_id>
+          
+          <creation_ts>2008-01-10 03:08:00 -0500</creation_ts>
+          <short_desc>GetRelatedDocumentsQuery - wrong AssociationType</short_desc>
+          <delta_ts>2012-01-05 13:32:31 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>1</classification_id>
+          <classification>Eclipse Foundation</classification>
+          <product>z_Archived</product>
+          <component>OHF</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Roni Ram">roni</reporter>
+          <assigned_to name="ohf.xds_consumer-inbox">ohf.xds_consumer-inbox</assigned_to>
+          <cc>matt.davis</cc>
+    
+    <cc>seknoop</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128735</commentid>
+    <comment_count>0</comment_count>
+    <who name="Roni Ram">roni</who>
+    <bug_when>2008-01-10 03:08:09 -0500</bug_when>
+    <thetext>Build ID: I20070621-1340
+
+Steps To Reproduce:
+Currently the association type is &apos;RPLC&apos;
+&lt;rim:AdhocQuery id=&quot;urn:uuid:d90e5407-b356-4d91-a89f-873917b4b0e6&quot;&gt;
+	&lt;rim:Slot name=&quot;$XDSDocumentEntryEntryUUID&quot;&gt;
+		&lt;rim:ValueList&gt;&lt;rim:Value&gt;&apos;urn:uuid:04d8727e-44d8-4740-c51c-02004c4f4f50&apos;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;
+	&lt;/rim:Slot&gt;
+	&lt;rim:Slot name=&quot;$AssociationTypes&quot;&gt;
+		&lt;rim:ValueList&gt;&lt;rim:Value&gt;(&apos;RPLC&apos;)&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;
+	&lt;/rim:Slot&gt;
+&lt;/rim:AdhocQuery&gt;
+
+and it should be like this...
+&lt;rim:AdhocQuery id=&quot;urn:uuid:d90e5407-b356-4d91-a89f-873917b4b0e6&quot;&gt;
+	&lt;rim:Slot name=&quot;$XDSDocumentEntryEntryUUID&quot;&gt;
+		&lt;rim:ValueList&gt;&lt;rim:Value&gt;&apos;urn:uuid:04d8727e-44d8-4740-c51c-02004c4f4f50&apos;&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;
+	&lt;/rim:Slot&gt;
+	&lt;rim:Slot name=&quot;$AssociationTypes&quot;&gt;
+		&lt;rim:ValueList&gt;&lt;rim:Value&gt;(&apos;urn:oasis:names:tc:ebxml-regrep:AssociationType:RPLC&apos;)&lt;/rim:Value&gt;&lt;/rim:ValueList&gt;
+	&lt;/rim:Slot&gt;
+&lt;/rim:AdhocQuery&gt;
+
+
+
+More information:
+The following classes have to be changed
+* StoredQueryConstants - I added this constant public static final String EBXML_3_0ASSOCIATION_PREFIX = &quot;urn:oasis:names:tc:ebxml-regrep:AssociationType:&quot;;
+* GetRelatedDocumentsQuery - I changed line 56 to assocValues[i] = &apos;\&apos;&apos; + StoredQueryConstants.EBXML_3_0ASSOCIATION_PREFIX + relationshipTypes[i].getName() +&apos;\&apos;&apos;;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1131709</commentid>
+    <comment_count>1</comment_count>
+    <who name="">seknoop</who>
+    <bug_when>2008-01-15 14:18:42 -0500</bug_when>
+    <thetext>Fixed with the code and suggestions provided. Thanks!
+- Sarah</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1284525</commentid>
+    <comment_count>2</comment_count>
+    <who name="Matthew Davis">matt.davis</who>
+    <bug_when>2008-07-03 16:08:59 -0400</bug_when>
+    <thetext>Closing out all IHE and Bridge bugs.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

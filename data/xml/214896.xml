@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214896</bug_id>
+          
+          <creation_ts>2008-01-10 09:51:00 -0500</creation_ts>
+          <short_desc>Changing the format of a debug expression doesn&apos;t take effect immediately</short_desc>
+          <delta_ts>2009-04-14 17:02:59 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-debug</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>NEW</bug_status>
+          <resolution></resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Michael Luber">michael.luber</reporter>
+          <assigned_to name="cdt-debug-inbox@eclipse.org">cdt-debug-inbox</assigned_to>
+          <cc>daniel.friederich</cc>
+    
+    <cc>jamesblackburn+eclipse</cc>
+    
+    <cc>nils.hagge</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1128879</commentid>
+    <comment_count>0</comment_count>
+    <who name="Michael Luber">michael.luber</who>
+    <bug_when>2008-01-10 09:51:03 -0500</bug_when>
+    <thetext>Build ID: I20071101-2000
+
+Steps To Reproduce:
+1. Setup a debug session with GDB and a simple C program involving a structure, e.g. use the program under &quot;More information&quot;.
+
+2. Run until the last line (&quot;return 0&quot;)
+
+3. Add the structure instance (&quot;s&quot;) to the Expressions view and expand it
+
+4. Right-click on the member &quot;a&quot; and choose &quot;Format -&gt; Binary&quot;. Before anything happens, you have to switch to another view and back. And even then only the entry in the tree structure will be updated, but not in the contents pane
+
+
+More information:
+/************************************************/
+int main(int argc, char **argv)
+{
+  struct {
+    int a;
+  } s;
+  s.a=23942304;
+  
+  return 0;
+}
+/************************************************/</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129223</commentid>
+    <comment_count>1</comment_count>
+    <who name="Daniel Friederich">daniel.friederich</who>
+    <bug_when>2008-01-10 15:29:44 -0500</bug_when>
+    <thetext>I actually saw the same issue when looking into bug 209793, so I at least checked if I did cause it.
+First note that this bug is not only happening for the format setting, it is also happening for me when changing the value. When entering a new value in a sub-variable in the expression view, the new value is visible only after an update, for example after stepping once.
+
+JDT does send out a DebugEvent, DebugEvent.CHANGE with detail DebugEvent.CONTENT when a variable is changed.
+CDT sends out a different detail, it fires a DebugEvent.STATE, which, given the JDoc description of it seems appropriate to me.
+And it obviously is good enough for the Variable view to update appropriately.
+
+I think the bug actually happens in the core, more precisely in
+org.eclipse.debug.internal.ui.viewers.update.ExpressionEventHandler.
+This class translates the occurring DebugEvent.CHANGE events to model deltas.
+When doing this it just translates the detail one to one:
+DebugEvent.CONTENT -&gt; gets IModelDelta.CONTENT
+DebugEvent.STATE -&gt; gets IModelDelta.STATE
+However it also replaces the variable as source of the incoming debug event with the expression as node of the outgoing delta. Therefore the
+IModelDelta.STATE which just means to update the label,
+updates the label of the main expression and not the label of its children variables.
+For JDT DebugEvent.CONTENT that is not a problem as the DebugEvent.CONTENT includes the children.
+
+I tried as simple fix locally to automatically include the IModelDelta.CONTENT if the source was translated, and that is working fine. Just as fine as forwarding the initial object to have changed and not mapping the variable to the expression. Just not doing the mapping seems like the most appropriate fix to me, but I don&apos;t know the details in that code good enough to be sure there are now problems with it.
+
+BTW. The fix for 209793 helps that you can now step once and still see the same variable formatting. Before stepping caused the variables to be recreated and the content was lost. Now the recreated variables restore the old formatting.
+
+BTW2: That the formatting only applies to the label and not to the details is consistent with the behavior in the variable view.
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1174817</commentid>
+    <comment_count>2</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-03-11 07:02:48 -0400</bug_when>
+    <thetext>(In reply to comment #1)
+&gt; JDT does send out a DebugEvent, DebugEvent.CHANGE with detail
+&gt; DebugEvent.CONTENT when a variable is changed.
+&gt; CDT sends out a different detail, it fires a DebugEvent.STATE, which, given the
+&gt; JDoc description of it seems appropriate to me.
+&gt; And it obviously is good enough for the Variable view to update appropriately.
+
+The JavaDoc for DebugEvent states:
+    *  STATE - indicates the state of an element has changed, but its children are not affected. A client would use a state change event to update a label of the affected element, but would not update any children.
+    * CONTENT - indicates that a debug element&apos;s value or contents have changed in some way. For example, when the value of a variable is changed explicitly, the variable should fire a content change event.
+
+Surely when a variable value is changed, a DebugEvent.CONTENT should be used?  
+
+While there may still be a bug in ExpressionEventHandler, making Certainly making handleChangedEvent (and resetValue) fire a DebugEvent.CONTENT event appears to do the trick, though really hurts performance...</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1175297</commentid>
+    <comment_count>3</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2008-03-11 14:15:05 -0400</bug_when>
+    <thetext>So I filed BUG 222267 for this.
+
+The small patch there fixes two problems: formatting an expression and changing its value.  In both cases the expression value is now automatically updated.
+
+Unfortunately the problem is deeper than this, I think.  For example changing stack frame does not automatically update the expressions.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1472631</commentid>
+    <comment_count>4</comment_count>
+    <who name="James Blackburn">jamesblackburn+eclipse</who>
+    <bug_when>2009-04-14 17:02:59 -0400</bug_when>
+    <thetext>This issue was fixed(ish) in 3.4 (bug222267) but has been reverted in 3.5M7 : bug245571 which means the issues here will likely reappear when the next milestone happens...</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

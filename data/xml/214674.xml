@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214674</bug_id>
+          
+          <creation_ts>2008-01-08 16:12:00 -0500</creation_ts>
+          <short_desc>SessionsXMLSchemaIncorrectTagValuesTest fails</short_desc>
+          <delta_ts>2009-09-15 10:56:08 -0400</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>12</classification_id>
+          <classification>RT</classification>
+          <product>EclipseLink</product>
+          <component>Foundation</component>
+          <version>unspecified</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard>Fixed in 1.0M4</status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>1.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Andrei Ilitchev">andrei.ilitchev</reporter>
+          <assigned_to name="Andrei Ilitchev">andrei.ilitchev</assigned_to>
+          <cc>peter.krogh</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127722</commentid>
+    <comment_count>0</comment_count>
+    <who name="Andrei Ilitchev">andrei.ilitchev</who>
+    <bug_when>2008-01-08 16:12:05 -0500</bug_when>
+    <thetext>VERSION: Eclipse Persistence Services - @VERSION@ (Build @BUILD_NUMBER@)
+	TEST MODEL NAME: SessionsXMLTestModel
+	MODEL DESCRIPTION: This model tests the Sessions XML feature.
+
+
+		VERSION: Eclipse Persistence Services - @VERSION@ (Build @BUILD_NUMBER@)
+		TEST SUITE NAME: XML Schema tests
+		SUITE DESCRIPTION: 
+
+			VERSION:   Eclipse Persistence Services - @VERSION@ (Build @BUILD_NUMBER@)
+			TEST NAME:   SessionsXMLSchemaIncorrectTagValuesTest
+			TEST DESCRIPTION: Test Sessions XML schema with incorrect tag values.
+			##FAILURE##
+			TEST TIME:      0
+			TOTAL TIME:      47
+			RESULT:      Error
+			Local Exception Stack: 
+			Exception [EclipseLink-0] (Eclipse Persistence Services - @VERSION@ (Build @BUILD_NUMBER@)): org.eclipse.persistence.testing.framework.TestErrorException
+			Exception Description: Fatal error occured.
+			Internal Exception: java.lang.ClassCastException: org.eclipse.persistence.platform.xml.XMLPlatformException
+	at org.eclipse.persistence.testing.framework.TestCase.execute(TestCase.java:162)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:244)
+	at org.eclipse.persistence.testing.framework.TestSuite.execute(TestSuite.java:72)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:244)
+	at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:205)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:244)
+	at org.eclipse.persistence.testing.framework.TestModel.execute(TestModel.java:205)
+	at org.eclipse.persistence.testing.framework.TestExecutor.execute(TestExecutor.java:244)
+	at org.eclipse.persistence.testing.framework.TestExecutor.runTest(TestExecutor.java:660)
+	at org.eclipse.persistence.testing.framework.ui.SynchronizedTestExecutor.run(SynchronizedTestExecutor.java:58)
+Caused by: java.lang.ClassCastException: org.eclipse.persistence.platform.xml.XMLPlatformException
+	at org.eclipse.persistence.testing.tests.sessionsxml.SessionsXMLSchemaIncorrectTagValuesTest.verify(SessionsXMLSchemaIncorrectTagValuesTest.java:45)
+	at org.eclipse.persistence.testing.framework.TestCase.execute(TestCase.java:153)
+	... 9 more
+
+
+		RESULTS OF TEST SUITE: XML Schema tests
+		###ERRORS###
+		Warnings: 0
+		Problems: 0
+		Errors: 1
+		Fatal Errors: 0
+		Passed: 18
+		Setup Warnings: 0
+		Setup Failures: 0
+		Total Time: 10187
+		Total Tests: 19
+
+
+	RESULTS OF TEST MODEL: SessionsXMLTestModel
+	###ERRORS###
+	Warnings: 0
+	Problems: 0
+	Errors: 1
+	Fatal Errors: 0
+	Passed: 27
+	Setup Warnings: 0
+	Setup Failures: 0
+	Total Time: 13610
+	Total Tests: 28
+
+The problem is in XMLSchemaIncorrectTagValues.xml file:
+         &lt;eclipselink:platform-class&gt;@dbPlatform@&lt;/eclipselink:platform-class&gt;
+should be changed to:
+         &lt;platform-class&gt;@dbPlatform@&lt;/platform-class&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127728</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86429</attachid>
+    <who name="Andrei Ilitchev">andrei.ilitchev</who>
+    <bug_when>2008-01-08 16:16:26 -0500</bug_when>
+    <thetext>Created attachment 86429
+the patch fixes the xml as was suggested in the prev. posting.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127736</commentid>
+    <comment_count>2</comment_count>
+    <who name="Andrei Ilitchev">andrei.ilitchev</who>
+    <bug_when>2008-01-08 16:19:23 -0500</bug_when>
+    <thetext>fixed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128385</commentid>
+    <comment_count>3</comment_count>
+      <attachid>86500</attachid>
+    <who name="Andrei Ilitchev">andrei.ilitchev</who>
+    <bug_when>2008-01-09 14:50:23 -0500</bug_when>
+    <thetext>Created attachment 86500
+corrected patch</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128387</commentid>
+    <comment_count>4</comment_count>
+    <who name="Andrei Ilitchev">andrei.ilitchev</who>
+    <bug_when>2008-01-09 14:51:44 -0500</bug_when>
+    <thetext>Corrected my yesterday&apos;s fix to Bug 214674</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86429</attachid>
+            <date>2008-01-08 16:16:00 -0500</date>
+            <delta_ts>2008-01-08 16:16:26 -0500</delta_ts>
+            <desc>the patch fixes the xml as was suggested in the prev. posting.</desc>
+            <filename>214674_080108.patch</filename>
+            <type>text/plain</type>
+            <size>1023</size>
+            <attacher name="Andrei Ilitchev">andrei.ilitchev</attacher>
+            
+              <data encoding="base64">SW5kZXg6IGZvdW5kYXRpb24vZWNsaXBzZWxpbmsuY29yZS50ZXN0L3Jlc291cmNlL29yZy9lY2xp
+cHNlL3BlcnNpc3RlbmNlL3Rlc3RpbmcvbW9kZWxzL3Nlc3Npb25zeG1sL1hNTFNjaGVtYUluY29y
+cmVjdFRhZ1ZhbHVlcy54bWwNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCi0tLSBmb3VuZGF0aW9uL2VjbGlwc2VsaW5r
+LmNvcmUudGVzdC9yZXNvdXJjZS9vcmcvZWNsaXBzZS9wZXJzaXN0ZW5jZS90ZXN0aW5nL21vZGVs
+cy9zZXNzaW9uc3htbC9YTUxTY2hlbWFJbmNvcnJlY3RUYWdWYWx1ZXMueG1sCShyZXZpc2lvbiA3
+NDI2KQ0KKysrIGZvdW5kYXRpb24vZWNsaXBzZWxpbmsuY29yZS50ZXN0L3Jlc291cmNlL29yZy9l
+Y2xpcHNlL3BlcnNpc3RlbmNlL3Rlc3RpbmcvbW9kZWxzL3Nlc3Npb25zeG1sL1hNTFNjaGVtYUlu
+Y29ycmVjdFRhZ1ZhbHVlcy54bWwJKHdvcmtpbmcgY29weSkNCkBAIC0yMyw3ICsyMyw3IEBADQog
+ICAgICAgPC9sb2dnaW5nPgogICAgICAgPHByaW1hcnktcHJvamVjdCB4c2k6dHlwZT0iY2xhc3Mi
+Pm9yZy5lY2xpcHNlLnBlcnNpc3RlbmNlLnRlc3RpbmcubW9kZWxzLmVtcGxveWVlLnJlbGF0aW9u
+YWwuRW1wbG95ZWVQcm9qZWN0PC9wcmltYXJ5LXByb2plY3Q+CiAgICAgICA8bG9naW4geHNpOnR5
+cGU9ImRhdGFiYXNlLWxvZ2luIj4KLSAgICAgICAgIDxlY2xpcHNlbGluazpwbGF0Zm9ybS1jbGFz
+cz5AZGJQbGF0Zm9ybUA8L2VjbGlwc2VsaW5rOnBsYXRmb3JtLWNsYXNzPgorICAgICAgICAgPHBs
+YXRmb3JtLWNsYXNzPkBkYlBsYXRmb3JtQDwvZWNsaXBzZWxpbms+CiAgICAgICAgICA8ZXh0ZXJu
+YWwtY29ubmVjdGlvbi1wb29saW5nPmJvb2xlYW48L2V4dGVybmFsLWNvbm5lY3Rpb24tcG9vbGlu
+Zz4KICAgICAgICAgIDxleHRlcm5hbC10cmFuc2FjdGlvbi1jb250cm9sbGVyPmJvb2xlYW48L2V4
+dGVybmFsLXRyYW5zYWN0aW9uLWNvbnRyb2xsZXI+CiAgICAgICAgICA8c2VxdWVuY2luZz4K
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="1"
+              isprivate="0"
+          >
+            <attachid>86500</attachid>
+            <date>2008-01-09 14:50:00 -0500</date>
+            <delta_ts>2008-01-09 14:50:23 -0500</delta_ts>
+            <desc>corrected patch</desc>
+            <filename>214674_080109.patch</filename>
+            <type>text/plain</type>
+            <size>999</size>
+            <attacher name="Andrei Ilitchev">andrei.ilitchev</attacher>
+            
+              <data encoding="base64">SW5kZXg6IGZvdW5kYXRpb24vZWNsaXBzZWxpbmsuY29yZS50ZXN0L3Jlc291cmNlL29yZy9lY2xp
+cHNlL3BlcnNpc3RlbmNlL3Rlc3RpbmcvbW9kZWxzL3Nlc3Npb25zeG1sL1hNTFNjaGVtYUluY29y
+cmVjdFRhZ1ZhbHVlcy54bWwNCj09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09PT09
+PT09PT09PT09PT09PT09PT09PT09PT09PT09PT0NCi0tLSBmb3VuZGF0aW9uL2VjbGlwc2VsaW5r
+LmNvcmUudGVzdC9yZXNvdXJjZS9vcmcvZWNsaXBzZS9wZXJzaXN0ZW5jZS90ZXN0aW5nL21vZGVs
+cy9zZXNzaW9uc3htbC9YTUxTY2hlbWFJbmNvcnJlY3RUYWdWYWx1ZXMueG1sCShyZXZpc2lvbiA3
+NDU2KQ0KKysrIGZvdW5kYXRpb24vZWNsaXBzZWxpbmsuY29yZS50ZXN0L3Jlc291cmNlL29yZy9l
+Y2xpcHNlL3BlcnNpc3RlbmNlL3Rlc3RpbmcvbW9kZWxzL3Nlc3Npb25zeG1sL1hNTFNjaGVtYUlu
+Y29ycmVjdFRhZ1ZhbHVlcy54bWwJKHdvcmtpbmcgY29weSkNCkBAIC0yMyw3ICsyMyw3IEBADQog
+ICAgICAgPC9sb2dnaW5nPgogICAgICAgPHByaW1hcnktcHJvamVjdCB4c2k6dHlwZT0iY2xhc3Mi
+Pm9yZy5lY2xpcHNlLnBlcnNpc3RlbmNlLnRlc3RpbmcubW9kZWxzLmVtcGxveWVlLnJlbGF0aW9u
+YWwuRW1wbG95ZWVQcm9qZWN0PC9wcmltYXJ5LXByb2plY3Q+CiAgICAgICA8bG9naW4geHNpOnR5
+cGU9ImRhdGFiYXNlLWxvZ2luIj4KLSAgICAgICAgIDxwbGF0Zm9ybS1jbGFzcz5AZGJQbGF0Zm9y
+bUA8L2VjbGlwc2VsaW5rPgorICAgICAgICAgPHBsYXRmb3JtLWNsYXNzPkBkYlBsYXRmb3JtQDwv
+cGxhdGZvcm0tY2xhc3M+CiAgICAgICAgICA8ZXh0ZXJuYWwtY29ubmVjdGlvbi1wb29saW5nPmJv
+b2xlYW48L2V4dGVybmFsLWNvbm5lY3Rpb24tcG9vbGluZz4KICAgICAgICAgIDxleHRlcm5hbC10
+cmFuc2FjdGlvbi1jb250cm9sbGVyPmJvb2xlYW48L2V4dGVybmFsLXRyYW5zYWN0aW9uLWNvbnRy
+b2xsZXI+CiAgICAgICAgICA8c2VxdWVuY2luZz4K
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

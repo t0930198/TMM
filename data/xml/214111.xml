@@ -1,0 +1,246 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214111</bug_id>
+          
+          <creation_ts>2008-01-02 09:02:00 -0500</creation_ts>
+          <short_desc>wrong escaping in lexer rules</short_desc>
+          <delta_ts>2008-12-16 01:01:22 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>11</classification_id>
+          <classification>Modeling</classification>
+          <product>GMT</product>
+          <component>oAW-xtext</component>
+          <version>4.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Mac OS X - Carbon (unsup.)</op_sys>
+          <bug_status>CLOSED</bug_status>
+          <resolution>NOT_ECLIPSE</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Sven Efftinge">sven.efftinge</reporter>
+          <assigned_to name="Patrick Schonbach">schoenbach</assigned_to>
+          <cc>schoenbach</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1124105</commentid>
+    <comment_count>0</comment_count>
+    <who name="Sven Efftinge">sven.efftinge</who>
+    <bug_when>2008-01-02 09:02:26 -0500</bug_when>
+    <thetext>I found a problem with creating custom lexer rules in xText with quote characters in them.
+
+xText Native rules are defined as:
+
+&quot;Native&quot; ID &quot;:&quot;
+    STRING // The string contains a valid ANTLR 3 lexer rule expression
+    &quot;;&quot;
+
+
+
+Since the Native rule body is a STRING lexical token, it must be delimited by single or double quotes, and similar quotes within the token must be escaped with a leading backslash (\), e.g.:
+
+Native FOO:
+    &quot; &apos;\&quot;&apos; ~(&apos;\&quot;&apos;)* &apos;\&quot;&apos; &quot;
+;
+
+
+
+The problem is that when the Antlr lexer rule is generated, the backslashes are not removed, and since Antlr does not have the same escaping rules for quote characters, the resulting Antlr lexer rule will be broken:
+
+RULE_FOO :
+    &apos;\&quot;&apos; ~(&apos;\&quot;&apos;)* &apos;\&quot;&apos;
+;
+
+
+
+This effectively means that you cannot define custom lexer rules involving single or double quotes. The fix is simply to remove the backslash escape characters before generating the Antlr lexer rule, but it needs to be made to the oAW parser generator, and until then it limits the kind of lexical tokens you can use in your dsl.
+
+Cheers,
+Edwin</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128856</commentid>
+    <comment_count>1</comment_count>
+      <attachid>86556</attachid>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-10 09:22:32 -0500</bug_when>
+    <thetext>Created attachment 86556
+mylyn/context/zip
+
+Mylyn context</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1128982</commentid>
+    <comment_count>2</comment_count>
+      <attachid>86570</attachid>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-10 11:41:34 -0500</bug_when>
+    <thetext>Created attachment 86570
+mylyn/context/zip
+
+Mylyn context</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1129039</commentid>
+    <comment_count>3</comment_count>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-10 12:34:26 -0500</bug_when>
+    <thetext>Fixed in HEAD and B_V42. Please set to RESOLVED FIXED.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134383</commentid>
+    <comment_count>4</comment_count>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-19 09:28:05 -0500</bug_when>
+    <thetext>This is fixed, as stated before.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134437</commentid>
+    <comment_count>5</comment_count>
+    <who name="Manfred Klug">manklu</who>
+    <bug_when>2008-01-19 14:50:03 -0500</bug_when>
+    <thetext>After this fix, rules like the following are broken.
+
+Native WS :
+	 &quot;(&apos; &apos;|&apos;\t&apos;|&apos;\r&apos;|&apos;\n&apos;|&apos;;&apos;)+ {$channel=HIDDEN;}&quot;;
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134439</commentid>
+    <comment_count>6</comment_count>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-19 14:56:39 -0500</bug_when>
+    <thetext>I will improve it.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1134452</commentid>
+    <comment_count>7</comment_count>
+    <who name="Patrick Schonbach">schoenbach</who>
+    <bug_when>2008-01-19 17:01:38 -0500</bug_when>
+    <thetext>Fixed in HEAD and branch B_v42</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1392568</commentid>
+    <comment_count>8</comment_count>
+    <who name="Heiko Behrens">Heiko.Behrens</who>
+    <bug_when>2008-12-15 19:13:23 -0500</bug_when>
+    <thetext>This bug has been moved to www.openArchitectureWare.org/bugzilla. It has been reopened in a batch process and will be closed again in a few minutes.
+
+Yes, this sounds strange but seems to be the only way to be conform with the bugzilla workflow.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1393342</commentid>
+    <comment_count>9</comment_count>
+    <who name="Karsten Thoms">karsten.thoms</who>
+    <bug_when>2008-12-15 20:01:26 -0500</bug_when>
+    <thetext>This bug has been moved to www.openArchitectureWare.org/bugzilla. This action is part of a batch process. We apologize if you received many mails due to this action.
+After change of the resolution the bugs will be closed.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1394231</commentid>
+    <comment_count>10</comment_count>
+    <who name="Karsten Thoms">karsten.thoms</who>
+    <bug_when>2008-12-16 01:01:22 -0500</bug_when>
+    <thetext>This bug has been moved to www.openArchitectureWare.org/bugzilla. This action is part of a batch process. We apologize if you received many mails due to this action.</thetext>
+  </long_desc>
+      
+          <attachment
+              isobsolete="1"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86556</attachid>
+            <date>2008-01-10 09:22:00 -0500</date>
+            <delta_ts>2008-01-10 11:42:43 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>1116</size>
+            <attacher name="Patrick Schonbach">schoenbach</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIAM56KjgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQxMTEueG1s3Zpdb9owFIb/SpSL3XFiOzaJs7FedOxDk7ZpX9rFbrzETbMl
+TuQYRrU/Pwdo15aM0hVCMoRQiLD9+sF+z/GBJyeLInfmUtdZqSYuBuQ6UsVlkql04n76+HwUuidP
+n7xSRmoRG/uhl1ltSn3hvEom7rkxVR153rdZWoOM86yqJZQ6Xd4YEUwxxq7z+ap390ZP07lUxnkm
+cyMmrprluetMVfJMGDlxCULhCOERRg5mESER4cAIcU6nH11n2YeszcQdISAEI/sgrvM6U1ZTIVRW
+zXLRjOA6b8Q8S5fXl0O81VmaqUa9FXolurjILxTEpbaXZSJzyNZjQCJjceE6H4zQZgdtH4yexWam
+5Uuhktx+erIwcmEglcrO25LzCpGpr16t40eiqB7n5nGjo6ykEjo+z4xctv4prJJVy0bUtX5Xs/wu
+5sL17o0TcYf4EaUR9SGkt2kuv/1V/7XMZXw/hN8TA7MM3on4h0jldFHlVrhuJdcmo9/g1t81imgA
+eAMcweAzwjm/xFfpshJpyxrcuuZkksra3lDGzrSwou6/Wm8MvJV8AGPuDwH9WnIYMR9oELZYwJjw
+xgKC7i1gpY2Fke+D7+Mh4NzBURFtcOK+Oup+SeBx5HPrQhskSLPcKOfhEDY1ttuDNauQkvDA2JrR
+eIRohGmLFY4w9HYfdreFkE/7unseaka/Xly2PC3VWZbCEuK+wyzmMA7H+01QbHIyz+TPGt7Lupzp
+WK4blu1JSquWQeIcsNf/He+e0wv7ZMCOnxPf1HEEHndnumEwhIi4gskwcBIce3Fty13DvkbLzpba
+FnvC4RGSid2cyWvD09DxmgJIm+GvWnhXhj+171VTGanB3t+AqtdR6iF7GIVAQ/82WNplGL06cRKr
+hf7txNlnmsM/gPaZ7g4mEKD/usK39+KeHwAPNkN355nMPwbfbqnd4ZV2CmFT2RtEFeCP0TLec+zD
+N9W+kNzBQJnf60PeP4enRoz3QouiEBoW1WFyqNZz0HFSqK1F+15SXEtnESXAON+ISeM/HGWSmd0R
+psWZ1WqnDl+a16ltfBc96zSM7D1F6oDeFpNk9AiFxgMnnR3s6m1miXlfffJ2xNl7LEYU+HgjBeo+
+cfQZMLRrxfUgFPBG7Zkg8BEeUCJ4z0pih4kdJk06wvpqXIcis8PPRn11ngd6uVTX6geHytMYgiBE
+/fjJ6LqWo8L0Nv+59fQ3UEsHCGIRNTKKAwAA9CUAAFBLAQIUABQACAAIAM56KjhiETUyigMAAPQl
+AAAwAAAAAAAAAAAAAAAAAAAAAABodHRwcyUzQSUyRiUyRmJ1Z3MuZWNsaXBzZS5vcmclMkZidWdz
+LTIxNDExMS54bWxQSwUGAAAAAAEAAQBeAAAA6AMAAAAA
+</data>
+
+          </attachment>
+          <attachment
+              isobsolete="0"
+              ispatch="0"
+              isprivate="0"
+          >
+            <attachid>86570</attachid>
+            <date>2008-01-10 11:41:00 -0500</date>
+            <delta_ts>2008-01-10 11:41:34 -0500</delta_ts>
+            <desc>mylyn/context/zip</desc>
+            <filename>mylyn-context.zip</filename>
+            <type>application/octet-stream</type>
+            <size>1375</size>
+            <attacher name="Patrick Schonbach">schoenbach</attacher>
+            
+              <data encoding="base64">UEsDBBQACAAIAC6NKjgAAAAAAAAAAAAAAAAwAAAAaHR0cHMlM0ElMkYlMkZidWdzLmVjbGlwc2Uu
+b3JnJTJGYnVncy0yMTQxMTEueG1s3Ztbk5s2FMe/CsND3yx0BYnEyUPiNpnOtJ0m7fShLxQrhBSD
+B+SNd/LlK1ivLwsGO2ZBdGdnx7sjtEc/Hf6ci3j5ertKrDuZF3GWzm0EoG3JNMyWcRrN7T8+/jjj
+9utXL9+nSuZBqPSgd3Ghsvzeer+c25+VWhe+4/yziQogwyReFxJkeVT9YYYRRQjZ1p/72e2TmRZ3
+MlXWW5moYG6nmySxrUW6fBsoObcxhHwG0QxBC3k+RT4WgBNhvVl8tK1qDlmouT2DAHvYtn6OU23O
+Kkjj9SYJyslt65fgLo6qz4+z/5rHUZyWhmsb9/au7pP7FIRZrj9mS5mAeDc9WMowuLetDyrI1QVm
+fVD5JlSbXL4L0mWiR8+3Sm4ViGSql6yhOasgTv92ijz8IVitXyTqRWlHtpZpkIefYyWrq78G2pKH
+K0ujjuZ9WOWX4C6wnatJQmFh4lPuMwKoxxtIcgb1FxqHJvMxLmkyjKdAc2cy9KkHEH0KEyNAGBZC
+PLJc59k6iBpQtqKTy0gW+g+p0itdaaOuh37yjxvQ77yClutwBZkC+oPJBPAa+krBHuYvZCLD67z3
+y1KBTQx+C8J/g0gututEG553kDuYYTa4bi2FyDNWSztAHRCPChf6jAPPfcq2QluqKzZeEZoWMt3d
+oDpAQN5oItFox1RptgkHQ6V3Q2KqfDjXIC4HO02DnWqw89Pj4IX+PS1jWx39blUNt7Y82+ShvMWB
+MdchUQ358A58bMf/hW6LQyPiGuvKTTHFJWBLY0q6R1y369651gL5U6EwNbswn6p+IkPgcdivFmgd
+uIvl1wL8vjNwd2F2Xg9qtkwNZkdBgTGjH2U95lFI+JD6iDaksDMEBKSm3q39pvHI9YkmTmuChctS
+CRWCGx+1l5vJfcZ8ok3GfABs076Jbk3Mv+2jlDdZ+imOQEWy3+JS22OUGHtrToEs9JEALq+l6eM8
+So9tmR7Ojjga4ioxNDaavjj37r00QRggrFaH1y7IoJhC6Xi/EOQC1zsXCo7El4hy2wVDI2fOT+ww
+BU/ro5twY2/Ws2I4YJeMT/DRO1zbi3vGC9duj4nPdI6DzxZlh/I1/c0AG7+TdWrHSM7VIU0YnTRR
+TNOn7657DFDzvEDZkGty/99kuHtdhBxQTp7CpUPmFfvGNNa20HMtfdNpdvSbXHNjlP6beb2nHs1N
+pSk2qVvbUlPYiuYsEA/f30MAw5uzlNFAtmnFqOfaehaM4aoQhEyrCtGfA/fO+LhAMmYPv59CzcAh
+P6Rm37031meHK1x4Qpgc3psCsiOUR0Dw8mTvJFqChzyATcR/qU88ILx6aWnwYsh3FodMi34QN/ZI
+742nRPJgtQryvs+HdOuoK0Yi+uyHmJ6VKPMpBkzUfBS7h1tbLmN1Ocdo9UnbqpcO/ip/LvTFXSUR
+vakMnwsSjaTXXnEfp7DU+q6IsRQ7dJKRScWZA8aNpCq6Gyt6z04GUiBQ7awIhoBANKFA8Mr+zrNg
+dGvx9PCBHdEU4KXHbQYsU5mqPL0e7h9A5M+8gjV8uaXtBarxoDpHVHfvcr/6D1BLBwhG3EUnjQQA
+AAY+AABQSwECFAAUAAgACAAujSo4RtxFJ40EAAAGPgAAMAAAAAAAAAAAAAAAAAAAAAAAaHR0cHMl
+M0ElMkYlMkZidWdzLmVjbGlwc2Uub3JnJTJGYnVncy0yMTQxMTEueG1sUEsFBgAAAAABAAEAXgAA
+AOsEAAAAAA==
+</data>
+
+          </attachment>
+      
+
+    </bug>
+
+</bugzilla>

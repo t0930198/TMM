@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214480</bug_id>
+          
+          <creation_ts>2008-01-07 08:13:00 -0500</creation_ts>
+          <short_desc>Pattern based scanning of URL pages</short_desc>
+          <delta_ts>2008-01-07 13:36:17 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Buckminster</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3.0-M1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Hallgren">thomas</reporter>
+          <assigned_to name="buckminster.core-inbox">buckminster.core-inbox</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1126498</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-07 08:13:41 -0500</bug_when>
+    <thetext>Background:
+A large amount of components, zip or tar.gz archives in particular, can be found on &quot;download pages&quot;. A download page is typically reachable by a URL and will contain a lot of &lt;href&gt; elements appointing the files that can be downloaded.
+
+It would be very nice if such a page could be specified in an RMAP provider in combination with some regular expression pattern that serves as discriminator for the URL&apos;s found on that page. A more elaborate solution could also make use of the fact that many of those URL&apos;s also contain valid meta-data information.
+
+A third option that would be applicable to downloads.eclipse.org is to be able to change the actual URL into another URL since the original URL will take you to another page where you have to select the download mirror. The desired behavior from Buckminster standpoint would be to use a URL that selects the default mirror based on geo-ip.
+
+Proposal:
+The &lt;provider&gt; element in the RMAP could be equipped with a &lt;matcher&gt; element. This element would point to a base (the web-page) and a regular expression that would serve as the discriminator for the URL&apos;s found on the base page. The matched URL&apos;s would end up in a named property that then can be used in the normal expansion of the &lt;uri format=&quot;&quot;&gt; element. I.e.:
+
+&lt;provider readerType=&quot;url&quot; componentTypes=&quot;unknown&quot; mutable=&quot;false&quot; source=&quot;false&quot;&gt;
+  &lt;matcher base=&quot;http://download.eclipse.org/eclipse/downloads/drops/R-3.3.1.1-200710231652/index.php&quot;&gt;     
+    &lt;match pattern=&quot;^.*download\.php?dropFile=.*$&quot; name=&quot;match&quot;/&gt;
+  &lt;/matcher&gt;
+  &lt;uri format=&quot;${match}&quot;/&gt;
+&lt;/provider&gt;
+
+To cater for the fact that the URL needs to sometimes be altered and also in order to extract valid component info, the single &lt;match&gt; can instead be replaced by a sequence of &lt;match&gt; and &lt;group&gt; elements. Some &lt;match&gt; elements can have specific names that transforms them into properties that the unknown component type can use when it builds the cspec.
+
+Instead of relying on that the user will use correct &quot;capturing groups&quot; versus &quot;non capturing groups&quot;, the XML elements should have a name (forces a capturing group) and an optional flag (might force an non capturing group and will always make sure that the group ends with &apos;?&apos;.
+
+If each match can be equipped with a quoted prefix and suffix, this also simplifies the expression a great deal. A fully blown implementation that reads a download page from Eclipse.org can then look like this:
+
+&lt;provider readerType=&quot;url&quot; componentTypes=&quot;unknown&quot; mutable=&quot;false&quot; source=&quot;false&quot;&gt;
+  &lt;matcher base=&quot;http://download.eclipse.org/eclipse/downloads/drops/R-3.3.1.1-200710231652/index.php&quot;&gt;     
+    &lt;match prefix=&quot;http://download.eclipse.org&quot; pattern=&quot;/.+/&quot; suffix=&quot;download.php?dropFile=&quot; name=&quot;folder&quot;/&gt;
+    &lt;group name=&quot;fileName&quot;&gt;
+      &lt;name pattern=&quot;[a-zA-Z0-9_-]+&quot;/&gt;
+      &lt;version prefix=&quot;-&quot; pattern=&quot;([0-9]+\.)*[0-9]+&quot; optional=&quot;true&quot;/&gt;
+      &lt;os prefix=&quot;-&quot; pattern=&quot;aix|linux|macosx|solaris|win32&quot; optional=&quot;true&quot;/&gt;
+      &lt;ws prefix=&quot;-&quot; pattern=&quot;carbon|gtk|motif|wpf|win32&quot; optional=&quot;true&quot;/&gt;
+      &lt;arch prefix=&quot;-&quot; pattern=&quot;ppc|x86|x86_64&quot; optional=&quot;true&quot;/&gt;
+      &lt;match prefix=&quot;.&quot; pattern=&quot;zip|tar\.gz&quot;/&gt;
+    &lt;/group&gt;
+  &lt;/matcher&gt;
+  &lt;uri format=&quot;http://www.eclipse.org/downloads/download.php?r=1&amp;amp;protocol=http&amp;amp;file=${folder}${fileName}&quot;/&gt;
+&lt;/provider&gt;
+
+The implementation will transform all capturing groups entered by the user into non-capturing groups and then add capturing groups where needed (to capture the named groups). Groups will also be added if needed to prevent that some expressions extend into another match. The full match for the above pattern should be:
+
+^http://download\.eclipse\.org(/.+/)download\.php\?dropFile=(([a-zA-Z0-9_-]+)(?:-((?:[0-9]+\.)*[0-9]+))?(?:-(aix|linux|macosx|solaris|win32))?(?:-(carbon|gtk|motif|wpf|win32))?(?:-(ppc|x86|x86_64))?\.(?:zip|tar\.gz))$
+
+and when resolving a component such as &quot;eclipse-RCP&quot; on a win32 platform, the following cspec should be implemented:
+
+&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;
+&lt;cs:cspec xmlns:cs=&quot;http://www.eclipse.org/buckminster/CSpec-1.0&quot; name=&quot;eclipse-RCP&quot; componentType=&quot;unknown&quot; version=&quot;3.3.1.1&quot; versionType=&quot;OSGi&quot; filter=&quot;(target.os=win32)&quot;/&gt;</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1126804</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-07 13:36:17 -0500</bug_when>
+    <thetext>Implemented in accordance with the proposal.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

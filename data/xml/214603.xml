@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214603</bug_id>
+          
+          <creation_ts>2008-01-08 06:32:00 -0500</creation_ts>
+          <short_desc>CygPath#getFileName will not return when &quot;name&quot; is empty</short_desc>
+          <delta_ts>2009-01-26 03:02:34 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>CDT</product>
+          <component>cdt-core</component>
+          <version>4.0.2</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>Windows XP</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>major</bug_severity>
+          <target_milestone>5.0</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Emi Suzuki">emi-suzuki</reporter>
+          <assigned_to name="Markus Schorn">markus.schorn</assigned_to>
+          <cc>IngedevTeam.fr</cc>
+    
+    <cc>markok</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127224</commentid>
+    <comment_count>0</comment_count>
+    <who name="Emi Suzuki">emi-suzuki</who>
+    <bug_when>2008-01-08 06:32:24 -0500</bug_when>
+    <thetext>CygPath#getFileName will not return when the content of the argument &quot;name&quot; is empty (not a null object), since stdout.readLine() waits the input forever.  
+
+  stdin.write(name + &quot;\n&quot;); //$NON-NLS-1$
+  stdin.flush();
+  String str = stdout.readLine();
+
+I had faced the issue above when building a C++ project which cause the linker errors below:  
+
+crtstuff.c:(.text+0xc): relocation truncated to fit: SPU_REL16 against `.bss&apos;
+crtstuff.c:(.text+0x34): relocation truncated to fit: SPU_REL16 against `.data&apos;
+crtstuff.c:(.text+0x3c): relocation truncated to fit: SPU_REL16 against `.data&apos;
+crtstuff.c:(.text+0x54): relocation truncated to fit: SPU_REL16 against `.bss&apos;
+/opt/cell/toolchain/lib/gcc/spu/4.1.1/crtbegin.o: In function `frame_dummy&apos;:
+crtstuff.c:(.text+0x80): relocation truncated to fit: SPU_ADDR18 against `.jcr&apos;
+crtstuff.c:(.text+0x84): relocation truncated to fit: SPU_REL16 against `.jcr&apos;
+/opt/cell/toolchain/lib/gcc/spu/4.1.1/crtbegin.o:(.fini+0x0): relocation truncated to fit: SPU_REL16 against `__do_global_dtors_aux&apos;
+/opt/cell/toolchain/lib/gcc/spu/4.1.1/crtend.o: In function `__do_global_ctors_aux&apos;:
+crtstuff.c:(.text+0x8): relocation truncated to fit: SPU_ADDR18 against `.ctors&apos;
+/opt/cell/toolchain/lib/gcc/spu/4.1.1/crtend.o:(.init+0x0): relocation truncated to fit: SPU_REL16 against `__do_global_ctors_aux&apos;
+/opt/cell/sysroot/usr/spu/lib/crt1.o: In function `_start&apos;:
+(.text+0x0): relocation truncated to fit: SPU_REL16 against symbol `__ea_local_store&apos; defined in COMMON section in /opt/cell/sysroot/usr/spu/lib/crt1.o
+/opt/cell/sysroot/usr/spu/lib/crt1.o: In function `_start&apos;:
+(.text+0x28): additional relocation overflows omitted from the output
+/opt/cell/toolchain/lib/gcc/spu/4.1.1/libstdc++.a(basic_file.o): In function `std::__basic_file&lt;char&gt;::sys_open(int, std::_Ios_Openmode)&apos;:
+(.text._ZNSt12__basic_fileIcE8sys_openEiSt13_Ios_Openmode+0x7c): undefined reference to `fdopen&apos;
+collect2: ld returned 1 exit status
+
+In the result of that, the building never ends and I was not able to even cancel it.
+
+The direct cause of the issue is the lines start from &quot;(.text+0x0)&quot; or &quot;(.text+0x28)&quot; in the above error messages: since they don&apos;t have the filenames, GLDErrorParser passes the filename as an empty string to CygPath#getFileName, for making error markers.  
+I confirmed that building the project above can end gracefully on a Linux Platform, however, I think it is CygPath to blame.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1250522</commentid>
+    <comment_count>1</comment_count>
+    <who name="Markus Schorn">markus.schorn</who>
+    <bug_when>2008-05-28 08:03:10 -0400</bug_when>
+    <thetext>Thanks,
+fixed in 5.0 &gt; 20080528.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1415142</commentid>
+    <comment_count>2</comment_count>
+    <who name="Marko Klopcic">markok</who>
+    <bug_when>2009-01-26 03:02:34 -0500</bug_when>
+    <thetext>*** Bug 220727 has been marked as a duplicate of this bug. ***</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

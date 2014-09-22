@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>215209</bug_id>
+          
+          <creation_ts>2008-01-14 08:30:00 -0500</creation_ts>
+          <short_desc>Redesign the overview page</short_desc>
+          <delta_ts>2008-01-31 05:02:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>13</classification_id>
+          <classification>SOA</classification>
+          <product>JWT</product>
+          <component>WE</component>
+          <version>0.4.0</version>
+          <rep_platform>PC</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>---</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Florian Lautenbacher">lautenbacher</reporter>
+          <assigned_to name="Christian Saad">christian.saad</assigned_to>
+          
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1130567</commentid>
+    <comment_count>0</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-14 08:30:17 -0500</bug_when>
+    <thetext>The overview page should be redesigned: no textbox for lasted changes and saved location, other buttons for new role / data / application.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130570</commentid>
+    <comment_count>1</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-14 08:32:33 -0500</bug_when>
+    <thetext>Works fine and looks cool! However, there should be a mouse-over tooltip, what the buttons mean. Otherwise it might be confusing if somebody only sees the icons and does not know that these mean &quot;Create new data / role / application&quot; or &quot;Delete x&quot;.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130661</commentid>
+    <comment_count>2</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-14 10:27:51 -0500</bug_when>
+    <thetext>mouseover tooltips have been included for the buttons on the overview sheet.
+
+other changes to the overview sheet include:
+- the current selection in overview sheet is synchronized with outline view
+- context menu is accessible
+- wizard opened from overview sheet preselects the package which was selected in overview sheet
+
+new fixes concerning the overview sheet:
+- entries in overview sheet are updated when view is changed
+- delete buttons in overview sheet are disabled on focus loss to prevent possible errors that can happen if a selection gets &apos;lost&apos; but the butten stays active
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130728</commentid>
+    <comment_count>3</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-14 11:17:44 -0500</bug_when>
+    <thetext>All things work fine and are great. But the last topic &quot;delete buttons in overview sheet are disabled...&quot; makes problems. It seems that the delete button doesn&apos;t seem to work anymore or the display is not actualized correctly (I guess the first, that it does simply not work anymore, because the focus comes to the button, then the button is deactivated, but the delete command is never executed in between).</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1130848</commentid>
+    <comment_count>4</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-14 13:24:12 -0500</bug_when>
+    <thetext>Oops :) This is a very tricky problem, because the focus event occurs before the mousedown event what makes this specific solution impossible. Also, the tree component (for some reason known probably only to java/eclipse developers) doesn&apos;t get selectionchanged events if the selection was changed using a java instruction instead of the mouse/keyboard. Basically the only way, that I can think of right now, to disable the buttons when leaving the overview page is to add selection listeners that do this to everything else (which is ugly). So, the current solution is to leave the delete buttons enabled and to check at each click if the selection is still valid to prevent exceptions.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1132960</commentid>
+    <comment_count>5</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-17 02:37:20 -0500</bug_when>
+    <thetext>Would it be possible to enable the button always, but to show an error message if the role/application/data is currently in use and cannot be deleted? That would ease the understanding of the user, too. This is related to bug 205160 and would be the resolution for both.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1133283</commentid>
+    <comment_count>6</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-17 11:49:08 -0500</bug_when>
+    <thetext>Ok, so there are the three following possible situations in which the selected element in the overview page cannot be deleted:
+1. If it is not a role/data/application but a package (because of the possibility that a package contains an element which is still referenced)
+2. If it is a role/data/application but still referenced elsewhere
+3. If there is nothing selected in the Tree
+
+The issue addressed in bug 205160 concerns the enablement of the delete entry in the context menu which is currently handles elsewhere. It would be advisable to first solve this issue by implementing a generic test for elements which are still referred to somewhere else (see bug 215674). Then the tests for case 1 and 2 could be removed from the overview sheet and be replaced by the deletion command test from the itemprovider.</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1138256</commentid>
+    <comment_count>7</comment_count>
+    <who name="Christian Saad">christian.saad</who>
+    <bug_when>2008-01-24 18:18:40 -0500</bug_when>
+    <thetext>the following changes were implemented:
+
+- overview page delete buttons are always enabled. when the elements are still referenced, a message is presented to the user
+- overview sheet can delete packages as well as still referenced elements
+- small bugfix: overview page always shows standard activity icon 
+</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1146193</commentid>
+    <comment_count>8</comment_count>
+    <who name="Florian Lautenbacher">lautenbacher</who>
+    <bug_when>2008-01-31 05:02:47 -0500</bug_when>
+    <thetext>Works fine.</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>

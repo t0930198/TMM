@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<!DOCTYPE bugzilla SYSTEM "https://bugs.eclipse.org/bugs/page.cgi?id=bugzilla.dtd">
+
+<bugzilla version="4.4.1"
+          urlbase="https://bugs.eclipse.org/bugs/"
+          
+          maintainer="webmaster@eclipse.org"
+>
+
+    <bug>
+          <bug_id>214586</bug_id>
+          
+          <creation_ts>2008-01-08 03:43:00 -0500</creation_ts>
+          <short_desc>Sporadic &quot;Problems occurred&quot; messages during materialization</short_desc>
+          <delta_ts>2008-01-08 03:47:47 -0500</delta_ts>
+          <reporter_accessible>1</reporter_accessible>
+          <cclist_accessible>1</cclist_accessible>
+          <classification_id>4</classification_id>
+          <classification>Tools</classification>
+          <product>Buckminster</product>
+          <component>Core</component>
+          <version>unspecified</version>
+          <rep_platform>All</rep_platform>
+          <op_sys>All</op_sys>
+          <bug_status>RESOLVED</bug_status>
+          <resolution>FIXED</resolution>
+          
+          
+          <bug_file_loc></bug_file_loc>
+          <status_whiteboard></status_whiteboard>
+          <keywords></keywords>
+          <priority>P3</priority>
+          <bug_severity>normal</bug_severity>
+          <target_milestone>0.3.0-M1</target_milestone>
+          
+          
+          <everconfirmed>1</everconfirmed>
+          <reporter name="Thomas Hallgren">thomas</reporter>
+          <assigned_to name="buckminster.core-inbox">buckminster.core-inbox</assigned_to>
+          <cc>alex.chen</cc>
+          
+          <votes>0</votes>
+
+      
+
+      
+
+      
+
+          <comment_sort_order>oldest_to_newest</comment_sort_order>  
+          <long_desc isprivate="0" >
+    <commentid>1127152</commentid>
+    <comment_count>0</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-08 03:43:36 -0500</bug_when>
+    <thetext>The message Problems occurred when invoking code from plug-in: &quot;org.eclipse.buckminster.core&quot; sometimes appear during materialization. The following stacktrace can be found in the .metadata/.log file:
+
+java.lang.NullPointerException
+	at java.util.LinkedList.remove(LinkedList.java:792)
+	at java.util.LinkedList.removeFirst(LinkedList.java:134)
+	at java.util.LinkedList.poll(LinkedList.java:470)
+	at org.eclipse.buckminster.core.materializer.MaterializationJob$1.done(MaterializationJob.java:223)
+	at org.eclipse.core.internal.jobs.JobListeners$3.notify(JobListeners.java:39)
+	at org.eclipse.core.internal.jobs.JobListeners.doNotify(JobListeners.java:112)
+	at org.eclipse.core.internal.jobs.JobListeners.done(JobListeners.java:152)
+	at org.eclipse.core.internal.jobs.JobManager.endJob(JobManager.java:550)
+	at org.eclipse.core.internal.jobs.WorkerPool.endJob(WorkerPool.java:105)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:71)</thetext>
+  </long_desc><long_desc isprivate="0" >
+    <commentid>1127154</commentid>
+    <comment_count>1</comment_count>
+    <who name="Thomas Hallgren">thomas</who>
+    <bug_when>2008-01-08 03:47:47 -0500</bug_when>
+    <thetext>The LinkedList was accessed from multiple threads without synchronization. It is now replaced with a ConcurrentLinkedQueue. I also added stacktrace printouts to the Buckminster console logger for Eclipse events.
+
+Fixed in revision 7386</thetext>
+  </long_desc>
+      
+      
+
+    </bug>
+
+</bugzilla>
