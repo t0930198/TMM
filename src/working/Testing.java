@@ -20,7 +20,7 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-public class Testing implements Runnable {
+public class Testing extends Report implements Runnable {
 
 	static String topic_source = "data/snlp/train_source/01000/summary.txt";
 	static String topic_summary;
@@ -30,19 +30,9 @@ public class Testing implements Runnable {
 	static String dest = "data/";
 	static String filename = "";
 
-	String bug_id = "";
-	String product = "";
-	String component = "";
-	String priority = "";
-	String severity = "";
-	List<Node> developer_list;
-
-	String short_desc;
-	String long_desc;
+	Vector<Report> reports = new Vector<Report>();
+	Report report;
 	int paired_topic;
-	
-
-	Derby tmmdb;
 
 	public static void main(String args[]) throws InterruptedException {
 		System.out.println("Working Directory = "
@@ -55,44 +45,35 @@ public class Testing implements Runnable {
 	}
 
 	public Testing() {
-		tmmdb = new Derby();
-		
+
 	}
 
 	public void run() {
 		System.out.println("inserting");
-		if (!tmmdb.isDataExist()) {
-			long StartTimeb = System.currentTimeMillis();
-			for (int i = 214050; i <= 215049; i++) {
-				try {
-					xmlParsing(xml_source + i + ".xml");
 
-					tmmdb._insert_to_bugreport(Integer.parseInt(bug_id), product,
-							component, severity, priority, compare());
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+		long StartTimeb = System.currentTimeMillis();
+		for (int i = 214050; i <= 215049; i++) {
+			try {
+				report = new Report();
+				xmlParsing(xml_source + i + ".xml");
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-			long ProcessTimeb = System.currentTimeMillis() - StartTimeb;
-			System.out.println("===== Build table cost time: "
-					+ (float) ProcessTimeb / 1000 + " s =====");
 		}
-		try {
-			tmmdb.create_table("CREATE TABLE TRIAGE_LIST(ID INT, NAME VARCHAR(20), PRIMARY KEY(ID) )");
-			tmmdb.close_DB();
-		} catch (SQLException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
+		long ProcessTimeb = System.currentTimeMillis() - StartTimeb;
+		System.out.println("===== Build table cost time: "
+				+ (float) ProcessTimeb / 1000 + " s =====");
+
 		System.exit(0);
 		ExecutorService thread_pool = Executors.newFixedThreadPool(4);
 		long StartTime = System.currentTimeMillis();
 		for (int i = 215050; i <= 215149; i++) {
 			try {
 				xmlParsing(xml_source + i + ".xml");
-				thread_pool.execute(new Thread(new Triager(product, component,
-						severity, priority, compare())));
+				thread_pool.execute(new Thread(new Triager(report.getProduct(),
+						report.getComponent(), report.getSeverity(), report
+								.getPriority(), compare())));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -121,25 +102,25 @@ public class Testing implements Runnable {
 			Document doc = reader.read(file);
 			Node node = doc.selectSingleNode("//bugzilla/bug");
 
-			this.bug_id = node.selectSingleNode("bug_id").getText();
-			this.product = node.selectSingleNode("product").getText();
-			this.component = node.selectSingleNode("component").getText();
-			this.priority = node.selectSingleNode("priority").getText();
-			this.severity = node.selectSingleNode("bug_severity").getText();
-			this.developer_list = node.selectNodes("long_desc/who");
+			report.setBug_id(node.selectSingleNode("bug_id").getText());
+			report.setProduct(node.selectSingleNode("product").getText());
+			report.setComponent(node.selectSingleNode("component").getText());
+			report.setPriority(node.selectSingleNode("priority").getText());
+			report.setSeverity(node.selectSingleNode("bug_severity").getText());
+			List<Node> list = node.selectNodes("long_desc/who");
 
-			for (int i = 0; i < developer_list.size(); i++) {
+			for (int i = 0; i < report.getDeveloper_list().size(); i++) {
 
-				Iterator i1 = developer_list.iterator();
+				Iterator i1 = report.getDeveloper_list().iterator();
 				while (i1.hasNext()) {
 					Element element = (Element) i1.next();
-					
+					report.addDeveloper(element.getText());
 				}
 			}
-			this.short_desc = node.selectSingleNode("short_desc").getText();
+			report.setShort_desc(node.selectSingleNode("short_desc").getText());
 
-			this.long_desc = node.selectSingleNode("long_desc")
-					.selectSingleNode("thetext").getText();
+			report.setLong_desc(node.selectSingleNode("long_desc")
+					.selectSingleNode("thetext").getText());
 			// System.out.println(long_desc);
 		} catch (Exception e) {
 			File f = new File(xml_source);
@@ -188,10 +169,10 @@ public class Testing implements Runnable {
 		for (String list : topic_list) {
 			for (String term : list.split("\n")) {
 
-				if (this.short_desc.contains(term.split("\t")[1])) {
+				if (report.getShort_desc().contains(term.split("\t")[1])) {
 					count[topic_id]++;
 				}
-				if (this.long_desc.contains(term.split("\t")[1])) {
+				if (report.getLong_desc().contains(term.split("\t")[1])) {
 					count[topic_id]++;
 				}
 			}
