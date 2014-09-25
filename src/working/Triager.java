@@ -12,37 +12,43 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-public class Triager implements Runnable{
+public class Triager {
 	
-	ResultSet participate;
 	List<Node> developer_list;
-	Vector<String> pre_developers;
 	
-	String product = "";
-	String component = "";
-	String priority = "";
-	String severity = "";
-	int topic=0;
+	private Vector<String> d_list;
+	String[] topic_list;
+	Vector<Report> train;
 	
-	String assign = "";
-	String attach = "";
-	String commit = "";
-	String comment = "";
-	
-	
-	Derby tmmdb;
-	
-	public Triager(String pro, String com, String pri, String ser, int topic ) throws SQLException{
-		this.product=pro;
-		this.component=com;
-		this.priority=pri;
-		this.severity=ser;
+	private Report report;
 		
-		participate = tmmdb._select_participate(product, component, severity,
-				priority, topic);
+	private String assign = "";
+	private String attach = "";
+	private String commit = "";
+	private String comment = "";
+	
+	public Triager(String[] topic_list, Vector<Report> train){
+		this.topic_list = topic_list;
+		this.train = train;
 	}
-	public void run(){
+	
+	public void work(Report r) {
+		this.report=r;
+		this.getD();
+	}
 		
+	private void getD(){
+		Vector<String> tmp = null;
+		
+		for(Report r:train){
+			tmp = r.getDev(report.getProduct(), report.getComponent(), report.getPriority(), report.getSeverity());
+			if(tmp!=null){
+				for(String s:tmp){
+					if(!d_list.contains(s))
+						d_list.add(s);
+				}
+			}
+		}
 	}
 	
 	private double aScore(){

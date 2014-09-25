@@ -20,31 +20,34 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
-public class Testing extends Report implements Runnable {
+public class Work extends Report implements Runnable {
 
-	static String topic_source = "data/snlp/train_source/01000/summary.txt";
-	static String topic_summary;
-	static String[] topic_list;
+	static private int train_begin=214049;
+	static private int train_end=214949;
+	
+	static private String topic_source = "data/snlp/train_source/01000/summary.txt";
+	static private String topic_summary;
+	static private String[] topic_list;
 
-	static String xml_source = "data/xml/";
-	static String dest = "data/";
-	static String filename = "";
+	static private String xml_source = "data/xml/";
+	static private String dest = "data/";
+	static private String filename = "";
 
-	Vector<Report> reports = new Vector<Report>();
-	Report report;
-	int paired_topic;
+	private Vector<Report> train = new Vector<Report>();
+	private Vector<Report> test = new Vector<Report>();
+	private Report report;
 
 	public static void main(String args[]) throws InterruptedException {
 		System.out.println("Working Directory = "
 				+ System.getProperty("user.dir"));
 		load_topicxml();
 
-		Thread t = new Thread(new Testing());
+		Thread t = new Thread(new Work());
 		t.start();
 		t.join();
 	}
 
-	public Testing() {
+	public Work() {
 
 	}
 
@@ -52,10 +55,12 @@ public class Testing extends Report implements Runnable {
 		System.out.println("inserting");
 
 		long StartTimeb = System.currentTimeMillis();
-		for (int i = 214050; i <= 215049; i++) {
+		for (int i = train_begin; i < train_end; i++) {
 			try {
 				report = new Report();
 				xmlParsing(xml_source + i + ".xml");
+				train.add(report);
+				report = null;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,25 +71,20 @@ public class Testing extends Report implements Runnable {
 				+ (float) ProcessTimeb / 1000 + " s =====");
 
 		System.exit(0);
-		ExecutorService thread_pool = Executors.newFixedThreadPool(4);
+		Triager triager = new Triager(topic_list, train);
 		long StartTime = System.currentTimeMillis();
-		for (int i = 215050; i <= 215149; i++) {
+		for (int i = train_end; i < (train_end+100); i++) {
 			try {
+				report = new Report();
 				xmlParsing(xml_source + i + ".xml");
-				thread_pool.execute(new Thread(new Triager(report.getProduct(),
-						report.getComponent(), report.getSeverity(), report
-								.getPriority(), compare())));
+				test.add(report);
+				triager.work(report);
+				report = null;
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 
-		}
-		try {
-			thread_pool.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		long ProcessTime = System.currentTimeMillis() - StartTime;
 		System.out.println("===== Parse testing reports cost time: "
@@ -160,31 +160,5 @@ public class Testing extends Report implements Runnable {
 		}
 	}
 
-	public int compare() {
-		int topic_id = 0;
-		int count[] = new int[topic_list.length];
-		for (int i : count)
-			i = 0;
-
-		for (String list : topic_list) {
-			for (String term : list.split("\n")) {
-
-				if (report.getShort_desc().contains(term.split("\t")[1])) {
-					count[topic_id]++;
-				}
-				if (report.getLong_desc().contains(term.split("\t")[1])) {
-					count[topic_id]++;
-				}
-			}
-			topic_id++;
-		}
-		int x = 0;
-		for (int i = 0; i < count.length; i++) {
-
-			if (count[x] < count[i]) {
-				x = i;
-			}
-		}
-		return x;
-	}
+	
 }
