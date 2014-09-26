@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Vector;
@@ -22,9 +23,9 @@ import org.dom4j.io.SAXReader;
 
 public class Work extends Report implements Runnable {
 
-	static private int train_begin=214049;
-	static private int train_end=214949;
-	
+	static private int train_begin = 214049;
+	static private int train_end = 214949;
+
 	static private String topic_source = "data/snlp/train_source/01000/summary.txt";
 	static private String topic_summary;
 	static private String[] topic_list;
@@ -36,6 +37,12 @@ public class Work extends Report implements Runnable {
 	private Vector<Report> train = new Vector<Report>();
 	private Vector<Report> test = new Vector<Report>();
 	private Report report;
+	private HashMap<String, Integer> assignee = new HashMap<String, Integer>();
+	private HashMap<String, Integer> attacher = new HashMap<String, Integer>();
+
+	private boolean state = false;
+
+	// true=>training, false=>testing
 
 	public static void main(String args[]) throws InterruptedException {
 		System.out.println("Working Directory = "
@@ -71,9 +78,9 @@ public class Work extends Report implements Runnable {
 				+ (float) ProcessTimeb / 1000 + " s =====");
 
 		System.exit(0);
-		Triager triager = new Triager(topic_list, train);
+		Triager triager = new Triager(topic_list, train, assignee, attacher);
 		long StartTime = System.currentTimeMillis();
-		for (int i = train_end; i < (train_end+100); i++) {
+		for (int i = train_end; i < (train_end + 100); i++) {
 			try {
 				report = new Report();
 				xmlParsing(xml_source + i + ".xml");
@@ -94,7 +101,7 @@ public class Work extends Report implements Runnable {
 	}
 
 	public void xmlParsing(String inXml) throws Exception {
-
+		String tmp;
 		try {
 			// dplist = new List<Node>();
 			File file = new File(inXml);
@@ -109,9 +116,9 @@ public class Work extends Report implements Runnable {
 			report.setSeverity(node.selectSingleNode("bug_severity").getText());
 			List<Node> list = node.selectNodes("long_desc/who");
 
-			for (int i = 0; i < report.getDeveloper_list().size(); i++) {
+			for (int i = 0; i < list.size(); i++) {
 
-				Iterator i1 = report.getDeveloper_list().iterator();
+				Iterator i1 = list.iterator();
 				while (i1.hasNext()) {
 					Element element = (Element) i1.next();
 					report.addDeveloper(element.getText());
@@ -121,7 +128,31 @@ public class Work extends Report implements Runnable {
 
 			report.setLong_desc(node.selectSingleNode("long_desc")
 					.selectSingleNode("thetext").getText());
-			// System.out.println(long_desc);
+
+			if (state) {
+				
+				tmp = node.selectSingleNode("assigned_to").getText();
+				if (!assignee.containsKey(tmp))
+					assignee.put(tmp, 0);
+				else
+					assignee.put(tmp, assignee.get(tmp) + 1);
+
+				list = node.selectNodes("attachment/attacher");
+				for (int i = 0; i < list.size(); i++) {
+
+					Iterator i1 = list.iterator();
+					while (i1.hasNext()) {
+						Element element = (Element) i1.next();
+						tmp = element.getText();
+						if (attacher.containsKey(tmp))
+							attacher.put(tmp, 0);
+						else
+							attacher.put(tmp, attacher.get(tmp) + 1);
+					}
+				}
+				
+			}
+
 		} catch (Exception e) {
 			File f = new File(xml_source);
 			if (!f.exists())
@@ -160,5 +191,4 @@ public class Work extends Report implements Runnable {
 		}
 	}
 
-	
 }
