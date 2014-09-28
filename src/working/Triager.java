@@ -7,8 +7,7 @@ import java.util.Vector;
 public class Triager {
 	
 	private Vector<String> candidate;
-	String[] topic_list;
-	Vector<Report> train;
+	private Vector<Report> train;
 	
 	private Report report;
 		
@@ -17,8 +16,8 @@ public class Triager {
 	private String commit = "";
 	private String comment = "";
 	
-	public Triager(String[] topic_list, Vector<Report> train, HashMap assignee, HashMap attacher){
-		this.topic_list = topic_list;
+	public Triager(Vector<Report> train, HashMap assignee, HashMap attacher){
+		
 		this.train = train;
 		this.assignee = assignee;
 		this.attacher = attacher;
@@ -33,7 +32,7 @@ public class Triager {
 		Vector<String> tmp = null;
 		
 		for(Report r:train){
-			tmp = r.getDev(report.getProduct(), report.getComponent(), report.getPriority(), report.getSeverity());
+			tmp = r.getDev(report.getProduct(), report.getComponent(), report.getPriority(), report.getSeverity(), report.getTopic());
 			if(tmp!=null){
 				for(String s:tmp){
 					if(!candidate.contains(s))
@@ -43,8 +42,8 @@ public class Triager {
 		}
 	}
 	
-	private double aScore(String developer){
-		assignee.get(developer);
+	private double aScore(String dev_name){
+		assignee.get(dev_name);
 		return 1;
 	}
 	

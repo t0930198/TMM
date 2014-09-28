@@ -8,6 +8,8 @@ import org.dom4j.Document;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import util.SNLP;
+
 public class TMM_pre implements Runnable {
 
 	static String source = "data/xml/";
@@ -43,7 +45,7 @@ public class TMM_pre implements Runnable {
 		if (!folder.exists())
 			folder.mkdirs();
 
-		for (int i = 214049; i <= 215049; i++) {
+		for (int i = 214049; i < 215049; i++) {
 			long StartTime = System.currentTimeMillis();
 			try {
 				content = "";
@@ -51,8 +53,8 @@ public class TMM_pre implements Runnable {
 				short_desc = "";
 				long_desc = "";
 				xmlParsing(source + i + ".xml");
-				snlp.work(bug_id, short_desc + long_desc, filename);
-
+				snlp.work(short_desc + long_desc);
+				snlp.writeFile(filename, bug_id);
 				long ProcessTime = System.currentTimeMillis() - StartTime;
 				System.out.println("===== Parse " + source + i + ".xml"
 						+ " cost time: " + (float) ProcessTime / 1000

@@ -21,6 +21,15 @@ import org.dom4j.Element;
 import org.dom4j.Node;
 import org.dom4j.io.SAXReader;
 
+import edu.stanford.nlp.ling.CoreLabel;
+import edu.stanford.nlp.ling.CoreAnnotations.SentencesAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.TextAnnotation;
+import edu.stanford.nlp.ling.CoreAnnotations.TokensAnnotation;
+import edu.stanford.nlp.pipeline.Annotation;
+import edu.stanford.nlp.util.CoreMap;
+
+import util.SNLP;
+
 public class Work extends Report implements Runnable {
 
 	static private int train_begin = 214049;
@@ -78,7 +87,7 @@ public class Work extends Report implements Runnable {
 				+ (float) ProcessTimeb / 1000 + " s =====");
 
 		System.exit(0);
-		Triager triager = new Triager(topic_list, train, assignee, attacher);
+		Triager triager = new Triager(train, assignee, attacher);
 		long StartTime = System.currentTimeMillis();
 		for (int i = train_end; i < (train_end + 100); i++) {
 			try {
@@ -128,30 +137,29 @@ public class Work extends Report implements Runnable {
 
 			report.setLong_desc(node.selectSingleNode("long_desc")
 					.selectSingleNode("thetext").getText());
+			
+			tmp = node.selectSingleNode("assigned_to").getText();
+			if (!assignee.containsKey(tmp))
+				assignee.put(tmp, 0);
+			else
+				assignee.put(tmp, assignee.get(tmp) + 1);
 
-			if (state) {
-				
-				tmp = node.selectSingleNode("assigned_to").getText();
-				if (!assignee.containsKey(tmp))
-					assignee.put(tmp, 0);
-				else
-					assignee.put(tmp, assignee.get(tmp) + 1);
+			list = node.selectNodes("attachment/attacher");
+			for (int i = 0; i < list.size(); i++) {
 
-				list = node.selectNodes("attachment/attacher");
-				for (int i = 0; i < list.size(); i++) {
+				Iterator i1 = list.iterator();
+				while (i1.hasNext()) {
+					Element element = (Element) i1.next();
+					tmp = element.getText();
+					if (attacher.containsKey(tmp))
+						attacher.put(tmp, 0);
+					else
+						attacher.put(tmp, attacher.get(tmp) + 1);
 
-					Iterator i1 = list.iterator();
-					while (i1.hasNext()) {
-						Element element = (Element) i1.next();
-						tmp = element.getText();
-						if (attacher.containsKey(tmp))
-							attacher.put(tmp, 0);
-						else
-							attacher.put(tmp, attacher.get(tmp) + 1);
-					}
 				}
-				
+
 			}
+			match_topic();
 
 		} catch (Exception e) {
 			File f = new File(xml_source);
@@ -161,6 +169,42 @@ public class Work extends Report implements Runnable {
 			e.printStackTrace();
 		}
 
+	}
+
+	private void match_topic() {
+		
+		SNLP snlp = new SNLP();
+		int topic = -1;
+		int match_count = 0;
+		snlp.work(report.getLong_desc() + report.getShort_desc());
+		Annotation document = snlp.get_document();
+		Vector<String> wordBag = new Vector<String>();
+		List<CoreMap> sentences = document.get(SentencesAnnotation.class);
+		for (CoreMap sentence : sentences) {
+			// traversing the words in the current sentence
+			// a CoreLabel is a CoreMap with additional token-specific
+			// methods
+			for (CoreLabel token : sentence.get(TokensAnnotation.class)) {
+				// this is the text of the token
+				String word = token.get(TextAnnotation.class);
+
+				word = word.replaceAll("[\\pP‘’“”`'.:> <\",]", " ");
+				wordBag.add(word);
+			}
+		}
+		String[] terms;
+		int temp_count = 0;
+		for (int i = 0; i < topic_list.length; i++) {
+
+			terms = topic_list[i].split("\n");
+			for (String term : terms) {
+				if (wordBag.contains(term))
+					temp_count++;
+			}
+			if (temp_count > match_count)
+				topic = i;
+		}
+		report.setTopic(topic);
 	}
 
 	/*

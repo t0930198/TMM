@@ -13,6 +13,7 @@ public class Report {
 	private Vector<String> developer_list = null;
 	private String short_desc = "";
 	private String long_desc = "";
+	private int topic;
 
 	public Report(String bug_id, String product, String component,
 			String priority, String severity, Vector<String> developer_list,
@@ -31,6 +32,14 @@ public class Report {
 
 	public Report() {
 		this.developer_list = new Vector<String>();
+	}
+
+	public void setTopic(int topic) {
+		this.topic = topic;
+	}
+
+	public int getTopic() {
+		return topic;
 	}
 
 	public void addDeveloper(String developer) {
@@ -102,10 +111,10 @@ public class Report {
 	}
 
 	public Vector<String> getDev(String product, String component,
-			String priority, String severity) {
+			String priority, String severity, int topic) {
 		if (this.product.equals(product) && this.component.equals(component)
 				&& this.priority.equals(priority)
-				&& this.severity.equals(severity))
+				&& this.severity.equals(severity) && this.topic == topic)
 			return developer_list;
 		else
 			return null;
